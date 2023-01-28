@@ -30,3 +30,4 @@ No additional instructions required.
 Name | Mobile | Email | Development OS/Toolchain
 -:|:-:|:-|-|
 Jerome Soh | 84886501 | jsyl3214@gmail.com | Windows 10/Visual Studio 2019
+Yap Yuhang | 97243029 | yapyuhang@u.nus.edu | Windows 10/Visual Studio 2019
