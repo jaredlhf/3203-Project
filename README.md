@@ -32,3 +32,4 @@ No additional instructions required.
 |   Jerome Soh | 84886501 | jsyl3214@gmail.com   | Windows 10/Visual Studio 2019                   |
 |   Yap Yuhang | 97243029 | yapyuhang@u.nus.edu  | Windows 10/Visual Studio 2019                   |
 | Ng Seng Leng | 97107292 | ngsengleng@gmail.com | Ventura 13.0.1/Visual Studio Code with Terminal |
+|Nikki Than Win| 81122934 | e0543751@u.nus.edu   | Windows 11/ Visual Studio 2022				   |
