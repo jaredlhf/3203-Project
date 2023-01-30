@@ -27,8 +27,9 @@ No additional instructions required.
 
 # Team Members
 
-|         Name |  Mobile  | Email                | Development OS/Toolchain                        |
-| -----------: | :------: | :------------------- | ----------------------------------------------- |
-|   Jerome Soh | 84886501 | jsyl3214@gmail.com   | Windows 10/Visual Studio 2019                   |
-|   Yap Yuhang | 97243029 | yapyuhang@u.nus.edu  | Windows 10/Visual Studio 2019                   |
-| Ng Seng Leng | 97107292 | ngsengleng@gmail.com | Ventura 13.0.1/Visual Studio Code with Terminal |
+|         Name    |  Mobile  | Email                | Development OS/Toolchain                        |
+| -----------:    | :------: | :------------------- | ----------------------------------------------- |
+|   Jerome Soh    | 84886501 | jsyl3214@gmail.com   | Windows 10/Visual Studio 2019                   |
+|   Yap Yuhang    | 97243029 | yapyuhang@u.nus.edu  | Windows 10/Visual Studio 2019                   |
+| Ng Seng Leng    | 97107292 | ngsengleng@gmail.com | Ventura 13.0.1/Visual Studio Code with Terminal |
+| Ng Han Poh Jacob| 97623938 | jnhp1998@gmail.com   | Windows 11/Visual Studio 2019                  |
