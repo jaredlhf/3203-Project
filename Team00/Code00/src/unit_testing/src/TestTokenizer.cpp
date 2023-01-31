@@ -24,7 +24,7 @@ TEST_CASE("NullStringTest") {
     match(output == expected);
 }
 
-TEST_CASE("EmptySpaceStringTest") {
+TEST_CASE("EmptySpaceBeginningAndEndOfStringTest") {
     std::string testStatement = " Hello ";
     const char* args[] = {"Hello"};
     std::vector<std::string> expected(args, std::end(args));
