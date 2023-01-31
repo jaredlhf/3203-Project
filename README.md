@@ -27,10 +27,11 @@ No additional instructions required.
 
 # Team Members
 
-|                 Name |  Mobile  | Email                | Development OS/Toolchain                        |
-| -------------------: | :------: | :------------------- | ----------------------------------------------- |
-|           Jerome Soh | 84886501 | jsyl3214@gmail.com   | Windows 10/Visual Studio 2019                   |
-|           Yap Yuhang | 97243029 | yapyuhang@u.nus.edu  | Windows 10/Visual Studio 2019                   |
-|         Ng Seng Leng | 97107292 | ngsengleng@gmail.com | Ventura 13.0.1/Visual Studio Code with Terminal |
-|       Nikki Than Win | 81122934 | e0543751@u.nus.edu   | Windows 11/ Visual Studio 2022                  |
-| Lim Hern Fong, Jared | 88684968 | e0560135@u.nus.edu   | Ventura 13.1/CLion 2022.3.1/CMake 3.24.2        |
+|                 Name |   Mobile   | Email                | Development OS/Toolchain                         |
+|---------------------:|:----------:|:---------------------|--------------------------------------------------|
+|           Jerome Soh |  84886501  | jsyl3214@gmail.com   | Windows 10/Visual Studio 2019                    |
+|           Yap Yuhang |  97243029  | yapyuhang@u.nus.edu  | Windows 10/Visual Studio 2019                    |
+|         Ng Seng Leng |  97107292  | ngsengleng@gmail.com | Ventura 13.0.1/Visual Studio Code with Terminal  |
+|       Nikki Than Win |  81122934  | e0543751@u.nus.edu   | Windows 11/ Visual Studio 2022                   |
+| Lim Hern Fong, Jared |  88684968  | e0560135@u.nus.edu   | Ventura 13.1/CLion 2022.3.1/CMake 3.24.2         |
+ | Ng Han Poh Jacob     | 97623938   | e0470741@u.nus.edu   | Ventura 13.0.1/CLion 2022.3.1/CMake 3.24.2       |
