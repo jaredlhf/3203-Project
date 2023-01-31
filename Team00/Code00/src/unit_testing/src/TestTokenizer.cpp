@@ -23,3 +23,12 @@ TEST_CASE("NullStringTest") {
 
     match(output == expected);
 }
+
+TEST_CASE("EmptySpaceStringTest") {
+    std::string testStatement = " Hello ";
+    const char* args[] = {"Hello"};
+    std::vector<std::string> expected(args, std::end(args));
+    std::vector<std::string> output = tokenize(testStatement);
+
+    match(output == expected);
+}
