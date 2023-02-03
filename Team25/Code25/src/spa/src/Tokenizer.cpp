@@ -33,6 +33,12 @@ vector<string> tokenize(const string &str) {
                 result.push_back(next);
                 next.clear();
             }
+        } else if (*it == ';') {
+            if (!next.empty()) {
+                result.push_back(next);
+                result.push_back(";");
+                next.clear();
+            }
         } else {
             next += *it;
         }
