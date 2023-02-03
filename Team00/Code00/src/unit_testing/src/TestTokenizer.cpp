@@ -29,12 +29,10 @@ TEST_CASE("EmptySpaceBeginningAndEndOfStringTest") {
     REQUIRE(tokenize(testStatement) == expected);
 }
 
-TEST_CASE("ExpectFunctionTest") {
+TEST_CASE("GetNextTokenTest") {
     std::string testStatement = " Hello World";
-    REQUIRE(expect(testStatement,"Hello") == "Hello");
-}
-
-TEST_CASE("ExpectFunctionFailTest") {
-    std::string testStatement = " Hello World";
-    REQUIRE_THROWS_AS(expect(testStatement,"World"),std::invalid_argument);
+    Tokenizer tokenizer;
+    tokenizer.setTokens(tokenize(testStatement));
+    REQUIRE(tokenizer.getNextToken() == "Hello");
+    REQUIRE(tokenizer.getNextToken() == "World");
 }
