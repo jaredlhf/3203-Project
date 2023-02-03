@@ -4,14 +4,17 @@
 
 using namespace std;
 
-class VarStorage;
+
 
 class PkbPopulator {
+	class VarStorage;
 private:
 	VarStorage* varStorage;
 
 public:
+	PkbPopulator(VarStorage* varStorage) {
+	};
 	void addVar(std::string varName);
 	std::vector<std::string>* getAllVar();
-	bool checkVar();
+	bool checkVar(std::string varName);
 };
