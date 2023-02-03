@@ -32,6 +32,6 @@ string expect(const string& spa, const string& str) {
         if (tokens.front() == str) {
             return tokens.front();
         } else {
-            throw std::logic_error("Expected" + str + "instead of" + tokens.front());
+            throw std::invalid_argument("Expected " + str + " instead of " + tokens.front());
         }
 }
