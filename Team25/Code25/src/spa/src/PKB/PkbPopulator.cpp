@@ -5,13 +5,26 @@
 using namespace std;
 
 #include "PkbPopulator.h"
+/*Place holder for VarStorage declaration*/
+struct PkbPopulator::VarStorage {
+public:
+	void VarStorage::addVar(std::string varName) {
 
-VarStorage* varStorage;
+	};
+	std::vector<std::string>* VarStorage::getAllVar() {
+
+	};
+	bool VarStorage::checkVar(std::string varName) {
+
+	};
+};
 
 /*
 TODO: ADD constructor method
 */
-PkbPopulator(VarStorage* varStorage)
+PkbPopulator::PkbPopulator(VarStorage* varStore) {
+	varStorage = varStore;
+}
 
 
 

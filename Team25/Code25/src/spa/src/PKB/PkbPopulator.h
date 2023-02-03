@@ -10,7 +10,6 @@ class PkbPopulator {
 	class VarStorage;
 private:
 	VarStorage* varStorage;
-
 public:
 	PkbPopulator(VarStorage* varStorage) {
 	};
