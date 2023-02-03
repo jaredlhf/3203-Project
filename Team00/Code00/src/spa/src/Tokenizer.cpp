@@ -7,8 +7,23 @@ using namespace std;
 
 #include "PKB.h"
 #include "TNode.h"
+#include "Tokenizer.h"
 
-vector<string> tokenize(const string& str) {
+void Tokenizer::setTokens( vector<string> tok ) {
+    tokens = tok;
+};
+
+vector<string> Tokenizer::getTokens() {
+    return this->tokens;
+}
+
+string Tokenizer::getNextToken() {
+    string next = this->tokens.front();
+    tokens.erase(tokens.begin());
+    return next;
+}
+
+vector<string> tokenize(const string &str) {
     string next;
     vector<string> result;
 
@@ -27,11 +42,5 @@ vector<string> tokenize(const string& str) {
     return result;
 }
 
-string expect(const string& spa, const string& str) {
-    vector<string> tokens = tokenize(spa);
-        if (tokens.front() == str) {
-            return tokens.front();
-        } else {
-            throw std::invalid_argument("Expected " + str + " instead of " + tokens.front());
-        }
-}
+
+
