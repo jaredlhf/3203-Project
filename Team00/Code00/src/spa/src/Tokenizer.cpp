@@ -26,3 +26,12 @@ vector<string> tokenize(const string& str) {
         result.push_back(next);
     return result;
 }
+
+string expect(const string& spa, const string& str) {
+    vector<string> tokens = tokenize(spa);
+        if (tokens.front() == str) {
+            return tokens.front();
+        } else {
+            throw std::logic_error("Expected" + str + "instead of" + tokens.front());
+        }
+}

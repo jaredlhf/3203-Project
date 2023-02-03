@@ -7,4 +7,5 @@ using namespace std;
 class Tokenizer {
 public:
     vector<string> tokenize(const string& str);
+    string expect(const string& spa,const string& str);
 };
