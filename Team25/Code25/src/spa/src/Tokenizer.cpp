@@ -5,8 +5,6 @@
 
 using namespace std;
 
-#include "PKB.h"
-#include "TNode.h"
 #include "Tokenizer.h"
 
 void Tokenizer::setTokens( vector<string> tok ) {
