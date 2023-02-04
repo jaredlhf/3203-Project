@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string SELECT_MARKER = "select";
+string SELECT_MARKER = "Select";
 string PATTERN_MARKER = "pattern";
 vector<string> SUCHTHAT_MARKER = {"such", "that"};
 vector<string> DESIGN_ENTITIES = {"stmt", "read", "print", "call", 
