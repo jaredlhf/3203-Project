@@ -5,8 +5,11 @@ using namespace std;
 
 VariableStore varStore;
 
-TEST_CASE("Empty store") {
+TEST_CASE("Empty variable store") {
+	unordered_set<string> output({  });
+
 	REQUIRE(varStore.size() == 0);
+	REQUIRE(varStore.getAllVar() == output);
 }
 
 TEST_CASE("Add one variable") {
