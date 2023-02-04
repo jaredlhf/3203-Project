@@ -10,6 +10,7 @@ TEST_CASE("Empty store") {
 }
 
 TEST_CASE("Add one variable") {
+	varStore.clear();
 	varStore.addVar("one");
 
 	unordered_set<string> output({ "one" });
@@ -21,6 +22,7 @@ TEST_CASE("Add one variable") {
 }
 
 TEST_CASE("Add two variable") {
+	varStore.clear();
 	varStore.addVar("one");
 	varStore.addVar("two");
 
@@ -32,3 +34,14 @@ TEST_CASE("Add two variable") {
 	REQUIRE(varStore.checkVar("two"));
 }
 
+TEST_CASE("Add duplicate variable") {
+	varStore.clear();
+	varStore.addVar("one");
+	varStore.addVar("one");
+
+	unordered_set<string> output({ "one" });
+
+	REQUIRE(varStore.size() == 1);
+	REQUIRE(varStore.getAllVar() == output);
+	REQUIRE(varStore.checkVar("one"));
+}

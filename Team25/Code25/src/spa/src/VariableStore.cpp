@@ -28,3 +28,7 @@ bool VariableStore::checkVar(string varName) {
 int VariableStore::size() {
 	return varStore.size();
 }
+
+void VariableStore::clear() {
+	varStore.clear();
+}
