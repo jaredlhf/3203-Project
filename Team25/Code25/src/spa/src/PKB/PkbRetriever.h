@@ -6,11 +6,11 @@ using namespace std;
 
 #include "placeHolder.h"
 
-class PkbPopulator {
-
+class PkbRetriever{
 private:
 	VarStorage* varStorage;
 public:
-	PkbPopulator(VarStorage* varStore);
-	void addVar(std::string varName);
+	PkbRetriever(VarStorage* varStore);
+	std::vector<std::string>* getAllVar();
+	bool checkVar(std::string varName);
 };
