@@ -15,6 +15,14 @@ TEST_CASE("Tokenize basic query without parantheses and newlines") {
 	REQUIRE(res == expected);
 }
 
+TEST_CASE("Tokenize basic query with extra whitespaces") {
+	string testStr = "variable    v; Select v";
+	vector<string> expected{ "variable", "v", ";", "Select", "v" };
+	vector<string> res = qt.tokenize(testStr);
+
+	REQUIRE(res == expected);
+}
+
 TEST_CASE("Tokenize basic query newline but without parantheses") {
 	string testStr = "variable v;\nSelect v";
 	vector<string> expected{ "variable", "v", ";", "Select", "v" };
