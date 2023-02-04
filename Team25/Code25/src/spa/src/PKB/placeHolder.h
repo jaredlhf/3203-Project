@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <unordered_set>
 #include <string>
 
 class VarStorage {
@@ -9,8 +9,8 @@ public:
 	void VarStorage::addVar(std::string varName) {
 	};
 
-	std::vector<std::string>* VarStorage::getAllVar() {
-		std::vector<std::string>* result{};
+	std::unordered_set<std::string>* VarStorage::getAllVar() {
+		std::unordered_set<std::string>* result{};
 		return result;
 	};
 

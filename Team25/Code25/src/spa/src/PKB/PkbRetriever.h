@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <vector>
+#include <unordered_set>
 #include <string>
 
 using namespace std;
@@ -11,6 +11,6 @@ private:
 	VarStorage* varStorage;
 public:
 	PkbRetriever(VarStorage* varStore);
-	std::vector<std::string>* getAllVar();
+	std::unordered_set<std::string>* getAllVar();
 	bool checkVar(std::string varName);
 };

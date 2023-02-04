@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include <vector>
+#include <unordered_set>
 #include <string>
 
 using namespace std;
@@ -15,7 +15,7 @@ PkbRetriever::PkbRetriever(VarStorage* varStore) {
 	this->varStorage = varStore;
 };
 
-std::vector<std::string>* PkbRetriever::getAllVar() {
+std::unordered_set<std::string>* PkbRetriever::getAllVar() {
 	return this->varStorage->getAllVar();
 }
 
