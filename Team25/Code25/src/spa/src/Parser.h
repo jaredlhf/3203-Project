@@ -13,13 +13,14 @@ using namespace std;
 class Parser {
 public:
     static bool isValidName(string variable);
+    void parseProgram(vector<string> tokenList);
 private:
     vector<string> tokens;
     void expect(const Token &expectedToken);
     string getNextToken();
-    bool isValidProcedure();
     ProcedureNode parseProcedure();
     StmtLstNode parseStmtLst();
+    StmtNode parseStmt()
 };
 
 #endif

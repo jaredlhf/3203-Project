@@ -15,7 +15,5 @@ void SourceProcessor::processSimple(string &filename) {
 
     string fileStr = processFile(filename);
     vector<string> tokens = t.tokenize(fileStr);
-
-
-    // TODO: parse tokens into AST
+    p.parseProgram(tokens);
 }

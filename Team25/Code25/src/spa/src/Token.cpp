@@ -17,4 +17,9 @@ bool RightBrace::isValidToken(string tokenString) const {
     return tokenString == "}";
 }
 
+bool Statement::isValidToken(string tokenString) const {
+    // TODO: implementation
+    return true;
+}
+
 

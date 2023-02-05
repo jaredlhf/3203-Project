@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -30,10 +31,10 @@ private:
 
 class StmtLstNode: public TNode {
 public:
-    StmtLstNode(StmtNode stmt);
+    StmtLstNode(vector<StmtNode> stmts);
 
 private:
-    StmtNode statement;
+    vector<StmtNode> statements;
 };
 
 class ProcedureNode: public TNode {

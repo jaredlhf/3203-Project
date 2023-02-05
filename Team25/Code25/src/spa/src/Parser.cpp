@@ -32,9 +32,24 @@ string Parser::getNextToken() {
 void Parser::expect(const Token &expectedToken) {
     string next = getNextToken();
     if (expectedToken.isValidToken(next)) {
+        std::cout << "error: unexpected token found" << std::endl;
         throw 1;
     }
 }
+
+void Parser::parseProgram(vector<string> tokenList) {
+    this->tokens = tokenList;
+
+    do {
+        if (tokens.empty()) {
+            std::cout << "error: no procedures found" << std::endl;
+            throw 1;
+        } else {
+            parseProcedure();
+        }
+    } while (!tokens.empty());
+}
+
 
 ProcedureNode Parser::parseProcedure() {
     expect(Procedure());
@@ -47,6 +62,12 @@ ProcedureNode Parser::parseProcedure() {
 }
 
 StmtLstNode Parser::parseStmtLst() {
-
+    vector<StmtNode> StmtLsts;
+    do {
+        StmtNode sn = parseStmt();
+        StmtLsts.push_back(sn);
+    } while(!RightBrace().isValidToken(tokens.front()));
+    StmtLstNode node = StmtLstNode(StmtLsts);
+    return node;
 }
 
