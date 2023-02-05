@@ -6,7 +6,7 @@ using namespace std;
 StatementStore stmtStore;
 
 TEST_CASE("Empty statement store") {
-	unordered_set<int> output({  });
+	unordered_set<int> output({ });
 
 	REQUIRE(stmtStore.size() == 0);
 	REQUIRE(stmtStore.getAllStmt("") == output);
