@@ -5,13 +5,13 @@
 using namespace std;
 
 #include "PkbPopulator.h"
-#include "placeHolder.h"
+#include "VariableStore.h"
 
 /*
  * Constructor class for PkbPopulator
  * param: VarStorage* varStore
  */
-PkbPopulator::PkbPopulator(VarStorage* varStore) {
+PkbPopulator::PkbPopulator(VariableStore* varStore) {
 	this->varStorage = varStore;
 };
 

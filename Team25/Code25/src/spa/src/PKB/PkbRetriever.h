@@ -4,13 +4,13 @@
 
 using namespace std;
 
-#include "placeHolder.h"
+#include "VariableStore.h"
 
 class PkbRetriever{
 private:
-	VarStorage* varStorage;
+	VariableStore* varStorage;
 public:
-	PkbRetriever(VarStorage* varStore);
-	std::unordered_set<std::string>* getAllVar();
-	bool checkVar(std::string varName);
+	PkbRetriever(VariableStore* varStore);
+	std::unordered_set<std::string> getAllVar();
+	bool has(std::string varName);
 };

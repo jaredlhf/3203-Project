@@ -5,20 +5,20 @@
 using namespace std;
 
 #include "PkbRetriever.h"
-#include "placeHolder.h"
+#include "VariableStore.h"
 
 /*
  * Constructor class for PkbRetriever
  * param: VarStorage* varStore
  */
-PkbRetriever::PkbRetriever(VarStorage* varStore) {
+PkbRetriever::PkbRetriever(VariableStore* varStore) {
 	this->varStorage = varStore;
 };
 
-std::unordered_set<std::string>* PkbRetriever::getAllVar() {
+std::unordered_set<std::string> PkbRetriever::getAllVar() {
 	return this->varStorage->getAllVar();
 }
 
-bool PkbRetriever::checkVar(std::string varName) {
-	return this->varStorage->checkVar(varName);
+bool PkbRetriever::has(std::string varName) {
+	return this->varStorage->has(varName);
 }

@@ -4,13 +4,13 @@
 
 using namespace std;
 
-#include "placeHolder.h"
+#include "VariableStore.h"
 
 class PkbPopulator {
 
 private:
-	VarStorage* varStorage;
+	VariableStore* varStorage;
 public:
-	PkbPopulator(VarStorage* varStore);
+	PkbPopulator(VariableStore* varStore);
 	void addVar(std::string varName);
 };

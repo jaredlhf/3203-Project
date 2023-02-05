@@ -1,4 +1,4 @@
-#include "ProcedureStore.h"
+#include "PKB/ProcedureStore.h"
 
 #include "catch.hpp"
 using namespace std;
