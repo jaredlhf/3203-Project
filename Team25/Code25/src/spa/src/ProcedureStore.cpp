@@ -17,7 +17,7 @@ unordered_set<string> ProcedureStore::getAllProc() {
 	return procStore;
 }
 
-bool ProcedureStore::checkProc(string procName) {
+bool ProcedureStore::has(string procName) {
 	if (procStore.find(procName) != procStore.end()) {
 		return true;
 	}

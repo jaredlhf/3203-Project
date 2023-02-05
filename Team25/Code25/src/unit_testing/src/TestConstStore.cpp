@@ -20,8 +20,8 @@ TEST_CASE("Add one constant") {
 
 	REQUIRE(constStore.size() == 1);
 	REQUIRE(constStore.getAllConst() == output);
-	REQUIRE(constStore.checkConst(1));
-	REQUIRE(!constStore.checkConst(2));
+	REQUIRE(constStore.has(1));
+	REQUIRE(!constStore.has(2));
 }
 
 TEST_CASE("Add two constants") {
@@ -33,8 +33,8 @@ TEST_CASE("Add two constants") {
 
 	REQUIRE(constStore.size() == 2);
 	REQUIRE(constStore.getAllConst() == output);
-	REQUIRE(constStore.checkConst(1));
-	REQUIRE(constStore.checkConst(2));
+	REQUIRE(constStore.has(1));
+	REQUIRE(constStore.has(2));
 }
 
 TEST_CASE("Add duplicate constant") {
@@ -46,5 +46,5 @@ TEST_CASE("Add duplicate constant") {
 
 	REQUIRE(constStore.size() == 1);
 	REQUIRE(constStore.getAllConst() == output);
-	REQUIRE(constStore.checkConst(1));
+	REQUIRE(constStore.has(1));
 }

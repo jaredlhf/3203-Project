@@ -17,7 +17,7 @@ unordered_set<string> VariableStore::getAllVar() {
 	return varStore;
 }
 
-bool VariableStore::checkVar(string varName) {
+bool VariableStore::has(string varName) {
 	if (varStore.find(varName) != varStore.end()) {
 		return true;
 	} else {

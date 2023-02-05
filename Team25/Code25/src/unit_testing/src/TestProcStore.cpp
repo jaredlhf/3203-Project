@@ -20,8 +20,8 @@ TEST_CASE("Add one procedure") {
 
 	REQUIRE(procStore.size() == 1);
 	REQUIRE(procStore.getAllProc() == output);
-	REQUIRE(procStore.checkProc("one"));
-	REQUIRE(!procStore.checkProc("two"));
+	REQUIRE(procStore.has("one"));
+	REQUIRE(!procStore.has("two"));
 }
 
 TEST_CASE("Add two procedures") {
@@ -33,8 +33,8 @@ TEST_CASE("Add two procedures") {
 
 	REQUIRE(procStore.size() == 2);
 	REQUIRE(procStore.getAllProc() == output);
-	REQUIRE(procStore.checkProc("one"));
-	REQUIRE(procStore.checkProc("two"));
+	REQUIRE(procStore.has("one"));
+	REQUIRE(procStore.has("two"));
 }
 
 TEST_CASE("Add duplicate procedure") {
@@ -46,5 +46,5 @@ TEST_CASE("Add duplicate procedure") {
 
 	REQUIRE(procStore.size() == 1);
 	REQUIRE(procStore.getAllProc() == output);
-	REQUIRE(procStore.checkProc("one"));
+	REQUIRE(procStore.has("one"));
 }

@@ -15,7 +15,7 @@ public:
 	ProcedureStore();
 	void addProc(string procName);
 	unordered_set<string> getAllProc();
-	bool checkProc(string procName);
+	bool has(string procName);
 	int size();
 	void clear();
 };

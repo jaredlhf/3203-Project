@@ -16,7 +16,7 @@ unordered_set<int> ConstantStore::getAllConst() {
 	return constStore;
 }
 
-bool ConstantStore::checkConst(int constNum) {
+bool ConstantStore::has(int constNum) {
 	if (constStore.find(constNum) != constStore.end()) {
 		return true;
 	}

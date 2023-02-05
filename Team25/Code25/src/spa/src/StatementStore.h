@@ -16,7 +16,7 @@ public:
 	StatementStore();
 	void addStmt(string stmtType, int lineNum);
 	unordered_set<int> getAllStmt(string stmtType);
-	bool checkStmt(string stmtType);
+	bool has(string stmtType);
 	int size();
 	void clear();
 };

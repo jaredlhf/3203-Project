@@ -13,7 +13,7 @@ void StatementStore::addStmt(string stmtType, int lineNum) {
 }
 
 unordered_set<int> StatementStore::getAllStmt(string stmtType) {
-	if (checkStmt(stmtType)) {
+	if (has(stmtType)) {
 		return stmtStore[stmtType];
 	}
 	else {
@@ -21,7 +21,7 @@ unordered_set<int> StatementStore::getAllStmt(string stmtType) {
 	}
 }
 
-bool StatementStore::checkStmt(string stmtType) {
+bool StatementStore::has(string stmtType) {
 	if (stmtStore.find(stmtType) != stmtStore.end()) {
 		return true;
 	}

@@ -20,8 +20,8 @@ TEST_CASE("Add one variable") {
 
 	REQUIRE(varStore.size() == 1);
 	REQUIRE(varStore.getAllVar() == output);
-	REQUIRE(varStore.checkVar("one"));
-	REQUIRE(!varStore.checkVar("two"));
+	REQUIRE(varStore.has("one"));
+	REQUIRE(!varStore.has("two"));
 }
 
 TEST_CASE("Add two variable") {
@@ -33,8 +33,8 @@ TEST_CASE("Add two variable") {
 
 	REQUIRE(varStore.size() == 2);
 	REQUIRE(varStore.getAllVar() == output);
-	REQUIRE(varStore.checkVar("one"));
-	REQUIRE(varStore.checkVar("two"));
+	REQUIRE(varStore.has("one"));
+	REQUIRE(varStore.has("two"));
 }
 
 TEST_CASE("Add duplicate variable") {
@@ -46,5 +46,5 @@ TEST_CASE("Add duplicate variable") {
 
 	REQUIRE(varStore.size() == 1);
 	REQUIRE(varStore.getAllVar() == output);
-	REQUIRE(varStore.checkVar("one"));
+	REQUIRE(varStore.has("one"));
 }

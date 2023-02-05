@@ -20,7 +20,7 @@ TEST_CASE("Add one statement") {
 
 	REQUIRE(stmtStore.size() == 1);
 	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.checkStmt("assign"));
+	REQUIRE(stmtStore.has("assign"));
 }
 
 TEST_CASE("Add two same statements") {
@@ -32,7 +32,7 @@ TEST_CASE("Add two same statements") {
 
 	REQUIRE(stmtStore.size() == 1);
 	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.checkStmt("assign"));
+	REQUIRE(stmtStore.has("assign"));
 }
 
 TEST_CASE("Add two different statements") {
@@ -46,8 +46,8 @@ TEST_CASE("Add two different statements") {
 	REQUIRE(stmtStore.size() == 2);
 	REQUIRE(stmtStore.getAllStmt("assign") == outputA);
 	REQUIRE(stmtStore.getAllStmt("if") == outputB);
-	REQUIRE(stmtStore.checkStmt("assign"));
-	REQUIRE(stmtStore.checkStmt("if"));
+	REQUIRE(stmtStore.has("assign"));
+	REQUIRE(stmtStore.has("if"));
 }
 
 TEST_CASE("Add duplicate statement") {
@@ -59,5 +59,5 @@ TEST_CASE("Add duplicate statement") {
 
 	REQUIRE(stmtStore.size() == 1);
 	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.checkStmt("assign"));
+	REQUIRE(stmtStore.has("assign"));
 }

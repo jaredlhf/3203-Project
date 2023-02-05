@@ -15,7 +15,7 @@ public :
 	VariableStore(); 
 	void addVar(string varName);
 	unordered_set<string> getAllVar();
-	bool checkVar(string varName);
+	bool has(string varName);
 	int size();
 	void clear();
 };

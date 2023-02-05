@@ -4,16 +4,17 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
-class ConstantStore {
+class FollowsStore {
 private:
-	unordered_set<int> constStore;
+	unordered_map<int, int> followsStore;
 public:
-	ConstantStore();
-	void addConst(int constNum);
-	unordered_set<int> getAllConst();
+	FollowsStore();
+	void addFollows(int leftLineNum, int rightLineNum);
+	int getFollows(int leftLineNum);
 	bool has(int constNum);
 	int size();
 	void clear();
