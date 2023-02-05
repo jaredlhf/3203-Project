@@ -30,6 +30,10 @@ bool StatementStore::checkStmt(string stmtType) {
 	}
 }
 
+int StatementStore::size() {
+	return stmtStore.size();
+}
+
 void StatementStore::clear() {
 	stmtStore.clear();
 }

@@ -17,6 +17,6 @@ public:
 	void addStmt(string stmtType, int lineNum);
 	unordered_set<int> getAllStmt(string stmtType);
 	bool checkStmt(string stmtType);
-	/*int size();*/
+	int size();
 	void clear();
 };
