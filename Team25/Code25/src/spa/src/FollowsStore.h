@@ -10,12 +10,17 @@ using namespace std;
 
 class FollowsStore {
 private:
-	unordered_map<int, int> followsStore;
+	unordered_map<int, int> followeeStore;
+	unordered_map<int, int> followerStore;
 public:
 	FollowsStore();
 	void addFollows(int leftLineNum, int rightLineNum);
-	int getFollows(int leftLineNum);
-	bool has(int constNum);
-	int size();
+	int getFollowee(int rightLineNum);
+	int getFollower(int leftLineNum);
+	bool hasFollowee(int lineNum);
+	bool hasFollower(int lineNum);
+	bool hasFollows(int leftLineNum, int rightLineNum);
+	unordered_set<int> getAllFollowers();
+	unordered_set<int> getAllFollowees();
 	void clear();
 };
