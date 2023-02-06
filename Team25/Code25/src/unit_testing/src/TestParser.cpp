@@ -1,6 +1,6 @@
 
-#include "Parser.h"
-#include "Parser.cpp"
+#include "sp/Parser.h"
+#include "sp/Parser.cpp"
 #include "catch.hpp"
 #include <regex>
 #include <string>
