@@ -1,4 +1,4 @@
-#include "VariableStore.h"
+#include "PKB/VariableStore.h"
 
 #include "catch.hpp"
 using namespace std;
@@ -16,7 +16,7 @@ TEST_CASE("Add one variable") {
 	varStore.clear();
 	varStore.addVar("one");
 
-	unordered_set<string> output({ "one" });
+	unordered_set<string> output({ "one"});
 
 	REQUIRE(varStore.size() == 1);
 	REQUIRE(varStore.getAllVar() == output);

@@ -1,4 +1,4 @@
-#include "StatementStore.h"
+#include "PKB/StatementStore.h"
 
 #include "catch.hpp"
 using namespace std;
@@ -6,7 +6,7 @@ using namespace std;
 StatementStore stmtStore;
 
 TEST_CASE("Empty statement store") {
-	unordered_set<int> output({  });
+	unordered_set<int> output({ });
 
 	REQUIRE(stmtStore.size() == 0);
 	REQUIRE(stmtStore.getAllStmt("") == output);
