@@ -7,7 +7,7 @@ ProcedureStore procStore;
 
 TEST_CASE("Empty procedure store") {
 	unordered_set<string> output({ });
-
+    procStore.clear();
 	REQUIRE(procStore.size() == 0);
 	REQUIRE(procStore.getAllProc() == output);
 }

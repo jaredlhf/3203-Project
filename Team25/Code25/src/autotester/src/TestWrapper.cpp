@@ -10,18 +10,16 @@ AbstractWrapper* WrapperFactory::createWrapper() {
 volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
-TestWrapper::TestWrapper() {
+TestWrapper::TestWrapper() : pkbRetriever(&vs, &cs, &fs, &ps, &ss), pkbPopulator(&vs, &cs, &fs, &ps, &ss), qps(&pkbRetriever)  {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
   sp = SourceProcessor();
-
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
-    //TODO: add in pkbPopulator to second argument
-    //sp.processSimple(filename);
+    sp.processSimple(filename, &pkbPopulator);
 }
 
 // method to evaluating a query
@@ -29,6 +27,8 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 // call your evaluator to evaluate the query here
   // ...code to evaluate query...
 
+    qps.query(query, results);
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
+
 }

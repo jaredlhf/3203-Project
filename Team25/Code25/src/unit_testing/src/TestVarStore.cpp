@@ -7,7 +7,7 @@ VariableStore varStore;
 
 TEST_CASE("Empty variable store") {
 	unordered_set<string> output({  });
-
+    varStore.clear();
 	REQUIRE(varStore.size() == 0);
 	REQUIRE(varStore.getAllVar() == output);
 }

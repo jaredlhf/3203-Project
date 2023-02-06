@@ -1,5 +1,8 @@
+
 #include "SourceProcessor.h"
 #include "catch.hpp"
+
+#include "PKB/PkbPopulator.h"
 
 TEST_CASE("Test processFile()") {
     SourceProcessor sp;
@@ -32,6 +35,12 @@ TEST_CASE("Test processFile()") {
 
 TEST_CASE("Test processSimple()") {
     SourceProcessor sp;
+    VariableStore vs;
+    ConstantStore cs;
+    FollowsStore fs;
+    ProcedureStore ps;
+    StatementStore ss;
+    PkbPopulator p = PkbPopulator(&vs, &cs, &fs, &ps, &ss);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"
@@ -43,7 +52,10 @@ TEST_CASE("Test processSimple()") {
     std::ofstream file(fileLocation);
     file << fileInput;
     file.close();
+    std::cout << vs.getAllVar().size() << std::endl;
 
-    sp.processSimple(fileLocation);
+    sp.processSimple(fileLocation, &p);
+
+    std::cout << vs.getAllVar().size() << std::endl;
 
 }
