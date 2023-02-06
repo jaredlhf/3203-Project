@@ -8,22 +8,6 @@ using namespace std;
 
 #include "Parser.h"
 
-bool isValidVariableName(string variable)
-{
-    if (!((variable[0] >= 'a' && variable[0] <= 'z')
-          || (variable[0] >= 'A' && variable[0] <= 'Z')
-          || variable[0] == '_'))
-        return false;
-    for (int i = 1; i < variable.length(); i++) {
-        if (!((variable[i] >= 'a' && variable[i] <= 'z')
-              || (variable[i] >= 'A' && variable[i] <= 'Z')
-              || (variable[i] >= '0' && variable[i] <= '9')
-              || variable[i] == '_'))
-            return false;
-    }
-    return true;
-}
-
 bool isNumber(string str)
 {
     std::string::const_iterator it = str.begin();
@@ -33,7 +17,13 @@ bool isNumber(string str)
     return !str.empty() && it == str.end();
 }
 
-void parseAssign(vector<string> tokens) {
+void Parser::parseAssign() {
+    /*string lhs = expect(std::make_shared<Name>());
+    // pkb populate api
+    expect(=)
+    parsing rhs - check validity and create ast
+            extract
+
     std::regex terms("(\\w+)");
     std::smatch result;
     std::vector<std::string> variableVector;
@@ -48,28 +38,37 @@ void parseAssign(vector<string> tokens) {
         } else if (isNumber(entity)) {
             std::cout<< entity << " constant" << endl;
         }
+        */
 }
 
-void parseStatement(vector<string> tokens) {
-    if (isValidVariableName(tokens.front())){
-        parseAssign(tokens);
-    } else if (tokens.front() == "if") {
-
-    } else if (tokens.front() == "while") {
-
-    } else if (tokens.front() == "print") {
-
-    } else if (tokens.front() == "read") {
-
-    } else {
-        throw std::invalid_argument("Invalid statement");
+StmtNode Parser::parseStmt() {
+    if (isValidVariableName(tokens.front())) {
+        parseAssign();
     }
 }
+
+
 
 std::string Parser::getNextToken() {
     std::string next = this->tokens.front();
     tokens.erase(tokens.begin());
     return next;
+}
+
+bool Parser::isValidVariableName(string variable)
+{
+    if (!((variable[0] >= 'a' && variable[0] <= 'z')
+          || (variable[0] >= 'A' && variable[0] <= 'Z')
+          || variable[0] == '_'))
+        return false;
+    for (int i = 1; i < variable.length(); i++) {
+        if (!((variable[i] >= 'a' && variable[i] <= 'z')
+              || (variable[i] >= 'A' && variable[i] <= 'Z')
+              || (variable[i] >= '0' && variable[i] <= '9')
+              || variable[i] == '_'))
+            return false;
+    }
+    return true;
 }
 
 void Parser::expect(std::shared_ptr<Token> expectedToken) {
@@ -113,8 +112,8 @@ ProcedureNode Parser::parseProcedure() {
 StmtLstNode Parser::parseStmtLst() {
     std::vector<StmtNode> StmtLsts;
 //    do {
-//        //StmtNode sn = parseStmt();
-//        //StmtLsts.push_back(sn);
+//        StmtNode sn = parseStmt();
+//        StmtLsts.push_back(sn);
 //    } while(!RightBrace().isEqual(tokens.front()));
     StmtLstNode node = StmtLstNode(StmtLsts);
     return node;

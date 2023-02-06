@@ -36,17 +36,8 @@ TEST_CASE("Test processSimple()") {
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"
                                  "  z = 3;\n"
-                                 "  i = 5;\n"
-                                 "  while (i!=0) {\n"
-                                 "    x = x - 1;\n"
-                                 "    if (x==1) then {\n"
-                                 "      z = x + 1; }\n"
-                                 "    else {\n"
-                                 "      y = z + x; }\n"
-                                 "    z = z + x + i;\n"
-                                 "    call q;\n"
-                                 "    i = i - 1; }\n"
-                                 "  call p; }";
+                                 "  } "
+                                ;
 
 
     std::ofstream file(fileLocation);

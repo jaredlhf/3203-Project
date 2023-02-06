@@ -12,10 +12,6 @@
 class Parser {
 public:
     void parseProgram(vector<string> tokenList);
-    void parseStatement(vector<string> str);
-    void parseAssign(vector<string> str);
-    bool isValidVariableName(string str);
-    bool isNumber(string str);
 private:
     std::vector<std::string> tokens;
     void expect(std::shared_ptr<Token> expectedToken);
@@ -23,6 +19,9 @@ private:
     ProcedureNode parseProcedure();
     StmtLstNode parseStmtLst();
     StmtNode parseStmt();
+    void parseAssign();
+    bool isValidVariableName(string str);
+    bool isNumber(string str);
 };
 
 #endif
