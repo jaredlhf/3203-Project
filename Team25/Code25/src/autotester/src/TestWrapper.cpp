@@ -14,12 +14,14 @@ TestWrapper::TestWrapper() {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
   sp = SourceProcessor();
+
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
-    sp.processSimple(filename);
+    //TODO: add in pkbPopulator to second argument
+    //sp.processSimple(filename);
 }
 
 // method to evaluating a query
