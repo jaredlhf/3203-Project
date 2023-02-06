@@ -20,7 +20,6 @@ bool Procedure::isEqual(std::string tokenString) {
 }
 
 bool Name::isEqual(std::string tokenString) {
-    std::cout << tokenString << std::endl;
     return isValidName(tokenString);
 }
 

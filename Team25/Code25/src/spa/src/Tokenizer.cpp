@@ -27,7 +27,7 @@ vector<string> Tokenizer::tokenize(const string &str) {
     vector<string> result;
 
     for (string::const_iterator it = str.begin(); it != str.end(); it++) {
-        if (*it == ' ') {
+        if ((*it == ' ') || (*it == '\t'))  {
             if (!next.empty()) {
                 result.push_back(next);
                 next.clear();

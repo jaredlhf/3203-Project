@@ -52,10 +52,10 @@ TEST_CASE("Test processSimple()") {
     std::ofstream file(fileLocation);
     file << fileInput;
     file.close();
-    std::cout << vs.getAllVar().size() << std::endl;
+    //std::cout << vs.getAllVar().size() << std::endl;
 
     sp.processSimple(fileLocation, &p);
 
-    std::cout << vs.getAllVar().size() << std::endl;
+    //std::cout << vs.getAllVar().size() << std::endl;
 
 }

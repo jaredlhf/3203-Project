@@ -1,6 +1,6 @@
 procedure Example {
   x = 2 + x;
-  z = 3 + y + (a + b);
+		z = 3 + y + (a + b);
   h = 232141;
   f1 = h3;
 }

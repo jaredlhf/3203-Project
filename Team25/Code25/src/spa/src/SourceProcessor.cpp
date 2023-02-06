@@ -17,7 +17,6 @@ void SourceProcessor::processSimple(std::string &filename, PkbPopulator* pkbPopu
     Parser p;
 
     std::string fileStr = processFile(filename);
-    std::cout << fileStr << std::endl;
     std::vector<std::string> tokens = t.tokenize(fileStr);
     p.parseProgram(tokens, pkbPopulator);
 }

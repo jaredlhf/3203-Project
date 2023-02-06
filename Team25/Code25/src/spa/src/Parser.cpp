@@ -57,8 +57,7 @@ void Parser::parseProgram(std::vector<std::string> tokenList, PkbPopulator* popu
 
     do {
         if (tokens.empty()) {
-            std::cout << "error: no procedures found" << std::endl;
-            throw 1;
+            throw std::invalid_argument("error: no procedures found");
         } else {
             parseProcedure();
         }
@@ -67,15 +66,10 @@ void Parser::parseProgram(std::vector<std::string> tokenList, PkbPopulator* popu
 
 
 ProcedureNode Parser::parseProcedure() {
-    std::cout << tokens.front() << std::endl;
     expect(std::make_shared<Procedure>());
-    std::cout << "done procedure" << std::endl;
     expect(std::make_shared<Name>());
-    std::cout << "done name" << std::endl;
     expect(std::make_shared<LeftBrace>());
-    std::cout << "done left brace" << std::endl;
     StmtLstNode stmtLst = parseStmtLst();
-    std::cout << "done parseStmtLst" << std::endl;
     ProcedureNode node = ProcedureNode(stmtLst);
     expect(std::make_shared<RightBrace>());
     return node;
@@ -94,9 +88,7 @@ StmtLstNode Parser::parseStmtLst() {
 StmtNode Parser::parseStmt() {
     AssignNode a("a","a");
     if (isValidVariableName(tokens.front())) {
-        std::cout << "check" << std::endl;
         parseAssign();
-        std::cout << "done assign" << std::endl;
     }
     return StmtNode(a);
 }
@@ -123,13 +115,14 @@ void Parser::parseAssign() {
         }
         for (string entity: variableVector)
             if (isValidVariableName((entity))) {
-                std::cout<< entity << " variable" << endl;
                 pkbPopulator->addVar(entity);
             } else if (isNumber(entity)) {
-                std::cout<< entity << " constant" << endl;
+                pkbPopulator->addConst(std::stoi(entity));
             }
+    } else {
+        throw std::invalid_argument("Invalid expression ");
     }
-    std::cout<<rhs<<endl;
+
     expect(std::make_shared<Semicolon>());
 }
 
