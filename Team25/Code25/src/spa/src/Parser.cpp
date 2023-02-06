@@ -51,8 +51,9 @@ std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
     return next;
 }
 
-void Parser::parseProgram(std::vector<std::string> tokenList) {
+void Parser::parseProgram(std::vector<std::string> tokenList, PkbPopulator* populator) {
     this->tokens = tokenList;
+    this->pkbPopulator = populator;
 
     do {
         if (tokens.empty()) {
@@ -104,6 +105,7 @@ StmtNode Parser::parseStmt() {
 void Parser::parseAssign() {
     std::string lhs = expect(std::make_shared<Name>());
     //pkb populate lhs
+    pkbPopulator->addVar(lhs);
     expect(std::make_shared<Equal>());
     std::string rhs = "";
     vector<string> rhsTokens;
@@ -122,6 +124,7 @@ void Parser::parseAssign() {
         for (string entity: variableVector)
             if (isValidVariableName((entity))) {
                 std::cout<< entity << " variable" << endl;
+                pkbPopulator->addVar(entity);
             } else if (isNumber(entity)) {
                 std::cout<< entity << " constant" << endl;
             }

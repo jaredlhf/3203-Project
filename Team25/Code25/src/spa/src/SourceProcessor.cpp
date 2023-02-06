@@ -1,5 +1,10 @@
 #include "SourceProcessor.h"
 
+
+SourceProcessor::SourceProcessor(PkbPopulator* populator) {
+    pkbPopulator = populator
+}
+
 // converts file specified by filename into string, with \n characters removed
 std::string SourceProcessor::processFile(std::string &filename) {
     ifstream inputFile;
@@ -17,5 +22,5 @@ void SourceProcessor::processSimple(std::string &filename) {
 
     std::string fileStr = processFile(filename);
     std::vector<std::string> tokens = t.tokenize(fileStr);
-    p.parseProgram(tokens);
+    p.parseProgram(tokens, pkbPopulator);
 }
