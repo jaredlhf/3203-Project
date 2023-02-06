@@ -41,10 +41,10 @@ TEST_CASE("Tokenize basic query with parantheses and newline") {
 }
 
 TEST_CASE("Tokenize complex query") {
-	string testStr = "assign a; while w;\nSelect a such that Parent* (w, a) pattern a (\"count\", \_)";
+	string testStr = "assign a; while w;\nSelect a such that Parent* (w, a) pattern a (\"count\", \\_)";
 	vector<string> expected{ "assign", "a", ";", "while", "w", ";", "Select", "a",
 		"such", "that", "Parent*", "(", "w", ",", "a", ")", "pattern", "a", 
-		"(", "\"count\"", ",", "\_", ")" };
+		"(", "\"count\"", ",", "\\_", ")" };
 	vector<string> res = qt.tokenize(testStr);
 
 	REQUIRE(res == expected);
