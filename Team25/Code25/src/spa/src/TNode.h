@@ -14,11 +14,11 @@ public:
 
 class AssignNode: public TNode {
 public:
-    AssignNode(string variable, string expression);
+    AssignNode(std::string variable, std::string expression);
 
 private:
-    string variable;
-    string expression;
+    std::string variable;
+    std::string expression;
 };
 
 class StmtNode: public TNode {
@@ -31,10 +31,10 @@ private:
 
 class StmtLstNode: public TNode {
 public:
-    StmtLstNode(vector<StmtNode> stmts);
+    StmtLstNode(std::vector<StmtNode> stmts);
 
 private:
-    vector<StmtNode> statements;
+    std::vector<StmtNode> statements;
 };
 
 class ProcedureNode: public TNode {

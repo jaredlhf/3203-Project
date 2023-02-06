@@ -2,13 +2,13 @@
 
 
 void TNode::accept() {
-    cout << "accept()" << endl;
+    std::cout << "accept()" << std::endl;
 }
 
-AssignNode::AssignNode(string var, string expr) : variable(var), expression(expr) {}
+AssignNode::AssignNode(std::string var, std::string expr) : variable(var), expression(expr) {}
 
 StmtNode::StmtNode(AssignNode a) : assign(a) {}
 
-StmtLstNode::StmtLstNode(vector<StmtNode> stmts) : statements(stmts){}
+StmtLstNode::StmtLstNode(std::vector<StmtNode> stmts) : statements(stmts){}
 
 ProcedureNode::ProcedureNode(StmtLstNode stmtLst) : statementList(stmtLst){}

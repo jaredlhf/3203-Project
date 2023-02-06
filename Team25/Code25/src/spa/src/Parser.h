@@ -4,23 +4,21 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
+#include "Token.h"
 #include "Tokenizer.h"
 #include "TNode.h"
-#include "Token.h"
+
 
 class Parser {
 public:
-    static bool isValidName(string variable);
     void parseProgram(vector<string> tokenList);
 private:
-    vector<string> tokens;
-    void expect(const Token &expectedToken);
-    string getNextToken();
+    std::vector<std::string> tokens;
+    void expect(std::shared_ptr<Token> expectedToken);
+    std::string getNextToken();
     ProcedureNode parseProcedure();
     StmtLstNode parseStmtLst();
-    StmtNode parseStmt()
+    StmtNode parseStmt();
 };
 
 #endif

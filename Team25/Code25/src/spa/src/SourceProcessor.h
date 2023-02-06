@@ -11,6 +11,6 @@ using namespace std;
 
 class SourceProcessor {
 public:
-    string processFile(string &filename);
-    void processSimple(string &filename);
+    std::string processFile(std::string &filename);
+    void processSimple(std::string &filename);
 };

@@ -1,19 +1,21 @@
 #include "SourceProcessor.h"
 
-string SourceProcessor::processFile(string &filename) {
+// converts file specified by filename into string, with \n characters removed
+std::string SourceProcessor::processFile(std::string &filename) {
     ifstream inputFile;
     inputFile.open(filename);
     stringstream strStream;
     strStream << inputFile.rdbuf();
     string res = strStream.str();
+    res.erase(std::remove(res.begin(), res.end(), '\n'), res.end());
     return res;
 }
 
-void SourceProcessor::processSimple(string &filename) {
+void SourceProcessor::processSimple(std::string &filename) {
     Tokenizer t;
     Parser p;
 
-    string fileStr = processFile(filename);
-    vector<string> tokens = t.tokenize(fileStr);
+    std::string fileStr = processFile(filename);
+    std::vector<std::string> tokens = t.tokenize(fileStr);
     p.parseProgram(tokens);
 }

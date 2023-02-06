@@ -2,39 +2,37 @@
 #define TOKEN_H
 
 #include <string>
-
-using namespace std;
-
-#include "Parser.h"
+#include <iostream>
 
 class Token {
 public:
-    virtual bool isValidToken(string tokenString) const;
+    static bool isValidName(std::string variable);
+    virtual bool isEqual(std::string tokenString) = 0;
 };
 
 class Procedure: public Token {
 public:
-    bool isValidToken(string tokenString) const override;
+    bool isEqual(std::string tokenString) override;
 };
 
 class Name: public Token {
 public:
-    bool isValidToken(string tokenString) const override;
+    bool isEqual(std::string tokenString) override;
 };
 
 class LeftBrace: public Token {
 public:
-    bool isValidToken(string tokenString) const override;
+    bool isEqual(std::string tokenString) override;
 };
 
 class RightBrace: public Token {
 public:
-    bool isValidToken(string tokenString) const override;
+    bool isEqual(std::string tokenString) override;
 };
 
 class Statement: public Token {
 public:
-    bool isValidToken(string tokenString) const override;
+    bool isEqual(std::string tokenString) override;
 };
 
 #endif
