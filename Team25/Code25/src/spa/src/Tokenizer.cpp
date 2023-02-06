@@ -21,7 +21,8 @@ string Tokenizer::getNextToken() {
     return next;
 }
 
-vector<string> tokenize(const string &str) {
+vector<string> Tokenizer::tokenize(const string &str) {
+
     string next;
     vector<string> result;
 
@@ -45,6 +46,3 @@ vector<string> tokenize(const string &str) {
         result.push_back(next);
     return result;
 }
-
-
-
