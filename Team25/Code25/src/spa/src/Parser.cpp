@@ -20,17 +20,18 @@ bool isNumber(string str)
 
 void Parser::parseAssign() {
     std::string lhs = expect(std::make_shared<Name>());
-//    std::cout<<lhs<<endl;
+    //    std::cout<<lhs<<endl;
     //pkb populate lhs
-//    expect(std::make_shared<Equal>());
+    expect(std::make_shared<Equal>());
     std::string rhs = "";
-//    while(*(tokens.begin()) != ";") {
-//        rhs = rhs + tokens.front();
-//        tokens.erase(tokens.begin());
-//    }
 
-//    std::cout<<tokens.front()<<endl;
-//    expect(std::make_shared<Semicolon>());
+    while(tokens.front() != ";") {
+        rhs = rhs + tokens.front();
+        tokens.erase(tokens.begin());
+    }
+
+    std::cout<<rhs<<endl;
+    expect(std::make_shared<Semicolon>());
 
 
     /* Extracting constant and variables
@@ -51,7 +52,7 @@ void Parser::parseAssign() {
         */
 }
 
-// check for validity 
+// check for validity
 std::string Parser::parseAssignExpr() {
     std::string expr = "";
     while (!Semicolon().isEqual(tokens.front())) {
