@@ -8,79 +8,15 @@ using namespace std;
 
 #include "Parser.h"
 ExpressionParser expressionParser;
+std::regex value("(\\w+)");
 
-bool isNumber(string str)
+bool Parser::isNumber(string str)
 {
     std::string::const_iterator it = str.begin();
     while (it != str.end() && std::isdigit(*it)) {
         ++it;
     }
     return !str.empty() && it == str.end();
-}
-
-void Parser::parseAssign() {
-    std::string lhs = expect(std::make_shared<Name>());
-    //    std::cout<<lhs<<endl;
-    //pkb populate lhs
-    expect(std::make_shared<Equal>());
-    std::string rhs = "";
-
-    while(tokens.front() != ";") {
-        rhs = rhs + tokens.front();
-        tokens.erase(tokens.begin());
-    }
-
-    std::cout<<rhs<<endl;
-    expect(std::make_shared<Semicolon>());
-
-
-    /* Extracting constant and variables
-    std::regex terms("(\\w+)");
-    std::smatch result;
-    std::vector<std::string> variableVector;
-    for (string token: tokens) {
-        std::regex_search(token, result, terms);
-            variableVector.push_back(result[0]);
-    }
-
-    for (string entity: variableVector)
-        if (isValidVariableName((entity))) {
-            std::cout<< entity << " variable" << endl;
-        } else if (isNumber(entity)) {
-            std::cout<< entity << " constant" << endl;
-        }
-        */
-}
-
-// check for validity
-std::string Parser::parseAssignExpr() {
-    std::string expr = "";
-    while (!Semicolon().isEqual(tokens.front())) {
-       expr = expr + tokens.front();
-       tokens.erase(tokens.begin());
-    }
-    if (tokens.empty()) {
-        throw std::logic_error("Expression cannot be empty");
-    }
-    return expr;
-}
-
-StmtNode Parser::parseStmt() {
-    if (isValidVariableName(tokens.front())) {
-        std::cout << "check" << std::endl;
-        parseAssign();
-        AssignNode a("a","a");
-        std::cout << "done assign" << std::endl;
-        return StmtNode(a);
-    }
-}
-
-
-
-std::string Parser::getNextToken() {
-    std::string next = this->tokens.front();
-    tokens.erase(tokens.begin());
-    return next;
 }
 
 bool Parser::isValidVariableName(string variable)
@@ -97,6 +33,12 @@ bool Parser::isValidVariableName(string variable)
             return false;
     }
     return true;
+}
+
+std::string Parser::getNextToken() {
+    std::string next = this->tokens.front();
+    tokens.erase(tokens.begin());
+    return next;
 }
 
 std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
@@ -148,6 +90,45 @@ StmtLstNode Parser::parseStmtLst() {
     return node;
 }
 
+StmtNode Parser::parseStmt() {
+    AssignNode a("a","a");
+    if (isValidVariableName(tokens.front())) {
+        std::cout << "check" << std::endl;
+        parseAssign();
+        std::cout << "done assign" << std::endl;
+    }
+    return StmtNode(a);
+}
+
+
+void Parser::parseAssign() {
+    std::string lhs = expect(std::make_shared<Name>());
+    //pkb populate lhs
+    expect(std::make_shared<Equal>());
+    std::string rhs = "";
+    vector<string> rhsTokens;
+    while(tokens.front() != ";") {
+        rhs = rhs + tokens.front();
+        rhsTokens.push_back((tokens.front()));
+        tokens.erase(tokens.begin());
+    }
+    if(Parser::expressionParser.verifyExpr((rhs))) {
+        std::smatch result;
+        std::vector<std::string> variableVector;
+        for (string token: rhsTokens) {
+            std::regex_search(token, result, value);
+            variableVector.push_back(result[0]);
+        }
+        for (string entity: variableVector)
+            if (isValidVariableName((entity))) {
+                std::cout<< entity << " variable" << endl;
+            } else if (isNumber(entity)) {
+                std::cout<< entity << " constant" << endl;
+            }
+    }
+    std::cout<<rhs<<endl;
+    expect(std::make_shared<Semicolon>());
+}
 
 
 
