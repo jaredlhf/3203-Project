@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "Parser.h"
+ExpressionParser expressionParser;
 
 bool isNumber(string str)
 {
@@ -18,12 +19,21 @@ bool isNumber(string str)
 }
 
 void Parser::parseAssign() {
-    /*string lhs = expect(std::make_shared<Name>());
-    // pkb populate api
-    expect(=)
-    parsing rhs - check validity and create ast
-            extract
+    std::string lhs = expect(std::make_shared<Name>());
+//    std::cout<<lhs<<endl;
+    //pkb populate lhs
+//    expect(std::make_shared<Equal>());
+    std::string rhs = "";
+//    while(*(tokens.begin()) != ";") {
+//        rhs = rhs + tokens.front();
+//        tokens.erase(tokens.begin());
+//    }
 
+//    std::cout<<tokens.front()<<endl;
+//    expect(std::make_shared<Semicolon>());
+
+
+    /* Extracting constant and variables
     std::regex terms("(\\w+)");
     std::smatch result;
     std::vector<std::string> variableVector;
@@ -41,9 +51,26 @@ void Parser::parseAssign() {
         */
 }
 
+// check for validity 
+std::string Parser::parseAssignExpr() {
+    std::string expr = "";
+    while (!Semicolon().isEqual(tokens.front())) {
+       expr = expr + tokens.front();
+       tokens.erase(tokens.begin());
+    }
+    if (tokens.empty()) {
+        throw std::logic_error("Expression cannot be empty");
+    }
+    return expr;
+}
+
 StmtNode Parser::parseStmt() {
     if (isValidVariableName(tokens.front())) {
+        std::cout << "check" << std::endl;
         parseAssign();
+        AssignNode a("a","a");
+        std::cout << "done assign" << std::endl;
+        return StmtNode(a);
     }
 }
 
@@ -71,13 +98,14 @@ bool Parser::isValidVariableName(string variable)
     return true;
 }
 
-void Parser::expect(std::shared_ptr<Token> expectedToken) {
+std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
     std::string next = getNextToken();
     if (!expectedToken->isEqual(next)) {
         std::cout << "error: unexpected token, got: " << next << std::endl;
 
         throw 1;
     }
+    return next;
 }
 
 void Parser::parseProgram(std::vector<std::string> tokenList) {
@@ -111,10 +139,10 @@ ProcedureNode Parser::parseProcedure() {
 
 StmtLstNode Parser::parseStmtLst() {
     std::vector<StmtNode> StmtLsts;
-//    do {
-//        StmtNode sn = parseStmt();
-//        StmtLsts.push_back(sn);
-//    } while(!RightBrace().isEqual(tokens.front()));
+    do {
+        StmtNode sn = parseStmt();
+        StmtLsts.push_back(sn);
+    } while(!RightBrace().isEqual(tokens.front()));
     StmtLstNode node = StmtLstNode(StmtLsts);
     return node;
 }
