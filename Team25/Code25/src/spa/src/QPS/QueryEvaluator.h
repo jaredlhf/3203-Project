@@ -6,6 +6,7 @@
 #include "ParserResponse.h"
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
+#include "PKB/PkbRetriever.h"
 
 using namespace std;
 
@@ -13,8 +14,8 @@ class QueryEvaluator {
 private:
 	unordered_map<string, Synonym> declarations;
 	Synonym resultSynonym;
-	void handleParserResponse(ParserResponse &response);
+	void handleParserResponse(ParserResponse& response);
 
 public:
-	list<string> evaluate(ParserResponse response);
+	list<string> evaluate(ParserResponse response, PkbRetriever* pkbRetriever);
 };

@@ -1,19 +1,12 @@
-#include <string>
-#include <list>
-#include <vector>
 #include <unordered_set>
 #include "QueryEvaluator.h"
-#include "ParserResponse.h"
-#include "constants/Synonym.h"
-#include "constants/Constants.h"
-//#include "PKB/PkbRetriever.h"
 
 using namespace std;
 
 // Adds the data from the parser into the class attributes
-void QueryEvaluator::handleParserResponse(ParserResponse &response) {
+void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	vector<vector<string>> rawDeclarations = response.getDeclarations();
-	for (vector<string> &row : rawDeclarations) {
+	for (vector<string>& row : rawDeclarations) {
 		string decType = row[0];
 		for (int i = 1; i < row.size(); i++) {
 			if (row[i] == ",") {
@@ -25,17 +18,18 @@ void QueryEvaluator::handleParserResponse(ParserResponse &response) {
 	}
 
 	string resultName = response.getSynonym();
+	cerr << resultName << endl;
 	resultSynonym = declarations[resultName];
 }
 
-list<string> QueryEvaluator::evaluate(ParserResponse response /*, PkbRetriever pr*/) {
+list<string> QueryEvaluator::evaluate(ParserResponse response, PkbRetriever* pkbRetriever) {
 	list<string> result;
 	handleParserResponse(response);
 
-	//unordered_set<string> *resSet = pr.getAllVar();
-	//for (const string& variable : (*resSet)) {
-	//	resultSynonym.insert(variable);
-	//}
+	unordered_set<string> resSet = (*pkbRetriever).getAllVar();
+	for (const string& variable : resSet) {
+		resultSynonym.addMatchingResult(variable);
+	}
 
 	for (const string& answer : resultSynonym.getMatches()) {
 		result.push_back(answer);
