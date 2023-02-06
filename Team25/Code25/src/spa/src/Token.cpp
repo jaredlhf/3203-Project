@@ -37,4 +37,12 @@ bool Statement::isEqual(std::string tokenString) {
     return true;
 }
 
+bool Equal::isEqual(std::string tokenString) {
+    return tokenString == "=";
+}
+
+bool Semicolon::isEqual(std::string tokenString) {
+    return tokenString == ";";
+}
+
 

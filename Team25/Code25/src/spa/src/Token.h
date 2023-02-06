@@ -35,4 +35,14 @@ public:
     bool isEqual(std::string tokenString) override;
 };
 
+class Equal: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class Semicolon: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
 #endif
