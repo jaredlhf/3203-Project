@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#include "sp/Tokenizer.h"
+#include "Tokenizer.h"
 
 void Tokenizer::setTokens( vector<string> tok ) {
     tokens = tok;
