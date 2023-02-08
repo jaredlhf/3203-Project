@@ -3,70 +3,79 @@
 #include <string>
 #include <unordered_set>
 
-using namespace std;
 
 class Synonym {
 protected:
-    unordered_set<string> matches;
-    string name;
-    string keyword;
+    std::unordered_set<std::string> matches;
+    std::string name;
+    std::string keyword;
 
 public:
     Synonym();
-    Synonym(string inputName);
-    bool matchesKeyword(string inputString);
-    bool matchesName(string inputName);
-    void addMatchingResult(string result);
-    unordered_set<string> getMatches();
-    static Synonym create(string type, string name);
+    Synonym(const std::string& inputName);
+    bool matchesKeyword(const std::string& inputString);
+    bool matchesName(const std::string& inputName);
+    void addMatchingResult(const std::string& result);
+    std::unordered_set<std::string> getMatches();
+    static Synonym create(const std::string& type, const std::string& name);
 };
 
 class StmtSynonym : public Synonym {
 public:
-    StmtSynonym(string name);
+    StmtSynonym(const std::string& name);
 };
 
 class ReadSynonym : public Synonym {
 public:
-    ReadSynonym(string name);
+    ReadSynonym(const std::string& name);
 };
 
 class PrintSynonym : public Synonym {
 public:
-    PrintSynonym(string name);
+    PrintSynonym(const std::string& name);
 };
 
 class CallSynonym : public Synonym {
 public:
-    CallSynonym(string name);
+    CallSynonym(const std::string& name);
 };
 
 class WhileSynonym : public Synonym {
 public:
-    WhileSynonym(string name);
+    WhileSynonym(const std::string& name);
 };
 
 class IfSynonym : public Synonym {
 public:
-    IfSynonym(string name);
+    IfSynonym(const std::string& name);
 };
 
 class AssignSynonym : public Synonym {
 public:
-    AssignSynonym(string name);
+    AssignSynonym(const std::string& name);
 };
 
 class VariableSynonym : public Synonym {
 public:
-    VariableSynonym(string name);
+    VariableSynonym(const std::string& name);
 };
 
 class ConstantSynonym : public Synonym {
 public:
-    ConstantSynonym(string name);
+    ConstantSynonym(const std::string& name);
 };
 
 class ProcedureSynonym : public Synonym {
 public:
-    ProcedureSynonym(string name);
+    ProcedureSynonym(const std::string& name);
+};
+
+class SyntaxErrorSynonym : public Synonym {
+public:
+    SyntaxErrorSynonym(const std::string& name);
+};
+
+class SemanticErrorSynonym : public Synonym {
+public:
+    SemanticErrorSynonym(const std::string& name);
 };

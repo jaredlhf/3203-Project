@@ -3,19 +3,19 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include "ParserResponse.h"
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
 #include "PKB/PkbRetriever.h"
 
-using namespace std;
 
 class QueryEvaluator {
 private:
-	unordered_map<string, Synonym> declarations;
+	std::unordered_map<std::string, Synonym> declarations;
 	Synonym resultSynonym;
 	void handleParserResponse(ParserResponse& response);
 
 public:
-	list<string> evaluate(ParserResponse response, PkbRetriever* pkbRetriever);
+	std::list<std::string> evaluate(ParserResponse response, PkbRetriever* pkbRetriever);
 };

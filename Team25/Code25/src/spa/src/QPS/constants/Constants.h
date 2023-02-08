@@ -2,18 +2,18 @@
 
 #include <string>
 
-using namespace std;
-
 class Constants {
 public:
-	static const string STMT;
-	static const string READ;
-	static const string PRINT;
-	static const string CALL;
-	static const string WHILE;
-	static const string IF;
-	static const string ASSIGN;
-	static const string VARIABLE;
-	static const string CONSTANT;
-	static const string PROCEDURE;
+	static const std::string STMT;
+	static const std::string READ;
+	static const std::string PRINT;
+	static const std::string CALL;
+	static const std::string WHILE;
+	static const std::string IF;
+	static const std::string ASSIGN;
+	static const std::string VARIABLE;
+	static const std::string CONSTANT;
+	static const std::string PROCEDURE;
+	static const std::string SYNTAX_ERROR;
+	static const std::string SEMANTIC_ERROR;
 };

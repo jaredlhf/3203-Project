@@ -1,20 +1,14 @@
-#include <stdio.h>
-#include <unordered_set>
 #include "QueryParser.h"
 #include "ParserResponse.h"
-#include <map>
-#include <iostream>
 
-using namespace std;
-
-string SELECT_MARKER = "Select";
-string PATTERN_MARKER = "pattern";
-vector<string> SUCHTHAT_MARKER = {"such", "that"};
-vector<string> DESIGN_ENTITIES = {"stmt", "read", "print", "call", 
+std::string SELECT_MARKER = "Select";
+std::string PATTERN_MARKER = "pattern";
+std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
+std::vector<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call",
 "while", "if", "assign", "variable", "constant", "procedure"};
 int MIN_DECLARATION_LENGTH = 2;
 
-bool QueryParser::isValidIntegerString(string s) {
+bool QueryParser::isValidIntegerString(const std::string& s) {
     // checks if string exists
     if (s.empty()) {
         return false;
@@ -24,7 +18,7 @@ bool QueryParser::isValidIntegerString(string s) {
     try {
         int v = stoi(s);
     } 
-    catch (exception &err) {
+    catch (std::exception &err) {
         return false;
     }
 
@@ -36,16 +30,16 @@ bool QueryParser::isValidIntegerString(string s) {
     return true;
 }
 
-bool QueryParser::isValidNaming(string s) {
+bool QueryParser::isValidNaming(const std::string& s) {
     // checks if first character of synonym name or variable name starts with a letter
     for (int i = 0; i < s.length(); i++) {
         if (i == 0 && !isalpha(s[i])) {
-            cout << "not alphabet" << endl;
+            std::cout << "not alphabet" << std::endl;
             return false;
         }
 
         if (!isalpha(s[i]) && !isdigit(s[i])) {
-            cout << "not alphabet or number" << endl;
+            std::cout << "not alphabet or number" << std::endl;
             return false;
         }
     }
@@ -53,17 +47,18 @@ bool QueryParser::isValidNaming(string s) {
     return true;
 }
 
-bool QueryParser::isValidDeclaration(vector<string> s, 
-    unordered_set<string>& declared_synonyms, unordered_set<string>& assignment_synonyms) {
+bool QueryParser::isValidDeclaration(std::vector<std::string> s,
+    std::unordered_set<std::string>& declared_synonyms, 
+    std::unordered_set<std::string>& assignment_synonyms) {
     
     if (s.size() < MIN_DECLARATION_LENGTH) {
-        cout << "too short" << endl;
+        std::cout << "too short" << std::endl;
         return false;
     }
 
     // check if design entity is valid
     if (find(DESIGN_ENTITIES.begin(), DESIGN_ENTITIES.end(), s[0]) == DESIGN_ENTITIES.end()) {
-        cout << "design entity wrong" << endl;
+        std::cout << "design entity wrong" << std::endl;
         return false;
     }
 
@@ -71,21 +66,21 @@ bool QueryParser::isValidDeclaration(vector<string> s,
 
         // checking that variables are separated by commas
         if (i % 2 == 0 && s[i] != ",") {
-            cout << "not csv" << endl;
+            std::cout << "not csv" << std::endl;
             return false;
         }
 
         // checking if variable names are in correct format and not repeated
         if (i % 2 != 0) {
             if (!isValidNaming(s[i])) {
-                cout << "wrong name" << endl;
+                std::cout << "wrong name" << std::endl;
                 return false;
             }
 
             
             if (declared_synonyms.find(s[i]) != declared_synonyms.end()) {
                 
-                cout << "redefined synonym" << endl;
+                std::cout << "redefined synonym" << std::endl;
                 return false;
             }
             if (s[0] == "assign") {
@@ -112,17 +107,17 @@ bool QueryParser::isValidDeclaration(vector<string> s,
 //     }    
 // }
 
-ParserResponse QueryParser::parseQueryTokens(vector<string> tokens) {
+ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     ParserResponse responseObject;
 
-    vector<vector<string>> declarations = {};
-    string synonym = "";
+    std::vector<std::vector<std::string>> declarations = {};
+    std::string synonym = "";
     // vector<string> suchThatClause = {};
     // vector<string> patternClause = {};
     
-    unordered_set<string> declared_synonyms = {};
-    unordered_set<string> assignment_synonyms = {};
+    std::unordered_set<std::string> declared_synonyms = {};
+    std::unordered_set<std::string> assignment_synonyms = {};
 
     int ptr = 0;
     bool isDeclaration = true;
@@ -131,7 +126,7 @@ ParserResponse QueryParser::parseQueryTokens(vector<string> tokens) {
 
         // get declarations
         if (isDeclaration) {
-            vector<string> declaration = {};
+            std::vector<std::string> declaration = {};
             while (tokens[ptr] != ";" && ptr < tokens.size()) {
 
                 declaration.push_back(tokens[ptr]);
