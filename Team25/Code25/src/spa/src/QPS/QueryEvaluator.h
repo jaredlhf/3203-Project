@@ -1,9 +1,11 @@
 #pragma once
+
 #include <string>
 #include <list>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <memory>
 #include "ParserResponse.h"
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
@@ -12,8 +14,8 @@
 
 class QueryEvaluator {
 private:
-	std::unordered_map<std::string, Synonym> declarations;
-	Synonym resultSynonym;
+	std::unordered_map<std::string, std::shared_ptr<Synonym>> declarations;
+	std::shared_ptr<Synonym> resultSynonym;
 	void handleParserResponse(ParserResponse& response);
 
 public:

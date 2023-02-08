@@ -2,22 +2,34 @@
 
 #include <string>
 #include <unordered_set>
+#include <memory>
+#include "Entity.h"
 
 
-class Synonym {
+class Synonym : public Entity {
 protected:
     std::unordered_set<std::string> matches;
     std::string name;
     std::string keyword;
 
 public:
+    // Constructor functions
     Synonym();
     Synonym(const std::string& inputName);
+
+    // Synonym instance functions
     bool matchesKeyword(const std::string& inputString);
     bool matchesName(const std::string& inputName);
     void addMatchingResult(const std::string& result);
-    std::unordered_set<std::string> getMatches();
-    static Synonym create(const std::string& type, const std::string& name);
+    virtual std::unordered_set<std::string> getMatches();
+
+    // Static functions
+    static std::shared_ptr<Synonym> create(const std::string& type, const std::string& name);
+
+    // Overriden functions
+    bool isConstant() override;
+    bool isSynonym() override;
+    bool isWildcard() override;
 };
 
 class StmtSynonym : public Synonym {

@@ -16,7 +16,6 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	}
 
 	std::string resultName = response.getSynonym();
-	cerr << resultName << endl;
 	resultSynonym = declarations[resultName];
 }
 
@@ -26,10 +25,10 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, PkbRetr
 
 	std::unordered_set<std::string> resSet = (*pkbRetriever).getAllVar();
 	for (const std::string& variable : resSet) {
-		resultSynonym.addMatchingResult(variable);
+		resultSynonym->addMatchingResult(variable);
 	}
 
-	for (const std::string& answer : resultSynonym.getMatches()) {
+	for (const std::string& answer : resultSynonym->getMatches()) {
 		result.push_back(answer);
 	}
 
