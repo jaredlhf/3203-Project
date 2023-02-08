@@ -48,11 +48,22 @@ bool ModifiesStore::hasModStmt(int lineNum) {
 	}
 }
 
-/*unordered_set<string> ModifiesStore::getAllModVar() {
+unordered_set<string> ModifiesStore::getAllModVar() {
+	unordered_set<string> modVarList;
+	
+	for (const auto& [key, value] : modVarStore) {
+			modVarList.insert(value.begin(), value.end());
+		}
+	return modVarList;
 }
 
 unordered_set<int> ModifiesStore::getAllModStmt() {
-}*/
+	unordered_set<int> modStmtList;
+	for (const auto& [key, value] : modStmtStore) {
+		modStmtList.insert(value.begin(), value.end());
+	}
+	return modStmtList;
+}
 
 void ModifiesStore::clear() {
 	modStmtStore.clear();

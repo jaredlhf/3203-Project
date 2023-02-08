@@ -23,8 +23,8 @@ public:
 	unordered_set<int> getModStmt(string varName);
 	bool hasModVar(string varName);
 	bool hasModStmt(int lineNum);
-	/*unordered_set<string> getAllModVar();
-	unordered_set<int> getAllModStmt();*/
+	unordered_set<string> getAllModVar();
+	unordered_set<int> getAllModStmt();
 	
 	void clear();
 };
