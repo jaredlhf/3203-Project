@@ -7,7 +7,7 @@ StatementStore stmtStore;
 
 TEST_CASE("Empty statement store") {
 	unordered_set<int> output({ });
-
+    stmtStore.clear();
 	REQUIRE(stmtStore.size() == 0);
 	REQUIRE(stmtStore.getAllStmt("") == output);
 }

@@ -7,7 +7,7 @@ ConstantStore constStore;
 
 TEST_CASE("Empty constant store") {
 	unordered_set<int> output({ });
-
+    constStore.clear();
 	REQUIRE(constStore.size() == 0);
 	REQUIRE(constStore.getAllConst() == output);
 }

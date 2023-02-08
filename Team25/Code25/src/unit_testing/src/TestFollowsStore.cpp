@@ -7,7 +7,7 @@ FollowsStore followsStore;
 
 TEST_CASE("Empty follows store") {
 	unordered_set<int> output({ });
-
+    followsStore.clear();
 	REQUIRE(followsStore.getAllFollowers().size() == 0);
 	REQUIRE(followsStore.getAllFollowees().size() == 0);
 	REQUIRE(followsStore.getAllFollowers() == output);
