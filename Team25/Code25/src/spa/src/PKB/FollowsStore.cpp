@@ -54,19 +54,19 @@ bool FollowsStore::hasFollows(int leftLineNum, int rightLineNum) {
 }
 
 unordered_set<int> FollowsStore::getAllFollowers() {
-	unordered_set<int> followers;
-	for (auto keyValueIt : followerStore) {
-		followers.insert(keyValueIt.first);
+	unordered_set<int> followerList;
+	for (const auto& [key, value] : followerStore) {
+		followerList.insert(value);
 	}
-	return followers;
+	return followerList;
 }
 
 unordered_set<int> FollowsStore::getAllFollowees() {
-	unordered_set<int> followees;
-	for (auto keyValueIt : followeeStore) {
-		followees.insert(keyValueIt.first);
+	unordered_set<int> followeeList;
+	for (const auto& [key, value] : followeeStore) {
+		followeeList.insert(value);
 	}
-	return followees;
+	return followeeList;
 }
 
 void FollowsStore::clear() {
