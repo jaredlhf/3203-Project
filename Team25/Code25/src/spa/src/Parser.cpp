@@ -106,7 +106,7 @@ void Parser::parseAssign() {
         rhsTokens.push_back((tokens.front()));
         tokens.erase(tokens.begin());
     }
-    if(Parser::expressionParser.verifyExpr((rhs))) {
+    if(Parser::expressionParser.isExpr((rhs))) {
         std::smatch result;
         std::vector<std::string> variableVector;
         for (string token: rhsTokens) {

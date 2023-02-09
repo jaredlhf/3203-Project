@@ -1,12 +1,15 @@
 #include <string>
 #include <regex>
 #include <stack>
+#include <sstream>
+#include <iostream>
 #include "ExpressionParser.h"
 
 using namespace std;
 
 std::regex terms("(\\w+)");
 std::regex validExpression("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*[+\\*\\-%\\/]\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
+std::regex validRelExpression("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*([\\<>]|[<>!=]=)\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
 
 bool ExpressionParser::isNumber(std::string str)
 {
@@ -59,7 +62,7 @@ bool ExpressionParser::checkParenthesis(std::string expr) {
     }
 }
 
-bool ExpressionParser::verifyExpr(std::string expr) {
+bool ExpressionParser::isExpr(std::string expr) {
     if (regex_match(expr, validExpression)) {
         if (checkParenthesis(expr)) {
             std::smatch result;
@@ -80,5 +83,78 @@ bool ExpressionParser::verifyExpr(std::string expr) {
     }
     else {
         return false;
+    }
+}
+
+bool ExpressionParser::isRelExpr(std::string expr) {
+    if (regex_match(expr, validRelExpression)) {
+        if (checkParenthesis(expr)) {
+            std::smatch result;
+
+            while (std::regex_search(expr, result, terms)) {
+                bool isValidName = isName(result[0]);
+                bool isValidInteger = isNumber(result[0]);
+                bool isValidExpr = isExpr(result[0]);
+                if (!isValidName && !isValidInteger && !isValidExpr) {
+                    return false;
+                }
+                expr = result.suffix().str();
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+};
+
+bool ExpressionParser::isCondExpr(std::string expr) {
+    char firstChar = expr.at(0);
+    // for ! case
+    if (firstChar == '!') {
+        // erase ! char
+        expr.erase(expr.begin());
+        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
+            //erase first (
+            expr.erase(expr.begin());
+            //erase last )
+            expr.pop_back();
+            return isRelExpr((expr));
+        } else {
+            throw std::invalid_argument("Invalid parenthesis in conditional expression");
+        }
+    // for && case
+    } else if (expr.find("&&") != std::string::npos) {
+        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
+            std::size_t andPos = expr.find("&&");
+            //erase first (
+            expr.erase(expr.begin());
+            //erase last )
+            expr.pop_back();
+            std::string firstSub = expr.substr(0, andPos - 1);
+            std::string secondSub = expr.substr(andPos + 1);
+            return isRelExpr(firstSub) && isRelExpr((secondSub));
+        } else {
+            throw std::invalid_argument("Invalid parenthesis in conditional expression");
+        }
+    // for || case
+    } else if (expr.find("||") != std::string::npos){
+        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
+            std::size_t orPos = expr.find("||");
+            //erase first (
+            expr.erase(expr.begin());
+            //erase last )
+            expr.pop_back();
+            std::string firstSub = expr.substr(0, orPos - 1);
+            std::string secondSub = expr.substr(orPos + 1);
+            return isRelExpr(firstSub) && isRelExpr((secondSub));
+        } else {
+            throw std::invalid_argument("Invalid parenthesis in conditional expression");
+        }
+    } else {
+        return isRelExpr(expr);
     }
 }
