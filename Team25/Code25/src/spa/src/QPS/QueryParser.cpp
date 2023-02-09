@@ -168,11 +168,12 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         //     }
         // }
     }
-
+    ptr++;
+    
     responseObject.setDeclarations(declarations);
     responseObject.setSynonym(synonym);
 
     return responseObject;
-       
+    
 
 }
