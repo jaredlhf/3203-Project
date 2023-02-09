@@ -40,6 +40,8 @@ std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::str
     if (type == Constants::VARIABLE) return std::make_shared<VariableSynonym>(VariableSynonym(name));
     if (type == Constants::CONSTANT) return std::make_shared<ConstantSynonym>(ConstantSynonym(name));
     if (type == Constants::PROCEDURE) return std::make_shared<ProcedureSynonym>(ProcedureSynonym(name));
+    if (type == Constants::SYNTAX_ERROR) return std::make_shared<SyntaxErrorSynonym>(SyntaxErrorSynonym(name));
+    if (type == Constants::SEMANTIC_ERROR) return std::make_shared<SemanticErrorSynonym>(SemanticErrorSynonym(name));
     
     return std::make_shared<Synonym>(Synonym(name));
 }

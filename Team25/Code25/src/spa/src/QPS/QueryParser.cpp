@@ -92,7 +92,21 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
 }
 
 std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vector<std::string> declaration) {
+    std::vector<std::shared_ptr<Synonym>> declarations = {};
 
+    std::string keyword = declaration[0];
+    for (int i = 1; i < declaration.size(); i++) {
+
+        if (i % 2 == 0) {
+            continue;
+        }
+
+        // creating the Synonym
+        if (i % 2 != 0) {
+            declarations.push_back(Synonym::create(keyword, declaration[i]));
+        }
+    }
+    return declarations;
 }
 // bool QueryParser::isValidPatternClause(vector<string> s) {
 //     // check if syn-assign is declared
@@ -110,8 +124,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     ParserResponse responseObject;
 
-    std::vector<std::vector<std::string>> declarations = {};
-    std::string synonym = "";
+    std::vector<std::shared_ptr<Synonym>> declarations = {};
+    std::shared_ptr<Synonym> synonym = nullptr;
     // vector<string> suchThatClause = {};
     // vector<string> patternClause = {};
     
@@ -127,15 +141,16 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         if (isDeclaration) {
             std::vector<std::string> declaration = {};
             while (tokens[ptr] != ";" && ptr < tokens.size()) {
-
                 declaration.push_back(tokens[ptr]);
                 ptr++;
             }
             ptr++;
             if (isValidDeclaration(declaration, declared_synonyms, assignment_synonyms)) {
-                declarations.push_back(declaration);
+                std::vector<std::shared_ptr<Synonym>> temp = processDeclaration(declaration);
+                declarations.insert(declarations.end(), temp.begin(), temp.end());
             } else {
-                declarations.push_back({"SyntaxError"});
+                synonym = Synonym::create(Constants::SYNTAX_ERROR, "");
+                break;
             }
         }
 
@@ -145,7 +160,11 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             afterSynonym = true;
             ptr++;
             if (ptr < tokens.size()) {
-                synonym = tokens[ptr];
+                for (std::shared_ptr<Synonym> element: declarations) {
+                    if (element->matchesName(tokens[ptr])) {
+                        synonym = element;
+                    }
+                }
             }
             ptr++;
         }
@@ -173,6 +192,4 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     responseObject.setSynonym(synonym);
 
     return responseObject;
-    
-
 }
