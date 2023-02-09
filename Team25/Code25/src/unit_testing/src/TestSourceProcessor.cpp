@@ -1,5 +1,5 @@
 
-#include "SourceProcessor.h"
+#include "SP/SourceProcessor.h"
 #include "catch.hpp"
 
 #include "PKB/PkbPopulator.h"

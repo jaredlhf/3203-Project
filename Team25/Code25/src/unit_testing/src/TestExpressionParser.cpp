@@ -1,6 +1,6 @@
 
-#include "ExpressionParser.h"
-#include "ExpressionParser.cpp"
+#include "SP/ExpressionParser.h"
+#include "SP/ExpressionParser.cpp"
 #include "catch.hpp"
 #include <regex>
 #include <iostream>

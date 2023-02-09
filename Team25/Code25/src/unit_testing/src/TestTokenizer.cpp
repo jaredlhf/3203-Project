@@ -1,5 +1,5 @@
-#include "Tokenizer.h"
-#include "Tokenizer.cpp"
+#include "SP/Tokenizer.h"
+#include "SP/Tokenizer.cpp"
 #include "catch.hpp"
 #include <regex>
 
