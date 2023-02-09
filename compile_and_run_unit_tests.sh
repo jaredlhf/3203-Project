@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
+set -e
 
+# remove old build directory
+if [ -d "Team25/Code25/build" ]
+then
+    echo "removing old build directory"
+    rm -r Team25/Code25/build
+fi
+
+mkdir Team25/Code25/build
 
 
 if [ $1 = "-a" ]

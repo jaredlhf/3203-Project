@@ -1,11 +1,15 @@
 #include "QueryParser.h"
 #include "ParserResponse.h"
+#include "constants/Constants.h"
+#include "constants/Synonym.h"
 
 std::string SELECT_MARKER = "Select";
 std::string PATTERN_MARKER = "pattern";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
-std::vector<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call",
-"while", "if", "assign", "variable", "constant", "procedure"};
+
+std::vector<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
+Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
+
 int MIN_DECLARATION_LENGTH = 2;
 
 bool QueryParser::isValidIntegerString(const std::string& s) {
@@ -34,12 +38,10 @@ bool QueryParser::isValidNaming(const std::string& s) {
     // checks if first character of synonym name or variable name starts with a letter
     for (int i = 0; i < s.length(); i++) {
         if (i == 0 && !isalpha(s[i])) {
-            std::cout << "not alphabet" << std::endl;
             return false;
         }
 
         if (!isalpha(s[i]) && !isdigit(s[i])) {
-            std::cout << "not alphabet or number" << std::endl;
             return false;
         }
     }
@@ -52,13 +54,11 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     std::unordered_set<std::string>& assignment_synonyms) {
     
     if (s.size() < MIN_DECLARATION_LENGTH) {
-        std::cout << "too short" << std::endl;
         return false;
     }
 
     // check if design entity is valid
     if (find(DESIGN_ENTITIES.begin(), DESIGN_ENTITIES.end(), s[0]) == DESIGN_ENTITIES.end()) {
-        std::cout << "design entity wrong" << std::endl;
         return false;
     }
 
@@ -66,21 +66,17 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
 
         // checking that variables are separated by commas
         if (i % 2 == 0 && s[i] != ",") {
-            std::cout << "not csv" << std::endl;
             return false;
         }
 
         // checking if variable names are in correct format and not repeated
         if (i % 2 != 0) {
             if (!isValidNaming(s[i])) {
-                std::cout << "wrong name" << std::endl;
                 return false;
             }
 
             
             if (declared_synonyms.find(s[i]) != declared_synonyms.end()) {
-                
-                std::cout << "redefined synonym" << std::endl;
                 return false;
             }
             if (s[0] == "assign") {
@@ -95,6 +91,9 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     return true;
 }
 
+std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vector<std::string> declaration) {
+
+}
 // bool QueryParser::isValidPatternClause(vector<string> s) {
 //     // check if syn-assign is declared
 //     if (assignment_synonyms.find(s[0]) == assignment_synonyms.end()) {
@@ -169,7 +168,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         // }
     }
     ptr++;
-    
+
     responseObject.setDeclarations(declarations);
     responseObject.setSynonym(synonym);
 

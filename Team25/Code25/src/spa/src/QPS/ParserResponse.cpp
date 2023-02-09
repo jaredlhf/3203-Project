@@ -1,4 +1,4 @@
-#include "ParserResponse.h";
+#include "ParserResponse.h"
 
 
 void ParserResponse::setDeclarations(std::vector<std::vector<std::string>> declarations) {
