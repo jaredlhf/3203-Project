@@ -13,5 +13,5 @@ using namespace std;
 class SourceProcessor {
 public:
     std::string processFile(std::string &filename);
-    void processSimple(std::string &filename, PkbPopulator* pkbPopulator);
+    void processSimple(std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator);
 };

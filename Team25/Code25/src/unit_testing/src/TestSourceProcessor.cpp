@@ -54,7 +54,7 @@ TEST_CASE("Test processSimple()") {
     file.close();
     //std::cout << vs.getAllVar().size() << std::endl;
 
-    sp.processSimple(fileLocation, &p);
+    sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(p));
 
     //std::cout << vs.getAllVar().size() << std::endl;
 

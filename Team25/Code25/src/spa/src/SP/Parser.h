@@ -13,11 +13,13 @@
 
 class Parser {
 public:
-    void parseProgram(vector<string> tokenList, PkbPopulator* populator);
+    void parseProgram(vector<string> tokenList, std::shared_ptr<PkbPopulator> populator);
 private:
     ExpressionParser expressionParser;
-    PkbPopulator* pkbPopulator;
+    std::shared_ptr<PkbPopulator> pkbPopulator;
     std::vector<std::string> tokens;
+
+
     std::string expect(std::shared_ptr<Token> expectedToken);
     std::string getNextToken();
     ProcedureNode parseProcedure();
@@ -26,7 +28,7 @@ private:
     void parseAssign();
     std::string parseAssignExpr();
     bool isValidVariableName(string str);
-    bool isNumber(string str);
+    bool isNumber(const string& str);
 };
 
 #endif

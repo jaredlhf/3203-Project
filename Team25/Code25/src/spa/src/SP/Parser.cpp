@@ -4,13 +4,12 @@
 #include <vector>
 #include <regex>
 
-using namespace std;
 
 #include "Parser.h"
 ExpressionParser expressionParser;
 std::regex value("(\\w+)");
 
-bool Parser::isNumber(string str)
+bool Parser::isNumber(const std::string& str)
 {
     std::string::const_iterator it = str.begin();
     while (it != str.end() && std::isdigit(*it)) {
@@ -19,7 +18,7 @@ bool Parser::isNumber(string str)
     return !str.empty() && it == str.end();
 }
 
-bool Parser::isValidVariableName(string variable)
+bool Parser::isValidVariableName(std::string variable)
 {
     if (!((variable[0] >= 'a' && variable[0] <= 'z')
           || (variable[0] >= 'A' && variable[0] <= 'Z')
@@ -51,7 +50,7 @@ std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
     return next;
 }
 
-void Parser::parseProgram(std::vector<std::string> tokenList, PkbPopulator* populator) {
+void Parser::parseProgram(std::vector<std::string> tokenList, std::shared_ptr<PkbPopulator> populator) {
     this->tokens = tokenList;
     this->pkbPopulator = populator;
 
