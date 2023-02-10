@@ -15,7 +15,7 @@
 
 class QueryEvaluator {
 private:
-	std::unordered_map<std::string, std::shared_ptr<Synonym>> declarations;
+	std::vector<std::shared_ptr<Synonym>> declarations;
 	std::shared_ptr<Synonym> resultSynonym;
 	void handleParserResponse(ParserResponse& response);
 	Constants::ClauseResult resolveClause(std::vector<std::shared_ptr<Clause>> clauses);

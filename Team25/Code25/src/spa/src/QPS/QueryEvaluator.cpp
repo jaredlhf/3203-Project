@@ -3,20 +3,9 @@
 
 // Adds the data from the parser into the class attributes
 void QueryEvaluator::handleParserResponse(ParserResponse& response) {
-	std::vector<std::vector<std::string>> rawDeclarations = response.getDeclarations();
-	for (std::vector<std::string>& row : rawDeclarations) {
-		std::string decType = row[0];
-		for (int i = 1; i < row.size(); i++) {
-			if (row[i] == ",") {
-				continue;
-			}
-			std::string varName = row[i];
-			declarations.insert({varName, Synonym::create(decType, varName)});
-		}
-	}
+	this->declarations = response.getDeclarations();
+	this->resultSynonym = response.getSynonym();
 
-	std::string resultName = response.getSynonym();
-	resultSynonym = declarations[resultName];
 }
 
 Constants::ClauseResult QueryEvaluator::resolveClause(std::vector<std::shared_ptr<Clause>> clauses) {

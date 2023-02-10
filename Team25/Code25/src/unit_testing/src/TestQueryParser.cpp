@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "QPS/QueryParser.h"
 #include "QPS/ParserResponse.h"
-#include "constants/Synonym.h"
-#include "constants/Constants.h"
+#include "QPS/constants/Synonym.h"
+#include "QPS/constants/Constants.h"
 
 #include <iostream>
 

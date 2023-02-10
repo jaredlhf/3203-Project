@@ -22,8 +22,8 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 				PkbRetriever pkbRetriever(&vs, &cs, &fs, &ps, &ss);
 
-				response.setDeclarations({ {"variable", "v", ",", "x"} });
-				response.setSynonym("v");
+				response.setDeclarations({Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
+				response.setSynonym(Synonym::create(Constants::VARIABLE, "v"));
 				vs.addVar("x");
 				vs.addVar("y");
 				vs.addVar("z");
