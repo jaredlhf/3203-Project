@@ -21,4 +21,5 @@ public:
 
 	// Value class functions
 	const std::string& getVal() const;
+	bool compare(std::shared_ptr<Value> other);
 };

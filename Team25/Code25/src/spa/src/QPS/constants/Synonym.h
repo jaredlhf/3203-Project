@@ -21,6 +21,9 @@ public:
     bool matchesKeyword(const std::string& inputString);
     bool matchesName(const std::string& inputName);
     void addMatchingResult(const std::string& result);
+    std::string getName();
+    std::string getKeyword();
+    bool compare(std::shared_ptr<Synonym> other);
     virtual std::unordered_set<std::string> getMatches();
     virtual bool isStmtRef();
 

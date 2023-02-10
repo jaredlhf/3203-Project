@@ -24,3 +24,19 @@ TEST_CASE("Value getVal function returns the right output") {
 
 	REQUIRE(ent->getVal() == expected);
 }
+
+TEST_CASE("Value class compare function returns true for the same value") {
+	const std::string val = "test";
+	std::shared_ptr<Value> ent = Value::create(val);
+	std::shared_ptr<Value> expected = Value::create(val);
+
+	REQUIRE(ent->compare(expected) == true);
+}
+
+TEST_CASE("Value class compare function returns false for different values") {
+	const std::string val = "test";
+	std::shared_ptr<Value> ent = Value::create(val);
+	std::shared_ptr<Value> expected = Value::create(val);
+
+	REQUIRE(ent->compare(expected) == true);
+}

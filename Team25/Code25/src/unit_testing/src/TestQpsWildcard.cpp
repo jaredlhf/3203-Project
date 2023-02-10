@@ -42,3 +42,28 @@ TEST_CASE("Wildcard isGenericWildcard function returns the right output") {
 
 	REQUIRE(ent2->isGenericWildcard() == true);
 }
+
+TEST_CASE("Wildcard compare function returns true for pattern wildcard") {
+	const std::string test1 = "test";
+	std::shared_ptr<Wildcard> ent1 = Wildcard::create(test1);
+	std::shared_ptr<Wildcard> ent2 = Wildcard::create(test1);
+
+	REQUIRE(ent1->compare(ent2) == true);
+}
+
+TEST_CASE("Wildcard compare function returns true for generic wildcard") {
+	const std::string test1 = "";
+	std::shared_ptr<Wildcard> ent1 = Wildcard::create(test1);
+	std::shared_ptr<Wildcard> ent2 = Wildcard::create(test1);
+
+	REQUIRE(ent1->compare(ent2) == true);
+}
+
+TEST_CASE("Wildcard compare function returns false for different wildcards") {
+	const std::string test1 = "xx";
+	const std::string test2 = "xyz";
+	std::shared_ptr<Wildcard> ent1 = Wildcard::create(test1);
+	std::shared_ptr<Wildcard> ent2 = Wildcard::create(test2);
+
+	REQUIRE(ent1->compare(ent2) == false);
+}

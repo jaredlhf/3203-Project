@@ -58,6 +58,23 @@ TEST_CASE("Adding results to set will NOT match with different set") {
 	REQUIRE(cl.getMatches() != unordered_set<string>({ "c", "v1" }));
 }
 
+TEST_CASE("Compare function returns the right results for Synonyms of the same type and name") {
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x")->compare(Synonym::create(Constants::ASSIGN, "x")) == true);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->compare(Synonym::create(Constants::CALL, "x")) == true);
+}
+
+TEST_CASE("Compare function returns false for Synonyms of different type") {
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->compare(Synonym::create(Constants::ASSIGN, "x")) == false);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->compare(Synonym::create(Constants::PROCEDURE, "x")) == false);
+}
+
+TEST_CASE("Compare function returns false for Synonyms of different name") {
+	REQUIRE(Synonym::create(Constants::ASSIGN, "y")->compare(Synonym::create(Constants::ASSIGN, "x")) == false);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->compare(Synonym::create(Constants::CALL, "y")) == false);
+}
+
+
+
 // TESTS FOR STATIC SYNONYM CLASS FUNCTIONS
 TEST_CASE("create function creates the right classes based on the keywords passed in") {
 	REQUIRE(Synonym::create(Constants::STMT, "x")->matchesKeyword(Constants::STMT));

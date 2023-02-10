@@ -24,6 +24,18 @@ void Synonym::addMatchingResult(const std::string& result) {
     matches.insert(result);
 }
 
+std::string Synonym::getName() {
+    return this->name;
+}
+
+std::string Synonym::getKeyword() {
+    return this->keyword;
+}
+
+bool Synonym::compare(std::shared_ptr<Synonym> other) {
+    return this->name == other->name && this->keyword == other->keyword;
+}
+
 std::unordered_set<std::string> Synonym::getMatches() {
     return matches;
 }
