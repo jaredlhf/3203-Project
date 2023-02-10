@@ -15,6 +15,10 @@ vector<string> Tokenizer::getTokens() {
     return this->tokens;
 }
 
+string Tokenizer::peek() {
+    return this->tokens.front();
+}
+
 string Tokenizer::getNextToken() {
     string next = this->tokens.front();
     tokens.erase(tokens.begin());
@@ -44,5 +48,7 @@ vector<string> Tokenizer::tokenize(const string &str) {
     }
     if (!next.empty())
         result.push_back(next);
+
+    setTokens(result);
     return result;
 }
