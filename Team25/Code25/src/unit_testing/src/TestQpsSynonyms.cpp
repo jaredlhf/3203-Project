@@ -121,3 +121,27 @@ TEST_CASE("All concrete synonym classes returns false for the wrong keywords") {
 	REQUIRE(cnst.matchesKeyword(Constants::PROCEDURE) == false);
 	REQUIRE(proc.matchesKeyword(Constants::STMT) == false);
 }
+
+TEST_CASE("All concrete synonym classes returns the right results for isStmtRef function") {
+	StmtSynonym st("cll");
+	ReadSynonym re("cll");
+	PrintSynonym pr("cll");
+	CallSynonym cl("cll");
+	WhileSynonym wh("cll");
+	IfSynonym i("cll");
+	AssignSynonym asg("cll");
+	VariableSynonym var("cll");
+	ConstantSynonym cnst("cll");
+	ProcedureSynonym proc("cll");
+
+	REQUIRE(Synonym::create(Constants::STMT, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::READ, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::PRINT, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::WHILE, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::IF, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x")->isStmtRef() == true);
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->isStmtRef() == false);
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->isStmtRef() == false);
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->isStmtRef() == false);
+}

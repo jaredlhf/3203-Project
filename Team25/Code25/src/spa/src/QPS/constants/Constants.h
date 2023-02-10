@@ -28,4 +28,11 @@ public:
 	static const std::string PATTERN;
 	static const std::string WILDCARD;
 
+	enum ClauseResult {
+		SEM_ERR,
+		SYN_ERR,
+		NO_MATCH,
+		OK
+	};
+
 };

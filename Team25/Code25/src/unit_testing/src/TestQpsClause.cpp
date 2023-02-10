@@ -58,3 +58,26 @@ TEST_CASE("resolve function in clause classes behaves as expected") {
 
 	REQUIRE(1 == 1);
 }
+
+TEST_CASE("isPatternClause function in clause classes behaves as expected") {
+	SynonymStub stub1;
+	SynonymStub stub2;
+	std::shared_ptr<Entity> arg1 = std::make_shared<SynonymStub>(stub1);
+	std::shared_ptr<Entity> arg2 = std::make_shared<SynonymStub>(stub2);
+
+	std::shared_ptr<Clause> uses = Clause::create(Constants::USES, arg1, arg2);
+	std::shared_ptr<Clause> modifies = Clause::create(Constants::MODIFIES, arg1, arg2);
+	std::shared_ptr<Clause> parent = Clause::create(Constants::PARENT, arg1, arg2);
+	std::shared_ptr<Clause> parentst = Clause::create(Constants::PARENTST, arg1, arg2);
+	std::shared_ptr<Clause> follows = Clause::create(Constants::FOLLOWS, arg1, arg2);
+	std::shared_ptr<Clause> followsst = Clause::create(Constants::FOLLOWSST, arg1, arg2);
+	std::shared_ptr<Clause> pattern = Clause::create(Constants::PATTERN, arg1, arg2);
+
+	REQUIRE(uses->isPatternClause() == false);
+	REQUIRE(modifies->isPatternClause() == false);
+	REQUIRE(parent->isPatternClause() == false);
+	REQUIRE(parentst->isPatternClause() == false);
+	REQUIRE(follows->isPatternClause() == false);
+	REQUIRE(followsst->isPatternClause() == false);
+	REQUIRE(pattern->isPatternClause() == true);
+}

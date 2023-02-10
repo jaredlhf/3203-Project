@@ -57,42 +57,66 @@ PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entit
 }
 
 // Overriden clause functions
-void Clause::resolve() {
+Constants::ClauseResult Clause::resolve() {
     std::cout << "resolve clause" << std::endl;
-    return;
+    return Constants::ClauseResult::SEM_ERR;
 }
 
-void UsesClause::resolve() {
+bool Clause::isPatternClause() {
+    return false;
+}
+
+Constants::ClauseResult UsesClause::resolve() {
     std::cout << "resolve uses clause" << std::endl;
-    return;
+
+    // Guard clause: First arg of Uses cannot be a wildcard
+    if (this->arg1->isWildcard()) {
+        return Constants::ClauseResult::SEM_ERR;
+    }
+
+    // If neither args are synonyms, just check if clause returns a result
+    if (this->arg1->isConstant()) {
+        // Return syntax error result if arg1 is not a integer constant
+        // 
+        // Call pkb getAllModStmt if arg2 is wildcard
+
+        // Check if these 2 args are a key-value pair in pkb if arg2 is constant, or result err if arg2 not string constant
+    }
+
+    // If at least one arg contains a synonym, resolve the answer and store it in the synonym
+    return Constants::ClauseResult::OK;
 }
 
-void ModifiesClause::resolve() {
+Constants::ClauseResult ModifiesClause::resolve() {
     std::cout << "resolve modifies clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
 }
 
-void ParentClause::resolve() {
+Constants::ClauseResult ParentClause::resolve() {
     std::cout << "resolve parent clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
 }
 
-void ParentStClause::resolve() {
+Constants::ClauseResult ParentStClause::resolve() {
     std::cout << "resolve parent* clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
 }
 
-void FollowsClause::resolve() {
+Constants::ClauseResult FollowsClause::resolve() {
     std::cout << "resolve follows clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
 }
 
-void FollowsStClause::resolve() {
+Constants::ClauseResult FollowsStClause::resolve() {
     std::cout << "resolve follows* clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
 }
 
-void PatternClause::resolve() {
+Constants::ClauseResult PatternClause::resolve() {
     std::cout << "resolve pattern clause" << std::endl;
-    return;
+    return Constants::ClauseResult::OK;
+}
+
+bool PatternClause::isPatternClause() {
+    return true;
 }

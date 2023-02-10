@@ -19,6 +19,10 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	resultSynonym = declarations[resultName];
 }
 
+Constants::ClauseResult QueryEvaluator::resolveClause(std::vector<std::shared_ptr<Clause>> clauses) {
+	return Constants::ClauseResult::NO_MATCH;
+}
+
 std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, PkbRetriever* pkbRetriever) {
 	std::list<std::string> result;
 	handleParserResponse(response);
