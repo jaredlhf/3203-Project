@@ -35,6 +35,13 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addStmt("assign", 2);
 				REQUIRE(ss.size() == 1);
 			}
+			THEN("Adding one follows relationship should increase the follows store size by 1") {
+				REQUIRE(fs.getAllFollowers().size() == 0);
+				REQUIRE(fs.getAllFollowees().size() == 0);
+				pkbPop.addFollows(1, 2);
+				REQUIRE(fs.getAllFollowers().size() == 1);
+				REQUIRE(fs.getAllFollowees().size() == 1);
+			}
 		}
 	}
 }
