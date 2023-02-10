@@ -1,21 +1,21 @@
-#include "ParserResponse.h";
+#include "constants/Synonym.h"
+#include "ParserResponse.h"
 
-
-void ParserResponse::setDeclarations(std::vector<std::vector<std::string>> declarations) {
+void ParserResponse::setDeclarations(std::vector<std::shared_ptr<Synonym>> declarations) {
     ParserResponse::declarations = declarations;
     return;
 }
 
-std::vector<std::vector<std::string>> ParserResponse::getDeclarations() {
+std::vector<std::shared_ptr<Synonym>> ParserResponse::getDeclarations() {
     return ParserResponse::declarations;
 }
 
-void ParserResponse::setSynonym(std::string synonym) {
+void ParserResponse::setSynonym(std::shared_ptr<Synonym> synonym) {
     ParserResponse::synonym = synonym;
     return;
 }
 
-std::string ParserResponse::getSynonym() {
+std::shared_ptr<Synonym> ParserResponse::getSynonym() {
     return ParserResponse::synonym;
 }
 

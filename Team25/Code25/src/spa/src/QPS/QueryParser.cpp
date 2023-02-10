@@ -1,11 +1,15 @@
 #include "QueryParser.h"
 #include "ParserResponse.h"
+#include "constants/Constants.h"
+#include "constants/Synonym.h"
 
 std::string SELECT_MARKER = "Select";
 std::string PATTERN_MARKER = "pattern";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
-std::vector<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call",
-"while", "if", "assign", "variable", "constant", "procedure"};
+
+std::vector<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
+Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
+
 int MIN_DECLARATION_LENGTH = 2;
 
 bool QueryParser::isValidIntegerString(const std::string& s) {
@@ -34,12 +38,10 @@ bool QueryParser::isValidNaming(const std::string& s) {
     // checks if first character of synonym name or variable name starts with a letter
     for (int i = 0; i < s.length(); i++) {
         if (i == 0 && !isalpha(s[i])) {
-            std::cout << "not alphabet" << std::endl;
             return false;
         }
 
         if (!isalpha(s[i]) && !isdigit(s[i])) {
-            std::cout << "not alphabet or number" << std::endl;
             return false;
         }
     }
@@ -52,13 +54,11 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     std::unordered_set<std::string>& assignment_synonyms) {
     
     if (s.size() < MIN_DECLARATION_LENGTH) {
-        std::cout << "too short" << std::endl;
         return false;
     }
 
     // check if design entity is valid
     if (find(DESIGN_ENTITIES.begin(), DESIGN_ENTITIES.end(), s[0]) == DESIGN_ENTITIES.end()) {
-        std::cout << "design entity wrong" << std::endl;
         return false;
     }
 
@@ -66,21 +66,17 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
 
         // checking that variables are separated by commas
         if (i % 2 == 0 && s[i] != ",") {
-            std::cout << "not csv" << std::endl;
             return false;
         }
 
         // checking if variable names are in correct format and not repeated
         if (i % 2 != 0) {
             if (!isValidNaming(s[i])) {
-                std::cout << "wrong name" << std::endl;
                 return false;
             }
 
             
             if (declared_synonyms.find(s[i]) != declared_synonyms.end()) {
-                
-                std::cout << "redefined synonym" << std::endl;
                 return false;
             }
             if (s[0] == "assign") {
@@ -95,6 +91,23 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     return true;
 }
 
+std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vector<std::string> declaration) {
+    std::vector<std::shared_ptr<Synonym>> declarations = {};
+
+    std::string keyword = declaration[0];
+    for (int i = 1; i < declaration.size(); i++) {
+
+        if (i % 2 == 0) {
+            continue;
+        }
+
+        // creating the Synonym
+        if (i % 2 != 0) {
+            declarations.push_back(Synonym::create(keyword, declaration[i]));
+        }
+    }
+    return declarations;
+}
 // bool QueryParser::isValidPatternClause(vector<string> s) {
 //     // check if syn-assign is declared
 //     if (assignment_synonyms.find(s[0]) == assignment_synonyms.end()) {
@@ -111,8 +124,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     ParserResponse responseObject;
 
-    std::vector<std::vector<std::string>> declarations = {};
-    std::string synonym = "";
+    std::vector<std::shared_ptr<Synonym>> declarations = {};
+    std::shared_ptr<Synonym> synonym = nullptr;
     // vector<string> suchThatClause = {};
     // vector<string> patternClause = {};
     
@@ -128,15 +141,16 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         if (isDeclaration) {
             std::vector<std::string> declaration = {};
             while (tokens[ptr] != ";" && ptr < tokens.size()) {
-
                 declaration.push_back(tokens[ptr]);
                 ptr++;
             }
             ptr++;
             if (isValidDeclaration(declaration, declared_synonyms, assignment_synonyms)) {
-                declarations.push_back(declaration);
+                std::vector<std::shared_ptr<Synonym>> temp = processDeclaration(declaration);
+                declarations.insert(declarations.end(), temp.begin(), temp.end());
             } else {
-                declarations.push_back({"SyntaxError"});
+                synonym = Synonym::create(Constants::SYNTAX_ERROR, "");
+                break;
             }
         }
 
@@ -146,7 +160,11 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             afterSynonym = true;
             ptr++;
             if (ptr < tokens.size()) {
-                synonym = tokens[ptr];
+                for (std::shared_ptr<Synonym> element: declarations) {
+                    if (element->matchesName(tokens[ptr])) {
+                        synonym = element;
+                    }
+                }
             }
             ptr++;
         }
@@ -168,11 +186,10 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         //     }
         // }
     }
+    ptr++;
 
     responseObject.setDeclarations(declarations);
     responseObject.setSynonym(synonym);
 
     return responseObject;
-       
-
 }
