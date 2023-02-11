@@ -1,22 +1,34 @@
 #include "QueryTokenizer.h"
 
-std::vector<std::string> QueryTokenizer::splitSymbol(std::string word) {
-    std::vector<std::string> res;
-    std::unordered_set<char> prefixes{'('};
-    std::unordered_set<char> suffixes{ ')', ',', ';'};
+std::string QueryTokenizer::preprocess(const std::string& word) {
+    std::string res = "";
+    bool inQuotes = false;
 
-    // Add prefixes if any and remove prefix from word
-    if (prefixes.find(word[0]) != prefixes.end()) {
-        res.push_back(word.substr(0, 1));
-        word = word.substr(1, word.size() - 1);
-    }
+    for (int i = 0; i < word.length(); i++) {
+        char c = word[i];
+        if (c == '\"') {
+            inQuotes = !inQuotes;
+        }
 
-    if (suffixes.find(word[word.size() - 1]) != suffixes.end()) {
-        res.push_back(word.substr(0, word.size() - 1));
-        res.push_back(word.substr(word.size() - 1, 1));
-    }
-    else {
-        res.push_back(word);
+        // If characters in quotes, do not account for whitespaces
+        if (inQuotes && c != ' ') {
+            res += c;
+        } else if (inQuotes && c == ' ') {
+            continue;
+        // Handle the case where * is part of the clause name
+        } else if (c == '*') {
+            res += c;
+            res += ' ';
+        }
+        // If char is not a whitespace or alphanumeric, insert a space inbetween, else just append char
+        else if (isspace(c) == 0 && iswalnum(c) == 0 && c != '_' && c != '\"') {
+            res += ' ';
+            res += c;
+            res += ' ';
+        }
+        else {
+            res += c;
+        }
     }
 
     return res;
@@ -28,13 +40,18 @@ std::vector<std::string> QueryTokenizer::tokenize(const std::string& query) {
     // Split words based on whitespaces and newlines
     std::regex words_regex("[^\\s\\n]+");
 
-    auto words_begin = std::sregex_iterator(query.begin(), query.end(), words_regex);
+    std::string processedQuery = preprocess(query);
+
+    auto words_begin = std::sregex_iterator(processedQuery.begin(), processedQuery.end(), words_regex);
     auto words_end = std::sregex_iterator();
 
     for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
         std::string curr = (*i).str();
-        std::vector<std::string> toAdd = splitSymbol(curr);
-        res.insert(res.end(), toAdd.begin(), toAdd.end());
+        if (curr.length() < 1) {
+            continue;
+        }
+
+        res.push_back(curr);
     }
 
     return res;
