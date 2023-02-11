@@ -18,5 +18,5 @@ private:
 
 public:
 	Qps(PkbRetriever* pkbRetriever);
-	void query(string queryStr, list<string> &uiList);
+	void query(const std::string& queryStr, std::list<std::string>& uiList);
 };

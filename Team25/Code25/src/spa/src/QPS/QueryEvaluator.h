@@ -1,21 +1,23 @@
 #pragma once
+
 #include <string>
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
+#include <memory>
 #include "ParserResponse.h"
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
 #include "PKB/PkbRetriever.h"
 
-using namespace std;
 
 class QueryEvaluator {
 private:
-	unordered_map<string, Synonym> declarations;
-	Synonym resultSynonym;
+	std::unordered_map<std::string, std::shared_ptr<Synonym>> declarations;
+	std::shared_ptr<Synonym> resultSynonym;
 	void handleParserResponse(ParserResponse& response);
 
 public:
-	list<string> evaluate(ParserResponse response, PkbRetriever* pkbRetriever);
+	std::list<std::string> evaluate(ParserResponse response, PkbRetriever* pkbRetriever);
 };

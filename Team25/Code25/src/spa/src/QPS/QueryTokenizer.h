@@ -1,13 +1,16 @@
 #pragma once
+
 #include <vector>
 #include <string>
+#include <unordered_set>
+#include <regex>
+#include <iostream>
 
-using namespace std;
 
 class QueryTokenizer {
 private:
-	vector<string> splitSymbol(string word);
+	std::vector<std::string> splitSymbol(std::string word);
 
 public:
-	vector<string> tokenize(string query);
+	std::vector<std::string> tokenize(const std::string& query);
 };
