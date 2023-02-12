@@ -11,6 +11,15 @@ std::regex terms("(\\w+)");
 std::regex validExpression("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*[+\\*\\-%\\/]\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
 std::regex validRelExpression("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*([\\<>]|[<>!=]=)\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
 
+std::string expect(char c, std::string str) {
+    if (str.at(0) == c) {
+       str.erase(str.begin());
+       return str;
+    }
+    throw std::invalid_argument ("Expected '" + c );
+}
+
+
 bool ExpressionParser::isNumber(std::string str)
 {
     std::string::const_iterator it = str.begin();
@@ -158,3 +167,44 @@ bool ExpressionParser::isCondExpr(std::string expr) {
         return isRelExpr(expr);
     }
 }
+
+
+bool ExpressionParser::parseCondExpr(std::string expr) {
+    if (expr.at(0) == ('!')) {
+        expr.erase(expr.begin());// !(condExpr)
+        expect('(',expr);
+        auto condExpr = parseCondExpr(expr.substr(0,expr.size() - 2));
+        expect(')',expr);
+        return true;
+    } else if (expr.at(0) == ('(')) {  // () op ()
+        expect('(',expr);
+        auto condLHS = parseCondExpr(expr.substr(0,expr.size() - 2));
+        expect(')',expr);
+
+        std::string op;
+
+        if (match("&&")) {
+            op = "&&";
+        } else if (match("||")) {
+            op = "||";
+        } else {
+            throw SimpleParseException("Expected '||' or '&&', got '" + peek()->Val +
+                                       "'.");
+        }
+
+        expect('(',expr);
+        auto condRHS = parseCondExpr(expr);
+        expect(')',expr);
+
+        return true;
+    } else {  // relExpr
+        auto relExpr = isRelExpr((expr));
+
+        if (relExpr) {
+            return true;
+        }
+    }
+    // Shouldn't reach here
+    return false;
+}
+

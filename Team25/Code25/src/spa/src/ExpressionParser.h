@@ -12,5 +12,7 @@ public:
     bool isExpr(std::string expr);
     bool isRelExpr(std::string expr);
     bool isCondExpr(std::string expr);
+    bool parseCondExpr(std::string expr);
+    std::string expect(char c, std::string std);
 };
 
