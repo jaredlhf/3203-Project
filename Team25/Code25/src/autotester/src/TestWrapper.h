@@ -7,7 +7,7 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
-#include "SourceProcessor.h"
+#include "SP/SourceProcessor.h"
 #include "PKB/PkbRetriever.h"
 #include "PKB/PkbPopulator.h"
 #include "QPS/Qps.h"

@@ -19,7 +19,7 @@ TestWrapper::TestWrapper() : pkbRetriever(&vs, &cs, &fs, &ps, &ss), pkbPopulator
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
-    sp.processSimple(filename, &pkbPopulator);
+    sp.processSimple(filename, std::make_shared<PkbPopulator>(pkbPopulator));
 }
 
 // method to evaluating a query

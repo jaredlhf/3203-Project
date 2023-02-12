@@ -4,13 +4,17 @@
 #include <vector>
 #include <regex>
 
-using namespace std;
 
 #include "Parser.h"
 ExpressionParser expressionParser;
 std::regex value("(\\w+)");
 
-bool Parser::isNumber(string str)
+Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> populator) {
+    this->tokenizer = t;
+    this->pkbPopulator = populator;
+};
+
+bool Parser::isNumber(const std::string& str)
 {
     std::string::const_iterator it = str.begin();
     while (it != str.end() && std::isdigit(*it)) {
@@ -19,7 +23,7 @@ bool Parser::isNumber(string str)
     return !str.empty() && it == str.end();
 }
 
-bool Parser::isValidVariableName(string variable)
+bool Parser::isValidVariableName(std::string variable)
 {
     if (!((variable[0] >= 'a' && variable[0] <= 'z')
           || (variable[0] >= 'A' && variable[0] <= 'Z')
@@ -35,14 +39,14 @@ bool Parser::isValidVariableName(string variable)
     return true;
 }
 
-std::string Parser::getNextToken() {
-    std::string next = this->tokens.front();
-    tokens.erase(tokens.begin());
-    return next;
-}
+//std::string Parser::getNextToken() {
+//    std::string next = this->tokens.front();
+//    tokens.erase(tokens.begin());
+//    return next;
+//}
 
 std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
-    std::string next = getNextToken();
+    std::string next = tokenizer->getNextToken();
     if (!expectedToken->isEqual(next)) {
         std::cout << "error: unexpected token, got: " << next << std::endl;
 
@@ -51,17 +55,15 @@ std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
     return next;
 }
 
-void Parser::parseProgram(std::vector<std::string> tokenList, PkbPopulator* populator) {
-    this->tokens = tokenList;
-    this->pkbPopulator = populator;
+void Parser::parseProgram() {
 
     do {
-        if (tokens.empty()) {
+        if (tokenizer->getTokens().empty()) {
             throw std::invalid_argument("error: no procedures found");
         } else {
             parseProcedure();
         }
-    } while (!tokens.empty());
+    } while (!tokenizer->getTokens().empty());
 }
 
 
@@ -80,14 +82,14 @@ StmtLstNode Parser::parseStmtLst() {
     do {
         StmtNode sn = parseStmt();
         StmtLsts.push_back(sn);
-    } while(!RightBrace().isEqual(tokens.front()));
+    } while(!RightBrace().isEqual(tokenizer->peek()));
     StmtLstNode node = StmtLstNode(StmtLsts);
     return node;
 }
 
 StmtNode Parser::parseStmt() {
     AssignNode a("a","a");
-    if (isValidVariableName(tokens.front())) {
+    if (isValidVariableName(tokenizer->peek())) {
         parseAssign();
     }
     return StmtNode(a);
@@ -101,10 +103,11 @@ void Parser::parseAssign() {
     expect(std::make_shared<Equal>());
     std::string rhs = "";
     vector<string> rhsTokens;
-    while(tokens.front() != ";") {
-        rhs = rhs + tokens.front();
-        rhsTokens.push_back((tokens.front()));
-        tokens.erase(tokens.begin());
+    while(tokenizer->peek() != ";") {
+        std::string next = tokenizer->getNextToken();
+        rhs = rhs + next;
+        rhsTokens.push_back(next);
+
     }
     if(Parser::expressionParser.isExpr((rhs))) {
         std::smatch result;

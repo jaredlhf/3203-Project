@@ -12,11 +12,12 @@ std::string SourceProcessor::processFile(std::string &filename) {
     return res;
 }
 
-void SourceProcessor::processSimple(std::string &filename, PkbPopulator* pkbPopulator) {
-    Tokenizer t;
-    Parser p;
-
+void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator) {
     std::string fileStr = processFile(filename);
+
+    Tokenizer t;
     std::vector<std::string> tokens = t.tokenize(fileStr);
-    p.parseProgram(tokens, pkbPopulator);
+
+    Parser p(std::make_shared<Tokenizer>(t), pkbPopulator);
+    p.parseProgram();
 }
