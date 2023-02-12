@@ -16,6 +16,7 @@ public:
     Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> populator);
     void parseProgram();
 private:
+    friend class AssignParser;
     ExpressionParser expressionParser;
     std::shared_ptr<PkbPopulator> pkbPopulator;
     std::shared_ptr<Tokenizer> tokenizer;
@@ -27,8 +28,7 @@ private:
     StmtNode parseStmt();
     void parseAssign();
     std::string parseAssignExpr();
-    bool isValidVariableName(string str);
-    bool isNumber(const string& str);
+
 };
 
 #endif

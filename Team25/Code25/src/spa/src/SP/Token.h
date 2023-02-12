@@ -6,7 +6,8 @@
 
 class Token {
 public:
-    static bool isValidName(std::string variable);
+    static bool isValidName(const std::string& variable);
+    static bool isNumber(const std::string& str);
     virtual bool isEqual(std::string tokenString) = 0;
 };
 

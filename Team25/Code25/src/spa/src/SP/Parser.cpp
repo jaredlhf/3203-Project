@@ -14,36 +14,6 @@ Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> popul
     this->pkbPopulator = populator;
 };
 
-bool Parser::isNumber(const std::string& str)
-{
-    std::string::const_iterator it = str.begin();
-    while (it != str.end() && std::isdigit(*it)) {
-        ++it;
-    }
-    return !str.empty() && it == str.end();
-}
-
-bool Parser::isValidVariableName(std::string variable)
-{
-    if (!((variable[0] >= 'a' && variable[0] <= 'z')
-          || (variable[0] >= 'A' && variable[0] <= 'Z')
-          || variable[0] == '_'))
-        return false;
-    for (int i = 1; i < variable.length(); i++) {
-        if (!((variable[i] >= 'a' && variable[i] <= 'z')
-              || (variable[i] >= 'A' && variable[i] <= 'Z')
-              || (variable[i] >= '0' && variable[i] <= '9')
-              || variable[i] == '_'))
-            return false;
-    }
-    return true;
-}
-
-//std::string Parser::getNextToken() {
-//    std::string next = this->tokens.front();
-//    tokens.erase(tokens.begin());
-//    return next;
-//}
 
 std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
     std::string next = tokenizer->getNextToken();
@@ -89,9 +59,10 @@ StmtLstNode Parser::parseStmtLst() {
 
 StmtNode Parser::parseStmt() {
     AssignNode a("a","a");
-    if (isValidVariableName(tokenizer->peek())) {
+    if (Token::isValidName(tokenizer->peek())) {
         parseAssign();
     }
+    StmtParser::parseStmt();
     return StmtNode(a);
 }
 
@@ -117,9 +88,9 @@ void Parser::parseAssign() {
             variableVector.push_back(result[0]);
         }
         for (string entity: variableVector)
-            if (isValidVariableName((entity))) {
+            if (Token::isValidName((entity))) {
                 pkbPopulator->addVar(entity);
-            } else if (isNumber(entity)) {
+            } else if (Token::isNumber(entity)) {
                 pkbPopulator->addConst(std::stoi(entity));
             }
     } else {
