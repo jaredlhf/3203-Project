@@ -4,10 +4,14 @@
 using namespace std;
 
 class ExpressionParser {
-    static bool checkParenthesis(std::string expr);
-    static bool isName(std::string var);
-    static bool isNumber(std::string var);
+    bool isName(std::string var);
+    bool isNumber(std::string var);
 public:
-    static bool verifyExpr(std::string expr);
+    int matchingBracket(std::string str);
+    bool checkParenthesis(std::string expr);
+    bool isExpr(std::string expr);
+    bool isRelExpr(std::string expr);
+    bool isCondExpr(std::string expr);
+    bool parseCondExpr(std::string expr);
 };
 
