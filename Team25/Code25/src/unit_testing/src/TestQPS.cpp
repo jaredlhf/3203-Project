@@ -15,7 +15,7 @@ SCENARIO("Mocking behavior of QPS") {
 		PkbRetriever pkbRetriever(&vs, &cs, &fs, &ps, &ss);
 
 		WHEN("The qps object is created") {
-			Qps qps(&pkbRetriever);
+			Qps qps(std::make_shared<PkbRetriever>(pkbRetriever));
 			THEN("For a given query string and population of the pkbRetriever") {
 				list<string> expected = { "x", "y", "z" };
 				list<string> res;

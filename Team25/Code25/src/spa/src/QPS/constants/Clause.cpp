@@ -77,13 +77,70 @@ Constants::ClauseResult UsesClause::resolve() {
     // If neither args are synonyms, just check if clause returns a result
     if (this->arg1->isConstant()) {
         // Return syntax error result if arg1 is not a integer constant
-        // 
-        // Call pkb getAllModStmt if arg2 is wildcard
+        if (!static_cast<Value*>(this->arg1.get())->isInt()) {
+            return Constants::ClauseResult::SYN_ERR;
+        }
 
-        // Check if these 2 args are a key-value pair in pkb if arg2 is constant, or result err if arg2 not string constant
+        std::string v1Val = static_cast<Value*>(this->arg1.get())->getVal();
+
+        // Call pkb getAllUsesVal(v1Val) if arg2 is wildcard
+        if (this->arg2->isWildcard()) {
+            bool validWildcard = static_cast<Wildcard*>(this->arg2.get())->isGenericWildcard();
+            return validWildcard ? /*TODO CALL GETALLUSESVAL*/ Constants::ClauseResult::OK : Constants::ClauseResult::SYN_ERR;
+        }
+
+        if (this->arg2->isConstant()) {
+            // Check if these 2 args are a key-value pair in pkb if arg2 is constant, or result err if arg2 not string constant
+            Value* v2 = static_cast<Value*>(this->arg2.get());
+            if (v2->isInt()) {
+                return Constants::ClauseResult::SYN_ERR;
+            }
+            std::string v2Val = v2->getVal();
+            /* If v2 constant is in pkb, call getUsesStmt(v2Val). If its an empty set, return NOMATCH, else OK*/
+            // TODO replace with match logic | return Constants::ClauseResult::OK;
+        }
+
+        if (this->arg2->isSynonym()) {
+            Synonym* s2 = static_cast<Synonym*>(this->arg2.get());
+            if (!s2->matchesKeyword(Constants::VARIABLE)) {
+                return Constants::ClauseResult::SYN_ERR;
+            }
+
+            /*TODO Call getUsesVal(v1Val) and store answers in s2*/
+            // TODO return ok if matches found else no match
+            return Constants::ClauseResult::OK;
+        }
     }
 
     // If at least one arg contains a synonym, resolve the answer and store it in the synonym
+    Synonym* s1 = static_cast<Synonym*>(this->arg1.get());
+    if (!s1->isStmtRef()) {
+        return Constants::ClauseResult::SYN_ERR;
+    }
+    // If arg2 is wildcard, getAllUsesStmt and add to s1
+    if (this->arg2->isWildcard()) {
+        // TODO call getAllUsesStmt() and add all results to s1
+    }
+
+    if (this->arg2->isConstant()) {
+        bool isIntConst = static_cast<Value*>(this->arg2.get())->isInt();
+        if (isIntConst) {
+            return Constants::ClauseResult::SYN_ERR;
+        }
+        std::string v2Val = static_cast<Value*>(this->arg2.get())->getVal();
+        // TODO call getUsesStmt(v2Val) and add all results to s1
+    }
+
+    // Both arg1 and 2 are Synonyms, so query and store it in each of them
+    Synonym* s2 = static_cast<Synonym*>(this->arg2.get());
+    if (!s2->matchesKeyword(Constants::VARIABLE)) {
+        return Constants::ClauseResult::SYN_ERR;
+    }
+
+    // TODO call getAllUsesStmt() and store in s1
+    // TODO call getAllUsesVar() and store in s2
+    // TODO return no match if no results match else ok
+
     return Constants::ClauseResult::OK;
 }
 

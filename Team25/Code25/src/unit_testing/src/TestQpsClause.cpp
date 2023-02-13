@@ -39,8 +39,10 @@ TEST_CASE("resolve function in clause classes behaves as expected") {
 	SynonymStub stub2;
 	std::shared_ptr<Entity> arg1 = std::make_shared<SynonymStub>(stub1);
 	std::shared_ptr<Entity> arg2 = std::make_shared<SynonymStub>(stub2);
+	std::shared_ptr<Value> v1 = Value::create("123");
+	std::shared_ptr<Synonym> s2 = Synonym::create(Constants::VARIABLE, "xx");
 
-	std::shared_ptr<Clause> uses = Clause::create(Constants::USES, arg1, arg2);
+	std::shared_ptr<Clause> uses = Clause::create(Constants::USES, v1, s2);
 	std::shared_ptr<Clause> modifies = Clause::create(Constants::MODIFIES, arg1, arg2);
 	std::shared_ptr<Clause> parent = Clause::create(Constants::PARENT, arg1, arg2);
 	std::shared_ptr<Clause> parentst = Clause::create(Constants::PARENTST, arg1, arg2);

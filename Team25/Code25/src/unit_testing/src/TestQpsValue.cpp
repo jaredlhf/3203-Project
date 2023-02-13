@@ -25,6 +25,27 @@ TEST_CASE("Value getVal function returns the right output") {
 	REQUIRE(ent->getVal() == expected);
 }
 
+TEST_CASE("Value isInt function returns the right output for int string") {
+	const std::string testInput = "123";
+	std::shared_ptr<Value> ent = Value::create(testInput);
+
+	REQUIRE(ent->isInt() == true);
+}
+
+TEST_CASE("Value isInt function returns the right output for negative int string") {
+	const std::string testInput = "-123";
+	std::shared_ptr<Value> ent = Value::create(testInput);
+
+	REQUIRE(ent->isInt() == true);
+}
+
+TEST_CASE("Value isInt function returns the right output for non int string") {
+	const std::string testInput = "count";
+	std::shared_ptr<Value> ent = Value::create(testInput);
+
+	REQUIRE(ent->isInt() == false);
+}
+
 TEST_CASE("Value class compare function returns true for the same value") {
 	const std::string val = "test";
 	std::shared_ptr<Value> ent = Value::create(val);

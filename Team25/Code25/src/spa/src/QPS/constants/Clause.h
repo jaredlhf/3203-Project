@@ -4,6 +4,9 @@
 #include <memory>
 #include "Constants.h"
 #include "Entity.h"
+#include "Wildcard.h"
+#include "Synonym.h"
+#include "Value.h"
 
 class Clause {
 protected:
