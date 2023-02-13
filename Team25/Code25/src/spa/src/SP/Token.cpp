@@ -53,4 +53,26 @@ bool Semicolon::isEqual(std::string tokenString) {
     return tokenString == ";";
 }
 
+bool Read::isEqual(std::string tokenString) {
+    return tokenString == "read";
+}
 
+bool Print::isEqual(std::string tokenString) {
+    return tokenString == "print";
+}
+
+bool While::isEqual(std::string tokenString) {
+    return tokenString == "while";
+}
+
+bool If::isEqual(std::string tokenString) {
+    return tokenString == "if";
+}
+
+bool Then::isEqual(std::string tokenString) {
+    return tokenString == "then";
+}
+
+bool Else::isEqual(std::string tokenString) {
+    return tokenString == "else";
+}

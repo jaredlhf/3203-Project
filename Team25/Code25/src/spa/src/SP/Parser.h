@@ -27,8 +27,8 @@ private:
 
     //std::string expect(std::shared_ptr<Token> expectedToken);
     ProcedureNode parseProcedure();
-    StmtLstNode parseStmtLst();
-    StmtNode parseStmt();
+    //StmtLstNode parseStmtLst();
+    //StmtNode parseStmt();
     //void parseAssign();
     //std::string parseAssignExpr();
 

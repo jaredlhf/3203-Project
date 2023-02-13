@@ -43,33 +43,33 @@ ProcedureNode Parser::parseProcedure() {
     utils->expect(std::make_shared<Procedure>());
     utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode stmtLst = parseStmtLst();
+    StmtLstNode stmtLst = StmtParser::parseStmtLst(this->utils, this->tokenizer);
     ProcedureNode node = ProcedureNode(stmtLst);
     utils->expect(std::make_shared<RightBrace>());
     return node;
 }
 
-StmtLstNode Parser::parseStmtLst() {
-    std::vector<StmtNode> StmtLsts;
-    do {
-        StmtNode sn = parseStmt();
-        StmtLsts.push_back(sn);
-    } while(!RightBrace().isEqual(tokenizer->peek()));
-    StmtLstNode node = StmtLstNode(StmtLsts);
-    return node;
-}
+//StmtLstNode Parser::parseStmtLst() {
+//    std::vector<StmtNode> StmtLsts;
+//    do {
+//        StmtNode sn = parseStmt();
+//        StmtLsts.push_back(sn);
+//    } while(!RightBrace().isEqual(tokenizer->peek()));
+//    StmtLstNode node = StmtLstNode(StmtLsts);
+//    return node;
+//}
 
-StmtNode Parser::parseStmt() {
-    AssignNode a("a","a");
-//    if (Token::isValidName(tokenizer->peek())) {
-//        //parseAssign();
-//    }
-    StmtParser::parseStmt(tokenizer->peek(), this->utils, this->tokenizer);
-//    std::shared_ptr<StmtParser> sp = StmtParser::createStmtParser(tokenizer->peek());
-//    sp->parse(this->utils, this->tokenizer);
-
-    return StmtNode(a);
-}
+//StmtNode Parser::parseStmt() {
+//    AssignNode a("a","a");
+////    if (Token::isValidName(tokenizer->peek())) {
+////        //parseAssign();
+////    }
+//    StmtParser::parseStmt(tokenizer->peek(), this->utils, this->tokenizer);
+////    std::shared_ptr<StmtParser> sp = StmtParser::createStmtParser(tokenizer->peek());
+////    sp->parse(this->utils, this->tokenizer);
+//
+//    return StmtNode(a);
+//}
 
 
 //void Parser::parseAssign() {
