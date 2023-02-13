@@ -6,7 +6,8 @@
 
 class Token {
 public:
-    static bool isValidName(std::string variable);
+    static bool isValidName(const std::string& variable);
+    static bool isNumber(const std::string& str);
     virtual bool isEqual(std::string tokenString) = 0;
 };
 
@@ -44,5 +45,36 @@ class Semicolon: public Token {
 public:
     bool isEqual(std::string tokenString) override;
 };
+
+class Read: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class Print: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class While: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class If: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class Then: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
+class Else: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
 
 #endif

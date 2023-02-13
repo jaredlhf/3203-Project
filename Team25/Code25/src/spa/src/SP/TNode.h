@@ -12,21 +12,17 @@ public:
     void accept();
 };
 
-class AssignNode: public TNode {
+class StmtNode: public TNode {
+private:
+};
+
+class AssignNode: public StmtNode {
 public:
     AssignNode(std::string variable, std::string expression);
 
 private:
     std::string variable;
     std::string expression;
-};
-
-class StmtNode: public TNode {
-public:
-    StmtNode(AssignNode a);
-
-private:
-    AssignNode assign;
 };
 
 class StmtLstNode: public TNode {

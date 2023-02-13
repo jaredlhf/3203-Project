@@ -1,64 +1,53 @@
 #ifndef STMTPARSER_H
 #define STMTPARSER_H
 
+#include <iostream>
 #include <string>
+#include <vector>
+#include <regex>
 #include "TNode.h"
+#include "ParserUtils.h"
+#include "Tokenizer.h"
+#include "ExpressionParser.h"
 
 class StmtParser {
 public:
-    virtual TNode parse() = 0;
+    virtual StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) = 0;
+    static std::shared_ptr<StmtParser> createStmtParser(std::string stmtType);
+    static StmtNode parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer);
+    static StmtLstNode parseStmtLst(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer);
 };
 
 class AssignParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class PrintParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class CallParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class WhileParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class IfParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class ReadParser: public StmtParser {
 public:
-    TNode parse() override;
+    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
-class StmtParserFactory {
-public:
-    static std::shared_ptr<StmtParser> createStmtParser(std::string stmtType) {
-        if (stmtType == "read") {
-            return std::make_shared<ReadParser>();
-        } else if (stmtType == "print") {
-            return std::make_shared<PrintParser>();
-        } else if (stmtType == "call") {
-            return std::make_shared<CallParser>();
-        } else if (stmtType == "while") {
-            return std::make_shared<WhileParser>();
-        } else if (stmtType == "if") {
-            return std::make_shared<IfParser>();
-        } else if (stmtType == "assign") {
-            return std::make_shared<AssignParser>();
-        } else {
-            throw std::invalid_argument("Not a statement keyword");
-        }
-    }
-};
 
 
 #endif //STMTPARSER_H

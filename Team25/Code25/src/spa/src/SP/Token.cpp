@@ -1,6 +1,6 @@
 #include "Token.h"
 
-bool Token::isValidName(std::string variable) {
+bool Token::isValidName(const std::string& variable) {
     if (!((variable[0] >= 'a' && variable[0] <= 'z')
           || (variable[0] >= 'A' && variable[0] <= 'Z')
           || variable[0] == '_'))
@@ -13,6 +13,15 @@ bool Token::isValidName(std::string variable) {
             return false;
     }
     return true;
+}
+
+bool Token::isNumber(const std::string& str)
+{
+    std::string::const_iterator it = str.begin();
+    while (it != str.end() && std::isdigit(*it)) {
+        ++it;
+    }
+    return !str.empty() && it == str.end();
 }
 
 bool Procedure::isEqual(std::string tokenString) {
@@ -44,4 +53,26 @@ bool Semicolon::isEqual(std::string tokenString) {
     return tokenString == ";";
 }
 
+bool Read::isEqual(std::string tokenString) {
+    return tokenString == "read";
+}
 
+bool Print::isEqual(std::string tokenString) {
+    return tokenString == "print";
+}
+
+bool While::isEqual(std::string tokenString) {
+    return tokenString == "while";
+}
+
+bool If::isEqual(std::string tokenString) {
+    return tokenString == "if";
+}
+
+bool Then::isEqual(std::string tokenString) {
+    return tokenString == "then";
+}
+
+bool Else::isEqual(std::string tokenString) {
+    return tokenString == "else";
+}

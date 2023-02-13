@@ -1,6 +1,12 @@
 procedure Example {
   x = 2 + x;
-		z = 3 + y + (a + b);
+  if then {
+    y = z;
+    i = j + k;
+  } else {
+    W = n;
+  }
+  read z;
   h = 232141;
   f1 = h3;
 }

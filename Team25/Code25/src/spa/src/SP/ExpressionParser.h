@@ -4,7 +4,6 @@
 using namespace std;
 
 class ExpressionParser {
-
     bool isName(std::string var);
     bool isNumber(std::string var);
 public:
