@@ -61,6 +61,26 @@ bool ExpressionParser::checkParenthesis(std::string expr) {
     }
 }
 
+int ExpressionParser::matchingBracket(std::string str) {
+    int count = 1;
+    int pos = 1;
+    for (char &c: str) {
+        if (c == '(') {
+            count++;
+        } else if (c == ')') {
+            count--;
+            if (count == 0) {
+                return pos;
+            }
+        }
+        pos++;
+    }
+}
+
+//bool ExpressionParser::removeMatchingBracket(std::string expr,int start, int end) {
+//
+//}
+
 bool ExpressionParser::isExpr(std::string expr) {
     if (regex_match(expr, validExpression)) {
         if (checkParenthesis(expr)) {
@@ -90,8 +110,8 @@ bool ExpressionParser::isRelExpr(std::string expr) {
     std::vector<string> double_rel_ops({ ">=", "<=", "==", "!="});
     int index;
     if (checkParenthesis(expr)) {
-        expr.erase(std::remove(expr.begin(), expr.end(), '('), expr.end());
-        expr.erase(std::remove(expr.begin(), expr.end(), ')'), expr.end());
+//        expr.erase(std::remove(expr.begin(), expr.end(), '('), expr.end());
+//        expr.erase(std::remove(expr.begin(), expr.end(), ')'), expr.end());
         for (string i: double_rel_ops) {
             if (expr.find(i) != std::string::npos) {
                 index = expr.find(i);
@@ -113,50 +133,70 @@ bool ExpressionParser::isRelExpr(std::string expr) {
 };
 
 bool ExpressionParser::isCondExpr(std::string expr) {
-
-    char firstChar = expr.at(0);
+    int index;
+    // remove ()
     // for ! case
-    if (firstChar == '!') {
-        // erase ! char
+    if (isRelExpr(expr)) {
+//        std::cout<<expr<<endl;
+//        std::cout<<"test"<<endl;
+        return true;
+    } else if (expr[0] == '!') {
+        //erase !
         expr.erase(expr.begin());
-        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
-            //erase first (
-            expr.erase(expr.begin());
-            //erase last )
-            expr.pop_back();
-            return isCondExpr((expr));
-        } else {
-            throw std::invalid_argument("Invalid parenthesis in conditional expression");
-        }
-    // for && case
-    } else if (expr.find("&&") != std::string::npos) {
-        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
-            std::size_t andPos = expr.find("&&");
-            //erase first (
-            expr.erase(expr.begin());
-            //erase last )
-            expr.pop_back();
-            std::string firstSub = expr.substr(0, andPos - 1);
-            std::string secondSub = expr.substr(andPos + 1);
+        int bracket = matchingBracket(expr.substr(1));
+        //remove ()
+        expr.erase(bracket);
+        expr.erase(expr.begin());
+//        std::cout << bracket << endl;
+//        std::cout << expr << " test1 " << endl;
+        return isCondExpr((expr));
+        // for && case
+    }
+    if ((expr.find("&&") != std::string::npos)) {
+        if (checkParenthesis(expr.substr(0, expr.find("&&")))) {
+            index = expr.find("&&");
+            std::string firstSub = expr.substr(0, index);
+            if (firstSub.at(0) == '(' && firstSub.at(firstSub.length() - 1) == ')') {
+                //erase first (
+                firstSub.erase(firstSub.begin());
+                //erase last )
+                firstSub.pop_back();
+            }
+            std::string secondSub = expr.substr(index + 2);
+            if (secondSub.at(0) == '(' && secondSub.at(secondSub.length() - 1) == ')') {
+                //erase first (
+                secondSub.erase(secondSub.begin());
+                //erase last )
+                secondSub.pop_back();
+            }
+//            std::cout << expr << " test2 " << endl;
+//            std::cout << firstSub << endl;
+//            std::cout << secondSub << endl;
             return isCondExpr(firstSub) && isCondExpr((secondSub));
-        } else {
-            throw std::invalid_argument("Invalid parenthesis in conditional expression");
         }
+    }
     // for || case
-    } else if (expr.find("||") != std::string::npos){
-        if (expr.at(0) == '(' && expr.at(expr.length() - 1) == ')') {
-            std::size_t orPos = expr.find("||");
-            //erase first (
-            expr.erase(expr.begin());
-            //erase last )
-            expr.pop_back();
-            std::string firstSub = expr.substr(0, orPos - 1);
-            std::string secondSub = expr.substr(orPos + 1);
+    if ((expr.find("||") != std::string::npos)) {
+        if (checkParenthesis(expr.substr(0, expr.find("||")))) {
+            index = expr.find("||");
+            std::string firstSub = expr.substr(0, index);
+            if (firstSub.at(0) == '(' && firstSub.at(firstSub.length() - 1) == ')') {
+                //erase first (
+                firstSub.erase(firstSub.begin());
+                //erase last )
+                firstSub.pop_back();
+            }
+            std::string secondSub = expr.substr(index + 2);
+            if (secondSub.at(0) == '(' && secondSub.at(secondSub.length() - 1) == ')') {
+                //erase first (
+                secondSub.erase(secondSub.begin());
+                //erase last )
+                secondSub.pop_back();
+            }
+//            std::cout << expr << " test3 " << endl;
+//            std::cout << firstSub << endl;
+//            std::cout << secondSub << endl;
             return isCondExpr(firstSub) && isCondExpr((secondSub));
-        } else {
-            throw std::invalid_argument("Invalid parenthesis in conditional expression");
         }
-    } else {
-        return isRelExpr(expr);
     }
 }
