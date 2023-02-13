@@ -1,10 +1,13 @@
 procedure Example {
-  x = 2 + x;
-  if then {
+  x = 2+d;
+  if (a < b) then {
     y = z;
     i = j + k;
   } else {
     W = n;
+  }
+  while (c > d) {
+    U = o + p;
   }
   read z;
   h = 232141;
