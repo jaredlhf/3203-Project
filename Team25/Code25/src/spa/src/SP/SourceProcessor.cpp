@@ -16,7 +16,7 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
     std::string fileStr = processFile(filename);
 
     Tokenizer t;
-    std::vector<std::string> tokens = t.tokenize(fileStr);
+    t.tokenize(fileStr);
 
     Parser p(std::make_shared<Tokenizer>(t), pkbPopulator);
     p.parseProgram();

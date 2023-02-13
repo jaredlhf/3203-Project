@@ -17,16 +17,6 @@ Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> popul
 };
 
 
-//std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
-//    std::string next = tokenizer->getNextToken();
-//    if (!expectedToken->isEqual(next)) {
-//        std::cout << "error: unexpected token, got: " << next << std::endl;
-//
-//        throw 1;
-//    }
-//    return next;
-//}
-
 void Parser::parseProgram() {
 
     do {
