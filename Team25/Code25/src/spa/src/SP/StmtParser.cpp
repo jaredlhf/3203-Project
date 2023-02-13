@@ -2,7 +2,7 @@
 
 std::regex value("(\\w+)");
 
- std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
+std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
     if (stmtType == "read") {
         return std::make_shared<ReadParser>();
     } else if (stmtType == "print") {
@@ -13,31 +13,33 @@ std::regex value("(\\w+)");
         return std::make_shared<WhileParser>();
     } else if (stmtType == "if") {
         return std::make_shared<IfParser>();
-    } else if (stmtType == "assign") {
+    } else if (Token::isValidName(stmtType)) {
         return std::make_shared<AssignParser>();
     } else {
         throw std::invalid_argument("Not a statement keyword or valid name");
     }
 }
 
-TNode StmtParser::parseStmt(std::string stmtType, std::shared_ptr<Parser> parser) {
+TNode StmtParser::parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     shared_ptr<StmtParser> sp = createStmtParser(stmtType);
-    sp->parse(parser);
+    TNode tn = sp->parse(utils, tokenizer);
+    return tn;
 }
 
-TNode AssignParser::parse(std::shared_ptr<Parser> parser) {
-    std::string lhs = parser->expect(std::make_shared<Name>());
+TNode AssignParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    std::string lhs = utils->expect(std::make_shared<Name>());
     //pkb populate lhs
-    parser->pkbPopulator->addVar(lhs);
-    parser->expect(std::make_shared<Equal>());
+    //parser->pkbPopulator->addVar(lhs);
+    std::cout << "populating:" << lhs << std::endl;
+    utils->expect(std::make_shared<Equal>());
     std::string rhs = "";
     vector<string> rhsTokens;
-    while(parser->tokenizer->peek() != ";") {
-        std::string next = parser->tokenizer->getNextToken();
+    while(tokenizer->peek() != ";") {
+        std::string next = tokenizer->getNextToken();
         rhs = rhs + next;
         rhsTokens.push_back(next);
     }
-    if(parser->expressionParser.verifyExpr((rhs))) {
+    if(ExpressionParser::verifyExpr((rhs))) {
         std::smatch result;
         std::vector<std::string> variableVector;
         for (std::string token: rhsTokens) {
@@ -46,13 +48,36 @@ TNode AssignParser::parse(std::shared_ptr<Parser> parser) {
         }
         for (string entity: variableVector)
             if (Token::isValidName((entity))) {
-                parser->pkbPopulator->addVar(entity);
+                std::cout << "populating:" << entity << std::endl;
+                //parser->pkbPopulator->addVar(entity);
             } else if (Token::isNumber(entity)) {
-                parser->pkbPopulator->addConst(std::stoi(entity));
+                //parser->pkbPopulator->addConst(std::stoi(entity));
+                std::cout << "populating:" << entity << std::endl;
             }
     } else {
         throw std::invalid_argument("Invalid expression ");
     }
 
-    parser->expect(std::make_shared<Semicolon>());
+    utils->expect(std::make_shared<Semicolon>());
+    return TNode();
+}
+
+TNode PrintParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    return TNode();
+}
+
+TNode CallParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    return TNode();
+}
+
+TNode WhileParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    return TNode();
+}
+
+TNode IfParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    return TNode();
+}
+
+TNode ReadParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    return TNode();
 }

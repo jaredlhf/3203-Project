@@ -1,15 +1,24 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Tests25</name><parsing_time_taken>3.090000</parsing_time_taken>
+<name>Tests25</name><parsing_time_taken>1.102000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" CondNum="1" RelNum="0" comment="comment">1</id><querystr><![CDATA[variable v; Select v]]></querystr>
-<stuans>z,y,a,f1,b,x,h,h3</stuans>
+<stuans></stuans>
 <correct>x,z,y,h,f1,h3,a,b</correct>
-<time_taken>3.158000</time_taken>
-<passed/>
+<time_taken>1.741000</time_taken>
+<failed>
+<missing>a,b,f1,h,h3,x,y,z</missing>
+<additional></additional>
+<summary>
+<expected>8</expected>
+<matched>0</matched>
+<missing>8</missing>
+<additional>0</additional>
+</summary>
+</failed>
 </query>
 </queries>
 </test_results>

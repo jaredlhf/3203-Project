@@ -6,24 +6,26 @@
 
 
 #include "Parser.h"
-ExpressionParser expressionParser;
-std::regex value("(\\w+)");
+
+//ExpressionParser expressionParser;
+//std::regex value("(\\w+)");
 
 Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> populator) {
     this->tokenizer = t;
     this->pkbPopulator = populator;
+    this->utils = std::make_shared<ParserUtils>(t);
 };
 
 
-std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
-    std::string next = tokenizer->getNextToken();
-    if (!expectedToken->isEqual(next)) {
-        std::cout << "error: unexpected token, got: " << next << std::endl;
-
-        throw 1;
-    }
-    return next;
-}
+//std::string Parser::expect(std::shared_ptr<Token> expectedToken) {
+//    std::string next = tokenizer->getNextToken();
+//    if (!expectedToken->isEqual(next)) {
+//        std::cout << "error: unexpected token, got: " << next << std::endl;
+//
+//        throw 1;
+//    }
+//    return next;
+//}
 
 void Parser::parseProgram() {
 
@@ -38,12 +40,12 @@ void Parser::parseProgram() {
 
 
 ProcedureNode Parser::parseProcedure() {
-    expect(std::make_shared<Procedure>());
-    expect(std::make_shared<Name>());
-    expect(std::make_shared<LeftBrace>());
+    utils->expect(std::make_shared<Procedure>());
+    utils->expect(std::make_shared<Name>());
+    utils->expect(std::make_shared<LeftBrace>());
     StmtLstNode stmtLst = parseStmtLst();
     ProcedureNode node = ProcedureNode(stmtLst);
-    expect(std::make_shared<RightBrace>());
+    utils->expect(std::make_shared<RightBrace>());
     return node;
 }
 
@@ -59,46 +61,49 @@ StmtLstNode Parser::parseStmtLst() {
 
 StmtNode Parser::parseStmt() {
     AssignNode a("a","a");
-    if (Token::isValidName(tokenizer->peek())) {
-        parseAssign();
-    }
-    StmtParser::parseStmt();
+//    if (Token::isValidName(tokenizer->peek())) {
+//        //parseAssign();
+//    }
+    StmtParser::parseStmt(tokenizer->peek(), this->utils, this->tokenizer);
+//    std::shared_ptr<StmtParser> sp = StmtParser::createStmtParser(tokenizer->peek());
+//    sp->parse(this->utils, this->tokenizer);
+
     return StmtNode(a);
 }
 
 
-void Parser::parseAssign() {
-    std::string lhs = expect(std::make_shared<Name>());
-    //pkb populate lhs
-    pkbPopulator->addVar(lhs);
-    expect(std::make_shared<Equal>());
-    std::string rhs = "";
-    vector<string> rhsTokens;
-    while(tokenizer->peek() != ";") {
-        std::string next = tokenizer->getNextToken();
-        rhs = rhs + next;
-        rhsTokens.push_back(next);
-
-    }
-    if(Parser::expressionParser.verifyExpr((rhs))) {
-        std::smatch result;
-        std::vector<std::string> variableVector;
-        for (string token: rhsTokens) {
-            std::regex_search(token, result, value);
-            variableVector.push_back(result[0]);
-        }
-        for (string entity: variableVector)
-            if (Token::isValidName((entity))) {
-                pkbPopulator->addVar(entity);
-            } else if (Token::isNumber(entity)) {
-                pkbPopulator->addConst(std::stoi(entity));
-            }
-    } else {
-        throw std::invalid_argument("Invalid expression ");
-    }
-
-    expect(std::make_shared<Semicolon>());
-}
+//void Parser::parseAssign() {
+//    std::string lhs = expect(std::make_shared<Name>());
+//    //pkb populate lhs
+//    pkbPopulator->addVar(lhs);
+//    expect(std::make_shared<Equal>());
+//    std::string rhs = "";
+//    vector<string> rhsTokens;
+//    while(tokenizer->peek() != ";") {
+//        std::string next = tokenizer->getNextToken();
+//        rhs = rhs + next;
+//        rhsTokens.push_back(next);
+//
+//    }
+//    if(Parser::expressionParser.verifyExpr((rhs))) {
+//        std::smatch result;
+//        std::vector<std::string> variableVector;
+//        for (string token: rhsTokens) {
+//            std::regex_search(token, result, value);
+//            variableVector.push_back(result[0]);
+//        }
+//        for (string entity: variableVector)
+//            if (Token::isValidName((entity))) {
+//                pkbPopulator->addVar(entity);
+//            } else if (Token::isNumber(entity)) {
+//                pkbPopulator->addConst(std::stoi(entity));
+//            }
+//    } else {
+//        throw std::invalid_argument("Invalid expression ");
+//    }
+//
+//    expect(std::make_shared<Semicolon>());
+//}
 
 
 
