@@ -14,14 +14,14 @@ using namespace std;
 class PkbPopulator {
 
 private:
-	VariableStore* varStorage;
-	ConstantStore* constStorage;
-	FollowsStore* followsStorage;
-	ProcedureStore* procedureStorage;
-	StatementStore* statementStorage;
+	shared_ptr<VariableStore> varStorage;
+	shared_ptr<ConstantStore> constStorage;
+	shared_ptr<FollowsStore> followsStorage;
+	shared_ptr<ProcedureStore> procedureStorage;
+	shared_ptr<StatementStore> statementStorage;
 
 public:
-	PkbPopulator(VariableStore* varStore, ConstantStore* constStore, FollowsStore* followsStore, ProcedureStore* procedureStore, StatementStore* statementStore);
+	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore);
 	void addVar(std::string varName);
 	void addConst(int constNum);
 	void addFollows(int leftLineNum, int rightLineNum);

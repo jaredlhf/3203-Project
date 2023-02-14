@@ -15,7 +15,7 @@ using namespace std;
  * Constructor class for PkbPopulator
  * param: VarStorage* varStore
  */
-PkbPopulator::PkbPopulator(VariableStore* varStore, ConstantStore* constStore, FollowsStore* followsStore, ProcedureStore* procedureStore, StatementStore* statementStore) {
+PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
