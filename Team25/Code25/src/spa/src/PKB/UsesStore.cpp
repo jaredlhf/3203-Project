@@ -1,37 +1,36 @@
 #include<stdio.h>
 #include <iostream>
 
-using namespace std;
 
-#include "ModifiesStore.h"
+#include "UsesStore.h"
 
-ModifiesStore::ModifiesStore() {}
+UsesStore::UsesStore() {}
 
-void ModifiesStore::addModifies(int lineNum, string varName) {
-	modVarStore[lineNum].emplace(varName);
-	modStmtStore[varName].emplace(lineNum);
+void UsesStore::add(int lineNum, std::string varName) {
+	varStore[lineNum] = varName;
+	stmtStore[varName].emplace(lineNum);
 }
 
-unordered_set<string> ModifiesStore::getModVar(int lineNum) {
-	if (hasModStmt(lineNum)) {
-		return modVarStore[lineNum];
+std::string UsesStore::getVar(int lineNum) {
+	if (hasStmt(lineNum)) {
+		return varStore[lineNum];
 	}
 	else {
-		return unordered_set<string>{};
+		return {};
 	}
 }
 
-unordered_set<int> ModifiesStore::getModStmt(string varName) {
-	if (hasModVar(varName)) {
-		return modStmtStore[varName];
+std::unordered_set<int> UsesStore::getStmt(std::string varName) {
+	if (hasVar(varName)) {
+		return stmtStore[varName];
 	}
 	else {
-		return unordered_set<int>{};
+		return std::unordered_set<int>{};
 	}
 }
 
-bool ModifiesStore::hasModVar(string varName) {
-	if (modStmtStore.find(varName) != modStmtStore.end()) {
+bool UsesStore::hasVar(std::string varName) {
+	if (stmtStore.find(varName) != stmtStore.end()) {
 		return true;
 	}
 	else {
@@ -39,8 +38,8 @@ bool ModifiesStore::hasModVar(string varName) {
 	}
 }
 
-bool ModifiesStore::hasModStmt(int lineNum) {
-	if (modVarStore.find(lineNum) != modVarStore.end()) {
+bool UsesStore::hasStmt(int lineNum) {
+	if (varStore.find(lineNum) != varStore.end()) {
 		return true;
 	}
 	else {
@@ -48,24 +47,26 @@ bool ModifiesStore::hasModStmt(int lineNum) {
 	}
 }
 
-unordered_set<string> ModifiesStore::getAllModVar() {
-	unordered_set<string> modVarList;
+std::unordered_set<std::string> UsesStore::getAllVar() {
+	std::unordered_set<string> varList;
 	
-	for (const auto& [key, value] : modVarStore) {
-			modVarList.insert(value.begin(), value.end());
+	for (const auto& [key, value] : varStore) {
+			varList.insert(value);
 		}
-	return modVarList;
+	return varList;
 }
 
-unordered_set<int> ModifiesStore::getAllModStmt() {
-	unordered_set<int> modStmtList;
-	for (const auto& [key, value] : modStmtStore) {
-		modStmtList.insert(value.begin(), value.end());
+std::unordered_set<int> UsesStore::getAllStmt() {
+	std::unordered_set<int> stmtList;
+
+	for (const auto& [key, value] : stmtStore) {
+		stmtList.insert(value.begin(), value.end());
 	}
-	return modStmtList;
+	return stmtList;
 }
 
-void ModifiesStore::clear() {
-	modStmtStore.clear();
-	modVarStore.clear();
+
+void UsesStore::clear() {
+	stmtStore.clear();
+	varStore.clear();
 }

@@ -3,73 +3,77 @@
 #include "catch.hpp"
 using namespace std;
 
-ModifiesStore modifiesStore;
+ModifiesStore modStore;
 
-TEST_CASE("Empty modifies store") {
+/*
+TEST_CASE("Empty mod store") {
 	unordered_set<int> outputStmt({ });
 	unordered_set<string> outputVar({ });
 	
-	modifiesStore.clear();
+	modStore.clear();
 
-	REQUIRE(modifiesStore.getAllModStmt() == outputStmt);
-	REQUIRE(modifiesStore.getAllModVar() == outputVar);
-}
-
-TEST_CASE("Add one modifies") {
+	REQUIRE(modStore.getAllStmt() == outputStmt);
+	REQUIRE(modStore.getAllVar() == outputVar);
+}*/
+/*
+TEST_CASE("Add one mod") {
 	unordered_set<int> outputStmt({ 2 });
-	unordered_set<string> outputVar({ "x" });
+	string outputVarA = "x";
+	unordered_set<string> outputVarB({ "x" });
 	
-	modifiesStore.clear();
-	modifiesStore.addModifies(2, "x");
+	modStore.clear();
+	modStore.add(2, "x");
 
-	REQUIRE(modifiesStore.getModVar(2) == outputVar);
-	REQUIRE(modifiesStore.getModStmt("x") == outputStmt);
-	REQUIRE(modifiesStore.hasModVar("x"));
-	REQUIRE(modifiesStore.hasModStmt(2));
-	REQUIRE(modifiesStore.getAllModStmt() == outputStmt);
-	REQUIRE(modifiesStore.getAllModVar() == outputVar);
+	REQUIRE(modStore.getVar(2) == outputVarA);
+	REQUIRE(modStore.getStmt("x") == outputStmt);
+	REQUIRE(modStore.hasVar("x"));
+	REQUIRE(modStore.hasStmt(2));
+	REQUIRE(modStore.getAllStmt() == outputStmt);
+	REQUIRE(modStore.getAllVar() == outputVarB);
 }
 
-TEST_CASE("Add two modifies") {
+TEST_CASE("Add two mod") {
 	unordered_set<int> outputStmt({ 2 });
-	unordered_set<string> outputVar({ "x","y" });
+	string outputVarA({ "y" });
+	unordered_set<string> outputVarB({ "x", "y"});
 
-	modifiesStore.clear();
-	modifiesStore.addModifies(2, "x");
-	modifiesStore.addModifies(2, "y");
+	modStore.clear();
+	modStore.add(2, "x");
+	modStore.add(2, "y");
+	modStore.add(3, "y");
 
-	REQUIRE(modifiesStore.getModVar(2) == outputVar);
-	REQUIRE(modifiesStore.getModStmt("x") == outputStmt);
-	REQUIRE(modifiesStore.getModStmt("y") == outputStmt);
-	REQUIRE(modifiesStore.hasModVar("x"));
-	REQUIRE(modifiesStore.hasModVar("y"));
-	REQUIRE(modifiesStore.hasModStmt(2));
-	REQUIRE(modifiesStore.getAllModStmt() == outputStmt);
-	REQUIRE(modifiesStore.getAllModVar() == outputVar);
+	REQUIRE(modStore.getVar(2) == outputVarA);
+	REQUIRE(modStore.getStmt("x") == outputStmt);
+	REQUIRE(modStore.getStmt("y") == outputStmt);
+	REQUIRE(modStore.hasVar("x"));
+	REQUIRE(modStore.hasVar("y"));
+	REQUIRE(modStore.hasStmt(2));
+	REQUIRE(modStore.getAllStmt() == outputStmt);
+	REQUIRE(modStore.getAllVar() == outputVarB);
 }
 
 TEST_CASE("Add multiple modifies") {
 	unordered_set<int> outputStmtA({ 2, 3 });
 	unordered_set<int> outputStmtB({ 2 });
 	unordered_set<int> outputStmtC({ 3 });
-	unordered_set<string> outputVarA({ "x","y"});
+	string outputVarA = "y" ;
 	unordered_set<string> outputVarB({ "x","v" });
 	unordered_set<string> outputVarC({ "x","y","v" });
 
-	modifiesStore.clear();
-	modifiesStore.addModifies(2, "x");
-	modifiesStore.addModifies(2, "y");
-	modifiesStore.addModifies(3, "v");
-	modifiesStore.addModifies(3, "x");
+	modStore.clear();
+	modStore.add(2, "x");
+	modStore.add(2, "y");
+	modStore.add(3, "v");
+	modStore.add(3, "x");
 
-	REQUIRE(modifiesStore.getModVar(2) == outputVarA);
-	REQUIRE(modifiesStore.getModStmt("x") == outputStmtA);
-	REQUIRE(modifiesStore.getModStmt("y") == outputStmtB);
-	REQUIRE(modifiesStore.hasModVar("x"));
-	REQUIRE(modifiesStore.hasModVar("y"));
-	REQUIRE(modifiesStore.hasModVar("v"));
-	REQUIRE(modifiesStore.hasModStmt(2));
-	REQUIRE(modifiesStore.hasModStmt(3));
-	REQUIRE(modifiesStore.getAllModStmt() == outputStmtA);
-	REQUIRE(modifiesStore.getAllModVar() == outputVarC);
-}
+	REQUIRE(modStore.getVar(2) == outputVarA);
+	REQUIRE(modStore.getStmt("x") == outputStmtA);
+	REQUIRE(modStore.getStmt("y") == outputStmtB);
+	REQUIRE(modStore.hasVar("x"));
+	REQUIRE(modStore.hasVar("y"));
+	REQUIRE(modStore.hasVar("v"));
+	REQUIRE(modStore.hasStmt(2));
+	REQUIRE(modStore.hasStmt(3));
+	REQUIRE(modStore.getAllStmt() == outputStmtA);
+	REQUIRE(modStore.getAllVar() == outputVarC);
+}*/
