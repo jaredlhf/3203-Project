@@ -39,3 +39,16 @@ TEST_CASE("Add two follows") {
 	REQUIRE(followsStore.hasFollower(4));
 	REQUIRE(!followsStore.hasFollowee(4));
 }
+
+TEST_CASE("Add duplicate follows") {
+	followsStore.clear();
+	followsStore.addFollows(1, 3);
+	followsStore.addFollows(1, 3);
+
+	REQUIRE(followsStore.getFollowee(3) == 1);
+	REQUIRE(followsStore.getFollower(1) == 3);
+	REQUIRE(followsStore.hasFollowee(1));
+	REQUIRE(followsStore.hasFollower(3));
+	REQUIRE(!followsStore.hasFollowee(3));
+	REQUIRE(!followsStore.hasFollower(1));
+}

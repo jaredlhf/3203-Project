@@ -2,17 +2,15 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 #include "StatementStore.h"
 
 StatementStore::StatementStore() {}
 
-void StatementStore::addStmt(string stmtType, int lineNum) {
+void StatementStore::addStmt(std::string stmtType, int lineNum) {
 	stmtStore[stmtType].emplace(lineNum);
 }
 
-unordered_set<int> StatementStore::getAllStmt(string stmtType) {
+unordered_set<int> StatementStore::getAllStmt(std::string stmtType) {
 	if (has(stmtType)) {
 		return stmtStore[stmtType];
 	}
@@ -21,7 +19,7 @@ unordered_set<int> StatementStore::getAllStmt(string stmtType) {
 	}
 }
 
-bool StatementStore::has(string stmtType) {
+bool StatementStore::has(std::string stmtType) {
 	if (stmtStore.find(stmtType) != stmtStore.end()) {
 		return true;
 	}
