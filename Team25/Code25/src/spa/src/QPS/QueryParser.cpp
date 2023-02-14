@@ -3,6 +3,7 @@
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
 #include "constants/Clause.h"
+#include "constants/Wildcard.h"
 
 std::string SELECT_MARKER = "Select";
 std::string PATTERN_MARKER = "pattern";
@@ -57,7 +58,7 @@ bool QueryParser::isValidNaming(const std::string& s) {
 bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     std::unordered_set<std::string>& declared_synonyms, 
     std::unordered_set<std::string>& assignment_synonyms) {
-    
+
     if (s.size() < MIN_DECLARATION_LENGTH) {
         std::cout << "too short" << std::endl;
         return false;
@@ -111,19 +112,19 @@ bool QueryParser::isValidEntRef(const std::string& s) {
 bool QueryParser::isValidExpression(std::vector<std::string> s) {
     if (s.size() == 1) {
         std::string token = removeQuotations(s[0]);
-        return token == Constants::WILDCARD || isValidNaming(token) || isValidIntegerString(token);
+        return token == Constants::WILDCARD;
     }
     if (s.size() == 3) {
         if (s[0] == s[2] && s[0] == Constants::WILDCARD) {
             std::string token = removeQuotations(s[1]);
-            return token == Constants::WILDCARD || isValidNaming(token) || isValidIntegerString(token);
+            return isValidNaming(token) || isValidIntegerString(token);
         }
     }
     return false;
 
 }
 
-ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, std::unordered_set<std::string> assignment_synonyms) {
+ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations) {
     std::string keyword;
     std::string entRef;
     std::vector<std::string> expression;
@@ -160,8 +161,29 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
                 std::cout << "invalid entref" << std::endl;
                 return response;
             }
-            response.setEntRef(Synonym::create(Constants::VARIABLE, s[ptr]));
-            
+            // if is wildcard
+            if (s[ptr] == "_") {
+                response.setEntRef(Wildcard::create());
+            // if is variable synonym, check if already declared
+            } else if (s[ptr].find('"') == std::string::npos) {
+                bool isDeclared = false;
+
+                for (auto& d : declarations) {
+                    if (d->getKeyword() == Constants::VARIABLE && d->getName() == s[ptr]) {
+                        response.setEntRef(Synonym::create(Constants::VARIABLE, s[ptr]));
+                        isDeclared = true;
+                        break;
+                    }
+                }
+
+                if (!isDeclared) {
+                    response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
+                }
+            } 
+            // if is constant value
+            else {
+                response.setEntRef(Value::create(s[ptr]));
+            }
         }
 
         if (ptr == 4 && s[ptr] != ",") {
@@ -181,12 +203,11 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         return response;
     }
 
-    std::string value = expression[0];
     if (expression.size() > 1) {
-        value = expression[1];
+        response.setPattern(Value::create(expression[1]));
+    } else {
+        response.setPattern(Wildcard::create());    
     }
-    
-    response.setPattern(Value::create(value));
 
     return response;
 }
@@ -281,28 +302,34 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     // get synonym for select statement
     while (ptr < tokens.size()) {
-        if (afterSynonym) {
+        if (afterSynonym && tokens[ptr] != PATTERN_MARKER) {
+            std::cout << "invalid select synonym" << std::endl;
+            return generateSemanticErrorResponse();
+        } else if (afterSynonym && tokens[ptr] == PATTERN_MARKER){
             break;
         }
 
         if (tokens[ptr] != SELECT_MARKER) {
-            for (std::shared_ptr<Synonym> element: declarations) {
+            // check if synonym used in select statement exists in declaration
+            for (auto& element: declarations) {
                 if (element->matchesName(tokens[ptr])) {
                     synonym = element;
+                    afterSynonym = true;
+                    break;
                 }
             }
-            afterSynonym = true;
+            
         }
         ptr++;
     }
 
     while (ptr < tokens.size()) {
         if (tokens[ptr] == ";") {
-            std::cout << "invalid token after declarations" << std::endl;
+            std::cout << "invalid semicolon token after declarations" << std::endl;
             return generateSyntaxErrorResponse();
         }
         // get pattern clause after declarations and select synonym
-        if (tokens[ptr] == "pattern") {
+        if (tokens[ptr] == PATTERN_MARKER) {
             std::vector<std::string> patternTokens = {};
             while (ptr < tokens.size()) {
                 if (tokens[ptr] == ")") {
@@ -313,7 +340,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 ptr++;
             }
 
-            ValidatePatternResponse response = validatePatternClause(patternTokens, assignment_synonyms);
+            ValidatePatternResponse response = validatePatternClause(patternTokens, assignment_synonyms, declarations);
 
             if (response.getAssignSyn()->getKeyword() == Constants::SEMANTIC_ERROR) {
                 std::cout << "semantic error on pattern" << std::endl;
@@ -332,6 +359,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
             }
         }
+
         ptr++;    
     }
 
