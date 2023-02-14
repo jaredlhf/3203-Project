@@ -19,6 +19,7 @@ public:
 
 	// Clause functions
 	std::string getKeyword();
+	bool compare(std::shared_ptr<Clause> other);
 
 	// Functions to be overriden by subclasses of Clause
 	virtual Constants::ClauseResult resolve();
