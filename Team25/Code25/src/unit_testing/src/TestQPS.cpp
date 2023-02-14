@@ -12,19 +12,25 @@ SCENARIO("Mocking behavior of QPS") {
 		ProcedureStore ps;
 		StatementStore ss;
 		ParserResponse response;
-		PkbRetriever pkbRetriever(&vs, &cs, &fs, &ps, &ss);
+		std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
+		std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
+		std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
+		std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
+		std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
 
 		WHEN("The qps object is created") {
-			Qps qps(&pkbRetriever);
+			Qps qps(&pkbRet);
 			THEN("For a given query string and population of the pkbRetriever") {
 				list<string> expected = { "x", "y", "z" };
 				list<string> res;
 				
 				string query = "variable x, v; Select v";
 
-				vs.addVar("x");
-				vs.addVar("y");
-				vs.addVar("z");
+				vsPointer -> addVar("x");
+				vsPointer -> addVar("y");
+				vsPointer -> addVar("z");
 
 				qps.query(query, res);
 				REQUIRE(res == expected);

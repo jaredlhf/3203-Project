@@ -15,7 +15,8 @@ using namespace std;
  * Constructor class for PkbRetriever
  * param: VarStorage* varStore
  */
-PkbRetriever::PkbRetriever(VariableStore* varStore, ConstantStore* constStore, FollowsStore* followsStore, ProcedureStore* procedureStore, StatementStore* statementStore) {
+
+PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;

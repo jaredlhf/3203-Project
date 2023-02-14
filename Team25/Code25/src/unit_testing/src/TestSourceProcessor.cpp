@@ -40,7 +40,13 @@ TEST_CASE("Test processSimple()") {
     FollowsStore fs;
     ProcedureStore ps;
     StatementStore ss;
-    PkbPopulator p = PkbPopulator(&vs, &cs, &fs, &ps, &ss);
+    std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
+    std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
+    std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
+    std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
+    std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+
+    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"
@@ -54,7 +60,7 @@ TEST_CASE("Test processSimple()") {
     file.close();
     //std::cout << vs.getAllVar().size() << std::endl;
 
-    sp.processSimple(fileLocation, &p);
+    sp.processSimple(fileLocation, &pkbPop);
 
     //std::cout << vs.getAllVar().size() << std::endl;
 
