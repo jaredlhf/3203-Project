@@ -6,6 +6,19 @@
 
 using namespace std;
 
+// TESTS FOR ENTITY OVERRIDEN FUNCTIONS
+TEST_CASE("Synonym classes return the right values for Entity parent class virtual functions") {
+	CallSynonym cl("cll");
+	ProcedureSynonym pr("cll");
+	StmtSynonym st("cll");
+	REQUIRE(cl.isSynonym() == true);
+	REQUIRE(pr.isConstant() == false);
+	REQUIRE(st.isWildcard() == false);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "a")->isSynonym() == true);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "a")->isConstant() == false);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "a")->isWildcard() == false);
+}
+
 // TESTS FOR BASE SYNONYM CLASS FUNCTIONS
 TEST_CASE("Synonym name matches given name works correctly") {
 	CallSynonym cl("cll");
@@ -47,16 +60,16 @@ TEST_CASE("Adding results to set will NOT match with different set") {
 
 // TESTS FOR STATIC SYNONYM CLASS FUNCTIONS
 TEST_CASE("create function creates the right classes based on the keywords passed in") {
-	REQUIRE(Synonym::create(Constants::STMT, "x").matchesKeyword(Constants::STMT));
-	REQUIRE(Synonym::create(Constants::READ, "x").matchesKeyword(Constants::READ));
-	REQUIRE(Synonym::create(Constants::PRINT, "x").matchesKeyword(Constants::PRINT));
-	REQUIRE(Synonym::create(Constants::CALL, "x").matchesKeyword(Constants::CALL));
-	REQUIRE(Synonym::create(Constants::WHILE, "x").matchesKeyword(Constants::WHILE));
-	REQUIRE(Synonym::create(Constants::IF, "x").matchesKeyword(Constants::IF));
-	REQUIRE(Synonym::create(Constants::ASSIGN, "x").matchesKeyword(Constants::ASSIGN));
-	REQUIRE(Synonym::create(Constants::VARIABLE, "x").matchesKeyword(Constants::VARIABLE));
-	REQUIRE(Synonym::create(Constants::CONSTANT, "x").matchesKeyword(Constants::CONSTANT));
-	REQUIRE(Synonym::create(Constants::PROCEDURE, "x").matchesKeyword(Constants::PROCEDURE));
+	REQUIRE(Synonym::create(Constants::STMT, "x")->matchesKeyword(Constants::STMT));
+	REQUIRE(Synonym::create(Constants::READ, "x")->matchesKeyword(Constants::READ));
+	REQUIRE(Synonym::create(Constants::PRINT, "x")->matchesKeyword(Constants::PRINT));
+	REQUIRE(Synonym::create(Constants::CALL, "x")->matchesKeyword(Constants::CALL));
+	REQUIRE(Synonym::create(Constants::WHILE, "x")->matchesKeyword(Constants::WHILE));
+	REQUIRE(Synonym::create(Constants::IF, "x")->matchesKeyword(Constants::IF));
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x")->matchesKeyword(Constants::ASSIGN));
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->matchesKeyword(Constants::VARIABLE));
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->matchesKeyword(Constants::CONSTANT));
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->matchesKeyword(Constants::PROCEDURE));
 }
 
 

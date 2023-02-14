@@ -8,6 +8,8 @@
 
 using namespace std;
 
+// TODO: Delete file
+
 class VariableStore {
 private :
 	unordered_set<string> varStore;

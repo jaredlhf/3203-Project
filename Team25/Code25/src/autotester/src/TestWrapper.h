@@ -23,6 +23,12 @@ class TestWrapper : public AbstractWrapper {
     ProcedureStore ps;
     StatementStore ss;
 
+    std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+    std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+    std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+    std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+    std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+
     PkbRetriever pkbRetriever;
     PkbPopulator pkbPopulator;
  public:

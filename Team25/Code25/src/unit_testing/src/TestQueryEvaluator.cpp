@@ -20,15 +20,21 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ProcedureStore ps;
 				StatementStore ss;
 				ParserResponse response;
-				PkbRetriever pkbRetriever(&vs, &cs, &fs, &ps, &ss);
+				std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
+				std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
+				std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
+				std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
+				std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+
+				PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
 
 				response.setDeclarations({ {"variable", "v", ",", "x"} });
 				response.setSynonym("v");
-				vs.addVar("x");
-				vs.addVar("y");
-				vs.addVar("z");
+				vsPointer -> add("x");
+				vsPointer -> add("y");
+				vsPointer -> add("z");
 
-				list<string> res = qe.evaluate(response, &pkbRetriever);
+				list<string> res = qe.evaluate(response, &pkbRet);
 				REQUIRE(res == expected);
 			}
 		}
