@@ -13,11 +13,11 @@ SCENARIO("Working version of PkbRetriever") {
 		StatementStore ss;
 
 		WHEN("The PkbRetriever references empty stores") {
-			std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
-			std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
-			std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
-			std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
-			std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
 			THEN("Getting all variables should return an empty list") {
@@ -53,10 +53,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
-			vsPointer -> addVar("x");
-			csPointer -> addConst(1);
+			vsPointer -> add("x");
+			csPointer -> add(1);
 			fsPointer -> addFollows(1, 2);
-			psPointer -> addProc("testProc");
+			psPointer -> add("testProc");
 			ssPointer -> addStmt("assign", 1);
 			THEN("Getting all variables hsould return a non empty list") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);

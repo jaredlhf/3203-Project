@@ -5,11 +5,9 @@
 using namespace std;
 
 #include "PkbRetriever.h"
-#include "VariableStore.h"
-#include "ConstantStore.h"
 #include "FollowsStore.h"
-#include "ProcedureStore.h"
 #include "StatementStore.h"
+#include "EntityStore.h"
 
 /*
  * Constructor class for PkbRetriever
@@ -25,11 +23,11 @@ PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 };
 
 std::unordered_set<std::string> PkbRetriever::getAllVar() {
-	return this->varStorage->getAllVar();
+	return this->varStorage->getAll();
 }
 
 std::unordered_set<int> PkbRetriever::getAllConst() {
-	return this->constStorage->getAllConst();
+	return this->constStorage->getAll();
 }
 
 int PkbRetriever::getFollowee(int rightLineNum) {
@@ -49,7 +47,7 @@ std::unordered_set<int> PkbRetriever::getAllFollowees() {
 }
 
 std::unordered_set<std::string> PkbRetriever::getAllProc() {
-	return this->procedureStorage->getAllProc();
+	return this->procedureStorage->getAll();
 }
 
 std::unordered_set<int> PkbRetriever::getAllStmt(std::string stmtType) {

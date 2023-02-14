@@ -1,25 +1,24 @@
 #pragma once
+
 #include <vector>
 #include <string>
 
-using namespace std;
-
 class ParserResponse {
     private:
-        vector<vector<string>> declarations;
-        string synonym;
-        // vector<string> suchThatClause;
-        // vector<string> patternClause;
+        std::vector<std::vector<std::string>> declarations;
+        std::string synonym;
+        // std::vector<std::string> suchThatClause;
+        // std::vector<std::string> patternClause;
         
     public:
-        void setDeclarations(vector<vector<string>> declarations);
-        void setSynonym(string synonym);
-        // void setSuchThatClause(vector<string> clause);
-        // void setPatternClause(vector<string> clause);
-        string getSynonym();
-        vector<vector<string>> getDeclarations();
-        // vector<string> getSuchThatClause();
-        // vector<string> getPatternClause();
+        void setDeclarations(std::vector<std::vector<std::string>> declarations);
+        void setSynonym(std::string synonym);
+        // void setSuchThatClause(std::vector<std::string> clause);
+        // void setPatternClause(std::vector<std::string> clause);
+        std::string getSynonym();
+        std::vector<std::vector<std::string>> getDeclarations();
+        // std::vector<std::string> getSuchThatClause();
+        // std::vector<std::string> getPatternClause();
         static bool compare(ParserResponse a, ParserResponse b);
 
 

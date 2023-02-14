@@ -7,6 +7,8 @@
 
 using namespace std;
 
+// TODO: Delete file
+
 class ConstantStore {
 private:
 	unordered_set<int> constStore;
@@ -18,3 +20,4 @@ public:
 	int size();
 	void clear();
 };
+

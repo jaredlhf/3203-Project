@@ -30,9 +30,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 
 				response.setDeclarations({ {"variable", "v", ",", "x"} });
 				response.setSynonym("v");
-				vsPointer -> addVar("x");
-				vsPointer -> addVar("y");
-				vsPointer -> addVar("z");
+				vsPointer -> add("x");
+				vsPointer -> add("y");
+				vsPointer -> add("z");
 
 				list<string> res = qe.evaluate(response, &pkbRet);
 				REQUIRE(res == expected);

@@ -5,11 +5,9 @@
 
 using namespace std;
 
-#include "VariableStore.h"
-#include "ConstantStore.h"
 #include "FollowsStore.h"
-#include "ProcedureStore.h"
 #include "StatementStore.h"
+#include "EntityStore.h"
 
 class PkbPopulator {
 

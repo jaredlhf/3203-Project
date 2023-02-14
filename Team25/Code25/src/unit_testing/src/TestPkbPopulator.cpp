@@ -14,11 +14,11 @@ SCENARIO("Working version of PkbPopulator") {
 	
 
 		WHEN("The PkbPopulator references empty stores") {
-			std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
-			std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
-			std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
-			std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
-			std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {

@@ -5,11 +5,9 @@
 using namespace std;
 
 #include "PkbPopulator.h"
-#include "VariableStore.h"
-#include "ConstantStore.h"
 #include "FollowsStore.h"
-#include "ProcedureStore.h"
 #include "StatementStore.h"
+#include "EntityStore.h"
 
 /*
  * Constructor class for PkbPopulator
@@ -25,11 +23,11 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 
 
 void PkbPopulator::addVar(std::string varName) {
-	this->varStorage->addVar(varName);
+	this->varStorage->add(varName);
 };
 
 void PkbPopulator::addConst(int constNum) {
-	this->constStorage->addConst(constNum);
+	this->constStorage->add(constNum);
 };
 
 void PkbPopulator::addFollows(int leftLineNum, int rightLineNum) {
@@ -37,7 +35,7 @@ void PkbPopulator::addFollows(int leftLineNum, int rightLineNum) {
 };
 
 void PkbPopulator::addProc(std::string procName) {
-	this->procedureStorage->addProc(procName);
+	this->procedureStorage->add(procName);
 };
 
 void PkbPopulator::addStmt(std::string stmtType, int lineNum) {

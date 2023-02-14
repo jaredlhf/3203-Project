@@ -28,9 +28,9 @@ SCENARIO("Mocking behavior of QPS") {
 				
 				string query = "variable x, v; Select v";
 
-				vsPointer -> addVar("x");
-				vsPointer -> addVar("y");
-				vsPointer -> addVar("z");
+				vsPointer -> add("x");
+				vsPointer -> add("y");
+				vsPointer -> add("z");
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
