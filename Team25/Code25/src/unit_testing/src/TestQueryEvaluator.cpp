@@ -1,7 +1,7 @@
 #include "catch.hpp"
+#include "PKB/PkbRetriever.h"
 #include "QPS/QueryEvaluator.h"
 #include "QPS/ParserResponse.h"
-#include "PKB/PkbRetriever.h"
 #include <iostream>
 
 using namespace std;
@@ -21,15 +21,21 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ProcedureStore ps;
 				StatementStore ss;
 				ParserResponse response;
-				PkbRetriever pkbRetriever(&vs, &cs, &fs, &ps, &ss);
+				std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+				std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+				std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+				std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+				std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
 
-				response.setDeclarations({Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
+				PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
 				response.setSynonym(Synonym::create(Constants::VARIABLE, "v"));
-				vs.addVar("x");
-				vs.addVar("y");
-				vs.addVar("z");
+				vsPointer->add("x");
+				vsPointer->add("y");
+				vsPointer->add("z");
 
-				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRetriever));
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
 		}
