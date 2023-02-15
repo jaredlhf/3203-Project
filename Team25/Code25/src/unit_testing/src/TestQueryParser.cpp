@@ -56,6 +56,16 @@ TEST_CASE("Parse query with incorrect design entity") {
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse query with no csv for declaration") {
+    std::vector<std::string> queryTokens = {"variable", "v", "x", ";", "Select", "v"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse query with repeated variable declarations") {
 
     std::vector<std::string> queryTokens = {"variable", "v", ",", "v", ";", "Select", "v"};
@@ -84,7 +94,7 @@ TEST_CASE("Parse query with random extra token") {
     // TODO: random should be identified as 
     std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "random", "pattern", "a", "(", "\"count\"", ",", "_", ")"};
     ParserResponse expectedResObject;
-    expectedResObject.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, ""));    
+    expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));    
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
@@ -193,6 +203,22 @@ TEST_CASE("Parse query with pattern that has no matching enclosing wildcard") {
     std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", "\"s\"", "_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+    
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+/**
+ * such that parsing with valid declarations
+ * 
+ */
+
+TEST_CASE("Parse correct query with such that Modifies") {
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "such", "that", "Modifies", "(", "1", ",", "2", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a")});
+    expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     

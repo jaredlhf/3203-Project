@@ -6,8 +6,11 @@
 #include <stdio.h>
 #include <iostream>
 #include "ParserResponse.h"
+#include "utils/ParserUtils.h"
+#include "constants/Constants.h"
 #include "constants/Synonym.h"
-#include "constants/Value.h"
+#include "constants/Clause.h"
+#include "constants/Wildcard.h"
 
 class ValidatePatternResponse {
     private:
@@ -40,18 +43,13 @@ class ValidatePatternResponse {
 
 class QueryParser {
     private:
-        bool isValidIntegerString(const std::string& s);
-        bool isValidNaming(const std::string& s);
         bool isValidDeclaration(std::vector<std::string> s,
             std::unordered_set<std::string>& declared_synonyms, 
             std::unordered_set<std::string>& assignment_synonyms);
         std::vector<std::shared_ptr<Synonym>> processDeclaration(std::vector<std::string> declaration, std::unordered_set<std::string> declared_synonyms);
         // static bool isValidSuchThatClause(vector<string> s);
         ValidatePatternResponse validatePatternClause(std::vector<std::string> s, std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations);
-        bool isValidEntRef(const std::string& s);
-        bool isValidExpression(std::vector<std::string> s);
         // static bool isStmtRef(string s);
-        std::string removeQuotations(const std::string& s);
         ParserResponse generateSyntaxErrorResponse();
         ParserResponse generateSemanticErrorResponse();
 

@@ -1,59 +1,9 @@
 #include "QueryParser.h"
-#include "ParserResponse.h"
-#include "constants/Constants.h"
-#include "constants/Synonym.h"
-#include "constants/Clause.h"
-#include "constants/Wildcard.h"
 
+int MIN_DECLARATION_LENGTH = 2;
 std::string SELECT_MARKER = "Select";
 std::string PATTERN_MARKER = "pattern";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
-
-// BUG: does not work with unordered_set.find()
-// std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
-// Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
-
-std::unordered_set<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
-int MIN_DECLARATION_LENGTH = 2;
-
-bool QueryParser::isValidIntegerString(const std::string& s) {
-    // checks if string exists
-    if (s.empty()) {
-        return false;
-    }
-
-    // checks if the string contains any non-numerical characters
-    std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    if (s.empty() || it != s.end()) {
-        return false;
-    }
-    
-    // checks if integer string has leading zeroes
-    if (s[0] == '0' && s.length() > 1) {
-        return false;
-    }
-
-    return true;
-}
-
-bool QueryParser::isValidNaming(const std::string& s) {
-
-    // checks if first character of synonym name or variable name starts with a letter
-    for (int i = 0; i < s.length(); i++) {
-        char c = s[i];
-
-        if (i == 0 && !isalpha(c)) {
-            return false;
-        }
-
-        if (!isalpha(c) && !isdigit(c)) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     std::unordered_set<std::string>& declared_synonyms, 
@@ -65,7 +15,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     }
 
     // check if design entity is valid
-    if (DESIGN_ENTITIES.find(s[0]) == DESIGN_ENTITIES.end()) {
+    if (!ParserUtils::isDesignEntityToken(s[0])) {
         std::cout << "invalid design entity" << std::endl;
         return false;
     }
@@ -80,7 +30,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
 
         // checking if variable names are in correct format
         if (i % 2 != 0) {
-            if (!isValidNaming(s[i])) {
+            if (!ParserUtils::isValidNaming(s[i])) {
                 std::cout << "invalid name" << std::endl;
                 return false;
             }
@@ -93,35 +43,6 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     }
 
     return true;
-}
-
-bool QueryParser::isValidEntRef(const std::string& s) {
-    
-    if (s == Constants::WILDCARD) {
-        return true;
-    }
-    if (s[0] == '\"' && s[s.size() - 1] == '\"') {
-        return isValidNaming(s.substr(1, s.size() - 2));
-    }
-
-    return isValidNaming(s);
-}
-
-// check for valid expression pattern for milestone 1
-// TODO: modify for pattern extensions with operators
-bool QueryParser::isValidExpression(std::vector<std::string> s) {
-    if (s.size() == 1) {
-        std::string token = removeQuotations(s[0]);
-        return token == Constants::WILDCARD;
-    }
-    if (s.size() == 3) {
-        if (s[0] == s[2] && s[0] == Constants::WILDCARD) {
-            std::string token = removeQuotations(s[1]);
-            return isValidNaming(token) || isValidIntegerString(token);
-        }
-    }
-    return false;
-
 }
 
 ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations) {
@@ -157,7 +78,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
 
         // check if entRef is valid
         if (ptr == 3) {
-            if (!isValidEntRef(s[ptr])) {
+            if (!ParserUtils::isValidEntRef(s[ptr])) {
                 std::cout << "invalid entref" << std::endl;
                 return response;
             }
@@ -199,7 +120,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         ptr++;
     }
 
-    if (!isValidExpression(expression)) {
+    if (!ParserUtils::isValidExpression(expression)) {
         return response;
     }
 
@@ -210,18 +131,6 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
     }
 
     return response;
-}
-
-std::string QueryParser::removeQuotations(const std::string& s) {
-    std::string newStr = s;
-
-    if (s[0] == '\"') {
-        newStr = s.substr(1, s.size() - 1);
-    }
-    if (newStr[newStr.size() - 1] == '\"') {
-        newStr = newStr.substr(0, newStr.size() - 1);
-    }
-    return newStr;
 }
 
 std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vector<std::string> declaration, std::unordered_set<std::string> declared_synonyms) {
@@ -266,25 +175,26 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     ParserResponse responseObject;
 
+    int tokenLength = tokens.size();
+    std::unordered_set<std::string> declared_synonyms = {};
+    std::unordered_set<std::string> assignment_synonyms = {};
+
     std::vector<std::shared_ptr<Synonym>> declarations = {};
     std::shared_ptr<Synonym> synonym = nullptr;
     // vector<string> suchThatClause = {};
     std::shared_ptr<Clause> patternClause = {};
 
-    std::unordered_set<std::string> declared_synonyms = {};
-    std::unordered_set<std::string> assignment_synonyms = {};
-
     int ptr = 0;
     bool afterSynonym = false;
 
     // get all declarations
-    while (ptr < tokens.size()) {
+    while (ptr < tokenLength) {
         // check if declarations are over
         if (tokens[ptr] == SELECT_MARKER) {
             break;
         }
         std::vector<std::string> declaration = {};
-        while (tokens[ptr] != ";" && ptr < tokens.size()) {
+        while (tokens[ptr] != ";" && ptr < tokenLength) {
             declaration.push_back(tokens[ptr]);
             ptr++;
         }
@@ -301,12 +211,16 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     }
 
     // get synonym for select statement
-    while (ptr < tokens.size()) {
-        if (afterSynonym && tokens[ptr] != PATTERN_MARKER) {
-            std::cout << "invalid select synonym" << std::endl;
-            return generateSemanticErrorResponse();
-        } else if (afterSynonym && tokens[ptr] == PATTERN_MARKER){
-            break;
+    while (ptr < tokenLength) {
+
+        if (afterSynonym) {
+            if (tokens[ptr] != PATTERN_MARKER && tokens[ptr] != SUCHTHAT_MARKER[0]) {
+                std::cout << "invalid select synonym" << std::endl;
+                return generateSyntaxErrorResponse(); 
+            }
+            if (tokens[ptr] == PATTERN_MARKER || tokens[ptr] == SUCHTHAT_MARKER[0]) {
+                break;
+            }
         }
 
         if (tokens[ptr] != SELECT_MARKER) {
@@ -323,7 +237,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         ptr++;
     }
 
-    while (ptr < tokens.size()) {
+    while (ptr < tokenLength) {
         if (tokens[ptr] == ";") {
             std::cout << "invalid semicolon token after declarations" << std::endl;
             return generateSyntaxErrorResponse();
@@ -331,7 +245,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         // get pattern clause after declarations and select synonym
         if (tokens[ptr] == PATTERN_MARKER) {
             std::vector<std::string> patternTokens = {};
-            while (ptr < tokens.size()) {
+            while (ptr < tokenLength) {
                 if (tokens[ptr] == ")") {
                     patternTokens.push_back(tokens[ptr]);
                     break;
@@ -353,11 +267,12 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             }
             patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
         }
-        if (ptr + 1 < tokens.size()) {
-            // get such that clause
-            if (tokens[ptr] == SUCHTHAT_MARKER[0] && tokens[ptr + 1] == SUCHTHAT_MARKER[1]) {
-
+        if (tokens[ptr] == SUCHTHAT_MARKER[1]) {
+            while (ptr < tokenLength) {
+                std::cout << tokens[ptr] << std::endl;
+                ptr++;
             }
+            
         }
 
         ptr++;    
