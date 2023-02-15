@@ -12,40 +12,40 @@
 
 class StmtParser {
 public:
-    virtual StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) = 0;
+    virtual std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) = 0;
     static std::shared_ptr<StmtParser> createStmtParser(std::string stmtType);
-    static StmtNode parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer);
+    static std::shared_ptr<StmtNode> parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer);
     static StmtLstNode parseStmtLst(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer);
 };
 
 class AssignParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class PrintParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class CallParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class WhileParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class IfParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 class ReadParser: public StmtParser {
 public:
-    StmtNode parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
+    std::shared_ptr<StmtNode> parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
 

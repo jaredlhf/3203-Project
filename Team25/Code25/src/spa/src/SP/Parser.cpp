@@ -14,8 +14,8 @@ void Parser::parseProgram() {
             throw std::invalid_argument("error: no procedures found");
         } else {
             ProcedureNode proc = parseProcedure();
-            StmtLstNode s = *(proc.getStmtLst());
-            for (const auto & i : (s.getStatements())) {
+            std::shared_ptr<StmtLstNode> s = proc.getStmtLst();
+            for (shared_ptr<StmtNode> i : (s->getStatements())) {
                 i->accept();
             }
         }

@@ -45,6 +45,8 @@ TEST_CASE("Test processSimple()") {
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"
                                  "  z = 3;\n"
+                                 "  read x;\n"
+                            "  print x;\n"
                                  "  } "
                                 ;
 

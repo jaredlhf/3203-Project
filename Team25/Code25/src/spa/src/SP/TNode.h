@@ -14,7 +14,7 @@ public:
 
 class StmtNode: public TNode {
 public:
-    virtual void accept(){ std::cout << "Stmt" << endl; }
+    virtual void accept() { std::cout << "stmt" <<endl; };
 protected:
     int lineNo;
 };
@@ -32,10 +32,20 @@ private:
 
 };
 
+class AssignNode: public StmtNode {
+public:
+    AssignNode(int lineNo, const std::string& variable, const std::string& expression);
+    void accept() override { std::cout << "assign" << std::endl; };
+    void print() const override{ std::cout << "Assign"  <<endl; }
+private:
+    std::string variable;
+    std::string expression;
+};
+
 class ReadNode: public StmtNode {
 public:
     ReadNode(int lineNo, const std::string& var);
-    void accept()  override{ std::cout << "read" << endl; }
+    void accept() override{ std::cout << "read" << endl; }
     void print() const override{ std::cout << "read" <<endl; }
 private:
     std::string variable;
@@ -53,7 +63,7 @@ private:
 class IfNode: public StmtNode {
 public:
     IfNode(int lineNo, const std::string& condExpr, std::shared_ptr<StmtLstNode> ifLst, std::shared_ptr<StmtLstNode> elseLst);
-    void accept()  override{ std::cout << "if" << endl; }
+    void accept() override{ std::cout << "if" << endl; }
     void print() const override{ std::cout << "if" <<endl; }
 private:
     std::string condExpr;
@@ -65,22 +75,14 @@ private:
 class WhileNode: public StmtNode {
 public:
     WhileNode(int lineNo, const std::string& condExpr, std::shared_ptr<StmtLstNode> stmtLst);
-    void accept()  override{ std::cout << "while" << endl; }
+    void accept() override { std::cout << "while" << endl; }
     void print() const override{ std::cout << "while" <<endl; }
 private:
     std::string condExpr;
     std::shared_ptr<StmtLstNode> stmtLst;
 };
 
-class AssignNode: public StmtNode {
-public:
-    AssignNode(int lineNo, const std::string& variable, const std::string& expression);
-    virtual void accept() override{ std::cout << "Assign1" << endl; }
-    void print() const override{ std::cout << "Assign"  <<endl; }
-private:
-    std::string variable;
-    std::string expression;
-};
+
 
 class ProcedureNode: public TNode {
 public:
