@@ -3,8 +3,7 @@
 
 
 TEST_CASE("accept()") {
-    TNode n = TNode();
-    n.accept();
+    AssignNode n = AssignNode(1,"v","x");
 }
 
 TEST_CASE("Create AssignNode") {

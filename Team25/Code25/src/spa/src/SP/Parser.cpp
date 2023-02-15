@@ -13,7 +13,11 @@ void Parser::parseProgram() {
         if (tokenizer->getTokens().empty()) {
             throw std::invalid_argument("error: no procedures found");
         } else {
-            parseProcedure();
+            ProcedureNode proc = parseProcedure();
+            StmtLstNode s = *(proc.getStmtLst());
+            for (const auto & i : (s.getStatements())) {
+                i->accept();
+            }
         }
     } while (!tokenizer->getTokens().empty());
 }

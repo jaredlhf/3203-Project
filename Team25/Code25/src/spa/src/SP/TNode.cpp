@@ -1,13 +1,15 @@
 #include "TNode.h"
 
 
-void TNode::accept() {
-    std::cout << "accept()" << std::endl;
-}
+//void TNode::accept() {
+//    this->print()
+//}
 
 StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts) {
     statements = stmts;
 }
+
+
 
 ReadNode::ReadNode(int line, const std::string& var) {
     variable = var;
