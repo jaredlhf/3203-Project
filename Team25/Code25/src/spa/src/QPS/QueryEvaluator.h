@@ -22,10 +22,11 @@ private:
 	std::shared_ptr<Clause> patternClause;
 	std::shared_ptr<Clause> suchThatClause;
 	void handleParserResponse(ParserResponse& response);
-	void initializeResultSynonym(std::shared_ptr<PkbRetriever> pkbRetriever);
 	
 
 public:
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectSynonym(
+		std::shared_ptr<Synonym> resultSynonym, std::shared_ptr<PkbRetriever> pkbRetriever);
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveClauses(
 		std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults);
 	std::list<std::string> evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever);
