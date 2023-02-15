@@ -132,7 +132,8 @@ TEST_CASE("Parse correct query with pattern: count constant value on LHS and s p
     ParserResponse expectedResObject;
     expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
-
+    expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"count\""), Value::create("\"s\"")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
     REQUIRE(expectedResObject.compare(resObj) == true);
@@ -143,6 +144,8 @@ TEST_CASE("Parse correct query ith pattern: variable v on LHS and partial patter
     ParserResponse expectedResObject;
     expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "v"), Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Synonym::create(Constants::VARIABLE, "v"), Value::create("\"s\"")));
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
@@ -215,11 +218,11 @@ TEST_CASE("Parse query with pattern that has no matching enclosing wildcard") {
  */
 
 TEST_CASE("Parse correct query with such that Modifies") {
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "such", "that", "Modifies", "(", "1", ",", "2", ")"};
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Modifies", "(", "1", ",", "x", ")"};
     ParserResponse expectedResObject;
-    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a")});
+    expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
-
+    expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
     REQUIRE(expectedResObject.compare(resObj) == true);

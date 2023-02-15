@@ -1,6 +1,5 @@
 #include "ParserUtils.h"
 
-
 // BUG: does not work with unordered_set.find()
 // std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
 //             Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
@@ -46,17 +45,62 @@ bool ParserUtils::isValidNaming(const std::string& s) {
     return true;
 }
 
-bool ParserUtils::isValidEntRef(const std::string& s) {
-    
+std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, std::vector<std::shared_ptr<Synonym>> declarations) {
     if (s == Constants::WILDCARD) {
-        return true;
-    }
-    if (s[0] == '\"' && s[s.size() - 1] == '\"') {
-        return isValidNaming(s.substr(1, s.size() - 2));
+        return Wildcard::create();
     }
 
-    return isValidNaming(s);
+    if (s.find('"') != std::string::npos && isValidNaming(s.substr(1, s.size() - 2))) {
+        return Value::create(s);
+    }
+
+    if (isValidNaming(s)) {
+        std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, s);
+        for (auto& d : declarations) {
+            if (d->compare(varSyn)) {
+                return varSyn;
+            }
+        }
+        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+    }
+
+return Synonym::create(Constants::SYNTAX_ERROR, "");
+
 }
+
+std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, std::vector<std::shared_ptr<Synonym>> declarations) {
+    if (s == Constants::WILDCARD) {
+        return Wildcard::create();
+    }
+
+    if (isValidIntegerString(s)) {
+        return Value::create(s);
+    }
+
+    if (isValidNaming(s)) {
+        std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, s);
+        for (auto& d : declarations) {
+            if (d->compare(varSyn)) {
+                return varSyn;
+            }
+        }
+        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+    }
+
+    return Synonym::create(Constants::SYNTAX_ERROR, "");
+
+}
+
+// bool ParserUtils::isValidStmtRef(const std::string& s) {
+//     if (s == Constants::WILDCARD) {
+//         return true;
+//     }
+//     if (isValidIntegerString(s)) {
+//         return true;
+//     }
+
+//     return isValidNaming(s);
+// }
 
 // check for valid expression pattern for milestone 1
 // TODO: modify for pattern extensions with operators
@@ -82,6 +126,14 @@ bool ParserUtils::isDesignEntityToken(const std::string& s) {
     return true;
 }
 
+bool ParserUtils::isRelRefToken(const std::string& s) {
+    if (RELREF.find(s) == RELREF.end()) {
+        std::cout << "invalid relref" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 std::string ParserUtils::removeQuotations(const std::string& s) {
     std::string newStr = s;
 
@@ -93,3 +145,4 @@ std::string ParserUtils::removeQuotations(const std::string& s) {
     }
     return newStr;
 }
+
