@@ -4,7 +4,7 @@
 #include <memory>
 
 
-class QpsTable {
+class QpsTable : public std::enable_shared_from_this<QpsTable> {
 private:
 	std::vector<std::string> headers;
 	std::set<std::vector<std::string>> data;
@@ -36,4 +36,5 @@ public:
 	std::vector<std::string> mergeInnerJoinRows(std::vector<std::string> row1, 
 		std::vector<std::string> row2, std::vector<std::pair<int, int>> cmnHeadIdx);
 	std::shared_ptr<QpsTable> innerJoin(std::shared_ptr<QpsTable> other);
+	std::shared_ptr<QpsTable> join(std::shared_ptr<QpsTable> other);
 };

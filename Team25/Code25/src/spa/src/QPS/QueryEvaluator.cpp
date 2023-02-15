@@ -35,8 +35,29 @@ void QueryEvaluator::initializeResultSynonym(std::shared_ptr<PkbRetriever> pkbRe
 	}
 }
 
-Constants::ClauseResult QueryEvaluator::resolveClause(std::vector<std::shared_ptr<Clause>> clauses) {
-	return Constants::ClauseResult::NO_MATCH;
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveClauses(
+	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults) {
+
+	// If there is a syn_err, sem_err or no match in the header, short-circuit and return
+	std::vector<Constants::ClauseResult> clauseResList;
+	for (std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> clauseRes : clauseResults) {
+		clauseResList.push_back(clauseRes.first);
+	}
+	Constants::ClauseResult limitingRes = Constants::getLowerBound(clauseResList);
+	if (limitingRes != Constants::ClauseResult::OK) {
+		return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(limitingRes, 
+			QpsTable::create());
+	}
+
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+	res.first = limitingRes;
+	res.second = QpsTable::create();
+
+	for (std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> clauseRes : clauseResults) {
+		res.second = res.second->join(clauseRes.second);
+	}
+
+	return res;
 }
 
 std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever) {

@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <memory>
 #include "ParserResponse.h"
+#include "QpsTable.h"
 #include "constants/Clause.h"
 #include "constants/Constants.h"
 #include "constants/Synonym.h"
@@ -22,8 +23,10 @@ private:
 	std::shared_ptr<Clause> suchThatClause;
 	void handleParserResponse(ParserResponse& response);
 	void initializeResultSynonym(std::shared_ptr<PkbRetriever> pkbRetriever);
-	Constants::ClauseResult resolveClause(std::vector<std::shared_ptr<Clause>> clauses);
+	
 
 public:
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveClauses(
+		std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults);
 	std::list<std::string> evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever);
 };

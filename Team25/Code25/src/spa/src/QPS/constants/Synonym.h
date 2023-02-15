@@ -26,6 +26,7 @@ public:
     bool compare(std::shared_ptr<Synonym> other);
     virtual std::unordered_set<std::string> getMatches();
     virtual bool isStmtRef();
+    virtual bool isVariableSyn();
 
     // Static functions
     static std::shared_ptr<Synonym> create(const std::string& type, const std::string& name);
@@ -82,6 +83,7 @@ class VariableSynonym : public Synonym {
 public:
     VariableSynonym(const std::string& name);
     virtual bool isStmtRef() override;
+    virtual bool isVariableSyn() override;
 };
 
 class ConstantSynonym : public Synonym {

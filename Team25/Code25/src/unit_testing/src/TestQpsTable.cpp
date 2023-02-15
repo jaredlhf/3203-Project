@@ -371,3 +371,128 @@ TEST_CASE("QpsTable innerJoin function returns right result for 2 common headers
 
 	REQUIRE(resData == expectedData);
 }
+
+TEST_CASE("QpsTable join function returns right result for 1 empty table as arg") {
+	std::vector<std::string> t1row1({ "1", "2" });
+	std::vector<std::string> t1row2({ "1", "3" });
+	std::vector<std::string> t1row3({ "4", "2" });
+	std::vector<std::string> t1row4({ "5", "3" });
+	std::set<std::vector<std::string>> t1Data({ t1row1, t1row2, t1row3, t1row4 });
+
+	std::vector<std::string> expectedrow1({ "1", "2" });
+	std::vector<std::string> expectedrow2({ "1", "3" });
+	std::vector<std::string> expectedrow3({ "4", "2" });
+	std::vector<std::string> expectedrow4({ "5", "3" });
+	std::set<std::vector<std::string>> expectedData({ expectedrow1, expectedrow2, expectedrow3, expectedrow4 });
+
+	std::vector<std::string> header1({ "a1", "v1" });
+	std::vector<std::string> expectedHeader({ "a1", "v1" });
+
+	std::shared_ptr<QpsTable> table1 = QpsTable::create(header1, t1Data);
+	std::shared_ptr<QpsTable> table2 = QpsTable::create();
+
+	std::shared_ptr<QpsTable> resTable = table1->join(table2);
+
+	REQUIRE(resTable->getData() == expectedData);
+	REQUIRE(resTable->getHeaders() == expectedHeader);
+	REQUIRE(table1->getData() == expectedData);
+	REQUIRE(table1->getHeaders() == expectedHeader);
+}
+
+TEST_CASE("QpsTable join function returns right result for 1 empty table as caller") {
+	std::vector<std::string> t1row1({ "1", "2" });
+	std::vector<std::string> t1row2({ "1", "3" });
+	std::vector<std::string> t1row3({ "4", "2" });
+	std::vector<std::string> t1row4({ "5", "3" });
+	std::set<std::vector<std::string>> t1Data({ t1row1, t1row2, t1row3, t1row4 });
+
+	std::vector<std::string> expectedrow1({ "1", "2" });
+	std::vector<std::string> expectedrow2({ "1", "3" });
+	std::vector<std::string> expectedrow3({ "4", "2" });
+	std::vector<std::string> expectedrow4({ "5", "3" });
+	std::set<std::vector<std::string>> expectedData({ expectedrow1, expectedrow2, expectedrow3, expectedrow4 });
+
+	std::vector<std::string> header1({ "a1", "v1" });
+	std::vector<std::string> expectedHeader({ "a1", "v1" });
+
+	std::shared_ptr<QpsTable> table1 = QpsTable::create(header1, t1Data);
+	std::shared_ptr<QpsTable> table2 = QpsTable::create();
+
+	std::shared_ptr<QpsTable> resTable = table2->join(table1);
+
+	REQUIRE(resTable->getData() == expectedData);
+	REQUIRE(resTable->getHeaders() == expectedHeader);
+	REQUIRE(table1->getData() == expectedData);
+	REQUIRE(table1->getHeaders() == expectedHeader);
+}
+
+TEST_CASE("QpsTable join function returns right result for no common headers (cross product)") {
+	std::vector<std::string> headers1({ "x", "s1" });
+	std::vector<std::string> headers2({ "1", "vv" });
+	std::vector<std::string> expectedHeader({ "x", "s1", "1", "vv" });
+
+	std::vector<std::string> res1Row1({ "1", "x1" });
+	std::vector<std::string> res1Row2({ "v", "s" });
+	std::set<std::vector<std::string>> res1Data({ res1Row1, res1Row2 });
+
+	std::vector<std::string> res2Row1({ "2", "x2" });
+	std::vector<std::string> res2Row2({ "v2", "s2" });
+	std::set<std::vector<std::string>> res2Data({ res2Row1, res2Row2 });
+
+	std::vector<std::string> expectedRow1({ "1", "x1", "2", "x2" });
+	std::vector<std::string> expectedRow2({ "1", "x1", "v2", "s2" });
+	std::vector<std::string> expectedRow3({ "v", "s", "2", "x2" });
+	std::vector<std::string> expectedRow4({ "v", "s", "v2", "s2" });
+	std::set<std::vector<std::string>> expectedData({ expectedRow1, expectedRow2, expectedRow3, expectedRow4 });
+
+	std::shared_ptr<QpsTable> res1 = QpsTable::create(headers1, res1Data);
+	std::shared_ptr<QpsTable> res2 = QpsTable::create(headers2, res2Data);
+	std::shared_ptr<QpsTable> resTable = res1->join(res2);
+
+	REQUIRE(res1->getHeaders() == headers1);
+	REQUIRE(res1->getData() == res1Data);
+	REQUIRE(res2->getHeaders() == headers2);
+	REQUIRE(res2->getData() == res2Data);
+	REQUIRE(resTable->getHeaders() == expectedHeader);
+	REQUIRE(resTable->getData() == expectedData);
+}
+
+TEST_CASE("QpsTable join function returns right result for tables with common headers (inner join)") {
+	std::vector<std::string> t1row1({ "x", "y", "z" });
+	std::vector<std::string> t1row2({ "p", "q", "r" });
+	std::vector<std::string> t1row3({ "1", "2", "3" });
+	std::vector<std::string> t1row4({ "x", "v", "z" });
+	std::set<std::vector<std::string>> t1Data({ t1row1, t1row2, t1row3, t1row4 });
+
+	std::vector<std::string> t2row1({ "e", "z", "x", "f" });
+	std::vector<std::string> t2row2({ "g", "z", "x", "h" });
+	std::vector<std::string> t2row3({ "i", "z", "1", "j" });
+	std::vector<std::string> t2row4({ "k", "r", "p", "l" });
+	std::vector<std::string> t2row5({ "m", "r", "p", "n" });
+	std::set<std::vector<std::string>> t2Data({ t2row1, t2row2, t2row3, t2row4, t2row5 });
+
+	std::vector<std::string> expectedRow1({ "x", "y", "z", "e", "f" });
+	std::vector<std::string> expectedRow2({ "x", "v", "z", "e", "f" });
+	std::vector<std::string> expectedRow3({ "x", "y", "z", "g", "h" });
+	std::vector<std::string> expectedRow4({ "x", "v", "z", "g", "h" });
+	std::vector<std::string> expectedRow5({ "p", "q", "r", "k", "l" });
+	std::vector<std::string> expectedRow6({ "p", "q", "r", "m", "n" });
+	std::set<std::vector<std::string>> expectedData({ expectedRow1, expectedRow2,
+		expectedRow3, expectedRow4, expectedRow5, expectedRow6 });
+
+	std::vector<std::string> header1({ "a", "b", "c" });
+	std::vector<std::string> header2({ "v", "c", "a", "r" });
+	std::vector<std::string> expectedHeader({ "a", "b", "c", "v", "r" });
+
+	std::shared_ptr<QpsTable> table1 = QpsTable::create(header1, t1Data);
+	std::shared_ptr<QpsTable> table2 = QpsTable::create(header2, t2Data);
+
+	std::shared_ptr<QpsTable> resTable = table1->join(table2);
+
+	REQUIRE(table1->getHeaders() == header1);
+	REQUIRE(table1->getData() == t1Data);
+	REQUIRE(table2->getHeaders() == header2);
+	REQUIRE(table2->getData() == t2Data);
+	REQUIRE(resTable->getHeaders() == expectedHeader);
+	REQUIRE(resTable->getData() == expectedData);
+}

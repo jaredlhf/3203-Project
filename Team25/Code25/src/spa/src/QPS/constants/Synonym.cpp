@@ -44,6 +44,10 @@ bool Synonym::isStmtRef() {
     return false;
 }
 
+bool Synonym::isVariableSyn() {
+    return false;
+}
+
 // Factory class for Synonyms
 std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::string& name) {
     if (type == Constants::STMT) return std::make_shared<StmtSynonym>(StmtSynonym(name));
@@ -138,6 +142,10 @@ VariableSynonym::VariableSynonym(const std::string& name) : Synonym(name) {
 
 bool VariableSynonym::isStmtRef() {
     return false;
+}
+
+bool VariableSynonym::isVariableSyn() {
+    return true;
 }
 
 ConstantSynonym::ConstantSynonym(const std::string& name) : Synonym(name) {

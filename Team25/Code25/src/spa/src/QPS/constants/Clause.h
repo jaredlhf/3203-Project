@@ -23,6 +23,7 @@ public:
 
 	// Functions to be overriden by subclasses of Clause
 	virtual Constants::ClauseResult resolve();
+	virtual bool isWrongArgs();
 	virtual bool isPatternClause();
 
 	// Factory method for Clause subclasses
@@ -32,42 +33,49 @@ public:
 class UsesClause : public Clause {
 public:
 	UsesClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class ModifiesClause : public Clause {
 public:
 	ModifiesClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class ParentClause : public Clause {
 public:
 	ParentClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class FollowsClause : public Clause {
 public:
 	FollowsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class ParentStClause : public Clause {
 public:
 	ParentStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class FollowsStClause : public Clause {
 public:
 	FollowsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 };
 
 class PatternClause : public Clause {
 public:
 	PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
 	virtual Constants::ClauseResult resolve() override;
 	virtual bool isPatternClause() override;
 };

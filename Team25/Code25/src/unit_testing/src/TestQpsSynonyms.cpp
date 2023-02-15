@@ -162,3 +162,27 @@ TEST_CASE("All concrete synonym classes returns the right results for isStmtRef 
 	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->isStmtRef() == false);
 	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->isStmtRef() == false);
 }
+
+TEST_CASE("All concrete synonym classes returns the right results for isVariableSyn function") {
+	StmtSynonym st("cll");
+	ReadSynonym re("cll");
+	PrintSynonym pr("cll");
+	CallSynonym cl("cll");
+	WhileSynonym wh("cll");
+	IfSynonym i("cll");
+	AssignSynonym asg("cll");
+	VariableSynonym var("cll");
+	ConstantSynonym cnst("cll");
+	ProcedureSynonym proc("cll");
+
+	REQUIRE(Synonym::create(Constants::STMT, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::READ, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::PRINT, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::WHILE, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::IF, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->isVariableSyn() == true);
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->isVariableSyn() == false);
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->isVariableSyn() == false);
+}

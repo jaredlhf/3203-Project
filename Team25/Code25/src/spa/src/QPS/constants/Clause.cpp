@@ -88,12 +88,41 @@ PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entit
 }
 
 // Overriden clause functions
+bool Clause::isWrongArgs() {
+    return true;
+}
+
 Constants::ClauseResult Clause::resolve() {
     std::cout << "resolve clause" << std::endl;
     return Constants::ClauseResult::SEM_ERR;
 }
 
 bool Clause::isPatternClause() {
+    return false;
+}
+
+
+// UsesClause overriden clause functions
+/*
+    For uses clauses, args is wrong if arg1 is not int or not stmtref type, or arg2 is int or not var type
+*/
+bool UsesClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isVariableSyn()) {
+        return true;
+    }
+
     return false;
 }
 
@@ -175,9 +204,58 @@ Constants::ClauseResult UsesClause::resolve() {
     return Constants::ClauseResult::OK;
 }
 
+
+// Modifies overriden clause functions
+/*
+    For modifies clauses, args is wrong if arg1 is not int or not stmtref type, or arg2 is int or not var type
+*/
+bool ModifiesClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isVariableSyn()) {
+        return true;
+    }
+
+    return false;
+}
+
 Constants::ClauseResult ModifiesClause::resolve() {
     std::cout << "resolve modifies clause" << std::endl;
     return Constants::ClauseResult::OK;
+}
+
+// Parent overriden clause functions
+/*
+    For parent clauses, args is wrong both args are not int or not stmtref type
+*/
+bool ParentClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
 }
 
 Constants::ClauseResult ParentClause::resolve() {
@@ -185,9 +263,28 @@ Constants::ClauseResult ParentClause::resolve() {
     return Constants::ClauseResult::OK;
 }
 
-Constants::ClauseResult ParentStClause::resolve() {
-    std::cout << "resolve parent* clause" << std::endl;
-    return Constants::ClauseResult::OK;
+// Follows overriden clause functions
+/*
+    For follows clauses, args is wrong both args are not int or not stmtref type
+*/
+bool FollowsClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
 }
 
 Constants::ClauseResult FollowsClause::resolve() {
@@ -195,9 +292,86 @@ Constants::ClauseResult FollowsClause::resolve() {
     return Constants::ClauseResult::OK;
 }
 
+// ParentSt overriden clause functions
+/*
+    For ParentSt clauses, args is wrong both args are not int or not stmtref type
+*/
+bool ParentStClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
+Constants::ClauseResult ParentStClause::resolve() {
+    std::cout << "resolve parent* clause" << std::endl;
+    return Constants::ClauseResult::OK;
+}
+
+// FollowsSt overriden clause functions
+/*
+    For FollowsSt clauses, args is wrong both args are not int or not stmtref type
+*/
+bool FollowsStClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
 Constants::ClauseResult FollowsStClause::resolve() {
     std::cout << "resolve follows* clause" << std::endl;
     return Constants::ClauseResult::OK;
+}
+
+// Pattern overriden clause functions
+/*
+    For Pattern clauses, args is wrong if arg1 is not varSyn or is int const, or if arg2 is synonym or is int const
+*/
+bool PatternClause::isWrongArgs() {
+    if (this->arg1->isConstant() && std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isVariableSyn()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym()) {
+        return true;
+    }
+
+    return false;
 }
 
 Constants::ClauseResult PatternClause::resolve() {

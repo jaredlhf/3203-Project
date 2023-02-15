@@ -46,6 +46,13 @@ TEST_CASE("Value isInt function returns the right output for non int string") {
 	REQUIRE(ent->isInt() == false);
 }
 
+TEST_CASE("Value isInt function returns the right output for semi int string") {
+	const std::string testInput = "12count";
+	std::shared_ptr<Value> ent = Value::create(testInput);
+
+	REQUIRE(ent->isInt() == false);
+}
+
 TEST_CASE("Value class compare function returns true for the same value") {
 	const std::string val = "test";
 	std::shared_ptr<Value> ent = Value::create(val);

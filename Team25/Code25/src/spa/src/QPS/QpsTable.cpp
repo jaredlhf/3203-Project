@@ -181,3 +181,19 @@ std::shared_ptr<QpsTable> QpsTable::innerJoin(std::shared_ptr<QpsTable> other) {
 
 	return res;
 }
+
+std::shared_ptr<QpsTable> QpsTable::join(std::shared_ptr<QpsTable> other) {
+	if (this->headers.size() == 0) {
+		return other;
+	}
+
+	if (other->headers.size() == 0) {
+		return shared_from_this();
+	}
+
+	if (hasOverlappingHeaders(other)) {
+		return this->innerJoin(other);
+	}
+
+	return this->crossProduct(other);
+}
