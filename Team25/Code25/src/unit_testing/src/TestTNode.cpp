@@ -10,6 +10,7 @@ TEST_CASE("accept()") {
 TEST_CASE("Create AssignNode") {
     string var = "x";
     string expr = "y + z";
-    AssignNode a = AssignNode(var, expr);
+    int lineNo = 1;
+    AssignNode a = AssignNode(lineNo, var, expr);
 
 }

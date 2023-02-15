@@ -24,15 +24,16 @@ std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
 
 StmtNode StmtParser::parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     shared_ptr<StmtParser> sp = createStmtParser(stmtType);
+    utils->incrementStmtNo();
     StmtNode sn = sp->parse(utils, tokenizer);
     return sn;
 }
 
 StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
-    std::vector<StmtNode> StmtLsts;
+    std::vector<std::shared_ptr<StmtNode>> StmtLsts;
     do {
         StmtNode sn = parseStmt(tokenizer->peek(), utils, tokenizer);
-        StmtLsts.push_back(sn);
+        StmtLsts.push_back(std::make_shared<StmtNode>(sn));
     } while(!RightBrace().isEqual(tokenizer->peek()));
     StmtLstNode node = StmtLstNode(StmtLsts);
     return node;
@@ -69,18 +70,21 @@ StmtNode AssignParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr
     } else {
         throw std::invalid_argument("Invalid expression ");
     }
-
+    AssignNode node = AssignNode(utils->getCurrentStmtNo(), lhs, rhs);
     utils->expect(std::make_shared<Semicolon>());
-    return StmtNode();
+
+    return node;
 }
 
 StmtNode PrintParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Read>());
-    utils->expect(std::make_shared<Name>());
+    std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
-    return StmtNode();
+    PrintNode node = PrintNode(utils->getCurrentStmtNo(), var);
+    return node;
 }
 
+//TODO: implementation
 StmtNode CallParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     return StmtNode();
 }
@@ -122,8 +126,10 @@ StmtNode WhileParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<
 
 
     utils->expect(std::make_shared<LeftBrace>());
-    parseStmtLst(utils, tokenizer);
+    StmtLstNode stmtLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
+
+    WhileNode node = WhileNode(utils->getCurrentStmtNo(), rhs, std::make_shared<StmtLstNode>(stmtLstNode));
     return StmtNode();
 }
 
@@ -166,18 +172,21 @@ StmtNode IfParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tok
 
     utils->expect(std::make_shared<Then>());
     utils->expect(std::make_shared<LeftBrace>());
-    parseStmtLst(utils, tokenizer);
+    StmtLstNode ifLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
     utils->expect(std::make_shared<Else>());
     utils->expect(std::make_shared<LeftBrace>());
-    parseStmtLst(utils, tokenizer);
+    StmtLstNode elseLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
-    return StmtNode();
+
+    IfNode node = IfNode(utils->getCurrentStmtNo(), rhs, std::make_shared<StmtLstNode>(ifLstNode), std::make_shared<StmtLstNode>(elseLstNode));
+    return node;
 }
 
 StmtNode ReadParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Read>());
-    utils->expect(std::make_shared<Name>());
+    std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
-    return StmtNode();
+    ReadNode node = ReadNode(utils->getCurrentStmtNo(), var);
+    return node;
 }
