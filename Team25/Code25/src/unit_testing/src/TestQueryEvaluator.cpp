@@ -28,7 +28,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				vs.addVar("y");
 				vs.addVar("z");
 
-				list<string> res = qe.evaluate(response, &pkbRetriever);
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRetriever));
 				REQUIRE(res == expected);
 			}
 		}

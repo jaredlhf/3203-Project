@@ -12,6 +12,37 @@ std::string Clause::getKeyword() {
     return this->keyword;
 }
 
+bool Clause::compare(std::shared_ptr<Clause> other) {
+    if (this->getKeyword() != other->getKeyword()) {
+        return false;
+    }
+
+    bool isSameArg1 = false;
+    bool isSameArg2 = false;
+
+    if (this->arg1->isConstant() && other->arg1->isConstant()) {
+        isSameArg1 = std::static_pointer_cast<Value>(this->arg1)->compare(std::static_pointer_cast<Value>(other->arg1));
+    }
+    else if (this->arg1->isWildcard() && other->arg1->isWildcard()) {
+        isSameArg1 = std::static_pointer_cast<Wildcard>(this->arg1)->compare(std::static_pointer_cast<Wildcard>(other->arg1));
+    }
+    else if (this->arg1->isSynonym() && other->arg1->isSynonym()) {
+        isSameArg1 = std::static_pointer_cast<Synonym>(this->arg1)->compare(std::static_pointer_cast<Synonym>(other->arg1));
+    }
+
+    if (this->arg2->isConstant() && other->arg2->isConstant()) {
+        isSameArg2 = std::static_pointer_cast<Value>(this->arg2)->compare(std::static_pointer_cast<Value>(other->arg2));
+    }
+    else if (this->arg2->isWildcard() && other->arg2->isWildcard()) {
+        isSameArg2 = std::static_pointer_cast<Wildcard>(this->arg2)->compare(std::static_pointer_cast<Wildcard>(other->arg2));
+    }
+    else if (this->arg2->isSynonym() && other->arg2->isSynonym()) {
+        isSameArg2 = std::static_pointer_cast<Synonym>(this->arg2)->compare(std::static_pointer_cast<Synonym>(other->arg2));
+    }
+
+    return isSameArg1 && isSameArg2;
+}
+
 // Factory function for Clause
 std::shared_ptr<Clause> Clause::create(const std::string clauseType, std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) {
     std::shared_ptr<Clause> res;
@@ -77,13 +108,70 @@ Constants::ClauseResult UsesClause::resolve() {
     // If neither args are synonyms, just check if clause returns a result
     if (this->arg1->isConstant()) {
         // Return syntax error result if arg1 is not a integer constant
-        // 
-        // Call pkb getAllModStmt if arg2 is wildcard
+        if (!std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+            return Constants::ClauseResult::SYN_ERR;
+        }
 
-        // Check if these 2 args are a key-value pair in pkb if arg2 is constant, or result err if arg2 not string constant
+        std::string v1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
+
+        // Call pkb getAllUsesVal(v1Val) if arg2 is wildcard
+        if (this->arg2->isWildcard()) {
+            bool validWildcard = std::static_pointer_cast<Wildcard>(this->arg2)->isGenericWildcard();
+            return validWildcard ? /*TODO CALL GETALLUSESVAL*/ Constants::ClauseResult::OK : Constants::ClauseResult::SYN_ERR;
+        }
+
+        if (this->arg2->isConstant()) {
+            // Check if these 2 args are a key-value pair in pkb if arg2 is constant, or result err if arg2 not string constant
+            std::shared_ptr<Value> v2 = std::static_pointer_cast<Value>(this->arg2);
+            if (v2->isInt()) {
+                return Constants::ClauseResult::SYN_ERR;
+            }
+            std::string v2Val = v2->getVal();
+            /* If v2 constant is in pkb, call getUsesStmt(v2Val). If its an empty set, return NOMATCH, else OK*/
+            // TODO replace with match logic | return Constants::ClauseResult::OK;
+        }
+
+        if (this->arg2->isSynonym()) {
+            std::shared_ptr<Synonym> s2 = std::static_pointer_cast<Synonym>(this->arg2);
+            if (!s2->matchesKeyword(Constants::VARIABLE)) {
+                return Constants::ClauseResult::SYN_ERR;
+            }
+
+            /*TODO Call getUsesVal(v1Val) and store answers in s2*/
+            // TODO return ok if matches found else no match
+            return Constants::ClauseResult::OK;
+        }
     }
 
     // If at least one arg contains a synonym, resolve the answer and store it in the synonym
+    std::shared_ptr<Synonym> s1 = std::static_pointer_cast<Synonym>(this->arg1);
+    if (!s1->isStmtRef()) {
+        return Constants::ClauseResult::SYN_ERR;
+    }
+    // If arg2 is wildcard, getAllUsesStmt and add to s1
+    if (this->arg2->isWildcard()) {
+        // TODO call getAllUsesStmt() and add all results to s1
+    }
+
+    if (this->arg2->isConstant()) {
+        bool isIntConst = std::static_pointer_cast<Value>(this->arg2)->isInt();
+        if (isIntConst) {
+            return Constants::ClauseResult::SYN_ERR;
+        }
+        std::string v2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
+        // TODO call getUsesStmt(v2Val) and add all results to s1
+    }
+
+    // Both arg1 and 2 are Synonyms, so query and store it in each of them
+    std::shared_ptr<Synonym> s2 = std::static_pointer_cast<Synonym>(this->arg2);
+    if (!s2->matchesKeyword(Constants::VARIABLE)) {
+        return Constants::ClauseResult::SYN_ERR;
+    }
+
+    // TODO call getAllUsesStmt() and store in s1
+    // TODO call getAllUsesVar() and store in s2
+    // TODO return no match if no results match else ok
+
     return Constants::ClauseResult::OK;
 }
 
