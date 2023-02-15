@@ -2,6 +2,7 @@
 
 ParserUtils::ParserUtils(std::shared_ptr<Tokenizer> t) {
     this->tokenizer = t;
+    currentStmtNo = 0;
 }
 
 std::string ParserUtils::expect(std::shared_ptr<Token> expectedToken) {
@@ -13,3 +14,12 @@ std::string ParserUtils::expect(std::shared_ptr<Token> expectedToken) {
     }
     return next;
 }
+
+int ParserUtils::getCurrentStmtNo() {
+    return currentStmtNo;
+}
+
+void ParserUtils::incrementStmtNo() {
+    currentStmtNo += 1;
+}
+
