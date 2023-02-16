@@ -1,7 +1,10 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include <set>
 #include <memory>
+#include "constants/Constants.h"
 
 
 class QpsTable : public std::enable_shared_from_this<QpsTable> {
@@ -19,6 +22,10 @@ public:
 	static std::shared_ptr<QpsTable> create();
 	static std::shared_ptr<QpsTable> create(std::vector<std::string> headers);
 	static std::shared_ptr<QpsTable> create(std::vector<std::string> headers, std::set<std::vector<std::string>> data);
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultSynErr();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultSemErr();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultNoMatch();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultOk();
 
 	// QpsTable instance functions
 	std::vector<std::string> getHeaders();

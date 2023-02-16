@@ -28,6 +28,25 @@ std::shared_ptr<QpsTable> QpsTable::create(std::vector<std::string> headers, std
 	return std::make_shared<QpsTable>(QpsTable(headers, data));
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefaultSynErr() {
+	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::SYN_ERR,
+		QpsTable::create());
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefaultSemErr() {
+	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::SEM_ERR,
+		QpsTable::create());
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefaultNoMatch() {
+	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::NO_MATCH,
+		QpsTable::create());
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefaultOk() {
+	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::NO_MATCH,
+		QpsTable::create());
+}
 
 // QPSTABLE INSTANCE FUNCTIONS
 std::vector<std::string> QpsTable::getHeaders() {

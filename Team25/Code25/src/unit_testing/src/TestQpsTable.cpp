@@ -496,3 +496,51 @@ TEST_CASE("QpsTable join function returns right result for tables with common he
 	REQUIRE(resTable->getHeaders() == expectedHeader);
 	REQUIRE(resTable->getData() == expectedData);
 }
+
+TEST_CASE("QpsTable getDefaultSynErr function returns the right results)") {
+	std::set<std::vector<std::string>> expectedData({});
+	std::vector<std::string> expectedHeader({});
+	Constants::ClauseResult expectedClauseRes = Constants::ClauseResult::SYN_ERR;
+
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res = QpsTable::getDefaultSynErr();
+
+	REQUIRE(res.first == expectedClauseRes);
+	REQUIRE(res.second->getHeaders() == expectedHeader);
+	REQUIRE(res.second->getData() == expectedData);
+}
+
+TEST_CASE("QpsTable getDefaultSemErr function returns the right results)") {
+	std::set<std::vector<std::string>> expectedData({});
+	std::vector<std::string> expectedHeader({});
+	Constants::ClauseResult expectedClauseRes = Constants::ClauseResult::SEM_ERR;
+
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res = QpsTable::getDefaultSemErr();
+
+	REQUIRE(res.first == expectedClauseRes);
+	REQUIRE(res.second->getHeaders() == expectedHeader);
+	REQUIRE(res.second->getData() == expectedData);
+}
+
+TEST_CASE("QpsTable getDefaultNoMatch function returns the right results)") {
+	std::set<std::vector<std::string>> expectedData({});
+	std::vector<std::string> expectedHeader({});
+	Constants::ClauseResult expectedClauseRes = Constants::ClauseResult::NO_MATCH;
+
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res = QpsTable::getDefaultNoMatch();
+
+	REQUIRE(res.first == expectedClauseRes);
+	REQUIRE(res.second->getHeaders() == expectedHeader);
+	REQUIRE(res.second->getData() == expectedData);
+}
+
+TEST_CASE("QpsTable getDefaultOk function returns the right results)") {
+	std::set<std::vector<std::string>> expectedData({});
+	std::vector<std::string> expectedHeader({});
+	Constants::ClauseResult expectedClauseRes = Constants::ClauseResult::NO_MATCH;
+
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res = QpsTable::getDefaultNoMatch();
+
+	REQUIRE(res.first == expectedClauseRes);
+	REQUIRE(res.second->getHeaders() == expectedHeader);
+	REQUIRE(res.second->getData() == expectedData);
+}

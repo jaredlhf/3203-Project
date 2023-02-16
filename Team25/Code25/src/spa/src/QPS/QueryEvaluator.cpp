@@ -5,7 +5,9 @@
 void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->declarations = response.getDeclarations();
 	this->resultSynonym = response.getSynonym();
-
+	this->patternSynonym = response.getAssignSynonym();
+	this->patternClause = response.getPatternClause();
+	this->suchThatClause = response.getSuchThatClause();
 }
 
 
@@ -119,9 +121,13 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 		resolveSelectSynonym(this->resultSynonym, pkbRetriever);
 	clauseResults.push_back(selectRes);
 
-	// TODO write implementation for suchThat clause retrieval
+	if (this->suchThatClause) {
+		// TODO write implementation for suchThat clause retrieval
+	}
 
-	// TODO write implementation for pattern clause retrieval
+	if (this->patternClause) {
+		// TODO write implementation for pattern clause retrieval
+	}
 
 	// TODO update implementation for join all logic
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =

@@ -182,8 +182,7 @@ TEST_CASE("isWrongArgs function in UsesClause class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::USES, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> intArg2Clause = Clause::create(Constants::USES, intValue, intValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::USES, varSyn, varSyn);
-	std::shared_ptr<Clause> nonVarArg2Clause = Clause::create(Constants::USES, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::USES, nonIntValue, intValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::USES, intValue, nonIntValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::USES, stmtSyn, varSyn);
 	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::USES, stmtSyn, nonIntValue);
@@ -191,12 +190,34 @@ TEST_CASE("isWrongArgs function in UsesClause class behaves as expected") {
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(intArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonVarArg2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
 	REQUIRE(validMixed1Clause->isWrongArgs() == false);
 	REQUIRE(validMixed2Clause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in UsesClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::USES, varSyn, varSyn);
+	std::shared_ptr<Clause> nonVarArg2Clause = Clause::create(Constants::USES, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::USES, varSyn, stmtSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::USES, intValue, nonIntValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::USES, stmtSyn, varSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::USES, stmtSyn, nonIntValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::USES, intValue, varSyn);
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonVarArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in ModifiesClause class behaves as expected") {
@@ -207,8 +228,7 @@ TEST_CASE("isWrongArgs function in ModifiesClause class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::MODIFIES, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> intArg2Clause = Clause::create(Constants::MODIFIES, intValue, intValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::MODIFIES, varSyn, varSyn);
-	std::shared_ptr<Clause> nonVarArg2Clause = Clause::create(Constants::MODIFIES, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::MODIFIES, nonIntValue, intValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::MODIFIES, intValue, nonIntValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::MODIFIES, stmtSyn, varSyn);
 	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::MODIFIES, stmtSyn, nonIntValue);
@@ -216,12 +236,34 @@ TEST_CASE("isWrongArgs function in ModifiesClause class behaves as expected") {
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(intArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonVarArg2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
 	REQUIRE(validMixed1Clause->isWrongArgs() == false);
 	REQUIRE(validMixed2Clause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in ModifiesClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::MODIFIES, varSyn, varSyn);
+	std::shared_ptr<Clause> nonVarArg2Clause = Clause::create(Constants::MODIFIES, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::MODIFIES, varSyn, stmtSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::MODIFIES, intValue, nonIntValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::MODIFIES, stmtSyn, varSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::MODIFIES, stmtSyn, nonIntValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::MODIFIES, intValue, varSyn);
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonVarArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in ParentClause class behaves as expected") {
@@ -232,21 +274,43 @@ TEST_CASE("isWrongArgs function in ParentClause class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::PARENT, nonIntValue, intValue);
 	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::PARENT, intValue, nonIntValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::PARENT, constSyn, stmtSyn);
-	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::PARENT, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::PARENT, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::PARENT, intValue, intValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::PARENT, stmtSyn, stmtSyn);
-	std::shared_ptr<Clause> invalidMixed1Clause = Clause::create(Constants::PARENT, stmtSyn, nonIntValue);
-	std::shared_ptr<Clause> invalidMixed2Clause = Clause::create(Constants::PARENT, constSyn, intValue);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::PARENT, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::PARENT, intValue, stmtSyn);
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg2Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed1Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in ParentClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::PARENT, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::PARENT, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::PARENT, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::PARENT, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::PARENT, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::PARENT, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::PARENT, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in Follows class behaves as expected") {
@@ -257,21 +321,43 @@ TEST_CASE("isWrongArgs function in Follows class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::FOLLOWS, nonIntValue, intValue);
 	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::FOLLOWS, intValue, nonIntValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::FOLLOWS, constSyn, stmtSyn);
-	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::FOLLOWS, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::PARENT, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::FOLLOWS, intValue, intValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::FOLLOWS, stmtSyn, stmtSyn);
-	std::shared_ptr<Clause> invalidMixed1Clause = Clause::create(Constants::FOLLOWS, stmtSyn, nonIntValue);
-	std::shared_ptr<Clause> invalidMixed2Clause = Clause::create(Constants::FOLLOWS, constSyn, intValue);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::PARENT, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::PARENT, intValue, stmtSyn);
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg2Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed1Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in FollowsClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::FOLLOWS, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::FOLLOWS, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::FOLLOWS, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::FOLLOWS, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::FOLLOWS, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::FOLLOWS, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::FOLLOWS, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in ParentSt class behaves as expected") {
@@ -282,21 +368,43 @@ TEST_CASE("isWrongArgs function in ParentSt class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::PARENTST, nonIntValue, intValue);
 	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::PARENTST, intValue, nonIntValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::PARENTST, constSyn, stmtSyn);
-	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::PARENTST, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::PARENTST, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::PARENTST, intValue, intValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::PARENTST, stmtSyn, stmtSyn);
-	std::shared_ptr<Clause> invalidMixed1Clause = Clause::create(Constants::PARENTST, stmtSyn, nonIntValue);
-	std::shared_ptr<Clause> invalidMixed2Clause = Clause::create(Constants::PARENTST, constSyn, intValue);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::PARENTST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::PARENTST, intValue, stmtSyn);
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg2Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed1Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in ParentStClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::PARENTST, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::PARENTST, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::PARENTST, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::PARENTST, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::PARENTST, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::PARENTST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::PARENTST, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in FollowsSt class behaves as expected") {
@@ -307,21 +415,43 @@ TEST_CASE("isWrongArgs function in FollowsSt class behaves as expected") {
 
 	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::FOLLOWSST, nonIntValue, intValue);
 	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::FOLLOWSST, intValue, nonIntValue);
-	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::FOLLOWSST, constSyn, stmtSyn);
-	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::FOLLOWSST, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::FOLLOWSST, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::FOLLOWSST, intValue, intValue);
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::FOLLOWSST, stmtSyn, stmtSyn);
-	std::shared_ptr<Clause> invalidMixed1Clause = Clause::create(Constants::FOLLOWSST, stmtSyn, nonIntValue);
-	std::shared_ptr<Clause> invalidMixed2Clause = Clause::create(Constants::FOLLOWSST, constSyn, intValue);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::FOLLOWSST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::FOLLOWSST, intValue, stmtSyn);
 
 	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg1Clause->isWrongArgs() == true);
-	REQUIRE(nonStmtArg2Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed1Clause->isWrongArgs() == true);
-	REQUIRE(invalidMixed2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
 	REQUIRE(validConstClause->isWrongArgs() == false);
 	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in FollowsStClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::FOLLOWSST, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::FOLLOWSST, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::FOLLOWSST, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::FOLLOWSST, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::FOLLOWSST, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::FOLLOWSST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::FOLLOWSST, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
 }
 
 TEST_CASE("isWrongArgs function in Pattern class behaves as expected") {
@@ -334,7 +464,6 @@ TEST_CASE("isWrongArgs function in Pattern class behaves as expected") {
 
 	std::shared_ptr<Clause> intArg1Clause = Clause::create(Constants::PATTERN, intValue, patternWildcard);
 	std::shared_ptr<Clause> intArg2Clause = Clause::create(Constants::PATTERN, varSyn, intValue);
-	std::shared_ptr<Clause> nonVarArg1Clause = Clause::create(Constants::PATTERN, stmtSyn, patternWildcard);
 	std::shared_ptr<Clause> synArg2Clause = Clause::create(Constants::PATTERN, nonIntValue, varSyn);
 	std::shared_ptr<Clause> valid1Clause = Clause::create(Constants::PATTERN, nonIntValue, genericWildcard);
 	std::shared_ptr<Clause> valid2Clause = Clause::create(Constants::PATTERN, genericWildcard, genericWildcard);
@@ -345,7 +474,6 @@ TEST_CASE("isWrongArgs function in Pattern class behaves as expected") {
 
 	REQUIRE(intArg1Clause->isWrongArgs() == true);
 	REQUIRE(intArg2Clause->isWrongArgs() == true);
-	REQUIRE(nonVarArg1Clause->isWrongArgs() == true);
 	REQUIRE(synArg2Clause->isWrongArgs() == true);
 	REQUIRE(valid1Clause->isWrongArgs() == false);
 	REQUIRE(valid2Clause->isWrongArgs() == false);
@@ -353,6 +481,31 @@ TEST_CASE("isWrongArgs function in Pattern class behaves as expected") {
 	REQUIRE(valid4Clause->isWrongArgs() == false);
 	REQUIRE(valid5Clause->isWrongArgs() == false);
 	REQUIRE(valid6Clause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in Pattern class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Wildcard> genericWildcard = Wildcard::create();
+	std::shared_ptr<Wildcard> patternWildcard = Wildcard::create("x+y");
+	std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonVarArg1Clause = Clause::create(Constants::PATTERN, stmtSyn, patternWildcard);
+	std::shared_ptr<Clause> valid1Clause = Clause::create(Constants::PATTERN, nonIntValue, genericWildcard);
+	std::shared_ptr<Clause> valid2Clause = Clause::create(Constants::PATTERN, genericWildcard, genericWildcard);
+	std::shared_ptr<Clause> valid3Clause = Clause::create(Constants::PATTERN, varSyn, genericWildcard);
+	std::shared_ptr<Clause> valid4Clause = Clause::create(Constants::PATTERN, nonIntValue, nonIntValue);
+	std::shared_ptr<Clause> valid5Clause = Clause::create(Constants::PATTERN, genericWildcard, nonIntValue);
+	std::shared_ptr<Clause> valid6Clause = Clause::create(Constants::PATTERN, varSyn, nonIntValue);
+
+	REQUIRE(nonVarArg1Clause->isSemInvalid() == true);
+	REQUIRE(valid1Clause->isSemInvalid() == false);
+	REQUIRE(valid2Clause->isSemInvalid() == false);
+	REQUIRE(valid3Clause->isSemInvalid() == false);
+	REQUIRE(valid4Clause->isSemInvalid() == false);
+	REQUIRE(valid5Clause->isSemInvalid() == false);
+	REQUIRE(valid6Clause->isSemInvalid() == false);
 }
 
 TEST_CASE("resolve function in clause classes behaves as expected") {
@@ -371,13 +524,13 @@ TEST_CASE("resolve function in clause classes behaves as expected") {
 	std::shared_ptr<Clause> followsst = Clause::create(Constants::FOLLOWSST, arg1, arg2);
 	std::shared_ptr<Clause> pattern = Clause::create(Constants::PATTERN, arg1, arg2);
 
-	uses->resolve();
-	modifies->resolve();
-	parent->resolve();
-	parentst->resolve();
-	follows->resolve();
-	followsst->resolve();
-	pattern->resolve();
+	uses->resolve(nullptr);
+	modifies->resolve(nullptr);
+	parent->resolve(nullptr);
+	parentst->resolve(nullptr);
+	follows->resolve(nullptr);
+	followsst->resolve(nullptr);
+	pattern->resolve(nullptr);
 
 	REQUIRE(1 == 1);
 }
