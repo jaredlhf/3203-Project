@@ -4,8 +4,6 @@
 #include "QPS/constants/Synonym.h"
 #include "QPS/constants/Constants.h"
 
-#include <iostream>
-
 QueryParser qp;
 
 /** 
@@ -139,7 +137,7 @@ TEST_CASE("Parse correct query with pattern: count constant value on LHS and s p
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
-TEST_CASE("Parse correct query ith pattern: variable v on LHS and partial pattern s on RHS") {
+TEST_CASE("Parse correct query with pattern: variable v on LHS and partial pattern s on RHS") {
     std::vector<std::string> queryTokens = {"variable", "v", ";", "assign", "a", ";", "Select", "a", "pattern", "a", "(", "v", ",", "_", "\"s\"", "_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "v"), Synonym::create(Constants::ASSIGN, "a")});

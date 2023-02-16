@@ -17,7 +17,7 @@ class ParserUtils {
         static bool isDesignEntityToken(const std::string& s);
         static bool isRelRefToken(const std::string& s);
         static std::string removeQuotations(const std::string& s);
-        static std::shared_ptr<Entity> getValidEntRef(const std::string& s, std::vector<std::shared_ptr<Synonym>> declarations);
-        static std::shared_ptr<Entity> getValidStmtRef(const std::string& s, std::vector<std::shared_ptr<Synonym>> declarations);
+        static std::shared_ptr<Entity> getValidEntRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
+        static std::shared_ptr<Entity> getValidStmtRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
         static bool isValidExpression(std::vector<std::string> s);
 };
