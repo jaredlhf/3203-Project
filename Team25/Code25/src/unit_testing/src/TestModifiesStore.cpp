@@ -5,7 +5,7 @@ using namespace std;
 
 ModifiesStore modStore;
 
-/*
+
 TEST_CASE("Empty mod store") {
 	unordered_set<int> outputStmt({ });
 	unordered_set<string> outputVar({ });
@@ -14,8 +14,8 @@ TEST_CASE("Empty mod store") {
 
 	REQUIRE(modStore.getAllStmt() == outputStmt);
 	REQUIRE(modStore.getAllVar() == outputVar);
-}*/
-/*
+}
+
 TEST_CASE("Add one mod") {
 	unordered_set<int> outputStmt({ 2 });
 	string outputVarA = "x";
@@ -33,22 +33,24 @@ TEST_CASE("Add one mod") {
 }
 
 TEST_CASE("Add two mod") {
-	unordered_set<int> outputStmt({ 2 });
-	string outputVarA({ "y" });
+	unordered_set<int> outputStmtA({ 2 });
+	unordered_set<int> outputStmtB({ 3, 4 });
+	unordered_set<int> outputStmtC({ 2, 3, 4 });
+	string outputVarA({ "x" });
 	unordered_set<string> outputVarB({ "x", "y"});
 
 	modStore.clear();
 	modStore.add(2, "x");
-	modStore.add(2, "y");
 	modStore.add(3, "y");
+	modStore.add(4, "y");
 
 	REQUIRE(modStore.getVar(2) == outputVarA);
-	REQUIRE(modStore.getStmt("x") == outputStmt);
-	REQUIRE(modStore.getStmt("y") == outputStmt);
+	REQUIRE(modStore.getStmt("x") == outputStmtA);
+	REQUIRE(modStore.getStmt("y") == outputStmtB);
 	REQUIRE(modStore.hasVar("x"));
 	REQUIRE(modStore.hasVar("y"));
 	REQUIRE(modStore.hasStmt(2));
-	REQUIRE(modStore.getAllStmt() == outputStmt);
+	REQUIRE(modStore.getAllStmt() == outputStmtC);
 	REQUIRE(modStore.getAllVar() == outputVarB);
 }
 
@@ -58,7 +60,7 @@ TEST_CASE("Add multiple modifies") {
 	unordered_set<int> outputStmtC({ 3 });
 	string outputVarA = "y" ;
 	unordered_set<string> outputVarB({ "x","v" });
-	unordered_set<string> outputVarC({ "x","y","v" });
+	unordered_set<string> outputVarC({ "x","y" });
 
 	modStore.clear();
 	modStore.add(2, "x");
@@ -76,4 +78,4 @@ TEST_CASE("Add multiple modifies") {
 	REQUIRE(modStore.hasStmt(3));
 	REQUIRE(modStore.getAllStmt() == outputStmtA);
 	REQUIRE(modStore.getAllVar() == outputVarC);
-}*/
+}
