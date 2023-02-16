@@ -40,9 +40,9 @@ public:
     void visit(std::shared_ptr<TNode> n) override ;
 };
 
-//class ParentsStarExtractor: public DesignExtractor {
-//public:
-//    void visit(std::shared_ptr<TNode> n) override { std::cout << "stmt" << endl; };
-//};
-//
-//
+class ParentsStarExtractor: public DesignExtractor {
+public:
+    void visit(std::shared_ptr<TNode> n) override;
+};
+
+

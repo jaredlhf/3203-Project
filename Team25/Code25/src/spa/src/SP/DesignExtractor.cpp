@@ -107,6 +107,9 @@ void ParentsExtractor::visit(std::shared_ptr<TNode> n) {
                 stmtLines.push_back(i->getLine());
             }
         }
+        for(auto j: stmtLines) {
+            std::cout << j << " parents " << endl;
+        }
         //populate pkb - key,vector or key,value permutations??
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
@@ -115,6 +118,46 @@ void ParentsExtractor::visit(std::shared_ptr<TNode> n) {
         for (auto i: whStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
                 stmtLines.push_back(i->getLine());
+            }
+        }
+        //populate pkb - key,vector or key,value permutations??
+    }
+}
+
+void ParentsStarExtractor::visit(std::shared_ptr<TNode> n) {
+    ParentsExtractor p;
+    if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
+        std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+        vector<int> stmtLines;
+        for(auto i: ifStmts) {
+            if (!(isIfNode(i) || isWhileNode(i))) {
+                stmtLines.push_back(i->getLine());
+            } else {
+               p.visit(i);
+            }
+        }
+        for(auto i: elseStmts) {
+            if (!(isIfNode(i) || isWhileNode(i))) {
+                stmtLines.push_back(i->getLine());
+            } else {
+                p.visit(i);
+            }
+        }
+        for(auto j: stmtLines) {
+            std::cout << j <<" parents*" <<endl;
+        }
+        //populate pkb - key,vector or key,value permutations??
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+        vector<int> stmtLines;
+        for (auto i: whStmts) {
+            if (!(isIfNode(i) || isWhileNode(i))) {
+                stmtLines.push_back(i->getLine());
+            } else {
+                p.visit(i);
             }
         }
         //populate pkb - key,vector or key,value permutations??
