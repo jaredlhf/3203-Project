@@ -13,9 +13,9 @@ private:
 	std::unordered_map<int, std::unordered_set<int>> followerStar;
 public:
 	FollowsStarStore();
-	void addFollowsStar(int leftLineNum, std::unordered_set<int> lineNumLst);
-	std::unordered_set<int> getFolloweeStar(int rightLineNum);
-	std::unordered_set<int> getFollowerStar(int leftLineNum);
+	void addFollowsStar(int followee, std::unordered_set<int> followerLst);
+	std::unordered_set<int> getFolloweeStar(int follower);
+	std::unordered_set<int> getFollowerStar(int followee);
 	bool hasFollowee(int lineNum);
 	bool hasFollower(int lineNum);
 	std::unordered_set<int> getAllFollowers();

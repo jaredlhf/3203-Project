@@ -5,24 +5,24 @@
 
 FollowsStore::FollowsStore() {}
 
-void FollowsStore::addFollows(int leftLineNum, int rightLineNum) {
-	followeeStore[rightLineNum] = leftLineNum;
-	followerStore[leftLineNum] = rightLineNum;
+void FollowsStore::addFollows(int followee, int follower) {
+	followeeStore[follower] = followee;
+	followerStore[followee] = follower;
 	
 }
 
-int FollowsStore::getFollowee(int rightLineNum) {
-	if (hasFollower(rightLineNum)) {
-		return followeeStore[rightLineNum];
+int FollowsStore::getFollowee(int follower) {
+	if (hasFollower(follower)) {
+		return followeeStore[follower];
 	}
 	else {
 		return -1;
 	}
 }
 
-int FollowsStore::getFollower(int leftLineNum) {
-	if (hasFollowee(leftLineNum)) {
-		return followerStore[leftLineNum];
+int FollowsStore::getFollower(int followee) {
+	if (hasFollowee(followee)) {
+		return followerStore[followee];
 	}
 	else {
 		return -1;
