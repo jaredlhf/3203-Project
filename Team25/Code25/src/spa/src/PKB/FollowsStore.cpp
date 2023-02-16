@@ -1,8 +1,6 @@
 #include<stdio.h>
 #include <iostream>
 
-using namespace std;
-
 #include "FollowsStore.h"
 
 FollowsStore::FollowsStore() {}
@@ -53,16 +51,16 @@ bool FollowsStore::hasFollows(int leftLineNum, int rightLineNum) {
 	return hasFollowee(leftLineNum) && hasFollower(rightLineNum);
 }
 
-unordered_set<int> FollowsStore::getAllFollowers() {
-	unordered_set<int> followerList;
+std::unordered_set<int> FollowsStore::getAllFollowers() {
+	std::unordered_set<int> followerList;
 	for (const auto& [key, value] : followerStore) {
 		followerList.insert(value);
 	}
 	return followerList;
 }
 
-unordered_set<int> FollowsStore::getAllFollowees() {
-	unordered_set<int> followeeList;
+std::unordered_set<int> FollowsStore::getAllFollowees() {
+	std::unordered_set<int> followeeList;
 	for (const auto& [key, value] : followeeStore) {
 		followeeList.insert(value);
 	}

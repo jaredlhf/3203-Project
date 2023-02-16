@@ -6,12 +6,11 @@
 #include <unordered_set>
 #include <unordered_map>
 
-using namespace std;
 
 class FollowsStore {
 private:
-	unordered_map<int, int> followeeStore;
-	unordered_map<int, int> followerStore;
+	std::unordered_map<int, int> followeeStore;
+	std::unordered_map<int, int> followerStore;
 public:
 	FollowsStore();
 	void addFollows(int leftLineNum, int rightLineNum);
@@ -20,7 +19,7 @@ public:
 	bool hasFollowee(int lineNum);
 	bool hasFollower(int lineNum);
 	bool hasFollows(int leftLineNum, int rightLineNum);
-	unordered_set<int> getAllFollowers();
-	unordered_set<int> getAllFollowees();
+	std::unordered_set<int> getAllFollowers();
+	std::unordered_set<int> getAllFollowees();
 	void clear();
 };
