@@ -7,6 +7,12 @@ using namespace std;
 class DesignExtractor {
 public:
     virtual void visit(std::shared_ptr<TNode> n) {};
+    static bool isAssignNode(std::shared_ptr<TNode> n);
+    static bool isPrintNode(std::shared_ptr<TNode> n);
+    static bool isReadNode(std::shared_ptr<TNode> n);
+    static bool isIfNode(std::shared_ptr<TNode> n);
+    static bool isWhileNode(std::shared_ptr<TNode> n);
+    static bool isStmtLstNode(std::shared_ptr<TNode> n);
 };
 
 class ModifiesExtractor: public DesignExtractor {
