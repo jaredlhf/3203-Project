@@ -47,9 +47,6 @@ bool FollowsStarStore::hasFollower(int lineNum) {
 		return false;
 	}
 }
-bool FollowsStarStore::hasFollows(int leftLineNum, int rightLineNum) {
-	return hasFollowee(leftLineNum) && hasFollower(rightLineNum);
-}
 
 std::unordered_set<int> FollowsStarStore::getAllFollowers() {
 	std::unordered_set<int> followerList;

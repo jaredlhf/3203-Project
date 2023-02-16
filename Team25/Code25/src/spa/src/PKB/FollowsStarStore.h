@@ -18,7 +18,6 @@ public:
 	std::unordered_set<int> getFollowerStar(int leftLineNum);
 	bool hasFollowee(int lineNum);
 	bool hasFollower(int lineNum);
-	bool hasFollows(int leftLineNum, int rightLineNum);
 	std::unordered_set<int> getAllFollowers();
 	std::unordered_set<int> getAllFollowees();
 	
