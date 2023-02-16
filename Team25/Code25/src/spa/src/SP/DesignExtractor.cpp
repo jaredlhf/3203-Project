@@ -35,6 +35,22 @@ bool DesignExtractor::isStmtLstNode(std::shared_ptr<TNode> n) {
     return (dynamic_pointer_cast<StmtLstNode>(n) != nullptr);
 }
 
+void DesignExtractor::extractVar(vector<std::string> tokens) {
+    for (string entity: tokens)
+        if (Token::isValidName((entity))) {
+            std::cout << "populating variable:" << entity << std::endl;
+            //parser->pkbPopulator->addVar(entity);
+        }
+}
+
+void DesignExtractor::extractConst(vector<std::string> tokens) {
+    for (string entity: tokens)
+         if (Token::isNumber(entity)) {
+            //parser->pkbPopulator->addConst(std::stoi(entity));
+            std::cout << "populating constant:" << entity << std::endl;
+        }
+}
+
 void ModifiesExtractor::visit(std::shared_ptr<TNode> n) {
     if (isAssignNode(n)) {
         std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
@@ -46,31 +62,61 @@ void ModifiesExtractor::visit(std::shared_ptr<TNode> n) {
         //parser->pkbPopulator->addVar(entity);
         std::cout<<"checked read"<<endl;
     } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
+        std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+        //check if need to get var from cond expr
+        for (auto i : ifStmts) {
+            visit(i);
+        }
+        for (auto i : elseStmts) {
+            visit(i);
+        }
     } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+        for (auto j: whStmts) {
+            visit(j);
+        }
     }
 }
 
 void UsesExtractor::visit(std::shared_ptr<TNode> n) {
+    Tokenizer t;
     std::cout<<n->print()<<endl;
     if (isAssignNode(n)) {
         std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
         std::cout << "expr:" << a->getExpr() << std::endl;
         vector<std::string> rhs = tok.tokenize(a->getExpr());
-        for (string entity: rhs)
-            if (Token::isValidName((entity))) {
-                std::cout << "populating variable:" << entity << std::endl;
-                //parser->pkbPopulator->addVar(entity);
-            } else if (Token::isNumber(entity)) {
-                //parser->pkbPopulator->addConst(std::stoi(entity));
-                std::cout << "populating constant:" << entity << std::endl;
-            }
+        extractVar(rhs);
+        extractConst(rhs);
         std::cout<<"checked assign"<<endl;
     } else if (isPrintNode(n)) {
         std::shared_ptr<PrintNode> r = std::dynamic_pointer_cast<PrintNode>(n);
         std::cout << "populating:" << r->getVar() << std::endl;
         std::cout<<"checked print"<<endl;
     } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
+        std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+        std::string expr = ifs->getCondExpr();
+        extractVar(t.tokenize(expr));
+        extractConst(t.tokenize(expr));
+        for (auto i : ifStmts) {
+            visit(i);
+        }
+        for (auto i : elseStmts) {
+            visit(i);
+        }
     } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+        std::string expr = wh->getCondExpr();
+        extractVar(t.tokenize(expr));
+        extractConst(t.tokenize(expr));
+        for (auto j: whStmts) {
+            visit(j);
+        }
     }
 }
 
@@ -80,13 +126,24 @@ void FollowsExtractor::visit(std::shared_ptr<TNode> n) {
         std::vector<std::shared_ptr<StmtNode>> stmts = sl->getStatements();
         vector<int> stmtLines;
         for(auto i: stmts) {
-            if(!(isIfNode(i) || isWhileNode(i))) {
-                std::cout<<i->getLine()<<endl;
-                if ((!stmtLines.empty()) && (i->getLine() == (stmtLines[stmtLines.size() - 1] + 1))) {
-                    std::cout << "populating follow pair (" << (stmtLines[stmtLines.size() - 1])<< ',' << i->getLine() << ")" <<endl;
-                }
-                stmtLines.push_back(i->getLine());
+            if ((!stmtLines.empty()) && (i->getLine() == (stmtLines[stmtLines.size() - 1] + 1))) {
+                std::cout << "populating follow pair (" << (stmtLines[stmtLines.size() - 1])<< ',' << i->getLine() << ")" <<endl;
             }
+            stmtLines.push_back(i->getLine());
+        }
+    }
+}
+
+void FollowsStarExtractor::visit(std::shared_ptr<TNode> n) {
+    if (isStmtLstNode(n)) {
+        std::shared_ptr<StmtLstNode> sl = std::dynamic_pointer_cast<StmtLstNode>(n);
+        std::vector<std::shared_ptr<StmtNode>> stmts = sl->getStatements();
+        vector<int> stmtLines;
+        for(auto i: stmts) {
+                stmtLines.push_back(i->getLine());
+        }
+        for(auto j : stmtLines) {
+            std::cout << j << " ";
         }
     }
 }

@@ -13,6 +13,8 @@ public:
     static bool isIfNode(std::shared_ptr<TNode> n);
     static bool isWhileNode(std::shared_ptr<TNode> n);
     static bool isStmtLstNode(std::shared_ptr<TNode> n);
+    static void extractVar(vector<std::string> tokens);
+    static void extractConst(vector<std::string> tokens);
 };
 
 class ModifiesExtractor: public DesignExtractor {
@@ -30,11 +32,11 @@ public:
     void visit(std::shared_ptr<TNode> n) override;
 };
 
-//class FollowsStarExtractor: public DesignExtractor {
-//public:
-//    void visit(std::shared_ptr<TNode> n) override { std::cout << "stmt" << endl; };
-//};
-//
+class FollowsStarExtractor: public DesignExtractor {
+public:
+    void visit(std::shared_ptr<TNode> n) override;
+};
+
 class ParentsExtractor: public DesignExtractor {
 public:
     void visit(std::shared_ptr<TNode> n) override ;
