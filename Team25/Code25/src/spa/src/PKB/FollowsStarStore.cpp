@@ -5,12 +5,15 @@
 
 FollowsStarStore::FollowsStarStore() {}
 
+
 void FollowsStarStore::addFollowsStar(int leftLineNum, std::unordered_set<int> lineNumLst) {
-	followerStar[leftLineNum].emplace(lineNumLst);
+	followerStar[leftLineNum] = lineNumLst;
 	for (const auto& rightLineNum : lineNumLst) {
 		followeeStar[rightLineNum].emplace(leftLineNum);
 	}
 }
+
+
 std::unordered_set<int> FollowsStarStore::getFolloweeStar(int rightLineNum) {
 	if (hasFollower(rightLineNum)) {
 		return followeeStar[rightLineNum];
@@ -47,6 +50,7 @@ bool FollowsStarStore::hasFollower(int lineNum) {
 bool FollowsStarStore::hasFollows(int leftLineNum, int rightLineNum) {
 	return hasFollowee(leftLineNum) && hasFollower(rightLineNum);
 }
+
 std::unordered_set<int> FollowsStarStore::getAllFollowers() {
 	std::unordered_set<int> followerList;
 	for (const auto& [key, value] : followerStar) {

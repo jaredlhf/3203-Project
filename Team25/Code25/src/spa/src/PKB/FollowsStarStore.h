@@ -21,5 +21,6 @@ public:
 	bool hasFollows(int leftLineNum, int rightLineNum);
 	std::unordered_set<int> getAllFollowers();
 	std::unordered_set<int> getAllFollowees();
+	
 	void clear();
 };
