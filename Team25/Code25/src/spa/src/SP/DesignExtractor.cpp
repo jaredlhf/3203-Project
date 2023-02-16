@@ -99,17 +99,19 @@ void ParentsExtractor::visit(std::shared_ptr<TNode> n) {
         vector<int> stmtLines;
         for(auto i: ifStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
+                std::cout << i->getLine() << " parents " << endl;
                 stmtLines.push_back(i->getLine());
             }
         }
         for(auto i: elseStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
+                std::cout << i->getLine() << " parents " << endl;
                 stmtLines.push_back(i->getLine());
             }
         }
-        for(auto j: stmtLines) {
-            std::cout << j << " parents " << endl;
-        }
+//        for(auto j: stmtLines) {
+//            std::cout << j << " parents " << endl;
+//        }
         //populate pkb - key,vector or key,value permutations??
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
@@ -130,19 +132,23 @@ void ParentsStarExtractor::visit(std::shared_ptr<TNode> n) {
         std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
         std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
         std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+        int ifLineNo = ifs->getLine();
         vector<int> stmtLines;
+        stmtLines.push_back(ifLineNo);
         for(auto i: ifStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
+//                std::cout<< i->getLine() <<" parents*if " <<endl;
                 stmtLines.push_back(i->getLine());
             } else {
-               p.visit(i);
+               visit(i);
             }
         }
         for(auto i: elseStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
+//                std::cout<< i->getLine() <<" parents*else " <<endl;
                 stmtLines.push_back(i->getLine());
             } else {
-                p.visit(i);
+                visit(i);
             }
         }
         for(auto j: stmtLines) {
