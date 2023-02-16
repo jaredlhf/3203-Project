@@ -24,7 +24,7 @@ PrintNode::PrintNode(int line, const std::string& var) {
 IfNode::IfNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> ifList, std::shared_ptr<StmtLstNode> elseList) {
    condExpr = condExp;
    ifLst = ifList;
-   elseList = elseList;
+   elseLst = elseList;
    lineNo = line;
 }
 
