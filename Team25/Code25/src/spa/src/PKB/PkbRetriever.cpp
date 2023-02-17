@@ -5,21 +5,19 @@
 using namespace std;
 
 #include "PkbRetriever.h"
-#include "FollowsStore.h"
-#include "StatementStore.h"
-#include "EntityStore.h"
 
 /*
  * Constructor class for PkbRetriever
  * param: VarStorage* varStore
  */
 
-PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore) {
+PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
 	this->procedureStorage = procedureStore;
 	this->statementStorage = statementStore;
+	this->patternStorage = patternStore;
 };
 
 std::unordered_set<std::string> PkbRetriever::getAllVar() {
@@ -52,4 +50,12 @@ std::unordered_set<std::string> PkbRetriever::getAllProc() {
 
 std::unordered_set<int> PkbRetriever::getAllStmt(std::string stmtType) {
 	return this->statementStorage->getAllStmt(stmtType);
+}
+
+std::unordered_set<int> PkbRetriever::getAssignLhs(std::string leftVar) {
+	return this->patternStorage->getAssignLhs(leftVar);
+}
+	
+std::string PkbRetriever::getAssignRhs(int stmtNo) {
+	return this->patternStorage->getAssignRhs(stmtNo);
 }

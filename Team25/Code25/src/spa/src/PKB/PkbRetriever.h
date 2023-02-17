@@ -9,6 +9,7 @@ using namespace std;
 #include "FollowsStore.h"
 #include "StatementStore.h"
 #include "EntityStore.h"
+#include "PatternStore.h"
 
 class PkbRetriever{
 private:
@@ -17,9 +18,10 @@ private:
 	shared_ptr<FollowsStore> followsStorage;
 	shared_ptr<ProcedureStore> procedureStorage;
 	shared_ptr<StatementStore> statementStorage;
+	shared_ptr<PatternStore> patternStorage;
 
 public:
-	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore);
+	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore);
 	std::unordered_set<std::string> getAllVar();
 	std::unordered_set<int> getAllConst();
 	int getFollowee(int rightLineNum);
@@ -28,4 +30,6 @@ public:
 	std::unordered_set<int> getAllFollowees();
 	std::unordered_set<string> getAllProc();
 	std::unordered_set<int> getAllStmt(string stmtType);
+	std::unordered_set<int> getAssignLhs(std::string leftVar);
+	std::string getAssignRhs(int stmtNo);
 };

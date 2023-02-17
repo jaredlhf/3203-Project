@@ -51,7 +51,9 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/FollowsStarStore.cpp" 
 "src/PKB/ParentStore.cpp" 
 "src/PKB/ParentStarStore.h" 
-"src/PKB/ParentStarStore.cpp")
+"src/PKB/ParentStarStore.cpp"
+"src/PKB/PatternStore.h"
+"src/PKB/PatternStore.cpp")
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
