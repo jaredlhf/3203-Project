@@ -7,16 +7,14 @@
 #include <unordered_set>
 #include <unordered_map>
 
-using namespace std;
-
 class StatementStore {
 private:
-	unordered_map<string, unordered_set<int>> stmtStore;
+	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
 public:
 	StatementStore();
-	void addStmt(string stmtType, int lineNum);
-	unordered_set<int> getAllStmt(string stmtType);
-	bool has(string stmtType);
+	void addStmt(std::string stmtType, int lineNum);
+	std::unordered_set<int> getAllStmt(std::string stmtType);
+	bool has(std::string stmtType);
 	int size();
 	void clear();
 };
