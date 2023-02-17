@@ -39,6 +39,7 @@ bool FollowsStarStore::hasFollowee(int lineNum) {
 		return false;
 	}
 }
+
 bool FollowsStarStore::hasFollower(int lineNum) {
 	if (followeeStar.find(lineNum) != followeeStar.end()) {
 		return true;
