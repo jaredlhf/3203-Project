@@ -7,15 +7,14 @@
 #include <unordered_map>
 #include <string>
 
-
-class ModifiesStore {
+class UsesStore {
 private:
 	std::unordered_map<int, std::string> varStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
 
-	
+
 public:
-	ModifiesStore();
+	UsesStore();
 
 	void add(int lineNum, std::string varName);
 	std::string getVar(int lineNum);
@@ -25,5 +24,6 @@ public:
 	std::unordered_set<std::string> getAllVar();
 	std::unordered_set<int> getAllStmt();
 	
+
 	void clear();
 };

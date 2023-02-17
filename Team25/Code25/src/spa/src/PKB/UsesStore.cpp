@@ -2,16 +2,16 @@
 #include <iostream>
 
 
-#include "ModifiesStore.h"
+#include "UsesStore.h"
 
-ModifiesStore::ModifiesStore() {}
+UsesStore::UsesStore() {}
 
-void ModifiesStore::add(int lineNum, std::string varName) {
+void UsesStore::add(int lineNum, std::string varName) {
 	varStore[lineNum] = varName;
 	stmtStore[varName].emplace(lineNum);
 }
 
-std::string ModifiesStore::getVar(int lineNum) {
+std::string UsesStore::getVar(int lineNum) {
 	if (hasStmt(lineNum)) {
 		return varStore[lineNum];
 	}
@@ -20,7 +20,7 @@ std::string ModifiesStore::getVar(int lineNum) {
 	}
 }
 
-std::unordered_set<int> ModifiesStore::getStmt(std::string varName) {
+std::unordered_set<int> UsesStore::getStmt(std::string varName) {
 	if (hasVar(varName)) {
 		return stmtStore[varName];
 	}
@@ -29,7 +29,7 @@ std::unordered_set<int> ModifiesStore::getStmt(std::string varName) {
 	}
 }
 
-bool ModifiesStore::hasVar(std::string varName) {
+bool UsesStore::hasVar(std::string varName) {
 	if (stmtStore.find(varName) != stmtStore.end()) {
 		return true;
 	}
@@ -38,7 +38,7 @@ bool ModifiesStore::hasVar(std::string varName) {
 	}
 }
 
-bool ModifiesStore::hasStmt(int lineNum) {
+bool UsesStore::hasStmt(int lineNum) {
 	if (varStore.find(lineNum) != varStore.end()) {
 		return true;
 	}
@@ -47,8 +47,8 @@ bool ModifiesStore::hasStmt(int lineNum) {
 	}
 }
 
-std::unordered_set<std::string> ModifiesStore::getAllVar() {
-	std::unordered_set<std::string> varList;
+std::unordered_set<std::string> UsesStore::getAllVar() {
+	std::unordered_set<string> varList;
 	
 	for (const auto& [key, value] : varStore) {
 			varList.insert(value);
@@ -56,8 +56,9 @@ std::unordered_set<std::string> ModifiesStore::getAllVar() {
 	return varList;
 }
 
-std::unordered_set<int> ModifiesStore::getAllStmt() {
+std::unordered_set<int> UsesStore::getAllStmt() {
 	std::unordered_set<int> stmtList;
+
 	for (const auto& [key, value] : stmtStore) {
 		stmtList.insert(value.begin(), value.end());
 	}
@@ -65,7 +66,7 @@ std::unordered_set<int> ModifiesStore::getAllStmt() {
 }
 
 
-void ModifiesStore::clear() {
+void UsesStore::clear() {
 	stmtStore.clear();
 	varStore.clear();
 }
