@@ -160,6 +160,26 @@ TEST_CASE("Parse pattern with undeclared variable count on LHS") {
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse pattern with empty string on first param") {
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "", ",", "_", "\"s\"", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse pattern with empty string on second param") {
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"1\"", ",", "_", "", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse query with invalid assign syn on pattern") {
     std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "s", "(", "\"count\"", ",", "_", "\"s\"", "_", ")"};
     ParserResponse expectedResObject;
@@ -223,5 +243,47 @@ TEST_CASE("Parse correct query with such that Modifies") {
     expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with syntax and semantic error should return syntax error") {
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "d", "such", "that", "Modifies", "1", ",", "x", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+/**
+ * full complex query with valid declarations
+ *
+ */
+
+TEST_CASE("Parse correct complex query with such that -> pattern") {
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Modifies", "(", "1", ",", "x", ")",
+                                            "pattern", "a", "(", "\"x\"", ",", "_", "\"count\"", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::ASSIGN, "a")});
+    expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
+    expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Value::create("\"count\"")));
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct complex query with pattern -> such that") {
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"x\"", ",", "_", "\"count\"", "_", ")",
+                                            "such", "that", "Modifies", "(", "1", ",", "x", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::ASSIGN, "a")});
+    expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
+    expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Value::create("\"count\"")));
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
     REQUIRE(expectedResObject.compare(resObj) == true);
 }

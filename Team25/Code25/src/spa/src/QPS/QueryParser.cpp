@@ -6,6 +6,8 @@ const std::string SELECT_MARKER = "Select";
 const std::string PATTERN_MARKER = "pattern";
 const std::string OPEN_BRACKET = "(";
 const std::string CLOSE_BRACKET = ")";
+const std::string DECLARATION_END_TOKEN = ";";
+const std::string SEPARATOR = ",";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
 
 bool QueryParser::isValidDeclaration(std::vector<std::string> s,
@@ -25,7 +27,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     for (int i = 1; i < s.size(); i++) {
 
         // checking that variables are separated by commas
-        if (i % 2 == 0 && s[i] != ",") {
+        if (i % 2 == 0 && s[i] != SEPARATOR) {
             std::cout << "not csv" << std::endl;
             return false;
         }
@@ -94,7 +96,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
             response.setEntRef(entRef);
         }
 
-        if (ptr == 4 && s[ptr] != ",") {
+        if (ptr == 4 && s[ptr] != SEPARATOR) {
             std::cout << "not a comma" << std::endl;
             return response;
         }
@@ -134,7 +136,7 @@ std::vector<std::string> QueryParser::validateSuchThatClause(std::vector<std::st
         return {};
     }
 
-    if (s[3] != ",") {
+    if (s[3] != SEPARATOR) {
         return {};
     }
 
@@ -188,6 +190,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     int tokenLength = tokens.size();
     std::unordered_set<std::string> declared_synonyms = {};
     std::unordered_set<std::string> assignment_synonyms = {};
+    bool hasSemanticError = false;
 
     std::vector<std::shared_ptr<Synonym>> declarations = {};
     std::shared_ptr<Synonym> synonym;
@@ -205,7 +208,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             break;
         }
         std::vector<std::string> declaration = {};
-        while (tokens[ptr] != ";" && ptr < tokenLength) {
+        while (tokens[ptr] != DECLARATION_END_TOKEN && ptr < tokenLength) {
             declaration.push_back(tokens[ptr]);
             ptr++;
         }
@@ -214,7 +217,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         }
         std::vector<std::shared_ptr<Synonym>> temp = processDeclaration(declaration, declared_synonyms);
         if (temp.size() == 0) {
-            return generateSemanticErrorResponse();
+            hasSemanticError = true;
         } 
         declarations.insert(declarations.end(), temp.begin(), temp.end());
 
@@ -243,13 +246,17 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                     break;
                 }
             }
+            if (!afterSynonym) {
+                hasSemanticError = true;
+            }
+
             
         }
         ptr++;
     }
 
     while (ptr < tokenLength) {
-        if (tokens[ptr] == ";") {
+        if (tokens[ptr] == DECLARATION_END_TOKEN) {
             std::cout << "invalid semicolon token after declarations" << std::endl;
             return generateSyntaxErrorResponse();
         }
@@ -269,10 +276,11 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
             if (response.getAssignSyn()->getKeyword() == Constants::SEMANTIC_ERROR) {
                 std::cout << "semantic error on pattern" << std::endl;
-                return generateSemanticErrorResponse();
+                hasSemanticError = true;
+                // return generateSemanticErrorResponse();
             }
 
-            if (response.isIncomplete()) {
+            if (response.isIncomplete() || response.getAssignSyn()->getKeyword() == Constants::SYNTAX_ERROR) {
                 std::cout << "invalid patternClause" << std::endl;
                 return generateSyntaxErrorResponse();
             }
@@ -303,7 +311,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 if (refKeyword == Constants::SYNTAX_ERROR) {
                     return generateSyntaxErrorResponse();
                 } else if (refKeyword == Constants::SEMANTIC_ERROR) {
-                    return generateSemanticErrorResponse();
+                    hasSemanticError = true;
+                    // return generateSemanticErrorResponse();
                 }
             }
 
@@ -312,7 +321,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 if (refKeyword == Constants::SYNTAX_ERROR) {
                     return generateSyntaxErrorResponse();
                 } else if (refKeyword == Constants::SEMANTIC_ERROR) {
-                    return generateSemanticErrorResponse();
+                    hasSemanticError = true;
+                    // return generateSemanticErrorResponse();
                 }
             }
 
@@ -321,7 +331,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
         ptr++;    
     }
-
+    if (hasSemanticError) {
+        return generateSemanticErrorResponse();
+    }
     responseObject.setDeclarations(declarations);
     responseObject.setSynonym(synonym);
     responseObject.setAssignSynonym(assignSynonym);

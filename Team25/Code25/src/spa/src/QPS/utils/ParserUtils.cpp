@@ -28,6 +28,9 @@ bool ParserUtils::isValidIntegerString(const std::string& s) {
 }
 
 bool ParserUtils::isValidNaming(const std::string& s) {
+    if (s.length() == 0) {
+        return false;
+    }
 
     // checks if first character of synonym name or variable name starts with a letter
     for (int i = 0; i < s.length(); i++) {

@@ -6,6 +6,11 @@ TEST_CASE("valid integer string") {
     REQUIRE(ParserUtils::isValidIntegerString(s) == true);
 }
 
+TEST_CASE("empty integer string") {
+    std::string s = "";
+    REQUIRE(ParserUtils::isValidIntegerString(s) == false);
+}
+
 TEST_CASE("integer string starts with zero") {
     std::string s = "0233";
     REQUIRE(ParserUtils::isValidIntegerString(s) == false);
@@ -24,6 +29,11 @@ TEST_CASE("valid name") {
 TEST_CASE("valid name with numbers") {
     std::string s = "counter22";
     REQUIRE(ParserUtils::isValidNaming(s) == true);
+}
+
+TEST_CASE("empty name string") {
+    std::string s = "";
+    REQUIRE(ParserUtils::isValidNaming(s) == false);
 }
 
 TEST_CASE("invalid character in name") {
