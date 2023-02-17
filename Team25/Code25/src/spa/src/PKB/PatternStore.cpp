@@ -15,7 +15,7 @@ void PatternStore::addAssignRhs(int stmtNo, std::string rightStmt) {
 	RhsAssignStore.insert({ stmtNo, rightStmt });
 }
 
-unordered_set<int> PatternStore::getAssignLhs(std::string leftVar) {
+std::unordered_set<int> PatternStore::getAssignLhs(std::string leftVar) {
 	if (hasAssignLhs(leftVar)) {
 		return LhsAssignStore[leftVar];
 	}
@@ -40,6 +40,12 @@ bool PatternStore::hasAssignLhs(std::string leftVar) {
 
 bool PatternStore::hasAssignRhs(int stmtNo) {
 	return RhsAssignStore.find(stmtNo) != RhsAssignStore.end();
+}
+int PatternStore::LhsAssignStoreSize() {
+	return LhsAssignStore.size();
+}
+int PatternStore::RhsAssignStoreSize() {
+	return RhsAssignStore.size();
 }
 
 void PatternStore::clear() {

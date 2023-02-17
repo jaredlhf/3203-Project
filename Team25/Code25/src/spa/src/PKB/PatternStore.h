@@ -19,11 +19,12 @@ public:
 
 	void addAssignLhs(std::string leftVar, int stmtNo);
 	void addAssignRhs(int stmtNo, std::string rightStmt);
-	unordered_set<int> getAssignLhs(std::string leftVar);
+	std::unordered_set<int> getAssignLhs(std::string leftVar);
 	std::string getAssignRhs(int stmtNo);
 	bool hasAssignLhs(std::string leftVar);
 	bool hasAssignRhs(int stmtNo);
-
+	int LhsAssignStoreSize();
+	int RhsAssignStoreSize();
 	void clear();
 	
 };
