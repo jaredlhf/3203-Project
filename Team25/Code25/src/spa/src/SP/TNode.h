@@ -29,7 +29,7 @@ public:
     std::vector<std::shared_ptr<StmtNode>> getStatements() {
         return this->statements;
     };
-
+    std::string print() const override {return "stmtLst node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
@@ -41,7 +41,7 @@ private:
 class AssignNode: public StmtNode {
 public:
     AssignNode(int lineNo, const std::string& variable, const std::string& expression);
-    std::string print() const override {return "assign";};
+    std::string print() const override {return "assign node";};
     std::string getVar() { return this->variable; };
     std::string getExpr() { return this->expression; };
     int getLine() override { return lineNo; };
@@ -61,6 +61,7 @@ public:
     std::string getVar() { return this->variable; };
     int getLine() override { return lineNo; };
 
+    std::string print() const override {return "read node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
@@ -75,6 +76,7 @@ public:
     std::string getVar() { return this->variable; };
     int getLine() override { return lineNo; };
 
+    std::string print() const override {return "print node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
@@ -91,6 +93,7 @@ public:
     std::shared_ptr<StmtLstNode> getElseLst() { return this->elseLst; };
     int getLine() override { return lineNo; };
 
+    std::string print() const override {return "if node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
@@ -109,6 +112,7 @@ public:
     std::shared_ptr<StmtLstNode> getStmtLst() { return this->stmtLst; };
     int getLine() override { return lineNo; };
 
+    std::string print() const override {return "while node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
@@ -127,6 +131,7 @@ public:
         return this->stmtLst;
     };
 
+    std::string print() const override {return "procedure node";};
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;

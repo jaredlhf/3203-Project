@@ -28,10 +28,11 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
     while (!stack.empty()) {
         std::shared_ptr<TNode> node = stack.top();
         stack.pop();
-        std::cout << "accepting" << std::endl;
+        std::cout << "accepting" << node->print() << std::endl;
         node->accept(se);
 
         for (const auto child: node->getChildren()) {
+            std::cout << "adding to stack" << node ->print() << std::endl;
             stack.push(child);
         }
     }

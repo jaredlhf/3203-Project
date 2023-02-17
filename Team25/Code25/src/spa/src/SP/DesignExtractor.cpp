@@ -202,6 +202,7 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh) {
 //}
 
 void FollowsExtractor::visit(std::shared_ptr<StmtLstNode> sl) {
+    std::cout << "visit StmtLst E" <<std::endl;
     std::vector<std::shared_ptr<StmtNode>> stmts = sl->getStatements();
     vector<int> stmtLines;
     for(auto i: stmts) {

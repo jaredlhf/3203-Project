@@ -8,6 +8,7 @@ StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts) {
 }
 
 void StmtLstNode::accept(std::shared_ptr<DesignExtractor> extractor) {
+    std::cout << "accept StmtLst E" <<std::endl;
     std::shared_ptr<StmtLstNode> node = std::dynamic_pointer_cast<StmtLstNode>(shared_from_this());
     extractor->visit(node);
 }
@@ -145,5 +146,7 @@ void ProcedureNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtracto
 }
 
 std::vector<std::shared_ptr<TNode>> ProcedureNode::getChildren() {
-    return stmtLst->getChildren();
+    std::vector<std::shared_ptr<TNode>> children;
+    children.push_back(stmtLst);
+    return children;
 }
