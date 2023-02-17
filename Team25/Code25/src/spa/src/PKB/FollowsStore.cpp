@@ -1,30 +1,28 @@
 #include<stdio.h>
 #include <iostream>
 
-using namespace std;
-
 #include "FollowsStore.h"
 
 FollowsStore::FollowsStore() {}
 
-void FollowsStore::addFollows(int leftLineNum, int rightLineNum) {
-	followeeStore[rightLineNum] = leftLineNum;
-	followerStore[leftLineNum] = rightLineNum;
+void FollowsStore::addFollows(int followee, int follower) {
+	followeeStore[follower] = followee;
+	followerStore[followee] = follower;
 	
 }
 
-int FollowsStore::getFollowee(int rightLineNum) {
-	if (hasFollower(rightLineNum)) {
-		return followeeStore[rightLineNum];
+int FollowsStore::getFollowee(int follower) {
+	if (hasFollower(follower)) {
+		return followeeStore[follower];
 	}
 	else {
 		return -1;
 	}
 }
 
-int FollowsStore::getFollower(int leftLineNum) {
-	if (hasFollowee(leftLineNum)) {
-		return followerStore[leftLineNum];
+int FollowsStore::getFollower(int followee) {
+	if (hasFollowee(followee)) {
+		return followerStore[followee];
 	}
 	else {
 		return -1;
@@ -49,24 +47,20 @@ bool FollowsStore::hasFollower(int lineNum) {
 	}
 }
 
-bool FollowsStore::hasFollows(int leftLineNum, int rightLineNum) {
-	return hasFollowee(leftLineNum) && hasFollower(rightLineNum);
+std::unordered_set<int> FollowsStore::getAllFollowers() {
+	std::unordered_set<int> followerList;
+	for (const auto& [key, value] : followerStore) {
+		followerList.insert(value);
+	}
+	return followerList;
 }
 
-unordered_set<int> FollowsStore::getAllFollowers() {
-	unordered_set<int> followers;
-	for (auto keyValueIt : followerStore) {
-		followers.insert(keyValueIt.first);
+std::unordered_set<int> FollowsStore::getAllFollowees() {
+	std::unordered_set<int> followeeList;
+	for (const auto& [key, value] : followeeStore) {
+		followeeList.insert(value);
 	}
-	return followers;
-}
-
-unordered_set<int> FollowsStore::getAllFollowees() {
-	unordered_set<int> followees;
-	for (auto keyValueIt : followeeStore) {
-		followees.insert(keyValueIt.first);
-	}
-	return followees;
+	return followeeList;
 }
 
 void FollowsStore::clear() {

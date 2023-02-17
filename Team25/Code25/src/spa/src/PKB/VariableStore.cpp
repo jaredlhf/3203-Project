@@ -7,6 +7,8 @@ using namespace std;
 
 #include "VariableStore.h"
 
+// TODO: Delete file
+
 VariableStore::VariableStore() {}
 
 void VariableStore::addVar(string varName) {

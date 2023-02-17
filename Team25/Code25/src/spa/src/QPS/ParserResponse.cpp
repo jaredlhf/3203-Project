@@ -1,22 +1,21 @@
 #include "ParserResponse.h";
 
-using namespace std;
 
-void ParserResponse::setDeclarations(vector<vector<string>> declarations) {
+void ParserResponse::setDeclarations(std::vector<std::vector<std::string>> declarations) {
     ParserResponse::declarations = declarations;
     return;
 }
 
-vector<vector<string>> ParserResponse::getDeclarations() {
+std::vector<std::vector<std::string>> ParserResponse::getDeclarations() {
     return ParserResponse::declarations;
 }
 
-void ParserResponse::setSynonym(string synonym) {
+void ParserResponse::setSynonym(std::string synonym) {
     ParserResponse::synonym = synonym;
     return;
 }
 
-string ParserResponse::getSynonym() {
+std::string ParserResponse::getSynonym() {
     return ParserResponse::synonym;
 }
 
