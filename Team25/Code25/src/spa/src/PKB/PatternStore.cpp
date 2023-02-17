@@ -29,7 +29,7 @@ std::string PatternStore::getAssignRhs(int stmtNo) {
 		return RhsAssignStore[stmtNo];
 	}
 	else {
-		return "";
+		return {};
 	}
 }
 
