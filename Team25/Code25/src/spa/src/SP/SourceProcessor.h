@@ -8,6 +8,8 @@ using namespace std;
 
 #include "Tokenizer.h"
 #include "Parser.h"
+#include "SelectiveExtractor.h"
+
 #include "PKB/PkbPopulator.h"
 
 class SourceProcessor {

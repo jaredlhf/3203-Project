@@ -4,17 +4,20 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+class DesignExtractor; //forward declaration
+class SelectiveExtractor; //forward declaration
 
-class TNode
+class TNode: public std::enable_shared_from_this<TNode>
 {
 public:
     virtual std::string print() const {return "tnode";};
+    virtual void accept(std::shared_ptr<DesignExtractor> extractor) = 0;
+    virtual void accept(std::shared_ptr<SelectiveExtractor> extractor) = 0;
+    virtual std::vector<std::shared_ptr<TNode>> getChildren() = 0;
 };
 
 class StmtNode: public TNode {
 public:
-    virtual void accept() { std::cout << "stmt" <<endl; };
     virtual int getLine() { return lineNo; };
 protected:
     int lineNo;
@@ -26,6 +29,10 @@ public:
     std::vector<std::shared_ptr<StmtNode>> getStatements() {
         return this->statements;
     };
+    std::string print() const override {return "stmtLst node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     std::vector<std::shared_ptr<StmtNode>> statements;
 
@@ -34,11 +41,14 @@ private:
 class AssignNode: public StmtNode {
 public:
     AssignNode(int lineNo, const std::string& variable, const std::string& expression);
-    void accept() override { std::cout << "assign" << std::endl; };
-    std::string print() const override {return "assign";};
+    std::string print() const override {return "assign node";};
     std::string getVar() { return this->variable; };
     std::string getExpr() { return this->expression; };
     int getLine() override { return lineNo; };
+
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     int lineNo;
     std::string variable;
@@ -48,9 +58,13 @@ private:
 class ReadNode: public StmtNode {
 public:
     ReadNode(int lineNo, const std::string& var);
-    void accept() override{ std::cout << "read" << endl; }
     std::string getVar() { return this->variable; };
     int getLine() override { return lineNo; };
+
+    std::string print() const override {return "read node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     int lineNo;
     std::string variable;
@@ -59,9 +73,13 @@ private:
 class PrintNode: public StmtNode {
 public:
     PrintNode(int lineNo, const std::string& var);
-    void accept() override{ std::cout << "print" << endl; }
     std::string getVar() { return this->variable; };
     int getLine() override { return lineNo; };
+
+    std::string print() const override {return "print node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     int lineNo;
     std::string variable;
@@ -70,11 +88,15 @@ private:
 class IfNode: public StmtNode {
 public:
     IfNode(int lineNo, const std::string& condExpr, std::shared_ptr<StmtLstNode> ifLst, std::shared_ptr<StmtLstNode> elseLst);
-    void accept() override{ std::cout << "if" << endl; }
     std::string getCondExpr() { return this->condExpr; };
     std::shared_ptr<StmtLstNode> getIfLst() { return this->ifLst; };
     std::shared_ptr<StmtLstNode> getElseLst() { return this->elseLst; };
     int getLine() override { return lineNo; };
+
+    std::string print() const override {return "if node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     int lineNo;
     std::string condExpr;
@@ -86,10 +108,14 @@ private:
 class WhileNode: public StmtNode {
 public:
     WhileNode(int lineNo, const std::string& condExpr, std::shared_ptr<StmtLstNode> stmtLst);
-    void accept() override { std::cout << "while" << endl; }
     std::string getCondExpr() { return this->condExpr; };
     std::shared_ptr<StmtLstNode> getStmtLst() { return this->stmtLst; };
     int getLine() override { return lineNo; };
+
+    std::string print() const override {return "while node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     int lineNo;
     std::string condExpr;
@@ -104,6 +130,11 @@ public:
     std::shared_ptr<StmtLstNode> getStmtLst() {
         return this->stmtLst;
     };
+
+    std::string print() const override {return "procedure node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 //    void print() const override{ std::cout << "proc" <<endl;  }
 private:
     std::shared_ptr<StmtLstNode> stmtLst;

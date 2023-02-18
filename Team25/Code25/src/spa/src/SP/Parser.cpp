@@ -7,17 +7,14 @@ Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> popul
     this->utils = std::make_shared<ParserUtils>(t);
 };
 
-
-void Parser::parseProgram() {
+// Returns just a ProcedureNode for milestone 1
+ProcedureNode Parser::parseProgram() {
     do {
         if (tokenizer->getTokens().empty()) {
             throw std::invalid_argument("error: no procedures found");
         } else {
             ProcedureNode proc = parseProcedure();
-            StmtLstNode s = *(proc.getStmtLst());
-            for (const auto & i : (s.getStatements())) {
-                i->accept();
-            }
+            return proc;
         }
     } while (!tokenizer->getTokens().empty());
 }
