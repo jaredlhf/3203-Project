@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include "Entity.h"
+#include "QPS/utils/StringUtils.h"
 
 class Value : public Entity {
 private:
@@ -20,5 +21,7 @@ public:
 	static std::shared_ptr<Value> create(const std::string& val);
 
 	// Value class functions
-	const std::string& getVal() const;
+	const std::string& getVal();
+	bool isInt();
+	bool compare(std::shared_ptr<Value> other);
 };

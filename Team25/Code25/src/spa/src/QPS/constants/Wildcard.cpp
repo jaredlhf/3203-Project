@@ -39,3 +39,7 @@ const std::string& Wildcard::getVal() const {
 bool Wildcard::isGenericWildcard() {
 	return this->val == "";
 }
+
+bool Wildcard::compare(std::shared_ptr<Wildcard> other) {
+	return this->val == other->val;
+}

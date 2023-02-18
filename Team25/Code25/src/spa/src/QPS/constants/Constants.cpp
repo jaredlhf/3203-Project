@@ -23,3 +23,21 @@ const std::string Constants::FOLLOWS = "Follows";
 const std::string Constants::FOLLOWSST = "Follows*";
 const std::string Constants::PATTERN = "pattern";
 const std::string Constants::WILDCARD = "_";
+
+// ClauseResult related functions
+Constants::ClauseResult Constants::getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2) {
+	return std::min(c1, c2);
+}
+
+Constants::ClauseResult Constants::getLowerBound(std::vector<Constants::ClauseResult> clauseList) {
+	if (clauseList.size() == 0) {
+		return Constants::ClauseResult::SYN_ERR;
+	}
+
+	Constants::ClauseResult res = clauseList[0];
+	for (int i = 1; i < clauseList.size(); i++) {
+		res = getLowerBound(res, clauseList[i]);
+	}
+
+	return res;
+}

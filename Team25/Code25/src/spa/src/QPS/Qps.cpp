@@ -1,6 +1,6 @@
 #include "Qps.h"
 
-Qps::Qps(PkbRetriever* retriever) {
+Qps::Qps(std::shared_ptr<PkbRetriever> retriever) {
 	pkbRetriever = retriever;
 }
 
