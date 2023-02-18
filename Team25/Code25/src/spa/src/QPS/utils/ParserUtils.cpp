@@ -28,6 +28,9 @@ bool ParserUtils::isValidIntegerString(const std::string& s) {
 }
 
 bool ParserUtils::isValidNaming(const std::string& s) {
+    if (s.length() == 0) {
+        return false;
+    }
 
     // checks if first character of synonym name or variable name starts with a letter
     for (int i = 0; i < s.length(); i++) {
@@ -80,8 +83,8 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
     if (isValidNaming(s)) {
         std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, s);
         for (auto& d : declarations) {
-            if (d->compare(varSyn)) {
-                return varSyn;
+            if (d->getName() == s) {
+                return d;
             }
         }
         return Synonym::create(Constants::SEMANTIC_ERROR, "");
@@ -93,21 +96,28 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
 
 // check for valid expression pattern for milestone 1
 // TODO: modify for pattern extensions with operators
-bool ParserUtils::isValidExpression(std::vector<std::string> s) {
-    if (s.size() == 1) {
-        std::string token = removeQuotations(s[0]);
-        return token == Constants::WILDCARD;
+bool ParserUtils::isValidExpression(const std::string& s) {
+    int length = s.size();
+    if (length == 1) {
+        return s == Constants::WILDCARD;
     }
-    if (s.size() == 3) {
-        if (s[1].find('"') == std::string::npos) {
-            return false;
-        }
-        if (s[0] == s[2] && s[0] == Constants::WILDCARD) {
-            std::string token = removeQuotations(s[1]);
-            return isValidNaming(token) || isValidIntegerString(token);
-        }
+    if (s[0] != s[length - 1]) {
+        return false;
     }
-    return false;
+    if (s[0] != '_') {
+        return false;
+    }
+
+    if (s[1] != s[length - 2]) {
+        return false;
+    }
+
+    if (s[1] != '\"') {
+        return false;
+    }
+
+    std::string cleanedString = s.substr(2, length - 4);
+    return isValidNaming(cleanedString) || isValidIntegerString((cleanedString));
 }
 
 bool ParserUtils::isDesignEntityToken(const std::string& s) {

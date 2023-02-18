@@ -6,6 +6,11 @@ TEST_CASE("valid integer string") {
     REQUIRE(ParserUtils::isValidIntegerString(s) == true);
 }
 
+TEST_CASE("empty integer string") {
+    std::string s = "";
+    REQUIRE(ParserUtils::isValidIntegerString(s) == false);
+}
+
 TEST_CASE("integer string starts with zero") {
     std::string s = "0233";
     REQUIRE(ParserUtils::isValidIntegerString(s) == false);
@@ -24,6 +29,11 @@ TEST_CASE("valid name") {
 TEST_CASE("valid name with numbers") {
     std::string s = "counter22";
     REQUIRE(ParserUtils::isValidNaming(s) == true);
+}
+
+TEST_CASE("empty name string") {
+    std::string s = "";
+    REQUIRE(ParserUtils::isValidNaming(s) == false);
 }
 
 TEST_CASE("invalid character in name") {
@@ -155,27 +165,27 @@ SCENARIO("Testing method for checking validity of a statement reference") {
 }
 
 TEST_CASE("valid var_name factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "\"s\"", "_"};
+    std::string s = "_\"s\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("valid wildcard pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_"};
+    std::string s = "_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("valid const_value factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "\"233\"", "_"};
+    std::string s = "_\"233\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("missing quotes for factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "233", "_"};
+    std::string s = "_233_";
     REQUIRE(ParserUtils::isValidExpression(s) == false);
 }
 
 TEST_CASE("missing wildcard for factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"\"233\"", "_"};
+    std::string s = "\"233\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == false);
 }
 
