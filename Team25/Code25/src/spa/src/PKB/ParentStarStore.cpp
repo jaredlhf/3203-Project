@@ -6,21 +6,20 @@
 ParentStarStore::ParentStarStore() {}
 
 
-void ParentStarStore::addParentStar(int parent, std::unordered_set<int> childrenLst) {
-	childrenStar[parent] = childrenLst;
-	for (const auto& child : childrenLst) {
-		parentStar[child].emplace(parent);
-	}
+void ParentStarStore::addParentStar(int parent, int child) {
+	childrenStar[parent].emplace(child);
+	parentStar[child].emplace(parent);
 }
 
-std::unordered_set<int> ParentStarStore::getParentStar(int children) {
-	if (hasChildren(children)) {
-		return parentStar[children];
+std::unordered_set<int> ParentStarStore::getParentStar(int child) {
+	if (hasChildren(child)) {
+		return parentStar[child];
 	}
 	else {
 		return {};
 	}
 }
+
 std::unordered_set<int> ParentStarStore::getChildrenStar(int parent) {
 	if (hasParent(parent)) {
 		return childrenStar[parent];

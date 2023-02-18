@@ -23,4 +23,5 @@ public:
 	// Value class functions
 	const std::string& getVal() const;
 	bool isGenericWildcard();
+	bool compare(std::shared_ptr<Wildcard> other);
 };

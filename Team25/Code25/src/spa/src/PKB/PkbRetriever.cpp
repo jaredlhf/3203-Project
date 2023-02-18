@@ -82,8 +82,8 @@ std::unordered_set<int> PkbRetriever::getModStmt(std::string varName) {
 	return this->modifiesStorage->getStmt(varName);
 }
 
-std::unordered_set<int> PkbRetriever::getParentStar(int children) {
-	return this->parentStarStorage->getParentStar(children);
+std::unordered_set<int> PkbRetriever::getParentStar(int child) {
+	return this->parentStarStorage->getParentStar(child);
 }
 std::unordered_set<int> PkbRetriever::getChildrenStar(int parent) {
 	return this->parentStarStorage->getChildrenStar(parent);
@@ -97,7 +97,7 @@ std::unordered_set<int> PkbRetriever::getChildren(int parent) {
 	return this->parentStorage->getChildren(parent);
 }
 
-std::string PkbRetriever::getUsesVar(int lineNum) {
+std::unordered_set<std::string> PkbRetriever::getUsesVar(int lineNum) {
 	return this->usesStorage->getVar(lineNum);
 }
 std::unordered_set<int> PkbRetriever::getUsesStmt(std::string varName) {

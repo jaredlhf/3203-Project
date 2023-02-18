@@ -44,7 +44,7 @@ public:
 	void addFollowsStar(int followee, std::unordered_set<int> followerLst);
 	void addModifiesProc(std::string procName, std::string varName);
 	void addModifies(int lineNum, std::string varName);
-	void addParentStar(int parent, std::unordered_set<int> childrenLst);
+	void addParentStar(int parent, int child);
 	void addParent(int parent, int child);
 	void addUses(int lineNum, std::string varName);
 };
