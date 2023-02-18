@@ -1,54 +1,53 @@
 #include "PKB/FollowsStore.h"
 
 #include "catch.hpp"
-using namespace std;
 
-FollowsStore followsStore;
 
-TEST_CASE("Empty follows store") {
-	unordered_set<int> output({ });
-    followsStore.clear();
-	REQUIRE(followsStore.getAllFollowers().size() == 0);
-	REQUIRE(followsStore.getAllFollowees().size() == 0);
-	REQUIRE(followsStore.getAllFollowers() == output);
-	REQUIRE(followsStore.getAllFollowees() == output);
 
-}
+SCENARIO("Populating follows store") {
+	GIVEN("New instance of follows store") {
+		FollowsStore followsStore;
 
-TEST_CASE("Add one follows") {
-	followsStore.clear();
-	followsStore.addFollows(1, 3);
+		THEN("It should start empty") {
+			REQUIRE(followsStore.getAllFollowers().size() == 0);
+			REQUIRE(followsStore.getAllFollowees().size() == 0);
+		}
 
-	REQUIRE(followsStore.getFollowee(3) == 1);
-	REQUIRE(followsStore.getFollower(1) == 3);
-	REQUIRE(followsStore.hasFollowee(1));
-	REQUIRE(followsStore.hasFollower(3));
-	REQUIRE(!followsStore.hasFollowee(3));
-	REQUIRE(!followsStore.hasFollower(1));
-}
+		WHEN("One follows is added") {
+			followsStore.addFollows(1, 3);
 
-TEST_CASE("Add two follows") {
-	followsStore.clear();
-	followsStore.addFollows(1, 3);
-	followsStore.addFollows(3, 4);
+			THEN("Followee should be mapped to follower") {
+				REQUIRE(followsStore.getFollowee(3) == 1);
+				REQUIRE(followsStore.getFollower(1) == 3);
+			}
 
-	REQUIRE(followsStore.getFollowee(4) == 3);
-	REQUIRE(followsStore.getFollower(3) == 4);
-	REQUIRE(followsStore.hasFollowee(3));
-	REQUIRE(followsStore.hasFollower(3));
-	REQUIRE(followsStore.hasFollower(4));
-	REQUIRE(!followsStore.hasFollowee(4));
-}
+			WHEN("Duplicate follows is added") {
+				followsStore.addFollows(1, 3);
 
-TEST_CASE("Add duplicate follows") {
-	followsStore.clear();
-	followsStore.addFollows(1, 3);
-	followsStore.addFollows(1, 3);
+				THEN("Follows relation should remain the same") {
+					REQUIRE(followsStore.getFollowee(3) == 1);
+					REQUIRE(followsStore.getFollower(1) == 3);
+				}
+			}
+		}
+		WHEN("Two follows are added") {
+			followsStore.addFollows(1, 3);
+			followsStore.addFollows(3, 4);
 
-	REQUIRE(followsStore.getFollowee(3) == 1);
-	REQUIRE(followsStore.getFollower(1) == 3);
-	REQUIRE(followsStore.hasFollowee(1));
-	REQUIRE(followsStore.hasFollower(3));
-	REQUIRE(!followsStore.hasFollowee(3));
-	REQUIRE(!followsStore.hasFollower(1));
+			THEN("Followees should be mapped to followers correctly") {
+				REQUIRE(followsStore.getFollowee(3) == 1);
+				REQUIRE(followsStore.getFollower(1) == 3);
+				REQUIRE(followsStore.getFollowee(4) == 3);
+				REQUIRE(followsStore.getFollower(3) == 4);
+			}
+
+			THEN("getAllFollowers method should return all followers") {
+				REQUIRE(followsStore.getAllFollowers() == std::unordered_set<int>({ 3, 4 }));
+			}
+
+			THEN("getAllFollowees method should return all followees") {
+				REQUIRE(followsStore.getAllFollowees() == std::unordered_set<int>({ 1, 3 }));
+			}
+		}
+	}
 }
