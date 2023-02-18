@@ -149,7 +149,6 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, st
     }else {
         throw std::invalid_argument("no parenthesis for cond_expr");
     }
-
     if(ExpressionParser::isCondExpr(rhs)) {
         std::smatch result;
         std::vector<std::string> variableVector;

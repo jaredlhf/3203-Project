@@ -2,7 +2,13 @@ procedure Example {
   x = 2+d;
   if (a < b) then {
     y = z;
-    i = j + k;
+  if (c<d) then {
+    X =y;
+  } else {
+    X =z;
+   }
+ 
+   i = j + k;
   } else {
     W = n;
   }
