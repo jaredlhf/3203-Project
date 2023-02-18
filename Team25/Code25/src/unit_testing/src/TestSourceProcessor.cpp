@@ -40,13 +40,15 @@ TEST_CASE("Test processSimple()") {
     FollowsStore fs;
     ProcedureStore ps;
     StatementStore ss;
+    PatternStore patts;
     std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
     std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
     std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
     std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+    std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
 
-    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
+    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"

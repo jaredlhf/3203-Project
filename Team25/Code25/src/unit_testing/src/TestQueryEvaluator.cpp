@@ -17,13 +17,17 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			FollowsStore fs;
 			ProcedureStore ps;
 			StatementStore ss;
+			PatternStore patts;
+
+			ParserResponse response;
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
 			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
 			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
 			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->add("x");
@@ -200,14 +204,17 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			FollowsStore fs;
 			ProcedureStore ps;
 			StatementStore ss;
+			PatternStore patts;
+
 			ParserResponse response;
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
 			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
 			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
 			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->add("x");
@@ -403,14 +410,17 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			FollowsStore fs;
 			ProcedureStore ps;
 			StatementStore ss;
+			PatternStore patts;
+
 			ParserResponse response;
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
 			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
 			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
 			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->add(123);
