@@ -8,9 +8,9 @@ ParserUtils::ParserUtils(std::shared_ptr<Tokenizer> t) {
 std::string ParserUtils::expect(std::shared_ptr<Token> expectedToken) {
     std::string next = tokenizer->getNextToken();
     if (!expectedToken->isEqual(next)) {
-        std::cout << "error: unexpected token, got: " << next << std::endl;
+        std::string error = "error: unexpected token, got: " + next;
 
-        throw 1;
+        throw std::invalid_argument(error);
     }
     return next;
 }

@@ -2,6 +2,7 @@
 #include "SP/TNode.h"
 #include "catch.hpp"
 #include <regex>
+#include "SP/SPConstants.h"
 
 using namespace std;
 
@@ -99,7 +100,7 @@ TEST_CASE("ModifiesIfTest") {
     //First If cond expr
     shared_ptr<IfNode> i = make_shared<IfNode>(IfNode(2,"x>3",ifSp,elseSp));
 
-    m.visit(i);
+    m.visit(i, SPConstants::INVALID_LINE_NO);
 }
 //
 //TEST_CASE("UsesAssignTest") {
@@ -127,7 +128,7 @@ TEST_CASE("FollowsTest") {
     stmts.push_back(sp2);
     StmtLstNode sl = StmtLstNode(stmts);
     shared_ptr<StmtLstNode> sp = make_shared<StmtLstNode>(sl);
-    f.visit(sp);
+    f.visit(sp, SPConstants::INVALID_LINE_NO);
 }
 
 TEST_CASE("FollowsWithWhileTest") {
@@ -173,7 +174,7 @@ TEST_CASE("FollowsWithWhileTest") {
     StmtLstNode sl = StmtLstNode(stmts);
     shared_ptr<StmtLstNode> sp = make_shared<StmtLstNode>(sl);
 
-    f.visit(sp);
+    f.visit(sp, SPConstants::INVALID_LINE_NO);
 }
 
 TEST_CASE("FollowsStarTest") {
@@ -219,7 +220,7 @@ TEST_CASE("FollowsStarTest") {
     StmtLstNode sl = StmtLstNode(stmts);
     shared_ptr<StmtLstNode> sp = make_shared<StmtLstNode>(sl);
 
-    f.visit(sp);
+    f.visit(sp, SPConstants::INVALID_LINE_NO);
 }
 
 TEST_CASE("ParentsTest") {
@@ -247,7 +248,7 @@ TEST_CASE("ParentsTest") {
 
     shared_ptr<IfNode> i = make_shared<IfNode>(IfNode(2,"x>3",ifSp,elseSp));
 
-    p.visit(i);
+    p.visit(i, SPConstants::INVALID_LINE_NO);
 }
 
 TEST_CASE("ParentsStarTest") {
@@ -331,7 +332,7 @@ TEST_CASE("ParentsStarTest") {
     //First If cond expr
     shared_ptr<IfNode> i = make_shared<IfNode>(IfNode(2,"x>3",ifSp,elseSp));
 
-    p.visit(i);
+    p.visit(i, SPConstants::INVALID_LINE_NO);
 }
 
 
