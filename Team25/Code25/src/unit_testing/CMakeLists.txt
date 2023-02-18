@@ -28,6 +28,8 @@ add_executable(unit_testing ${srcs}
 "src/TestQpsConstants.cpp"
 "src/TestQpsStringUtils.cpp"
 "src/TestQpsTable.cpp"
-"src/TestQueryParser.cpp")
+"src/TestQueryParser.cpp"
+"src/TestQpsUsesClauseResolve.cpp"
+"src/TestQpsPatternClauseResolve.cpp" "src/TestQpsParentClause.cpp" "src/TestQpsFollowsClause.cpp")
 target_link_libraries(unit_testing spa)
 

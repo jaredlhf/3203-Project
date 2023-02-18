@@ -17,6 +17,8 @@ protected:
 	std::string keyword;
 	std::shared_ptr<Entity> arg1;
 	std::shared_ptr<Entity> arg2;
+	static std::unordered_set<int> getEveryStmt(std::shared_ptr<PkbRetriever> pkbRet);
+
 public:
 	// Constructor functions
 	Clause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);

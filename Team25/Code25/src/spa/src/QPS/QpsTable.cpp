@@ -44,7 +44,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefau
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QpsTable::getDefaultOk() {
-	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::NO_MATCH,
+	return std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>(Constants::ClauseResult::OK,
 		QpsTable::create());
 }
 
