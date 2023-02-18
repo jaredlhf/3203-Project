@@ -14,6 +14,12 @@ SCENARIO("Working version of PkbRetriever") {
 		ProcedureStore ps;
 		StatementStore ss;
 		PatternStore patts;
+		FollowsStarStore fstars;
+		ModifiesProcStore mprocs;
+		ModifiesStore ms;
+		ParentStarStore pStars;
+		ParentStore parents;
+		UsesStore uses;
 
 		WHEN("The PkbRetriever references empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -21,9 +27,15 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
 			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
 			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
-			std:shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
+			std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
+			std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+			std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -60,14 +72,20 @@ SCENARIO("Working version of PkbRetriever") {
 			}
 		}
 		WHEN("The PkbRetriever references non-empty stores") {
-			std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
-			std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
-			std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
-			std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
-			std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
-			std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
+			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
+			std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+			std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
 			vsPointer -> add("x");
 			csPointer -> add(1);
 			fsPointer -> addFollows(1, 2);
@@ -89,9 +107,9 @@ SCENARIO("Working version of PkbRetriever") {
 			}
 			THEN("Getting all follows should return a non empty set") {
 				REQUIRE(pkbRet.getAllFollowees().size() == 1);
-				REQUIRE(pkbRet.getAllFollowees().count(2) == 1);
+				REQUIRE(pkbRet.getAllFollowees().count(1) == 1);
 				REQUIRE(pkbRet.getAllFollowers().size() == 1);
-				REQUIRE(pkbRet.getAllFollowers().count(1) == 1);
+				REQUIRE(pkbRet.getAllFollowers().count(2) == 1);
 			}
 			THEN("Getting all procedures should return a non empty set") {
 				REQUIRE(pkbRet.getAllProc().size() == 1);

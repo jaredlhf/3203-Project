@@ -28,6 +28,8 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/ProcedureStore.h"
 "src/PKB/StatementStore.cpp"
 "src/PKB/StatementStore.h"
+"src/PKB/UsesStore.cpp"
+"src/PKB/UsesStore.h"
 "src/PKB/VariableStore.cpp"
 "src/PKB/VariableStore.h"
 "src/Parser.cpp"
