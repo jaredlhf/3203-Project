@@ -48,7 +48,7 @@ bool UsesStore::hasStmt(int lineNum) {
 }
 
 std::unordered_set<std::string> UsesStore::getAllVar() {
-	std::unordered_set<string> varList;
+	std::unordered_set<std::string> varList;
 	
 	for (const auto& [key, value] : varStore) {
 			varList.insert(value);
