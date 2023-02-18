@@ -66,8 +66,8 @@ void PkbPopulator::addModifies(int lineNum, std::string varName) {
 	this->modifiesStorage->add(lineNum, varName);
 }
 
-void PkbPopulator::addParentStar(int parent, std::unordered_set<int> childrenLst) {
-	this->parentStarStorage->addParentStar(parent, childrenLst);
+void PkbPopulator::addParentStar(int parent, int child) {
+	this->parentStarStorage->addParentStar(parent, child);
 }
 
 void PkbPopulator::addParent(int parent, int child) {
