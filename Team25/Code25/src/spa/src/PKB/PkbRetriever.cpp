@@ -97,7 +97,7 @@ std::unordered_set<int> PkbRetriever::getChildren(int parent) {
 	return this->parentStorage->getChildren(parent);
 }
 
-std::string PkbRetriever::getUsesVar(int lineNum) {
+std::unordered_set<std::string> PkbRetriever::getUsesVar(int lineNum) {
 	return this->usesStorage->getVar(lineNum);
 }
 std::unordered_set<int> PkbRetriever::getUsesStmt(std::string varName) {

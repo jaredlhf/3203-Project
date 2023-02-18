@@ -10,7 +10,7 @@
 class UsesStore {
 private:
 	std::unordered_map<int, std::unordered_set<std::string>> varStore;
-	std::unordered_map<std::string, int> stmtStore;
+	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
 
 
 public:
@@ -18,7 +18,7 @@ public:
 
 	void add(int lineNum, std::string varName);
 	std::unordered_set<std::string> getVar(int lineNum);
-	int getStmt(std::string varName);
+	std::unordered_set<int> getStmt(std::string varName);
 	bool hasVar(std::string varName);
 	bool hasStmt(int lineNum);
 	std::unordered_set<std::string> getAllVar();
