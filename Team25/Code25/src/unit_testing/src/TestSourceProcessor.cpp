@@ -41,14 +41,26 @@ TEST_CASE("Test processSimple()") {
     ProcedureStore ps;
     StatementStore ss;
     PatternStore patts;
+    FollowsStarStore fstars;
+    ModifiesProcStore mprocs;
+    ModifiesStore ms;
+    ParentStarStore pStars;
+    ParentStore parents;
+    UsesStore uses;
     std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
     std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
     std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
     std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
     std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
+    std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+    std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+    std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+    std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+    std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+    std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer);
+    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                                  "  x = 2;\n"
