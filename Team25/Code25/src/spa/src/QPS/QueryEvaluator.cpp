@@ -119,8 +119,6 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 		return std::list<std::string>({ this->resultSynonym->getKeyword() });
 	}
 
-	std::cout << "pass error handling" << std::endl;
-
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =

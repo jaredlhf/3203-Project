@@ -42,12 +42,12 @@ SCENARIO("Mocking behavior of QPS") {
 			THEN("For a given query string and population of the pkbRetriever") {
 				list<string> expected = { "x", "y", "z" };
 				list<string> res;
-				
+
 				string query = "variable x, v; Select v";
 
-				vsPointer -> add("x");
-				vsPointer -> add("y");
-				vsPointer -> add("z");
+				vsPointer->add("x");
+				vsPointer->add("y");
+				vsPointer->add("z");
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -203,10 +203,20 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For pattern query, the right result is returned") {
-				list<string> expected = { "1", "3" };
+				list<string> expected = { "3", "7", "9"};
 				list<string> res;
 
 				string query = "assign a1; stmt s2; Select a1 pattern a1 (_, _\"x\"_)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query with var syn in pattern clause, the right result is returned") {
+				list<string> expected = { "3", "7", "9" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select a1 pattern a1 (v1, _\"x\"_)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -226,7 +236,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				list<string> expected = { "x" };
 				list<string> res;
 
-				string query = "assign a1; variable v1; Select v1 such that Uses(_,v1) pattern a1 (v1, _)";
+				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(s1,v1)  pattern a1 (v1, _)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);

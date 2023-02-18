@@ -1246,6 +1246,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
     if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
         std::shared_ptr<Wildcard> wcArg2 = std::static_pointer_cast<Wildcard>(this->arg2);
 
+        std::cout << "This is 2 wildcard pattern clause" << std::endl;
+        std::cout << "arg2 val is " << wcArg2->getVal() << std::endl;
+
         // Case: pattern a1 (_, _)
         if (wcArg2->isGenericWildcard()) {
             std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName });
