@@ -40,7 +40,7 @@ bool DesignExtractor::isStmtLstNode(std::shared_ptr<TNode> n) {
 void DesignExtractor::extractVar(vector<std::string> tokens) {
     for (string entity: tokens)
         if (Token::isValidName((entity))) {
-            std::cout << "populating variable:" << entity << std::endl;
+//            std::cout << "populating variable:" << entity << std::endl;
             //parser->pkbPopulator->addVar(entity);
         }
 }
@@ -49,7 +49,7 @@ void DesignExtractor::extractConst(vector<std::string> tokens) {
     for (string entity: tokens)
          if (Token::isNumber(entity)) {
             //parser->pkbPopulator->addConst(std::stoi(entity));
-            std::cout << "populating constant:" << entity << std::endl;
+//            std::cout << "populating constant:" << entity << std::endl;
         }
 }
 
@@ -103,7 +103,7 @@ void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = a->getLine();
     }
-    std::cout << "populating modifies:" << a->getVar() << std::endl;
+    std::cout << "populating modifies:" << "(" << lineNo << "," << a->getVar() <<")"  << std::endl;
     //std::cout<<"checked assign"<<endl;
 }
 
@@ -111,7 +111,7 @@ void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = r->getLine();
     }
-    std::cout << "populating modifies:" << r->getVar() << std::endl;
+    std::cout << "populating modifies:" << "(" << lineNo << "," << r->getVar() <<")" << std::endl;
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -199,7 +199,7 @@ void UsesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = a->getLine();
     }
-    std::cout << "populating uses expr:" << a->getExpr() << std::endl;
+    std::cout << "populating uses expr:" << "(" << lineNo << "," << a->getExpr() <<")" << std::endl;
     vector<std::string> rhs = tok.tokenize(a->getExpr());
     extractVar(rhs);
     extractConst(rhs);
@@ -210,7 +210,7 @@ void UsesExtractor::visit(std::shared_ptr<PrintNode> r, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = r->getLine();
     }
-    std::cout << "populating uses:" << r->getVar() << std::endl;
+    std::cout << "populating uses:" << "(" << lineNo << "," << r ->getVar() <<")" << std::endl;
     //std::cout<<"checked print"<<endl;
 }
 
@@ -292,11 +292,17 @@ void FollowsStarExtractor::visit(std::shared_ptr<StmtLstNode> sl, int lineNo) {
     for(auto i: stmts) {
         stmtLines.push_back(i->getLine());
     }
-    std::cout << "populating follows* ";
-    for(auto j : stmtLines) {
-        std::cout << j << " " ;
+
+    while (stmtLines.size() != 1) {
+        std::vector<int> follows = std::vector<int>(stmtLines.begin() + 1, stmtLines.end());
+        std::cout << "populating follows* " << "(" << stmtLines[0] << "," << "(";
+        for(auto k: follows) {
+            std::cout << k << " ";
+        }
+        std::cout<<"))"<<endl;
+        stmtLines.erase(stmtLines.begin());
     }
-    std::cout << std::endl;
+
 }
 
 //void ParentsExtractor::visit(std::shared_ptr<TNode> n) {
@@ -344,34 +350,40 @@ void ParentsExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
 }
 
 void ParentsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
+        int line = ifs->getLine();
         std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
         std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
         vector<int> stmtLines;
         for(auto i: ifStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
-                std::cout << i->getLine() << " parents " << endl;
+//                std::cout << i->getLine() << " parents " << endl;
                 stmtLines.push_back(i->getLine());
             }
         }
         for(auto i: elseStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
-                std::cout << i->getLine() << " parents " << endl;
+//                std::cout << i->getLine() << " parents " << endl;
                 stmtLines.push_back(i->getLine());
             }
         }
-//        for(auto j: stmtLines) {
-//            std::cout << j << " parents " << endl;
-//        }
+        for(auto j: stmtLines) {
+            std::cout << "populating parents: " << "(" << line << "," << j << ")"<< endl ;
+        }
+        std::cout<<endl;
         //populate pkb - key,vector or key,value permutations??
 }
 
 void ParentsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
+        int line = wh->getLine();
         std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
         vector<int> stmtLines;
         for (auto i: whStmts) {
             if (!(isIfNode(i) || isWhileNode(i))) {
                 stmtLines.push_back(i->getLine());
             }
+        }
+        for(auto j: stmtLines) {
+            std::cout << "populating parents: " << "(" << line << "," << j << ")"<< endl ;
         }
         //populate pkb - key,vector or key,value permutations??
 }
@@ -432,7 +444,10 @@ void ParentsStarExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
 }
 
 void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
-    ParentsExtractor p;
+//    int line = ifs->getLine();
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = ifs->getLine();
+    }
     std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     int ifLineNo = ifs->getLine();
@@ -455,21 +470,29 @@ void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
         }
     }
     for(auto j: stmtLines) {
-        std::cout << j <<" parents*" <<endl;
+        std::cout<<"populating parents*:" <<  "(" << lineNo << "," << j << ")" <<endl;
     }
     //populate pkb - key,vector or key,value permutations??
 }
 
 void ParentsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
-    ParentsExtractor p;
+//    int line = wh->getLine();
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = wh->getLine();
+    }
     std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+    int whLineNo = wh->getLine();
     vector<int> stmtLines;
+    stmtLines.push_back(whLineNo);
     for (auto i: whStmts) {
         if (!(isIfNode(i) || isWhileNode(i))) {
             stmtLines.push_back(i->getLine());
         } else {
-            p.visit(i, lineNo);
+            visit(i, lineNo);
         }
+    }
+    for(auto j: stmtLines) {
+        std::cout<<"populating parents*:" << "("  << lineNo << "," << j << ")" <<endl;
     }
     //populate pkb - key,vector or key,value permutations??
 }
