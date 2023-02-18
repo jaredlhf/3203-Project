@@ -53,8 +53,11 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
         return Wildcard::create();
     }
 
-    if (s.find('"') != std::string::npos && isValidNaming(s.substr(1, s.size() - 2))) {
-        return Value::create(s);
+    if (s.find('"') != std::string::npos) {
+        std::string cleanString = removeQuotations(s);
+        if (isValidNaming(cleanString)) {
+            return Value::create(cleanString);
+        }
     }
 
     if (isValidNaming(s)) {

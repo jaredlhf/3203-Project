@@ -62,7 +62,7 @@ SCENARIO("Testing method for checking validity of an entity reference") {
 
         WHEN("given a valid SIMPLE program variable string") {
             std::string s = "\"count\"";
-            std::shared_ptr<Value> v = Value::create(s);
+            std::shared_ptr<Value> v = Value::create("count");
             THEN("it should return the correct value entity") {
                 std::shared_ptr<Entity> e = ParserUtils::getValidEntRef(s, declarations);
                 REQUIRE(e->isConstant() == true);
