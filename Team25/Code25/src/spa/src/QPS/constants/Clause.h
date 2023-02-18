@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <unordered_set>
 #include "Constants.h"
 #include "Entity.h"
 #include "Wildcard.h"
@@ -9,6 +10,7 @@
 #include "Value.h"
 #include "PKB/PkbRetriever.h"
 #include "QPS/QpsTable.h"
+#include "QPS/utils/StringUtils.h"
 
 class Clause {
 protected:

@@ -123,10 +123,13 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 
 	if (this->suchThatClause) {
 		// TODO write implementation for suchThat clause retrieval
+		clauseResults.push_back(this->suchThatClause->resolve(pkbRetriever));
 	}
 
 	if (this->patternClause) {
 		// TODO write implementation for pattern clause retrieval
+		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(this->patternClause);
+		clauseResults.push_back(ptnClause->resolve(pkbRetriever, this->patternSynonym));
 	}
 
 	// TODO update implementation for join all logic
