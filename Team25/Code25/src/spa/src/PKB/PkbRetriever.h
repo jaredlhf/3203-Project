@@ -63,6 +63,6 @@ public:
 	int getParent(int child); 
 	std::unordered_set<int> getChildren(int parent);
 	/*Uses Store*/
-	std::string getUsesVar(int lineNum); 
+	std::unordered_set<std::string> getUsesVar(int lineNum);
 	std::unordered_set<int> getUsesStmt(std::string varName);
 };
