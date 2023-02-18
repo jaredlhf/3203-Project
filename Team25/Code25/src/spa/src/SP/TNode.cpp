@@ -104,10 +104,10 @@ void IfNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
 }
 
 std::vector<std::shared_ptr<TNode>> IfNode::getChildren() {
-    std::vector<std::shared_ptr<TNode>> ifs = ifLst->getChildren();
-    std::vector<std::shared_ptr<TNode>> els = elseLst->getChildren();
-    ifs.insert(ifs.end(), els.begin(), els.end());
-    return ifs;
+    std::vector<std::shared_ptr<TNode>> children;
+    children.push_back(ifLst);
+    children.push_back(elseLst);
+    return children;
 }
 
 WhileNode::WhileNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> stmtList) {
@@ -127,7 +127,9 @@ void WhileNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
 }
 
 std::vector<std::shared_ptr<TNode>> WhileNode::getChildren() {
-    return stmtLst->getChildren();
+    std::vector<std::shared_ptr<TNode>> children;
+    children.push_back(stmtLst);
+    return children;
 }
 
 
