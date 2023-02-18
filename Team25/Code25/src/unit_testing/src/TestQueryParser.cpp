@@ -131,7 +131,7 @@ TEST_CASE("Parse correct query with pattern: count constant value on LHS and s p
     expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"count\""), Wildcard::create("\"s\"")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"count\""), Wildcard::create("s")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
     REQUIRE(expectedResObject.compare(resObj) == true);
@@ -143,7 +143,7 @@ TEST_CASE("Parse correct query with pattern: variable v on LHS and partial patte
     expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "v"), Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Synonym::create(Constants::VARIABLE, "v"), Wildcard::create("\"s\"")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Synonym::create(Constants::VARIABLE, "v"), Wildcard::create("s")));
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
@@ -157,7 +157,7 @@ TEST_CASE("Parse correct query with pattern: wildcard on LHS and partial pattern
     expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a1"));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a1"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create("\"x\"")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create("x")));
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
@@ -307,7 +307,7 @@ TEST_CASE("Parse correct complex query with such that -> pattern") {
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("\"count\"")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("count")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
     REQUIRE(expectedResObject.compare(resObj) == true);
@@ -321,7 +321,7 @@ TEST_CASE("Parse correct complex query with pattern -> such that") {
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("\"count\"")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("count")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
     REQUIRE(expectedResObject.compare(resObj) == true);

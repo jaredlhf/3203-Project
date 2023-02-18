@@ -115,7 +115,9 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
     if (expression == Constants::WILDCARD) {
         response.setPattern(Wildcard::create());
     } else {
-        std::string cleanedString = expression.substr(1, expression.size() - 2);
+        // only for partial matching
+        // TODO: adapt to other possible patterns in future milestones
+        std::string cleanedString = expression.substr(2, expression.size() - 4);
         response.setPattern(Wildcard::create(cleanedString));
     }
 
