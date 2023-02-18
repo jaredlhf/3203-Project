@@ -15,32 +15,22 @@ TEST_CASE("Empty parent star store") {
 
 }
 
-TEST_CASE("Add one parent star") {
 
-	parentStar.clear();
-	std::unordered_set<int> parentLst({ 1 });
-	std::unordered_set<int> childrenLst({ 2, 3, 4 });
-	parentStar.addParentStar(1, childrenLst);
-	
-
-	REQUIRE(parentStar.getParentStar(2) == parentLst);
-	REQUIRE(parentStar.getChildrenStar(1) == childrenLst);
-	REQUIRE(parentStar.hasParent(1));
-	REQUIRE(parentStar.hasChildren(3));
-	REQUIRE(!parentStar.hasParent(3));
-	REQUIRE(!parentStar.hasChildren(1));
-	REQUIRE(parentStar.getAllChildren() == childrenLst);
-}
-
-TEST_CASE("Add two parent star") {
+TEST_CASE("Add parent star") {
 	parentStar.clear();
 	std::unordered_set<int> parentLstA({ 1 });
 	std::unordered_set<int> childrenLstA({ 2, 3, 4 });
 	std::unordered_set<int> parentLstB({ 1, 2 });
 	std::unordered_set<int> childrenLstB({ 3, 4 });
-	parentStar.addParentStar(1, childrenLstA);
-	parentStar.addParentStar(2, childrenLstB);
+	parentStar.addParentStar(1, 2);
+	parentStar.addParentStar(1, 3);
+	parentStar.addParentStar(1, 4);
+	parentStar.addParentStar(2, 3);
+	parentStar.addParentStar(2, 4);
+	parentStar.addParentStar(3, 4);
 
+	REQUIRE(parentStar.getParentStar(2) == parentLstA);
+	REQUIRE(parentStar.getChildrenStar(1) == childrenLstA);
 	REQUIRE(parentStar.getParentStar(3) == parentLstB);
 	REQUIRE(parentStar.getChildrenStar(2) == childrenLstB);
 	REQUIRE(parentStar.hasParent(2));

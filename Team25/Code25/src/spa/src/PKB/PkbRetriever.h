@@ -57,7 +57,7 @@ public:
 	std::string getModVar(int lineNum); 
 	std::unordered_set<int> getModStmt(std::string varName);
 	/*ParentStar Store*/
-	std::unordered_set<int> getParentStar(int children); 
+	std::unordered_set<int> getParentStar(int child); 
 	std::unordered_set<int> getChildrenStar(int parent);
 	/*Parent Store*/
 	int getParent(int child); 
