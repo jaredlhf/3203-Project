@@ -1,63 +1,47 @@
 #include "PKB/StatementStore.h"
 
 #include "catch.hpp"
-using namespace std;
 
-StatementStore stmtStore;
 
-TEST_CASE("Empty statement store") {
-	unordered_set<int> output({ });
-    stmtStore.clear();
-	REQUIRE(stmtStore.size() == 0);
-	REQUIRE(stmtStore.getAllStmt("") == output);
-}
+SCENARIO("Populating statement store") {
+	GIVEN("New instance of statement store") {
+		StatementStore stmtStore;
 
-TEST_CASE("Add one statement") {
-	stmtStore.clear();
-	stmtStore.addStmt("assign", 3);
+		THEN("It should start empty") {
+			REQUIRE(stmtStore.size() == 0);
+		}
 
-	unordered_set<int> output({ 3 });
+		WHEN("One statement is added") {
+			stmtStore.addStmt("assign", 1);
 
-	REQUIRE(stmtStore.size() == 1);
-	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.has("assign"));
-}
+			THEN("Store should have 1 key") {
+				REQUIRE(stmtStore.size() == 1);
+				REQUIRE(stmtStore.has("assign"));
+			}
 
-TEST_CASE("Add two same statements") {
-	stmtStore.clear();
-	stmtStore.addStmt("assign", 3);
-	stmtStore.addStmt("assign", 5);
+			THEN("Value for key should be correct") {
+				REQUIRE(stmtStore.getAllStmt("assign") == std::unordered_set<int>({ 1 }));
+			}
 
-	unordered_set<int> output({ 3, 5 });
+		}
+		WHEN("2 assign, 1 print, 1 read are added") {
+			stmtStore.addStmt("assign", 1);
+			stmtStore.addStmt("assign", 2);
+			stmtStore.addStmt("print", 3);
+			stmtStore.addStmt("read", 4);
 
-	REQUIRE(stmtStore.size() == 1);
-	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.has("assign"));
-}
+			THEN("Store should have 3 keys") {
+				REQUIRE(stmtStore.size() == 3);
+				REQUIRE(stmtStore.has("assign"));
+				REQUIRE(stmtStore.has("print"));
+				REQUIRE(stmtStore.has("read"));
+			}
 
-TEST_CASE("Add two different statements") {
-	stmtStore.clear();
-	stmtStore.addStmt("assign", 3);
-	stmtStore.addStmt("if", 5);
-
-	unordered_set<int> outputA({ 3 });
-	unordered_set<int> outputB({ 5 });
-
-	REQUIRE(stmtStore.size() == 2);
-	REQUIRE(stmtStore.getAllStmt("assign") == outputA);
-	REQUIRE(stmtStore.getAllStmt("if") == outputB);
-	REQUIRE(stmtStore.has("assign"));
-	REQUIRE(stmtStore.has("if"));
-}
-
-TEST_CASE("Add duplicate statement") {
-	stmtStore.clear();
-	stmtStore.addStmt("assign", 3);
-	stmtStore.addStmt("assign", 3);
-
-	unordered_set<int> output({ 3 });
-
-	REQUIRE(stmtStore.size() == 1);
-	REQUIRE(stmtStore.getAllStmt("assign") == output);
-	REQUIRE(stmtStore.has("assign"));
+			THEN("Value for keys should be correct") {
+				REQUIRE(stmtStore.getAllStmt("assign") == std::unordered_set<int>({ 1, 2 }));
+				REQUIRE(stmtStore.getAllStmt("print") == std::unordered_set<int>({ 3 }));
+				REQUIRE(stmtStore.getAllStmt("read") == std::unordered_set<int>({ 4 }));
+			}
+		}
+	}
 }

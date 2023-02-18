@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
+/* Storage class for statements and their line numbers.*/
 class StatementStore {
 private:
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
