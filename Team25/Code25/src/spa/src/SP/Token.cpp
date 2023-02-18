@@ -1,16 +1,13 @@
 #include "Token.h"
 
-bool Token::isValidName(const std::string& variable) {
-    if (!((variable[0] >= 'a' && variable[0] <= 'z')
-          || (variable[0] >= 'A' && variable[0] <= 'Z')
-          || variable[0] == '_'))
-        return false;
-    for (int i = 1; i < variable.length(); i++) {
-        if (!((variable[i] >= 'a' && variable[i] <= 'z')
-              || (variable[i] >= 'A' && variable[i] <= 'Z')
-              || (variable[i] >= '0' && variable[i] <= '9')
-              || variable[i] == '_'))
+bool Token::isValidName(const std::string& var) {
+    for (int i = 0; i < var.length(); i++) {
+        if (i == 0 && !isalpha(var[i])) {
             return false;
+        }
+        if (!isalpha(var[i]) && !isdigit(var[i])) {
+            return false;
+        }
     }
     return true;
 }
