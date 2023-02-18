@@ -131,7 +131,7 @@ TEST_CASE("Parse correct query with pattern: count constant value on LHS and s p
     expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a")});
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"count\""), Wildcard::create("s")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("count"), Wildcard::create("s")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
     
     REQUIRE(expectedResObject.compare(resObj) == true);
@@ -307,7 +307,7 @@ TEST_CASE("Parse correct complex query with such that -> pattern") {
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("count")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("x"), Wildcard::create("count")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
     REQUIRE(expectedResObject.compare(resObj) == true);
@@ -321,7 +321,7 @@ TEST_CASE("Parse correct complex query with pattern -> such that") {
     expectedResObject.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
     expectedResObject.setSuchThatClause(Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "x")));
     expectedResObject.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a"));
-    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("\"x\""), Wildcard::create("count")));
+    expectedResObject.setPatternClause(Clause::create(Constants::PATTERN, Value::create("x"), Wildcard::create("count")));
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
     REQUIRE(expectedResObject.compare(resObj) == true);
