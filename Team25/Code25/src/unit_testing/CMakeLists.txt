@@ -22,6 +22,7 @@ add_executable(unit_testing ${srcs}
 "src/TestQpsClause.cpp" 
 "src/TestModifiesStore.cpp"
 "src/TestParentStore.cpp" 
-"src/TestParentStar.cpp")
+"src/TestParentStar.cpp"
+"src/TestUsesStore.cpp")
 target_link_libraries(unit_testing spa)
 
