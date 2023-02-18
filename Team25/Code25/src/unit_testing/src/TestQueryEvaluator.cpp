@@ -11,7 +11,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 	GIVEN("An instance of a QpsEvaluator class") {
 		QueryEvaluator qe;
 
-		WHEN("ParserResponse and PkbRetriever are populated with query for variables") {
+		WHEN("ParserResponse and PkbRetriever are populated with query for variables for only select queries") {
 			VariableStore vs;
 			ConstantStore cs;
 			FollowsStore fs;
@@ -199,6 +199,207 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 
 				response.setDeclarations({ Synonym::create(Constants::READ, "x"), Synonym::create(Constants::VARIABLE, "v") });
 				response.setSynonym(Synonym::create(Constants::READ, "rd"));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+		}
+
+		WHEN("ParserResponse and PkbRetriever are populated with suchthat and/or pattern") {
+			VariableStore vs;
+			ConstantStore cs;
+			FollowsStore fs;
+			ProcedureStore ps;
+			StatementStore ss;
+			PatternStore patts;
+			FollowsStarStore fstars;
+			ModifiesProcStore mprocs;
+			ModifiesStore ms;
+			ParentStarStore pStars;
+			ParentStore parents;
+			UsesStore uses;
+
+			ParserResponse response;
+
+			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+			std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+			std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+			std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+			std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+			std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
+			std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+			std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+
+			// Mock variables appearing in the SIMPLE program
+			vsPointer->add("w");
+			vsPointer->add("x");
+			vsPointer->add("y");
+			vsPointer->add("z");
+
+			// Mock constants appearing in the SIMPLE program
+			csPointer->add(123);
+			csPointer->add(456);
+			csPointer->add(789);
+
+			// Mock procedures appearing in the SIMPLE program
+			psPointer->add("main");
+			psPointer->add("factorial");
+			psPointer->add("beta");
+
+			// Mock statements appearing in the SIMPLE program
+			ssPointer->addStmt(Constants::ASSIGN, 1);
+			ssPointer->addStmt(Constants::WHILE, 2);
+			ssPointer->addStmt(Constants::ASSIGN, 3);
+			ssPointer->addStmt(Constants::IF, 4);
+			ssPointer->addStmt(Constants::READ, 5);
+			ssPointer->addStmt(Constants::PRINT, 6);
+			ssPointer->addStmt(Constants::ASSIGN, 7);
+			ssPointer->addStmt(Constants::WHILE, 8);
+			ssPointer->addStmt(Constants::ASSIGN, 9);
+
+			// Mock followsSt relationship in SIMPLE program
+			fstarsPointer->addFollowsStar(1, { 2 });
+			fstarsPointer->addFollowsStar(3, { 4, 8 });
+			fstarsPointer->addFollowsStar(4, { 8 });
+			fstarsPointer->addFollowsStar(5, { 6, 7 });
+			fstarsPointer->addFollowsStar(6, { 7 });
+
+			// Mock follows relationship in SIMPLE program
+			fsPointer->addFollows(1, 2);
+			fsPointer->addFollows(3, 4);
+			fsPointer->addFollows(4, 8);
+			fsPointer->addFollows(5, 6);
+			fsPointer->addFollows(6, 7);
+
+			// Mock parentSt relationship in SIMPLE program
+			pStarsPointer->addParentStar(2, { 3,4,5,6,7,8,9 });
+			pStarsPointer->addParentStar(4, { 5,6,7 });
+			pStarsPointer->addParentStar(8, { 9 });
+
+			// Mock parent relationship in SIMPLE program
+			parentsPointer->addParent(2, 3);
+			parentsPointer->addParent(2, 4);
+			parentsPointer->addParent(2, 8);
+			parentsPointer->addParent(4, 5);
+			parentsPointer->addParent(4, 6);
+			parentsPointer->addParent(4, 7);
+			parentsPointer->addParent(8, 9);
+
+			// Mock Modifies relationship in SIMPLE program
+			msPointer->add(1, "x");
+			msPointer->add(3, "w");
+			msPointer->add(5, "y");
+			msPointer->add(7, "x");
+			msPointer->add(9, "x");
+
+			// Mock Patterns in SIMPLE program
+			pattsPointer->addAssignLhs("x", 1);
+			pattsPointer->addAssignRhs(1, "y+1");
+			pattsPointer->addAssignLhs("w", 3); 
+			pattsPointer->addAssignRhs(3, "x+1");
+			pattsPointer->addAssignLhs("x", 7);
+			pattsPointer->addAssignRhs(7, "x+1");
+			pattsPointer->addAssignLhs("x", 9);
+			pattsPointer->addAssignRhs(9, "x+1");
+
+			THEN("When QpsEvaluator evaluates a followsSt clause, it returns the right result") {
+				list<string> expected = { "1", "3" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2") });
+				response.setSynonym(Synonym::create(Constants::ASSIGN, "a1"));
+				response.setSuchThatClause(Clause::create(Constants::FOLLOWSST, 
+					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a follows clause, it returns the right result") {
+				list<string> expected = { "2", "4", "6", "7", "8" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::STMT, "s2") });
+				response.setSynonym(Synonym::create(Constants::STMT, "s2"));
+				response.setSuchThatClause(Clause::create(Constants::FOLLOWS,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::STMT, "s2")));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a parentSt clause, it returns the right result") {
+				list<string> expected = { "2", "4" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
+				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
+				response.setSuchThatClause(Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a parent clause, it returns the right result") {
+				list<string> expected = { "3", "7", "9" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::ASSIGN, "a2") });
+				response.setSynonym(Synonym::create(Constants::ASSIGN, "a2"));
+				response.setSuchThatClause(Clause::create(Constants::PARENT,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::ASSIGN, "a2")));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a modifies clause, it returns the right result") {
+				list<string> expected = { "1", "7", "9" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1") });
+				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
+				response.setSuchThatClause(Clause::create(Constants::MODIFIES,
+					Synonym::create(Constants::STMT, "s1"), Value::create("x")));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a pattern clause, it returns the right result") {
+				list<string> expected = { "3", "7", "9" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1") });
+				response.setSynonym(Synonym::create(Constants::ASSIGN, "a1"));
+				response.setPatternClause(Clause::create(Constants::PATTERN,
+					Wildcard::create(), Wildcard::create("x")));
+				response.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a1"));
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates 2 clauses, it returns the right result") {
+				list<string> expected = { "2" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1"),
+					Synonym::create(Constants::STMT, "s1") });
+				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
+				response.setPatternClause(Clause::create(Constants::PATTERN,
+					Wildcard::create(), Wildcard::create("y")));
+				response.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a1"));
+				response.setSuchThatClause(Clause::create(Constants::FOLLOWS,
+					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s1")));
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);

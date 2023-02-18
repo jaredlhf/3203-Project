@@ -3,7 +3,7 @@
 
 
 // Scenario for testing ParentClause::resolve
-SCENARIO("Mocking behavior of ParentClause::resolve") {
+SCENARIO("Mocking behavior of ParentStClause::resolve") {
 	GIVEN("An instance of a PkbRetriever class") {
 		VariableStore vs;
 		ConstantStore cs;
@@ -51,36 +51,19 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 			ssPointer->addStmt(Constants::ASSIGN, 1);
 			ssPointer->addStmt(Constants::WHILE, 2);
 			ssPointer->addStmt(Constants::ASSIGN, 3);
-			ssPointer->addStmt(Constants::ASSIGN, 4);
-			ssPointer->addStmt(Constants::IF, 5);
-			ssPointer->addStmt(Constants::ASSIGN, 6);
-			ssPointer->addStmt(Constants::READ, 7);
-			ssPointer->addStmt(Constants::PRINT, 8);
+			ssPointer->addStmt(Constants::IF, 4);
+			ssPointer->addStmt(Constants::READ, 5);
+			ssPointer->addStmt(Constants::PRINT, 6);
+			ssPointer->addStmt(Constants::ASSIGN, 7);
+			ssPointer->addStmt(Constants::WHILE, 8);
 			ssPointer->addStmt(Constants::ASSIGN, 9);
-			ssPointer->addStmt(Constants::WHILE, 10);
-			ssPointer->addStmt(Constants::ASSIGN, 11);
-			ssPointer->addStmt(Constants::READ, 12);
-			ssPointer->addStmt(Constants::IF, 13);
-			ssPointer->addStmt(Constants::READ, 14);
-			ssPointer->addStmt(Constants::PRINT, 15);
-			ssPointer->addStmt(Constants::READ, 16);
 
-			// Mock parent relationship in SIMPLE program
-			parentsPointer->addParent(2, 3);
-			parentsPointer->addParent(2, 4);
-			parentsPointer->addParent(2, 5);
-			parentsPointer->addParent(2, 10);
-			parentsPointer->addParent(5, 6);
-			parentsPointer->addParent(5, 7);
-			parentsPointer->addParent(5, 8);
-			parentsPointer->addParent(5, 9);
-			parentsPointer->addParent(10, 11);
-			parentsPointer->addParent(10, 12);
-			parentsPointer->addParent(13, 14);
-			parentsPointer->addParent(13, 15);
-			parentsPointer->addParent(13, 16);
+			// Mock parentSt relationship in SIMPLE program
+			pStarsPointer->addParentStar(2, { 3,4,5,6,7,8,9 });
+			pStarsPointer->addParentStar(4, { 5,6,7 });
+			pStarsPointer->addParentStar(8, { 9 });
 
-			THEN("When ParentClause resolves wrong syntax, it should return the right results") {
+			THEN("When ParentStClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =
 					std::make_pair(Constants::ClauseResult::SYN_ERR, QpsTable::create());
 
@@ -89,8 +72,8 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 				std::shared_ptr<Synonym> stmtSynArg1 = Synonym::create(Constants::STMT, "s1");
 				std::shared_ptr<Synonym> stmtSynArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> wrongClause1 = Clause::create(Constants::PARENT, wrongArg1, stmtSynArg2);
-				std::shared_ptr<Clause> wrongClause2 = Clause::create(Constants::PARENT, stmtSynArg1, wrongArg2);
+				std::shared_ptr<Clause> wrongClause1 = Clause::create(Constants::PARENTST, wrongArg1, stmtSynArg2);
+				std::shared_ptr<Clause> wrongClause2 = Clause::create(Constants::PARENTST, stmtSynArg1, wrongArg2);
 
 				REQUIRE(wrongClause1->resolve(pkbRet).first == expectedClauseRes.first);
 				REQUIRE(wrongClause1->resolve(pkbRet).second->getData() == expectedClauseRes.second->getData());
@@ -98,7 +81,7 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 				REQUIRE(wrongClause2->resolve(pkbRet).second->getData() == expectedClauseRes.second->getData());
 			}
 
-			THEN("When ParentClause resolves wrong semantics, it should return the right results") {
+			THEN("When ParentStClause resolves wrong semantics, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =
 					std::make_pair(Constants::ClauseResult::SEM_ERR, QpsTable::create());
 
@@ -107,8 +90,8 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 				std::shared_ptr<Synonym> stmtSynArg1 = Synonym::create(Constants::STMT, "s1");
 				std::shared_ptr<Synonym> stmtSynArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> wrongClause1 = Clause::create(Constants::PARENT, wrongArg1, stmtSynArg2);
-				std::shared_ptr<Clause> wrongClause2 = Clause::create(Constants::PARENT, stmtSynArg1, wrongArg2);
+				std::shared_ptr<Clause> wrongClause1 = Clause::create(Constants::PARENTST, wrongArg1, stmtSynArg2);
+				std::shared_ptr<Clause> wrongClause2 = Clause::create(Constants::PARENTST, stmtSynArg1, wrongArg2);
 
 				REQUIRE(wrongClause1->resolve(pkbRet).first == expectedClauseRes.first);
 				REQUIRE(wrongClause1->resolve(pkbRet).second->getData() == expectedClauseRes.second->getData());
@@ -116,49 +99,49 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 				REQUIRE(wrongClause2->resolve(pkbRet).second->getData() == expectedClauseRes.second->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(_,_), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(_,_), it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =
 					std::make_pair(Constants::ClauseResult::OK, QpsTable::create());
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
 				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, wcArg1, wcArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, wcArg1, wcArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedClauseRes.first);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedClauseRes.second->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedClauseRes.second->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(_,3), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(_,5), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
-				std::shared_ptr<Value> constArg2 = Value::create("3");
+				std::shared_ptr<Value> constArg2 = Value::create("5");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, wcArg1, constArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, wcArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(_,2), it should return no matches") {
+			THEN("When ParentStClause resolves case ParentSt(_,2), it should return no matches") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
 				std::shared_ptr<Value> constArg2 = Value::create("2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, wcArg1, constArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, wcArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(_,s2), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(_,s2), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s2" });
 				expectedTable->addRow({ "3" });
@@ -168,225 +151,223 @@ SCENARIO("Mocking behavior of ParentClause::resolve") {
 				expectedTable->addRow({ "7" });
 				expectedTable->addRow({ "8" });
 				expectedTable->addRow({ "9" });
-				expectedTable->addRow({ "10" });
-				expectedTable->addRow({ "11" });
-				expectedTable->addRow({ "12" });
-				expectedTable->addRow({ "14" });
-				expectedTable->addRow({ "15" });
-				expectedTable->addRow({ "16" });
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, wcArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, wcArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(_,cll2), it should return no matches") {
+			THEN("When ParentStClause resolves case ParentSt(_,cll2), it should return no matches") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "cll2" });
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::CALL, "cll2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, wcArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, wcArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(2,_), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(4,_), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
+
+				std::shared_ptr<Value> constArg1 = Value::create("4");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, wcArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When ParentStClause resolves case ParentSt(3,_), it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
+
+				std::shared_ptr<Value> constArg1 = Value::create("3");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, wcArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When ParentStClause resolves case ParentSt(2,5), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
 
 				std::shared_ptr<Value> constArg1 = Value::create("2");
-				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+				std::shared_ptr<Value> constArg2 = Value::create("5");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, wcArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(1,_), it should return no matches") {
+			THEN("When ParentStClause resolves case ParentSt(4,9), it should return no matches") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
 
-				std::shared_ptr<Value> constArg1 = Value::create("1");
-				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+				std::shared_ptr<Value> constArg1 = Value::create("4");
+				std::shared_ptr<Value> constArg2 = Value::create("9");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, wcArg2);
-
-				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
-				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
-				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
-			}
-
-			THEN("When ParentClause resolves case Parent(2,3), it should return the right results") {
-				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
-				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
-
-				std::shared_ptr<Value> constArg1 = Value::create("2");
-				std::shared_ptr<Value> constArg2 = Value::create("3");
-
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, constArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(1,3), it should return no matches") {
-				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
-				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
-
-				std::shared_ptr<Value> constArg1 = Value::create("1");
-				std::shared_ptr<Value> constArg2 = Value::create("3");
-
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, constArg2);
-
-				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
-				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
-				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
-			}
-
-			THEN("When ParentClause resolves case Parent(2,s2), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(2,s2), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s2" });
 				expectedTable->addRow({ "3" });
 				expectedTable->addRow({ "4" });
 				expectedTable->addRow({ "5" });
-				expectedTable->addRow({ "10" });
+				expectedTable->addRow({ "6" });
+				expectedTable->addRow({ "7" });
+				expectedTable->addRow({ "8" });
+				expectedTable->addRow({ "9" });
 
 				std::shared_ptr<Value> constArg1 = Value::create("2");
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(1,s2), it should return no matches") {
+			THEN("When ParentStClause resolves case ParentSt(1,s2), it should return no matches") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s2" });
 
 				std::shared_ptr<Value> constArg1 = Value::create("1");
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, constArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, constArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(s1,_), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(s1,_), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1" });
 				expectedTable->addRow({ "2" });
-				expectedTable->addRow({ "5" });
-				expectedTable->addRow({ "10" });
-				expectedTable->addRow({ "13" });
+				expectedTable->addRow({ "4" });
+				expectedTable->addRow({ "8" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::STMT, "s1");
 				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, wcArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, wcArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(a1,_), it should return no matches") {
+			THEN("When ParentStClause resolves case ParentSt(a1,_), it should return no matches") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "a1" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::ASSIGN, "a1");
 				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, wcArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, wcArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(s1,3), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(s1,6), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1" });
 				expectedTable->addRow({ "2" });
+				expectedTable->addRow({ "4" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::STMT, "s1");
-				std::shared_ptr<Value> constArg2 = Value::create("3");
+				std::shared_ptr<Value> constArg2 = Value::create("6");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, constArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(s1,1), it should return no match") {
+			THEN("When ParentStClause resolves case ParentSt(s1,1), it should return no match") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::STMT, "s1");
 				std::shared_ptr<Value> constArg2 = Value::create("1");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, constArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, constArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(w1,a2), it should return the right results") {
+			THEN("When ParentStClause resolves case ParentSt(w1,a2), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "w1", "a2" });
 				expectedTable->addRow({ "2", "3" });
-				expectedTable->addRow({ "2", "4" });
-				expectedTable->addRow({ "10", "11" });
+				expectedTable->addRow({ "2", "7" });
+				expectedTable->addRow({ "2", "9" });
+				expectedTable->addRow({ "8", "9" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::WHILE, "w1");
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::ASSIGN, "a2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(a1,s2), it should return no match") {
+			THEN("When ParentStClause resolves case ParentSt(a1,s2), it should return no match") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "a1", "s2" });
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::ASSIGN, "a1");
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::STMT, "s2");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When ParentClause resolves case Parent(s1,s1), it should return no match") {
+			THEN("When ParentStClause resolves case ParentSt(s1,s1), it should return no match") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create();
 
 				std::shared_ptr<Synonym> synArg1 = Synonym::create(Constants::STMT, "s1");
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::STMT, "s1");
 
-				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENT, synArg1, synArg2);
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PARENTST, synArg1, synArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());

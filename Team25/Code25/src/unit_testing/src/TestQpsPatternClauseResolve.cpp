@@ -59,6 +59,11 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 			ssPointer->addStmt(Constants::PRINT, 3);
 			ssPointer->addStmt(Constants::READ, 4);
 
+			// Mock variables modified in the SIMPLE program
+			msPointer->add(1, "z");
+			msPointer->add(2, "x");
+			msPointer->add(4, "z");
+
 			// Mock Patterns in SIMPLE program
 			pattsPointer->addAssignLhs("z", 1);
 			pattsPointer->addAssignLhs("x", 2);
@@ -240,13 +245,13 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getData() == expectedTable->getData());
 			}
 
-			THEN("When PatternClause resolves case pattern a1 (v1, _'x'_), it should return the right results") {
+			THEN("When PatternClause resolves case pattern a1 (v1, _'z'_), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ a1->getName(), "v1" });
 				expectedTable->addRow({ "2", "x" });
 
 				std::shared_ptr<Synonym> varSynArg1 = Synonym::create(Constants::VARIABLE, "v1");
-				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create("x");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create("z");
 
 				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, varSynArg1, wcArg2);
 				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
