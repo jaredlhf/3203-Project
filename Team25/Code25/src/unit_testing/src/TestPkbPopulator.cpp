@@ -33,7 +33,7 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
-		std:shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
