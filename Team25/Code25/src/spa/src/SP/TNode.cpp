@@ -8,7 +8,7 @@ StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts) {
 }
 
 void StmtLstNode::accept(std::shared_ptr<DesignExtractor> extractor) {
-    std::cout << "accept StmtLst E" <<std::endl;
+    //std::cout << "accept StmtLst E" <<std::endl;
     std::shared_ptr<StmtLstNode> node = std::dynamic_pointer_cast<StmtLstNode>(shared_from_this());
     extractor->visit(node);
 }
@@ -33,13 +33,13 @@ AssignNode::AssignNode(int line, const std::string& var, const std::string& expr
 }
 
 void AssignNode::accept(std::shared_ptr<DesignExtractor> extractor) {
-    std::cout << "assign accept E" << std::endl;
+    //std::cout << "assign accept E" << std::endl;
     std::shared_ptr<AssignNode> node = std::dynamic_pointer_cast<AssignNode>(shared_from_this());
     extractor->visit(node);
 }
 
 void AssignNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
-    std::cout << "assign accept SE" << std::endl;
+    //std::cout << "assign accept SE" << std::endl;
     std::shared_ptr<AssignNode> node = std::dynamic_pointer_cast<AssignNode>(shared_from_this());
     selectiveExtractor->visit(node);
 }

@@ -100,12 +100,12 @@ void ModifiesExtractor::visit(std::shared_ptr<TNode> n) {
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a) {
-    std::cout << "populating:" << a->getVar() << std::endl;
-    std::cout<<"checked assign"<<endl;
+    std::cout << "populating modifies:" << a->getVar() << std::endl;
+    //std::cout<<"checked assign"<<endl;
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r) {
-    std::cout << "populating:" << r->getVar() << std::endl;
+    std::cout << "populating modifies:" << r->getVar() << std::endl;
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs) {
@@ -113,7 +113,7 @@ void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs) {
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     //check if need to get var from cond expr
     for (auto i : ifStmts) {
-        std::cout << "node type in modifies" << i->print() << std::endl;
+        //std::cout << "node type in modifies" << i->print() << std::endl;
         visit(i);
     }
     for (auto i : elseStmts) {
@@ -184,16 +184,16 @@ void UsesExtractor::visit(std::shared_ptr<TNode> n) {
 }
 
 void UsesExtractor::visit(std::shared_ptr<AssignNode> a) {
-    std::cout << "expr:" << a->getExpr() << std::endl;
+    std::cout << "populating uses expr:" << a->getExpr() << std::endl;
     vector<std::string> rhs = tok.tokenize(a->getExpr());
     extractVar(rhs);
     extractConst(rhs);
-    std::cout<<"checked assign"<<endl;
+    //std::cout<<"checked assign"<<endl;
 }
 
 void UsesExtractor::visit(std::shared_ptr<PrintNode> r) {
-    std::cout << "populating:" << r->getVar() << std::endl;
-    std::cout<<"checked print"<<endl;
+    std::cout << "populating uses:" << r->getVar() << std::endl;
+    //std::cout<<"checked print"<<endl;
 }
 
 void UsesExtractor::visit(std::shared_ptr<IfNode> ifs) {
@@ -237,7 +237,7 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh) {
 //}
 
 void FollowsExtractor::visit(std::shared_ptr<StmtLstNode> sl) {
-    std::cout << "visit StmtLst E" <<std::endl;
+
     std::vector<std::shared_ptr<StmtNode>> stmts = sl->getStatements();
     vector<int> stmtLines;
     for(auto i: stmts) {
@@ -268,9 +268,11 @@ void FollowsStarExtractor::visit(std::shared_ptr<StmtLstNode> sl) {
     for(auto i: stmts) {
         stmtLines.push_back(i->getLine());
     }
+    std::cout << "populating follows* ";
     for(auto j : stmtLines) {
-        std::cout << j << " ";
+        std::cout << j << " " ;
     }
+    std::cout << std::endl;
 }
 
 //void ParentsExtractor::visit(std::shared_ptr<TNode> n) {

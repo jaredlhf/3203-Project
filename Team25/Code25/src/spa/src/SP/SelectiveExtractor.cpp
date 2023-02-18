@@ -10,7 +10,7 @@ SelectiveExtractor::SelectiveExtractor() {
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<AssignNode> n) {
-    std::cout << "assign visit SE" << std::endl;
+    //std::cout << "assign visit SE" << std::endl;
     n->accept(modifiesExtractor);
     n->accept(usesExtractor);
 }
@@ -38,7 +38,7 @@ void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<StmtLstNode> n) {
-    std::cout << "visit StmtLst SE" <<std::endl;
+    //std::cout << "visit StmtLst SE" <<std::endl;
     n->accept(followsExtractor);
     n->accept(followsStarExtractor);
 }
