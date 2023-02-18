@@ -28,7 +28,7 @@ public:
 
 class ModifiesExtractor: public DesignExtractor {
 public:
-
+    void visit(std::shared_ptr<TNode> n);
     void visit(std::shared_ptr<AssignNode> n);
     void visit(std::shared_ptr<ReadNode> n);
     void visit(std::shared_ptr<IfNode> n);
@@ -37,7 +37,7 @@ public:
 
 class UsesExtractor: public DesignExtractor {
 public:
-
+    void visit(std::shared_ptr<TNode> n);
     void visit(std::shared_ptr<AssignNode> n);
     void visit(std::shared_ptr<PrintNode> n);
     void visit(std::shared_ptr<IfNode> n);
@@ -58,14 +58,14 @@ public:
 
 class ParentsExtractor: public DesignExtractor {
 public:
-
+    void visit(std::shared_ptr<TNode> n);
     void visit(std::shared_ptr<IfNode> n);
     void visit(std::shared_ptr<WhileNode> n);
 };
 
 class ParentsStarExtractor: public DesignExtractor {
 public:
-
+    void visit(std::shared_ptr<TNode> n);
     void visit(std::shared_ptr<IfNode> n);
     void visit(std::shared_ptr<WhileNode> n);
 };

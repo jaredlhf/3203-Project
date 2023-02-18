@@ -35,6 +35,8 @@ bool DesignExtractor::isStmtLstNode(std::shared_ptr<TNode> n) {
     return (dynamic_pointer_cast<StmtLstNode>(n) != nullptr);
 }
 
+
+
 void DesignExtractor::extractVar(vector<std::string> tokens) {
     for (string entity: tokens)
         if (Token::isValidName((entity))) {
@@ -81,6 +83,22 @@ void DesignExtractor::extractConst(vector<std::string> tokens) {
 //    }
 //}
 
+void ModifiesExtractor::visit(std::shared_ptr<TNode> n) {
+    if (isAssignNode(n)) {
+        std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
+        ModifiesExtractor::visit(a);
+    } else if (isReadNode(n)) {
+        std::shared_ptr<ReadNode> r = std::dynamic_pointer_cast<ReadNode>(n);
+        ModifiesExtractor::visit(r);
+    } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        ModifiesExtractor::visit(ifs);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        ModifiesExtractor::visit(wh);
+    }
+}
+
 void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a) {
     std::cout << "populating:" << a->getVar() << std::endl;
     std::cout<<"checked assign"<<endl;
@@ -95,17 +113,18 @@ void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs) {
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     //check if need to get var from cond expr
     for (auto i : ifStmts) {
-        //visit(i);
+        std::cout << "node type in modifies" << i->print() << std::endl;
+        visit(i);
     }
     for (auto i : elseStmts) {
-        //visit(i);
+        visit(i);
     }
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<WhileNode> wh) {
     std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
     for (auto j: whStmts) {
-        //visit(j);
+        visit(j);
     }
 }
 
@@ -148,6 +167,22 @@ void ModifiesExtractor::visit(std::shared_ptr<WhileNode> wh) {
 //    }
 //}
 
+void UsesExtractor::visit(std::shared_ptr<TNode> n) {
+    if (isAssignNode(n)) {
+        std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
+        UsesExtractor::visit(a);
+    } else if (isPrintNode(n)) {
+        std::shared_ptr<PrintNode> r = std::dynamic_pointer_cast<PrintNode>(n);
+        UsesExtractor::visit(r);
+    } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        UsesExtractor::visit(ifs);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        UsesExtractor::visit(wh);
+    }
+}
+
 void UsesExtractor::visit(std::shared_ptr<AssignNode> a) {
     std::cout << "expr:" << a->getExpr() << std::endl;
     vector<std::string> rhs = tok.tokenize(a->getExpr());
@@ -169,10 +204,10 @@ void UsesExtractor::visit(std::shared_ptr<IfNode> ifs) {
     extractVar(t.tokenize(expr));
     extractConst(t.tokenize(expr));
     for (auto i : ifStmts) {
-        //visit(i);
+        visit(i);
     }
     for (auto i : elseStmts) {
-        //visit(i);
+        visit(i);
     }
 }
 
@@ -183,7 +218,7 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh) {
     extractVar(t.tokenize(expr));
     extractConst(t.tokenize(expr));
     for (auto j: whStmts) {
-        //visit(j);
+        visit(j);
     }
 }
 
@@ -272,6 +307,15 @@ void FollowsStarExtractor::visit(std::shared_ptr<StmtLstNode> sl) {
 //        //populate pkb - key,vector or key,value permutations??
 //    }
 //}
+void ParentsExtractor::visit(std::shared_ptr<TNode> n) {
+    if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        visit(ifs);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        visit(wh);
+    }
+}
 
 void ParentsExtractor::visit(std::shared_ptr<IfNode> ifs) {
         std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
@@ -351,6 +395,15 @@ void ParentsExtractor::visit(std::shared_ptr<WhileNode> wh) {
 //        //populate pkb - key,vector or key,value permutations??
 //    }
 //}
+void ParentsStarExtractor::visit(std::shared_ptr<TNode> n) {
+    if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        visit(ifs);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        visit(wh);
+    }
+}
 
 void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs) {
     ParentsExtractor p;
@@ -364,7 +417,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs) {
 //          std::cout<< i->getLine() <<" parents*if " <<endl;
             stmtLines.push_back(i->getLine());
         } else {
-            //visit(i);
+            visit(i);
         }
     }
     for(auto i: elseStmts) {
@@ -372,7 +425,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs) {
 //          std::cout<< i->getLine() <<" parents*else " <<endl;
             stmtLines.push_back(i->getLine());
         } else {
-            //visit(i);
+            visit(i);
         }
     }
     for(auto j: stmtLines) {
@@ -389,7 +442,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<WhileNode> wh) {
         if (!(isIfNode(i) || isWhileNode(i))) {
             stmtLines.push_back(i->getLine());
         } else {
-            //p.visit(i);
+            p.visit(i);
         }
     }
     //populate pkb - key,vector or key,value permutations??

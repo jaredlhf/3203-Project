@@ -43,12 +43,29 @@ TEST_CASE("Test processSimple()") {
     PkbPopulator p = PkbPopulator(&vs, &cs, &fs, &ps, &ss);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
-                                 "  x = 2;\n"
-                                 "  z = 3;\n"
-                                 "  read x;\n"
-                            "  print x;\n"
-                                 "  } "
-                                ;
+                            "  x = 2+d;\n"
+                            "  if (a < b) then {\n"
+                            "    y = z;\n"
+                            "    i = j + k;\n"
+                            "  } else {\n"
+                            "    W = n;\n"
+                            "  }\n"
+                            "  while (c > d) {\n"
+                            "    U = o + p;\n"
+                            "  }\n"
+                            "  read z;\n"
+                            "  h = 232141;\n"
+                            "  f1 = h3;\n"
+                            "}";
+
+
+//            "procedure Example {\n"
+//                                 "  x = 2;\n"
+//                                 "  z = 3;\n"
+//                                 "  read x;\n"
+//                            "  print x;\n"
+//                                 "  } "
+//                                ;
 
 
     std::ofstream file(fileLocation);
