@@ -127,9 +127,17 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		fsPointer->addFollows(6, 7);
 
 		// Mock parentSt relationship in SIMPLE program
-		pStarsPointer->addParentStar(2, { 3,4,5,6,7,8,9 });
-		pStarsPointer->addParentStar(4, { 5,6,7 });
-		pStarsPointer->addParentStar(8, { 9 });
+		pStarsPointer->addParentStar(2, 3);
+		pStarsPointer->addParentStar(2, 4);
+		pStarsPointer->addParentStar(2, 5);
+		pStarsPointer->addParentStar(2, 6);
+		pStarsPointer->addParentStar(2, 7);
+		pStarsPointer->addParentStar(2, 8);
+		pStarsPointer->addParentStar(2, 9);
+		pStarsPointer->addParentStar(4, 5);
+		pStarsPointer->addParentStar(4, 6);
+		pStarsPointer->addParentStar(4, 7);
+		pStarsPointer->addParentStar(8, 9);
 
 		// Mock parent relationship in SIMPLE program
 		parentsPointer->addParent(2, 3);
