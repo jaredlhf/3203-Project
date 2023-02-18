@@ -3,7 +3,7 @@
 std::regex value("(\\w+)");
 
 std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
-    std::cout << "creating: " << stmtType << std::endl;
+//    std::cout << "creating: " << stmtType << std::endl;
     if (stmtType == "read") {
         return std::make_shared<ReadParser>();
     } else if (stmtType == "print") {
@@ -43,7 +43,9 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils
     std::string lhs = utils->expect(std::make_shared<Name>());
     //pkb populate lhs
     //parser->pkbPopulator->addVar(lhs);
-    //std::cout << "populating:" << lhs << std::endl;
+
+//    std::cout << "populating:" << lhs << std::endl;
+
     utils->expect(std::make_shared<Equal>());
     std::string rhs = "";
     vector<string> rhsTokens;
@@ -61,15 +63,18 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils
         }
         for (string entity: variableVector)
             if (Token::isValidName((entity))) {
+
                 //std::cout << "populating:" << entity << std::endl;
                 //parser->pkbPopulator->addVar(entity);
             } else if (Token::isNumber(entity)) {
                 //parser->pkbPopulator->addConst(std::stoi(entity));
                 //std::cout << "populating:" << entity << std::endl;
+
             }
     } else {
         throw std::invalid_argument("Invalid expression ");
     }
+    std::cout<< rhs << " " << utils->getCurrentStmtNo()<<endl;
     AssignNode node = AssignNode(utils->getCurrentStmtNo(), lhs, rhs);
     utils->expect(std::make_shared<Semicolon>());
 
@@ -81,6 +86,7 @@ std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<ParserUtils> utils,
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), var);
+    std::cout<< var << " " << utils->getCurrentStmtNo()<<endl;
     return std::make_shared<PrintNode>(node);
 }
 
@@ -91,6 +97,7 @@ std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<ParserUtils> utils, 
 }
 
 std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<While>());
     //parse conditional expr
     std::string rhs = "";
@@ -115,11 +122,11 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils,
         }
         for (string entity: variableVector)
             if (Token::isValidName((entity))) {
-                std::cout << "populating:" << entity << std::endl;
+//                std::cout << "populating:" << entity << std::endl;
                 //parser->pkbPopulator->addVar(entity);
             } else if (Token::isNumber(entity)) {
                 //parser->pkbPopulator->addConst(std::stoi(entity));
-                std::cout << "populating:" << entity << std::endl;
+//                std::cout << "populating:" << entity << std::endl;
             }
     } else {
         throw std::invalid_argument("Invalid expression ");
@@ -129,11 +136,13 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils,
     StmtLstNode stmtLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
 
-    WhileNode node = WhileNode(utils->getCurrentStmtNo(), rhs, std::make_shared<StmtLstNode>(stmtLstNode));
+    std::cout<< rhs << " " << lineNo<<endl;
+    WhileNode node = WhileNode(lineNo, rhs, std::make_shared<StmtLstNode>(stmtLstNode));
     return std::make_shared<WhileNode>(node);
 }
 
 std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<If>());
     //parse conditional expr
     std::string rhs = "";
@@ -158,11 +167,11 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, st
         }
         for (string entity: variableVector)
             if (Token::isValidName((entity))) {
-                std::cout << "populating:" << entity << std::endl;
+//                std::cout << "populating:" << entity << std::endl;
                 //parser->pkbPopulator->addVar(entity);
             } else if (Token::isNumber(entity)) {
                 //parser->pkbPopulator->addConst(std::stoi(entity));
-                std::cout << "populating:" << entity << std::endl;
+//                std::cout << "populating:" << entity << std::endl;
             }
     } else {
         throw std::invalid_argument("Invalid expression ");
@@ -178,7 +187,8 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, st
     StmtLstNode elseLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
 
-    IfNode node = IfNode(utils->getCurrentStmtNo(), rhs, std::make_shared<StmtLstNode>(ifLstNode), std::make_shared<StmtLstNode>(elseLstNode));
+    IfNode node = IfNode(lineNo, rhs, std::make_shared<StmtLstNode>(ifLstNode), std::make_shared<StmtLstNode>(elseLstNode));
+    std::cout<< rhs << " " << lineNo<<endl;
     return std::make_shared<IfNode>(node);;
 }
 
@@ -186,6 +196,7 @@ std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<ParserUtils> utils, 
     utils->expect(std::make_shared<Read>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
+    std::cout<< var << " " << utils->getCurrentStmtNo()<<endl;
     ReadNode node = ReadNode(utils->getCurrentStmtNo(), var);
     return std::make_shared<ReadNode>(node);;
 }
