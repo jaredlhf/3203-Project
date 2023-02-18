@@ -43,7 +43,7 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils
     std::string lhs = utils->expect(std::make_shared<Name>());
     //pkb populate lhs
     //parser->pkbPopulator->addVar(lhs);
-    std::cout << "populating:" << lhs << std::endl;
+    //std::cout << "populating:" << lhs << std::endl;
     utils->expect(std::make_shared<Equal>());
     std::string rhs = "";
     vector<string> rhsTokens;
@@ -61,11 +61,11 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils
         }
         for (string entity: variableVector)
             if (Token::isValidName((entity))) {
-                std::cout << "populating:" << entity << std::endl;
+                //std::cout << "populating:" << entity << std::endl;
                 //parser->pkbPopulator->addVar(entity);
             } else if (Token::isNumber(entity)) {
                 //parser->pkbPopulator->addConst(std::stoi(entity));
-                std::cout << "populating:" << entity << std::endl;
+                //std::cout << "populating:" << entity << std::endl;
             }
     } else {
         throw std::invalid_argument("Invalid expression ");
@@ -124,7 +124,6 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils,
     } else {
         throw std::invalid_argument("Invalid expression ");
     }
-
 
     utils->expect(std::make_shared<LeftBrace>());
     StmtLstNode stmtLstNode = parseStmtLst(utils, tokenizer);

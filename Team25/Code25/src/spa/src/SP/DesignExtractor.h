@@ -1,19 +1,19 @@
 #pragma once
 #include <string>
 #include "TNode.h"
+#include "SPConstants.h"
 
 using namespace std;
 
 class DesignExtractor {
 public:
-
-    virtual void visit(std::shared_ptr<AssignNode> n) {};
-    virtual void visit(std::shared_ptr<ReadNode> n) {};
-    virtual void visit(std::shared_ptr<PrintNode> n) {};
-    virtual void visit(std::shared_ptr<IfNode> n) {};
-    virtual void visit(std::shared_ptr<WhileNode> n) {};
-    virtual void visit(std::shared_ptr<StmtLstNode> n) {};
-    virtual void visit(std::shared_ptr<ProcedureNode> n) {};
+    virtual void visit(std::shared_ptr<AssignNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<ReadNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<PrintNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<IfNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<WhileNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<StmtLstNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<ProcedureNode> n, int lineNo) {};
 
 
     static bool isAssignNode(std::shared_ptr<TNode> n);
@@ -28,46 +28,46 @@ public:
 
 class ModifiesExtractor: public DesignExtractor {
 public:
-    void visit(std::shared_ptr<TNode> n);
-    void visit(std::shared_ptr<AssignNode> n);
-    void visit(std::shared_ptr<ReadNode> n);
-    void visit(std::shared_ptr<IfNode> n);
-    void visit(std::shared_ptr<WhileNode> n);
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<AssignNode> n, int lineNo);
+    void visit(std::shared_ptr<ReadNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
 class UsesExtractor: public DesignExtractor {
 public:
-    void visit(std::shared_ptr<TNode> n);
-    void visit(std::shared_ptr<AssignNode> n);
-    void visit(std::shared_ptr<PrintNode> n);
-    void visit(std::shared_ptr<IfNode> n);
-    void visit(std::shared_ptr<WhileNode> n);
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<AssignNode> n, int lineNo);
+    void visit(std::shared_ptr<PrintNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
 class FollowsExtractor: public DesignExtractor {
 public:
 
-    void visit(std::shared_ptr<StmtLstNode> n);
+    void visit(std::shared_ptr<StmtLstNode> n, int lineNo);
 };
 
 class FollowsStarExtractor: public DesignExtractor {
 public:
 
-    void visit(std::shared_ptr<StmtLstNode> n);
+    void visit(std::shared_ptr<StmtLstNode> n, int lineNo);
 };
 
 class ParentsExtractor: public DesignExtractor {
 public:
-    void visit(std::shared_ptr<TNode> n);
-    void visit(std::shared_ptr<IfNode> n);
-    void visit(std::shared_ptr<WhileNode> n);
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
 class ParentsStarExtractor: public DesignExtractor {
 public:
-    void visit(std::shared_ptr<TNode> n);
-    void visit(std::shared_ptr<IfNode> n);
-    void visit(std::shared_ptr<WhileNode> n);
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
 

@@ -10,7 +10,7 @@ StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts) {
 void StmtLstNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     //std::cout << "accept StmtLst E" <<std::endl;
     std::shared_ptr<StmtLstNode> node = std::dynamic_pointer_cast<StmtLstNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void StmtLstNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -35,7 +35,7 @@ AssignNode::AssignNode(int line, const std::string& var, const std::string& expr
 void AssignNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     //std::cout << "assign accept E" << std::endl;
     std::shared_ptr<AssignNode> node = std::dynamic_pointer_cast<AssignNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void AssignNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -55,7 +55,7 @@ ReadNode::ReadNode(int line, const std::string& var) {
 
 void ReadNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     std::shared_ptr<ReadNode> node = std::dynamic_pointer_cast<ReadNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void ReadNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -74,7 +74,7 @@ PrintNode::PrintNode(int line, const std::string& var) {
 
 void PrintNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     std::shared_ptr<PrintNode> node = std::dynamic_pointer_cast<PrintNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void PrintNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -95,7 +95,7 @@ IfNode::IfNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode
 
 void IfNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     std::shared_ptr<IfNode> node = std::dynamic_pointer_cast<IfNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void IfNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -118,7 +118,7 @@ WhileNode::WhileNode(int line, const std::string& condExp, std::shared_ptr<StmtL
 
 void WhileNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     std::shared_ptr<WhileNode> node = std::dynamic_pointer_cast<WhileNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void WhileNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
@@ -139,7 +139,7 @@ ProcedureNode::ProcedureNode(std::shared_ptr<StmtLstNode> stmtList) {
 
 void ProcedureNode::accept(std::shared_ptr<DesignExtractor> extractor) {
     std::shared_ptr<ProcedureNode> node = std::dynamic_pointer_cast<ProcedureNode>(shared_from_this());
-    extractor->visit(node);
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
 }
 
 void ProcedureNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
