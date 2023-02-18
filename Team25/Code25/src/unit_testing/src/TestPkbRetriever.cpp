@@ -89,9 +89,9 @@ SCENARIO("Working version of PkbRetriever") {
 			}
 			THEN("Getting all follows should return a non empty set") {
 				REQUIRE(pkbRet.getAllFollowees().size() == 1);
-				REQUIRE(pkbRet.getAllFollowees().count(2) == 1);
+				REQUIRE(pkbRet.getAllFollowees().count(1) == 1);
 				REQUIRE(pkbRet.getAllFollowers().size() == 1);
-				REQUIRE(pkbRet.getAllFollowers().count(1) == 1);
+				REQUIRE(pkbRet.getAllFollowers().count(2) == 1);
 			}
 			THEN("Getting all procedures should return a non empty set") {
 				REQUIRE(pkbRet.getAllProc().size() == 1);

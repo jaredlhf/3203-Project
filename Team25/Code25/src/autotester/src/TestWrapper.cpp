@@ -10,7 +10,7 @@ AbstractWrapper* WrapperFactory::createWrapper() {
 volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
-TestWrapper::TestWrapper() : pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer), pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer), qps(&pkbRetriever)  {
+TestWrapper::TestWrapper() : pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer), pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer), qps(&pkbRetriever)  {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
   sp = SourceProcessor();

@@ -1,4 +1,4 @@
-#include<stdio.h>
+	#include<stdio.h>
 #include <iostream>
 
 #include "ParentStarStore.h"
@@ -6,7 +6,7 @@
 ParentStarStore::ParentStarStore() {}
 
 
-void ParentStarStore::addParentStar(int parent, std::unordered_set<int> &childrenLst) {
+void ParentStarStore::addParentStar(int parent, std::unordered_set<int> childrenLst) {
 	childrenStar[parent] = childrenLst;
 	for (const auto& child : childrenLst) {
 		parentStar[child].emplace(parent);
