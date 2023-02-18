@@ -108,11 +108,6 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::re
 std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever) {
 	std::list<std::string> result;
 	handleParserResponse(response);
-	if (!response.getSuchThatClause()) {
-		std::cout << "such that doesnt exist" << std::endl;
-	}
-
-	std::cout << response.getSynonym()->getKeyword() << std::endl;
 
 	// Edge case: If resultSynonym is a syntax or semantic error, return immediately
 	if (this->resultSynonym->matchesKeyword(Constants::SYNTAX_ERROR) || this->resultSynonym->matchesKeyword(Constants::SEMANTIC_ERROR)) {

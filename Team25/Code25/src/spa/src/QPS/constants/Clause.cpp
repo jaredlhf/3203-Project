@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Clause.h"
 
 
@@ -184,10 +183,8 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
     if (this->arg1->isConstant() && this->arg2->isConstant()) {
         const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
         const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        /*TODO add line to find results: std::unordered_set<std::string> pkbRes = getUsesVar(arg1Val); */
-        const std::string& pkbRes = pkbRet->getUsesVar(std::stoi(arg1Val));
-        std::cout << "Uses test" << pkbRes << " " << arg2Val << std::endl;
-        return pkbRes == arg2Val /* TODO replace condition with std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()  */
+        std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(std::stoi(arg1Val));
+        return pkbRes.count(arg2Val) > 0
             ? QpsTable::getDefaultOk()
             : QpsTable::getDefaultNoMatch();
     }
@@ -197,8 +194,8 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
         const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
         const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
         std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
-        std::unordered_set<std::string> pkbRes = {} /*TODO replace computation with getUsesVar(arg1Val);*/;
-        for (const std::string& val : pkbRes) {
+        std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(std::stoi(arg1Val)) /*TODO replace computation with getUsesVar(arg1Val);*/;
+        for (std::string val : pkbRes) {
             resTable->addRow({ val });
         }
 
@@ -216,7 +213,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = {} /*TODO replace computation with getUsesVar(stmtNum);*/;
+            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
             if (pkbRes.size() > 0) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -237,7 +234,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = {} /*TODO replace computation with getUsesVar(stmtNum);*/;
+            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
             if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -259,7 +256,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = {} /*TODO replace computation with getUsesVar(stmtNum);*/;
+            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
             for (const std::string& arg2Match : pkbRes) {
                 resTable->addRow({ std::to_string(stmtNum), arg2Match });
             }
@@ -1245,9 +1242,6 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
     // If both args are wildcard
     if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
         std::shared_ptr<Wildcard> wcArg2 = std::static_pointer_cast<Wildcard>(this->arg2);
-
-        std::cout << "This is 2 wildcard pattern clause" << std::endl;
-        std::cout << "arg2 val is " << wcArg2->getVal() << std::endl;
 
         // Case: pattern a1 (_, _)
         if (wcArg2->isGenericWildcard()) {

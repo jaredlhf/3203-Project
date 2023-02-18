@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "QPS/Qps.h"
-#include <iostream>
 
 using namespace std;
 
@@ -148,6 +147,13 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		msPointer->add(7, "x");
 		msPointer->add(9, "x");
 
+		// Mock Uses relationship in SIMPLE program
+		usesPointer->add(1, "y");
+		usesPointer->add(3, "x");
+		usesPointer->add(6, "x");
+		usesPointer->add(7, "x");
+		usesPointer->add(9, "x");
+
 		// Mock Patterns in SIMPLE program
 		pattsPointer->addAssignLhs("x", 1);
 		pattsPointer->addAssignRhs(1, "y+1");
@@ -182,6 +188,16 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For empty parent* query, the no result is returned") {
+				list<string> expected = {};
+				list<string> res;
+
+				string query = "while w1; Select w1 such that Parent*(1, _)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For parent query, the right result is returned") {
 				list<string> expected = { "4" };
 				list<string> res;
@@ -202,11 +218,111 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
-			THEN("For pattern query, the right result is returned") {
+			THEN("For uses query, the right result is returned") {
+				list<string> expected = { "3", "4", "5", "6", "7", "8", "9" };
+				list<string> res;
+
+				string query = "stmt s1; Select s1 such that Parent(_, s1)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For follows* query in the form (s1, _), the right result is returned") {
+				list<string> expected = { "1", "3", "4", "5", "6" };
+				list<string> res;
+
+				string query = "stmt s1; Select s1 such that Follows*(s1, _)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For modifies query in the form (s1, 'y'), the right result is returned") {
+				list<string> expected = { "5" };
+				list<string> res;
+
+				string query = "read rd1; Select rd1 such that Modifies(rd1, \"y\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For uses query in the form (1, 'y'), the right result is returned") {
+				list<string> expected = { "6" };
+				list<string> res;
+
+				string query = "print pn1; Select pn1 such that Uses(1, \"y\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For follows query in the form (1, s2), the right result is returned") {
+				list<string> expected = { "2" };
+				list<string> res;
+
+				string query = "stmt s2; Select s2 such that Follows(1, s2)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (_, 'x'), the right result is returned") {
 				list<string> expected = { "3", "7", "9"};
 				list<string> res;
 
 				string query = "assign a1; stmt s2; Select a1 pattern a1 (_, _\"x\"_)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (_, _), the right result is returned") {
+				list<string> expected = { "1", "3", "7", "9" };
+				list<string> res;
+
+				string query = "assign a1; stmt s2; Select a1 pattern a1 (_, _)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (v1, _), the right result is returned") {
+				list<string> expected = { "w", "x" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select v1 pattern a1 (v1, _)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (v1, _'y'_), the right result is returned") {
+				list<string> expected = { "x" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select v1 pattern a1 (v1, _\"y\"_)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form ('x', _), the right result is returned") {
+				list<string> expected = { "1", "7", "9" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select a1 pattern a1 (\"x\", _)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form ('x', _'y'_), the right result is returned") {
+				list<string> expected = { "1" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select a1 pattern a1 (\"x\", _\"y\"_)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -233,10 +349,10 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For combined query with 1 overlapping synonym, the right result is returned") {
-				list<string> expected = { "x" };
+				list<string> expected = { "y" };
 				list<string> res;
 
-				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(s1,v1)  pattern a1 (v1, _)";
+				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(a1,v1) pattern a1 (_,_\"y\"_) ";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);

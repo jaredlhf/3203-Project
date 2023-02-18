@@ -508,33 +508,6 @@ TEST_CASE("isSemInvalid function in Pattern class behaves as expected") {
 	REQUIRE(valid6Clause->isSemInvalid() == false);
 }
 
-TEST_CASE("resolve function in clause classes behaves as expected") {
-	SynonymStub stub1;
-	SynonymStub stub2;
-	std::shared_ptr<Entity> arg1 = std::make_shared<SynonymStub>(stub1);
-	std::shared_ptr<Entity> arg2 = std::make_shared<SynonymStub>(stub2);
-	std::shared_ptr<Value> v1 = Value::create("123");
-	std::shared_ptr<Synonym> s2 = Synonym::create(Constants::VARIABLE, "xx");
-
-	std::shared_ptr<Clause> uses = Clause::create(Constants::USES, v1, s2);
-	std::shared_ptr<Clause> modifies = Clause::create(Constants::MODIFIES, arg1, arg2);
-	std::shared_ptr<Clause> parent = Clause::create(Constants::PARENT, arg1, arg2);
-	std::shared_ptr<Clause> parentst = Clause::create(Constants::PARENTST, arg1, arg2);
-	std::shared_ptr<Clause> follows = Clause::create(Constants::FOLLOWS, arg1, arg2);
-	std::shared_ptr<Clause> followsst = Clause::create(Constants::FOLLOWSST, arg1, arg2);
-	std::shared_ptr<Clause> pattern = Clause::create(Constants::PATTERN, arg1, arg2);
-
-	uses->resolve(nullptr);
-	modifies->resolve(nullptr);
-	parent->resolve(nullptr);
-	parentst->resolve(nullptr);
-	follows->resolve(nullptr);
-	followsst->resolve(nullptr);
-	pattern->resolve(nullptr);
-
-	REQUIRE(1 == 1);
-}
-
 TEST_CASE("isPatternClause function in clause classes behaves as expected") {
 	SynonymStub stub1;
 	SynonymStub stub2;
