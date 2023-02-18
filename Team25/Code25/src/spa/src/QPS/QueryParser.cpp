@@ -53,7 +53,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
     
     std::string keyword;
     std::string entRef;
-    std::vector<std::string> expression;
+    std::string expression;
     ValidatePatternResponse response;
 
     int ptr = 0;
@@ -102,9 +102,8 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         }
         
         // retrieve pattern
-        while (ptr > 4 && ptr < s.size() - 1) {
-            expression.push_back(s[ptr]);
-            ptr++;
+        if (ptr == 5) {
+            expression = s[ptr];
         }
         ptr++;
     }
@@ -113,10 +112,11 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         return response;
     }
 
-    if (expression.size() > 1) {
-        response.setPattern(Value::create(expression[1]));
+    if (expression == Constants::WILDCARD) {
+        response.setPattern(Wildcard::create());
     } else {
-        response.setPattern(Wildcard::create());    
+        std::string cleanedString = expression.substr(1, expression.size() - 2);
+        response.setPattern(Wildcard::create(cleanedString));
     }
 
     return response;

@@ -165,27 +165,27 @@ SCENARIO("Testing method for checking validity of a statement reference") {
 }
 
 TEST_CASE("valid var_name factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "\"s\"", "_"};
+    std::string s = "_\"s\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("valid wildcard pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_"};
+    std::string s = "_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("valid const_value factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "\"233\"", "_"};
+    std::string s = "_\"233\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == true);
 }
 
 TEST_CASE("missing quotes for factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"_", "233", "_"};
+    std::string s = "_233_";
     REQUIRE(ParserUtils::isValidExpression(s) == false);
 }
 
 TEST_CASE("missing wildcard for factor pattern expression for milestone 1") {
-    std::vector<std::string> s = {"\"233\"", "_"};
+    std::string s = "\"233\"_";
     REQUIRE(ParserUtils::isValidExpression(s) == false);
 }
 
