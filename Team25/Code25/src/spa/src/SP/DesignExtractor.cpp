@@ -332,11 +332,11 @@ void FollowsStarExtractor::visit(std::shared_ptr<StmtLstNode> sl, int lineNo) {
         std::unordered_set<int> follows = std::unordered_set<int>(stmtLines.begin() + 1, stmtLines.end());
         int key = stmtLines[0];
         pkbPopulator->addFollowsStar(key, follows);
-//        std::cout << "populating follows* " << "(" << stmtLines[0] << "," << "(";
-//        for(auto k: follows) {
-//            std::cout << k << " ";
-//        }
-//        std::cout<<"))"<<endl;
+        std::cout << "populating follows* " << "(" << stmtLines[0] << "," << "(";
+        for(auto k: follows) {
+            std::cout << k << " ";
+        }
+        std::cout<<"))"<<endl;
         stmtLines.erase(stmtLines.begin());
     }
 

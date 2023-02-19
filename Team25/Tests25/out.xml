@@ -1,24 +1,8 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Tests25</name><parsing_time_taken>2.911000</parsing_time_taken>
+<name>Tests25</name><parsing_time_taken>4.554000</parsing_time_taken>
 </info>
 <queries>
 <query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="comment">1</id><querystr><![CDATA[variable v; Select v]]></querystr>
-<stuans></stuans>
-<correct>x,z,y,h,f1,h3,a,b</correct>
-<time_taken>1.251000</time_taken>
-<failed>
-<missing>a,b,f1,h,h3,x,y,z</missing>
-<additional></additional>
-<summary>
-<expected>8</expected>
-<matched>0</matched>
-<missing>8</missing>
-<additional>0</additional>
-</summary>
-</failed>
-</query>
-</queries>
-</test_results>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="comment">1</id><querystr><![CDATA[stmt s; Select s such that Follows* (5, s)]]></querystr>

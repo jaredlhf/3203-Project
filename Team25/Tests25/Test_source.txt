@@ -1,21 +1,19 @@
-procedure Example {
-  x = 2+d;
-  if (a < b) then {
-    y = z;
-  if (c<d) then {
-    X =y;
-  } else {
-    X =z;
-   }
- 
-   i = j + k;
-  } else {
-    W = n;
-  }
-  while (c > d) {
-    U = o + p;
-  }
-  read z;
-  h = 232141;
-  f1 = h3;
-}
+procedure computeCentroid {
+      count = 0;
+      cenX = 0;
+      cenY = 0;
+      
+      while ((x != 0) && (y != 0)) {
+          count = count + 1;
+          cenX = cenX + x;
+          cenY = cenY + y;
+          
+        }
+      if (count == 0) then {
+          flag = 1;
+        } else {
+          cenX = cenX / count;
+          cenY = cenY / count;
+        }
+      normSq = cenX * cenX + cenY * cenY;
+    }
