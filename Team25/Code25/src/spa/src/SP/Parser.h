@@ -8,7 +8,7 @@
 #include "Token.h"
 #include "Tokenizer.h"
 #include "TNode.h"
-#include "ParserUtils.h"
+#include "SPParserUtils.h"
 #include "StmtParser.h"
 #include "ExpressionParser.h"
 #include "PKB/PkbPopulator.h"
@@ -21,7 +21,7 @@ public:
 private:
     //std::shared_ptr<PkbPopulator> pkbPopulator;
     std::shared_ptr<Tokenizer> tokenizer;
-    std::shared_ptr<ParserUtils> utils;
+    std::shared_ptr<SPParserUtils> utils;
 
     ProcedureNode parseProcedure();
 };

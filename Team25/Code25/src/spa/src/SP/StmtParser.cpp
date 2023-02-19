@@ -22,14 +22,14 @@ std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
     }
 }
 
-std::shared_ptr<StmtNode> StmtParser::parseStmt(std::string stmtType, std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> StmtParser::parseStmt(std::string stmtType, std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     shared_ptr<StmtParser> sp = createStmtParser(stmtType);
     utils->incrementStmtNo();
     std::shared_ptr<StmtNode> sn = sp->parse(utils, tokenizer);
     return sn;
 }
 
-StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     std::vector<std::shared_ptr<StmtNode>> StmtLsts;
     do {
         std::shared_ptr<StmtNode> sn = parseStmt(tokenizer->peek(), utils, tokenizer);
@@ -39,7 +39,7 @@ StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<ParserUtils> utils, std::sh
     return node;
 }
 
-std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     std::string lhs = utils->expect(std::make_shared<Name>());
     //pkb populate lhs
     //parser->pkbPopulator->addVar(lhs);
@@ -81,7 +81,7 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<ParserUtils> utils
     return std::make_shared<AssignNode>(node);
 }
 
-std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Print>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
@@ -91,12 +91,12 @@ std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<ParserUtils> utils,
 }
 
 //TODO: implementation
-std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), "ds");
     return std::make_shared<PrintNode>(node);
 }
 
-std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<While>());
     //parse conditional expr
@@ -141,7 +141,7 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<ParserUtils> utils,
     return std::make_shared<WhileNode>(node);
 }
 
-std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<If>());
     //parse conditional expr
@@ -192,7 +192,7 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<ParserUtils> utils, st
     return std::make_shared<IfNode>(node);;
 }
 
-std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<ParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Read>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());

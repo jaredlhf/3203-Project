@@ -4,7 +4,7 @@
 Parser::Parser(std::shared_ptr<Tokenizer> t) {
     this->tokenizer = t;
     //this->pkbPopulator = populator;
-    this->utils = std::make_shared<ParserUtils>(t);
+    this->utils = std::make_shared<SPParserUtils>(t);
 };
 
 // Returns just a ProcedureNode for milestone 1

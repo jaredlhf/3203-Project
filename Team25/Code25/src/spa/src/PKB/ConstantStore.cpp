@@ -6,6 +6,8 @@ using namespace std;
 
 #include "ConstantStore.h"
 
+// TODO: Delete file
+
 ConstantStore::ConstantStore() {}
 
 void ConstantStore::addConst(int constNum) {
@@ -32,3 +34,4 @@ int ConstantStore::size() {
 void ConstantStore::clear() {
 	constStore.clear();
 }
+

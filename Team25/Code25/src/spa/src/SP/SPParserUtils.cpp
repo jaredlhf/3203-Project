@@ -1,11 +1,11 @@
-#include "ParserUtils.h"
+#include "SPParserUtils.h"
 
-ParserUtils::ParserUtils(std::shared_ptr<Tokenizer> t) {
+SPParserUtils::SPParserUtils(std::shared_ptr<Tokenizer> t) {
     this->tokenizer = t;
     currentStmtNo = 0;
 }
 
-std::string ParserUtils::expect(std::shared_ptr<Token> expectedToken) {
+std::string SPParserUtils::expect(std::shared_ptr<Token> expectedToken) {
     std::string next = tokenizer->getNextToken();
     if (!expectedToken->isEqual(next)) {
         std::string error = "error: unexpected token, got: " + next;
@@ -15,11 +15,11 @@ std::string ParserUtils::expect(std::shared_ptr<Token> expectedToken) {
     return next;
 }
 
-int ParserUtils::getCurrentStmtNo() {
+int SPParserUtils::getCurrentStmtNo() {
     return currentStmtNo;
 }
 
-void ParserUtils::incrementStmtNo() {
+void SPParserUtils::incrementStmtNo() {
     currentStmtNo += 1;
 }
 

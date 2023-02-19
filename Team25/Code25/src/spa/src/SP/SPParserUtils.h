@@ -1,13 +1,13 @@
-#ifndef SPA_PARSERUTILS_H
-#define SPA_PARSERUTILS_H
+#ifndef SPA_SPPARSERUTILS_H
+#define SPA_SPPARSERUTILS_H
 
 #include <string>
 #include "Token.h"
 #include "Tokenizer.h"
 
-class ParserUtils {
+class SPParserUtils {
 public:
-    ParserUtils(std::shared_ptr<Tokenizer> t);
+    SPParserUtils(std::shared_ptr<Tokenizer> t);
     std::string expect(std::shared_ptr<Token> expectedToken);
     int getCurrentStmtNo();
     void incrementStmtNo();
@@ -17,4 +17,4 @@ private:
     int currentStmtNo;
 };
 
-#endif //SPA_PARSERUTILS_H
+#endif //SPA_SPPARSERUTILS_H

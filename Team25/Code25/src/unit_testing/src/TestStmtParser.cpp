@@ -55,7 +55,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(shortValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<AssignNode> node = dynamic_pointer_cast<AssignNode>(ap->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "x");
@@ -67,7 +67,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(longValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<AssignNode> node = dynamic_pointer_cast<AssignNode>(ap->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "read");
@@ -79,7 +79,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(manyValidStatements);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<AssignNode> node = dynamic_pointer_cast<AssignNode>(ap->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "x");
@@ -91,7 +91,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(irregularSpacesValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<AssignNode> node = dynamic_pointer_cast<AssignNode>(ap->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "x");
@@ -103,7 +103,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidLhs);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ap->parse(util, t), std::invalid_argument);
             }
@@ -113,7 +113,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidRhs);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ap->parse(util, t), std::invalid_argument);
             }
@@ -123,7 +123,7 @@ SCENARIO("Testing AssignParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidRhsVarName);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ap->parse(util, t), std::invalid_argument);
             }
@@ -144,7 +144,7 @@ SCENARIO("Testing PrintParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(validStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<PrintNode> node = dynamic_pointer_cast<PrintNode>(pp->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "y");
@@ -155,7 +155,7 @@ SCENARIO("Testing PrintParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidMissingVarStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(pp->parse(util, t), std::invalid_argument);
             }
@@ -165,7 +165,7 @@ SCENARIO("Testing PrintParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidVarStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(pp->parse(util, t), std::invalid_argument);
             }
@@ -186,7 +186,7 @@ SCENARIO("Testing ReadParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(validStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<ReadNode> node = dynamic_pointer_cast<ReadNode>(rp->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getVar() == "y");
@@ -197,7 +197,7 @@ SCENARIO("Testing ReadParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidMissingVarStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(rp->parse(util, t), std::invalid_argument);
             }
@@ -207,7 +207,7 @@ SCENARIO("Testing ReadParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(invalidVarStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(rp->parse(util, t), std::invalid_argument);
             }
@@ -238,7 +238,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(shortValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<IfNode> node = dynamic_pointer_cast<IfNode>(ip->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getCondExpr() == "x>0");
@@ -255,7 +255,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(longValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<IfNode> node = dynamic_pointer_cast<IfNode>(ip->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getCondExpr() == "(x>0)&&(y<5)");
@@ -280,7 +280,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingElse);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ip->parse(util, t), std::invalid_argument);
             }
@@ -290,7 +290,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingIfLst);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ip->parse(util, t), std::invalid_argument);
             }
@@ -300,7 +300,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingElseLst);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ip->parse(util, t), std::invalid_argument);
             }
@@ -310,7 +310,7 @@ SCENARIO("Testing IfParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingCondExpr);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(ip->parse(util, t), std::invalid_argument);
             }
@@ -340,7 +340,7 @@ SCENARIO("Testing WhileParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(shortValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<WhileNode> node = dynamic_pointer_cast<WhileNode>(wp->parse(util, t));
             THEN ("it should generate correct AST") {
                 REQUIRE(node->getCondExpr() == "x>0");
@@ -354,7 +354,7 @@ SCENARIO("Testing WhileParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(longValidStatement);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             std::shared_ptr<WhileNode> node = dynamic_pointer_cast<WhileNode>(wp->parse(util, t));
 
             THEN ("it should generate correct AST") {
@@ -382,7 +382,7 @@ SCENARIO("Testing WhileParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingStmtLst);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(wp->parse(util, t), std::invalid_argument);
             }
@@ -393,7 +393,7 @@ SCENARIO("Testing WhileParser") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
             t->tokenize(missingCondExpr);
 
-            std::shared_ptr<ParserUtils> util = std::make_shared<ParserUtils>(t);
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
             THEN ("it should throw an error") {
                 REQUIRE_THROWS_AS(wp->parse(util, t), std::invalid_argument);
             }

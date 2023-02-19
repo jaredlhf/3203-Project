@@ -1,87 +1,181 @@
-#include <string>
-#include <unordered_set>
 #include "Synonym.h"
 #include "Constants.h"
 
-using namespace std;
 
 // Base Synonym class methods
 Synonym::Synonym() {
     name = "";
 }
 
-Synonym::Synonym(string inputName) {
+// Synonym instance methods
+Synonym::Synonym(const std::string& inputName) {
     name = inputName;
 }
 
-bool Synonym::matchesKeyword(string inputString) {
+bool Synonym::matchesKeyword(const std::string& inputString) {
     return inputString == keyword;
 }
 
-bool Synonym::matchesName(string inputName) {
+bool Synonym::matchesName(const std::string& inputName) {
     return inputName == name;
 }
 
-void Synonym::addMatchingResult(string result) {
+void Synonym::addMatchingResult(const std::string& result) {
     matches.insert(result);
 }
 
-unordered_set<string> Synonym::getMatches() {
+std::string Synonym::getName() {
+    return this->name;
+}
+
+std::string Synonym::getKeyword() {
+    return this->keyword;
+}
+
+bool Synonym::compare(std::shared_ptr<Synonym> other) {
+    return this->name == other->name && this->keyword == other->keyword;
+}
+
+std::unordered_set<std::string> Synonym::getMatches() {
     return matches;
 }
 
-Synonym Synonym::create(string type, string name) {
-    if (type == Constants::STMT) return StmtSynonym(name);
-    if (type == Constants::READ) return ReadSynonym(name);
-    if (type == Constants::PRINT) return PrintSynonym(name);
-    if (type == Constants::CALL) return CallSynonym(name);
-    if (type == Constants::WHILE) return WhileSynonym(name);
-    if (type == Constants::IF) return IfSynonym(name);
-    if (type == Constants::ASSIGN) return AssignSynonym(name);
-    if (type == Constants::VARIABLE) return VariableSynonym(name);
-    if (type == Constants::CONSTANT) return ConstantSynonym(name);
-    if (type == Constants::PROCEDURE) return ProcedureSynonym(name);
+bool Synonym::isStmtRef() {
+    return false;
+}
+
+bool Synonym::isVariableSyn() {
+    return false;
+}
+
+// Factory class for Synonyms
+std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::string& name) {
+    if (type == Constants::STMT) return std::make_shared<StmtSynonym>(StmtSynonym(name));
+    if (type == Constants::READ) return std::make_shared<ReadSynonym>(ReadSynonym(name));
+    if (type == Constants::PRINT) return std::make_shared<PrintSynonym>(PrintSynonym(name));
+    if (type == Constants::CALL) return std::make_shared<CallSynonym>(CallSynonym(name));
+    if (type == Constants::WHILE) return std::make_shared<WhileSynonym>(WhileSynonym(name));
+    if (type == Constants::IF) return std::make_shared<IfSynonym>(IfSynonym(name));
+    if (type == Constants::ASSIGN) return std::make_shared<AssignSynonym>(AssignSynonym(name));
+    if (type == Constants::VARIABLE) return std::make_shared<VariableSynonym>(VariableSynonym(name));
+    if (type == Constants::CONSTANT) return std::make_shared<ConstantSynonym>(ConstantSynonym(name));
+    if (type == Constants::PROCEDURE) return std::make_shared<ProcedureSynonym>(ProcedureSynonym(name));
+    if (type == Constants::SYNTAX_ERROR) return std::make_shared<SyntaxErrorSynonym>(SyntaxErrorSynonym(name));
+    if (type == Constants::SEMANTIC_ERROR) return std::make_shared<SemanticErrorSynonym>(SemanticErrorSynonym(name));
     
-    return Synonym(name);
+    return std::make_shared<Synonym>(Synonym(name));
+}
+
+// Overriden methods from Entity parent class
+bool Synonym::isConstant() {
+    return false;
+}
+
+bool Synonym::isSynonym() {
+    return true;
+}
+
+bool Synonym::isWildcard() {
+    return false;
 }
 
 // Concrete Synonym class overriden methods
-StmtSynonym::StmtSynonym(string name) : Synonym(name) {
+StmtSynonym::StmtSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::STMT;
 }
 
-ReadSynonym::ReadSynonym(string name) : Synonym(name) {
+bool StmtSynonym::isStmtRef() {
+    return true;
+}
+
+ReadSynonym::ReadSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::READ;
 }
 
-PrintSynonym::PrintSynonym(string name) : Synonym(name) {
+bool ReadSynonym::isStmtRef() {
+    return true;
+}
+
+PrintSynonym::PrintSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::PRINT;
 }
 
-CallSynonym::CallSynonym(string name) : Synonym(name) {
+bool PrintSynonym::isStmtRef() {
+    return true;
+}
+
+CallSynonym::CallSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::CALL;
 }
 
-WhileSynonym::WhileSynonym(string name) : Synonym(name) {
+bool CallSynonym::isStmtRef() {
+    return true;
+}
+
+WhileSynonym::WhileSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::WHILE;
 }
 
-IfSynonym::IfSynonym(string name) : Synonym(name) {
+bool WhileSynonym::isStmtRef() {
+    return true;
+}
+
+IfSynonym::IfSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::IF;
 }
 
-AssignSynonym::AssignSynonym(string name) : Synonym(name) {
+bool IfSynonym::isStmtRef() {
+    return true;
+}
+
+AssignSynonym::AssignSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::ASSIGN;
 }
 
-VariableSynonym::VariableSynonym(string name) : Synonym(name) {
+bool AssignSynonym::isStmtRef() {
+    return true;
+}
+
+VariableSynonym::VariableSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::VARIABLE;
 }
 
-ConstantSynonym::ConstantSynonym(string name) : Synonym(name) {
+bool VariableSynonym::isStmtRef() {
+    return false;
+}
+
+bool VariableSynonym::isVariableSyn() {
+    return true;
+}
+
+ConstantSynonym::ConstantSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::CONSTANT;
 }
 
-ProcedureSynonym::ProcedureSynonym(string name) : Synonym(name) {
+bool ConstantSynonym::isStmtRef() {
+    return false;
+}
+
+ProcedureSynonym::ProcedureSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::PROCEDURE;
+}
+
+bool ProcedureSynonym::isStmtRef() {
+    return false;
+}
+
+SyntaxErrorSynonym::SyntaxErrorSynonym(const std::string& name) : Synonym(name) {
+    keyword = Constants::SYNTAX_ERROR;
+}
+
+bool SyntaxErrorSynonym::isStmtRef() {
+    return false;
+}
+
+SemanticErrorSynonym::SemanticErrorSynonym(const std::string& name) : Synonym(name) {
+    keyword = Constants::SEMANTIC_ERROR;
+}
+
+bool SemanticErrorSynonym::isStmtRef() {
+    return false;
 }

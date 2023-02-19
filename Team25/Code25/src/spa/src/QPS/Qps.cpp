@@ -1,13 +1,13 @@
 #include "Qps.h"
 
-Qps::Qps(PkbRetriever* retriever) {
+Qps::Qps(std::shared_ptr<PkbRetriever> retriever) {
 	pkbRetriever = retriever;
 }
 
-void Qps::query(string queryStr, list<string> &uiList) {
-	vector<string> tokens = tokenizer.tokenize(queryStr);
+void Qps::query(const std::string& queryStr, std::list<std::string>& uiList) {
+	std::vector<std::string> tokens = tokenizer.tokenize(queryStr);
 	ParserResponse response = parser.parseQueryTokens(tokens);
-	list<string> result = evaluator.evaluate(response, pkbRetriever);
+	std::list<std::string> result = evaluator.evaluate(response, pkbRetriever);
 
 	uiList.insert(uiList.end(), result.begin(), result.end());
 }

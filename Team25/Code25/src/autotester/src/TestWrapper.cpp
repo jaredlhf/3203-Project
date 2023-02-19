@@ -9,11 +9,13 @@ AbstractWrapper* WrapperFactory::createWrapper() {
 // Do not modify the following line
 volatile bool AbstractWrapper::GlobalStop = false;
 
+
 // a default constructor
-TestWrapper::TestWrapper() : pkbRetriever(&vs, &cs, &fs, &ps, &ss), pkbPopulator(&vs, &cs, &fs, &ps, &ss), qps(&pkbRetriever)  {
+TestWrapper::TestWrapper() : pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer), pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer), qps(std::make_shared<PkbRetriever>(pkbRetriever))  {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
   sp = SourceProcessor();
+
 }
 
 // method for parsing the SIMPLE source

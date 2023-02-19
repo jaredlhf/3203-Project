@@ -20,8 +20,37 @@ using namespace std;
 //    m.visit(sp);
 //}
 
+VariableStore vs;
+ConstantStore cs;
+FollowsStore fs;
+ProcedureStore ps;
+StatementStore ss;
+PatternStore patts;
+FollowsStarStore fstars;
+ModifiesProcStore mprocs;
+ModifiesStore ms;
+ParentStarStore pStars;
+ParentStore parents;
+UsesStore uses;
+
+std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
+std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
+std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
+std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
+std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
+std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
+std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+
+PkbPopulator pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+std::shared_ptr<PkbPopulator> pkbPop = std::make_shared<PkbPopulator>(pkbPopulator);
+
 TEST_CASE("ModifiesIfTest") {
-    ModifiesExtractor m;
+    ModifiesExtractor m(pkbPop);
     //First If stmtLst
     vector<std::shared_ptr<StmtNode>> ifStmts;
     AssignNode a1 = AssignNode(3,"k","x + y + z + 1");
@@ -118,7 +147,7 @@ TEST_CASE("ModifiesIfTest") {
 //}
 
 TEST_CASE("FollowsTest") {
-    FollowsExtractor f;
+    FollowsExtractor f(pkbPop);
     vector<std::shared_ptr<StmtNode>> stmts;
     AssignNode a = AssignNode(1,"v","x + y + z + 1");
     shared_ptr<AssignNode> sp1 = make_shared<AssignNode>(a);
@@ -132,7 +161,7 @@ TEST_CASE("FollowsTest") {
 }
 
 TEST_CASE("FollowsWithWhileTest") {
-    FollowsExtractor f;
+    FollowsExtractor f(pkbPop);
     vector<std::shared_ptr<StmtNode>> stmts;
 
     AssignNode a = AssignNode(1,"v","x + y + z + 1");
@@ -178,7 +207,7 @@ TEST_CASE("FollowsWithWhileTest") {
 }
 
 TEST_CASE("FollowsStarTest") {
-    FollowsStarExtractor f;
+    FollowsStarExtractor f(pkbPop);
     vector<std::shared_ptr<StmtNode>> stmts;
 
     AssignNode a = AssignNode(1,"v","x + y + z + 1");
@@ -224,7 +253,7 @@ TEST_CASE("FollowsStarTest") {
 }
 
 TEST_CASE("ParentsTest") {
-    ParentsExtractor p;
+    ParentsExtractor p(pkbPop);
 
     vector<std::shared_ptr<StmtNode>> ifStmts;
     AssignNode a1 = AssignNode(3,"v","x + y + z + 1");
@@ -252,7 +281,7 @@ TEST_CASE("ParentsTest") {
 }
 
 TEST_CASE("ParentsStarTest") {
-    ParentsStarExtractor p;
+    ParentsStarExtractor p(pkbPop);
 
     //First If stmtLst
     vector<std::shared_ptr<StmtNode>> ifStmts;

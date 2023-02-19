@@ -2,71 +2,110 @@
 
 #include <string>
 #include <unordered_set>
+#include <memory>
+#include "Entity.h"
 
-using namespace std;
 
-class Synonym {
+class Synonym : public Entity {
 protected:
-    unordered_set<string> matches;
-    string name;
-    string keyword;
+    std::unordered_set<std::string> matches;
+    std::string name;
+    std::string keyword;
 
 public:
+    // Constructor functions
     Synonym();
-    Synonym(string inputName);
-    bool matchesKeyword(string inputString);
-    bool matchesName(string inputName);
-    void addMatchingResult(string result);
-    unordered_set<string> getMatches();
-    static Synonym create(string type, string name);
+    Synonym(const std::string& inputName);
+
+    // Synonym instance functions
+    bool matchesKeyword(const std::string& inputString);
+    bool matchesName(const std::string& inputName);
+    void addMatchingResult(const std::string& result);
+    std::string getName();
+    std::string getKeyword();
+    bool compare(std::shared_ptr<Synonym> other);
+    virtual std::unordered_set<std::string> getMatches();
+    virtual bool isStmtRef();
+    virtual bool isVariableSyn();
+
+    // Static functions
+    static std::shared_ptr<Synonym> create(const std::string& type, const std::string& name);
+
+    // Overriden functions
+    bool isConstant() override;
+    bool isSynonym() override;
+    bool isWildcard() override;
 };
 
 class StmtSynonym : public Synonym {
 public:
-    StmtSynonym(string name);
+    StmtSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class ReadSynonym : public Synonym {
 public:
-    ReadSynonym(string name);
+    ReadSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class PrintSynonym : public Synonym {
 public:
-    PrintSynonym(string name);
+    PrintSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class CallSynonym : public Synonym {
 public:
-    CallSynonym(string name);
+    CallSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class WhileSynonym : public Synonym {
 public:
-    WhileSynonym(string name);
+    WhileSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class IfSynonym : public Synonym {
 public:
-    IfSynonym(string name);
+    IfSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class AssignSynonym : public Synonym {
 public:
-    AssignSynonym(string name);
+    AssignSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class VariableSynonym : public Synonym {
 public:
-    VariableSynonym(string name);
+    VariableSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
+    virtual bool isVariableSyn() override;
 };
 
 class ConstantSynonym : public Synonym {
 public:
-    ConstantSynonym(string name);
+    ConstantSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
 
 class ProcedureSynonym : public Synonym {
 public:
-    ProcedureSynonym(string name);
+    ProcedureSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
+};
+
+class SyntaxErrorSynonym : public Synonym {
+public:
+    SyntaxErrorSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
+};
+
+class SemanticErrorSynonym : public Synonym {
+public:
+    SemanticErrorSynonym(const std::string& name);
+    virtual bool isStmtRef() override;
 };
