@@ -70,6 +70,51 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAssignRhs(2) == "");
 				REQUIRE(pkbRet.getAssignRhs(3) == "");
 			}
+			THEN("Getting all follower star should return an empty set") {
+				REQUIRE(pkbRet.getFollowerStar(1).size() == 0);
+				REQUIRE(pkbRet.getFollowerStar(2).size() == 0);
+				REQUIRE(pkbRet.getFollowerStar(3).size() == 0);
+			}
+			THEN("Getting all followee star should return an empty set") {
+				REQUIRE(pkbRet.getFolloweeStar(1).size() == 0);
+				REQUIRE(pkbRet.getFolloweeStar(2).size() == 0);
+				REQUIRE(pkbRet.getFolloweeStar(3).size() == 0);
+			}
+			THEN("Getting all modifies statement should return an empty set") {
+				REQUIRE(pkbRet.getModStmt("x").size() == 0);
+				REQUIRE(pkbRet.getModStmt("y").size() == 0);
+				REQUIRE(pkbRet.getModStmt("z").size() == 0);
+			}
+			THEN("Getting all modifies variable should return an empty set") {
+				REQUIRE(pkbRet.getModVar(1).size() == 0);
+				REQUIRE(pkbRet.getModVar(2).size() == 0);
+				REQUIRE(pkbRet.getModVar(3).size() == 0);
+			}
+			THEN("Getting all parents star parents should return an empty set") {
+				REQUIRE(pkbRet.getParentStar(1).size() == 0);
+				REQUIRE(pkbRet.getParentStar(2).size() == 0);
+				REQUIRE(pkbRet.getParentStar(3).size() == 0);
+			}
+			THEN("Getting all parents star children should return an empty set") {
+				REQUIRE(pkbRet.getChildrenStar(1).size() == 0);
+				REQUIRE(pkbRet.getChildrenStar(2).size() == 0);
+				REQUIRE(pkbRet.getChildrenStar(3).size() == 0);
+			}
+			THEN("Getting all parent should return -1") {
+				REQUIRE(pkbRet.getParent(1) == -1);
+				REQUIRE(pkbRet.getParent(2) == -1);
+				REQUIRE(pkbRet.getParent(3) == -1);
+			}
+			THEN("Getting all uses statment should return an empty set") {
+				REQUIRE(pkbRet.getUsesStmt("x").size() == 0);
+				REQUIRE(pkbRet.getUsesStmt("y").size() == 0);
+				REQUIRE(pkbRet.getUsesStmt("z").size() == 0);
+			}
+			THEN("Getting all uses variable should return an empty set") {
+				REQUIRE(pkbRet.getUsesVar(1).size() == 0);
+				REQUIRE(pkbRet.getUsesVar(2).size() == 0);
+				REQUIRE(pkbRet.getUsesVar(3).size() == 0);
+			}
 		}
 		WHEN("The PkbRetriever references non-empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -97,21 +142,26 @@ SCENARIO("Working version of PkbRetriever") {
 			pattsPointer->addAssignRhs(1, "y + 1");
 			pattsPointer->addAssignRhs(2, "y + x");
 			pattsPointer->addAssignRhs(3, "z + 2");
-			THEN("Getting all variables hsould return a non empty set") {
+			fstarsPointer->addFollowsStar(1, std::unordered_set({ 1, 2, 3 }));
+			msPointer->add(1, "x");
+			pStarsPointer->addParentStar(1, 2);
+			parentsPointer->addParent(1, 2);
+			usesPointer->add(1, "x");
+			THEN("Getting a variables hsould return a non empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);
 				REQUIRE(pkbRet.getAllVar().count("x") == 1);
 			}
-			THEN("Getting all constants should return a non empty set") {
+			THEN("Getting a constants should return a non empty set") {
 				REQUIRE(pkbRet.getAllConst().size() == 1);
 				REQUIRE(pkbRet.getAllConst().count(1) == 1);
 			}
-			THEN("Getting all follows should return a non empty set") {
+			THEN("Getting a follows should return a non empty set") {
 				REQUIRE(pkbRet.getAllFollowees().size() == 1);
 				REQUIRE(pkbRet.getAllFollowees().count(1) == 1);
 				REQUIRE(pkbRet.getAllFollowers().size() == 1);
 				REQUIRE(pkbRet.getAllFollowers().count(2) == 1);
 			}
-			THEN("Getting all procedures should return a non empty set") {
+			THEN("Getting a procedures should return a non empty set") {
 				REQUIRE(pkbRet.getAllProc().size() == 1);
 				REQUIRE(pkbRet.getAllProc().count("testProc") == 1);
 			}
@@ -138,6 +188,51 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAssignRhs(2) != "y+x");
 				REQUIRE(pkbRet.getAssignRhs(3) == "z + 2");
 				REQUIRE(pkbRet.getAssignRhs(3) != "z+2");
+			}
+			THEN("Getting a follower star should return a non empty set") {
+				REQUIRE(pkbRet.getFollowerStar(1).size() == 3);
+				REQUIRE(pkbRet.getFollowerStar(2).size() == 0);
+				REQUIRE(pkbRet.getFollowerStar(3).size() == 0);
+			}
+			THEN("Getting a followee star should return a non empty set") {
+				REQUIRE(pkbRet.getFolloweeStar(1).size() == 1);
+				REQUIRE(pkbRet.getFolloweeStar(2).size() == 1);
+				REQUIRE(pkbRet.getFolloweeStar(3).size() == 1);
+			}
+			THEN("Getting a modifies statement should return a non empty set") {
+				REQUIRE(pkbRet.getModStmt("x").size() == 1);
+				REQUIRE(pkbRet.getModStmt("y").size() == 0);
+				REQUIRE(pkbRet.getModStmt("z").size() == 0);
+			}
+			THEN("Getting a modifies variable should return a non empty set") {
+				REQUIRE(pkbRet.getModVar(1).size() == 1);
+				REQUIRE(pkbRet.getModVar(2).size() == 0);
+				REQUIRE(pkbRet.getModVar(3).size() == 0);
+			}
+			THEN("Getting parents star parent should return a non empty set") {
+				REQUIRE(pkbRet.getParentStar(1).size() == 0);
+				REQUIRE(pkbRet.getParentStar(2).size() == 1);
+				REQUIRE(pkbRet.getParentStar(3).size() == 0);
+			}
+			THEN("Getting parents star parent should return a non empty set") {
+				REQUIRE(pkbRet.getChildrenStar(1).size() == 1);
+				REQUIRE(pkbRet.getChildrenStar(2).size() == 0);
+				REQUIRE(pkbRet.getChildrenStar(3).size() == 0);
+			}
+			THEN("Getting parent should return non -1") {
+				REQUIRE(pkbRet.getParent(1) == -1);
+				REQUIRE(pkbRet.getParent(2) == 1);
+				REQUIRE(pkbRet.getParent(3) == -1);
+			}
+			THEN("Getting a uses statment should return an empty set") {
+				REQUIRE(pkbRet.getUsesStmt("x").size() == 1);
+				REQUIRE(pkbRet.getUsesStmt("y").size() == 0);
+				REQUIRE(pkbRet.getUsesStmt("z").size() == 0);
+			}
+			THEN("Getting a uses variable should return an empty set") {
+				REQUIRE(pkbRet.getUsesVar(1).size() == 1);
+				REQUIRE(pkbRet.getUsesVar(2).size() == 0);
+				REQUIRE(pkbRet.getUsesVar(3).size() == 0);
 			}
 		}
 	}
