@@ -1,34 +1,10 @@
 #include <string>
 #include <regex>
 #include <stack>
-#include <sstream>
-#include <iostream>
+#include "Token.h"
 #include "ExpressionParser.h"
 
 using namespace std;
-
-bool ExpressionParser::isNumber(std::string str)
-{
-    std::string::const_iterator it = str.begin();
-    while (it != str.end() && std::isdigit(*it)) {
-        ++it;
-    }
-    return !str.empty() && it == str.end();
-}
-
-
-bool ExpressionParser::isName(std::string var)
-{
-    for (int i = 0; i < var.length(); i++) {
-        if (i == 0 && !isalpha(var[i])) {
-            return false;
-        }
-        if (!isalpha(var[i]) && !isdigit(var[i])) {
-            return false;
-        }
-    }
-    return true;
-}
 
 bool ExpressionParser::checkParenthesis(std::string expr) {
     std::stack<char> stack;
@@ -79,7 +55,7 @@ bool ExpressionParser::isExpr(std::string str) {
             std::smatch result;
             while (std::regex_search(str, result, term)) {
                 // check if char string is a valid name or number
-                if (!(isName(result[0]) || isNumber(result[0]))) {
+                if (!(Token::isValidName(result[0]) || Token::isNumber(result[0]))) {
                     return false;
                 }
                 str = result.suffix().str();
@@ -131,15 +107,18 @@ bool ExpressionParser::isCondExpr(std::string expr) {
     } else if (expr[0] == '!') {
         //erase !
         expr.erase(expr.begin());
-        int bracket = matchingBracket(expr.substr(1));
-        //remove ()
-        expr.erase(bracket);
-        expr.erase(expr.begin());
+        if(checkParenthesis(expr)) {
+            int bracket = matchingBracket(expr.substr(1));
+            //remove ()
+            expr.erase(bracket);
+            expr.erase(expr.begin());
 //        std::cout << bracket << endl;
 //        std::cout << expr << " test1 " << endl;
-        return isCondExpr((expr));
-        // for && case
+            return isCondExpr((expr));
+        }
+        return false;
     }
+    // for && case
     if ((expr.find("&&") != std::string::npos)) {
         if (checkParenthesis(expr.substr(0, expr.find("&&")))) {
             index = expr.find("&&");
