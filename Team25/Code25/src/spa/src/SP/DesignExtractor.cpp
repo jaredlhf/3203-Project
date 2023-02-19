@@ -45,15 +45,16 @@ void DesignExtractor::extractVar(vector<std::string> tokens) {
     for (string entity: tokens)
         if (Token::isValidName((entity))) {
 //            std::cout << "populating variable:" << entity << std::endl;
-            //parser->pkbPopulator->addVar(entity);
+            pkbPopulator->addVar(entity);
         }
 }
 
 void DesignExtractor::extractConst(vector<std::string> tokens) {
     for (string entity: tokens)
          if (Token::isNumber(entity)) {
-            //parser->pkbPopulator->addConst(std::stoi(entity));
+              pkbPopulator->addConst(std::stoi(entity));
 //            std::cout << "populating constant:" << entity << std::endl;
+
         }
 }
 
@@ -109,12 +110,19 @@ void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     }
     std::cout << "populating modifies:" << "(" << lineNo << "," << a->getVar() <<")"  << std::endl;
     //std::cout<<"checked assign"<<endl;
+    pkbPopulator->addModifies(lineNo, a->getVar());
+    pkbPopulator->addVar(a->getVar());
+
+    pkbPopulator->addAssignLhs(a->getVar(), lineNo);
+    pkbPopulator->addAssignRhs(lineNo, a->getExpr());
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = r->getLine();
     }
+    pkbPopulator->addModifies(lineNo, r->getVar());
+    pkbPopulator->addVar(r->getVar());
     std::cout << "populating modifies:" << "(" << lineNo << "," << r->getVar() <<")" << std::endl;
 }
 
@@ -207,6 +215,13 @@ void UsesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     vector<std::string> rhs = tok.tokenize(a->getExpr());
     extractVar(rhs);
     extractConst(rhs);
+
+    for (auto const token: rhs) {
+        if (Token::isValidName(token)) {
+            pkbPopulator->addUses(lineNo, token);
+        }
+    }
+
     //std::cout<<"checked assign"<<endl;
 }
 
@@ -214,6 +229,8 @@ void UsesExtractor::visit(std::shared_ptr<PrintNode> r, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = r->getLine();
     }
+    pkbPopulator->addUses(lineNo, r->getVar());
+    pkbPopulator->addVar(r->getVar());
     std::cout << "populating uses:" << "(" << lineNo << "," << r ->getVar() <<")" << std::endl;
     //std::cout<<"checked print"<<endl;
 }
@@ -226,8 +243,14 @@ void UsesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     std::string expr = ifs->getCondExpr();
-    extractVar(t.tokenize(expr));
-    extractConst(t.tokenize(expr));
+    std::vector<std::string> tokens = t.tokenize(expr);
+    extractVar(tokens);
+    extractConst(tokens);
+
+    for (const auto token : tokens) {
+        pkbPopulator->addUses(lineNo, token);
+    }
+
     for (auto i : ifStmts) {
         visit(i, lineNo);
     }
@@ -243,8 +266,13 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     Tokenizer t;
     std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
     std::string expr = wh->getCondExpr();
-    extractVar(t.tokenize(expr));
-    extractConst(t.tokenize(expr));
+    std::vector<std::string> tokens = t.tokenize(expr);
+    extractVar(tokens);
+    extractConst(tokens);
+
+    for (const auto token : tokens) {
+        pkbPopulator->addUses(lineNo, token);
+    }
     for (auto j: whStmts) {
         visit(j, lineNo);
     }
@@ -270,7 +298,10 @@ void FollowsExtractor::visit(std::shared_ptr<StmtLstNode> sl, int lineNo) {
     vector<int> stmtLines;
     for(auto i: stmts) {
         if ((!stmtLines.empty()) && (i->getLine() == (stmtLines[stmtLines.size() - 1] + 1))) {
+            int left = (stmtLines[stmtLines.size() - 1]);
+            int right = i->getLine();
             std::cout << "populating follow pair (" << (stmtLines[stmtLines.size() - 1])<< ',' << i->getLine() << ")" <<endl;
+            pkbPopulator->addFollows(left, right);
         }
         stmtLines.push_back(i->getLine());
     }
@@ -298,12 +329,14 @@ void FollowsStarExtractor::visit(std::shared_ptr<StmtLstNode> sl, int lineNo) {
     }
 
     while (stmtLines.size() != 1) {
-        std::vector<int> follows = std::vector<int>(stmtLines.begin() + 1, stmtLines.end());
-        std::cout << "populating follows* " << "(" << stmtLines[0] << "," << "(";
-        for(auto k: follows) {
-            std::cout << k << " ";
-        }
-        std::cout<<"))"<<endl;
+        std::unordered_set<int> follows = std::unordered_set<int>(stmtLines.begin() + 1, stmtLines.end());
+        int key = stmtLines[0];
+        pkbPopulator->addFollowsStar(key, follows);
+//        std::cout << "populating follows* " << "(" << stmtLines[0] << "," << "(";
+//        for(auto k: follows) {
+//            std::cout << k << " ";
+//        }
+//        std::cout<<"))"<<endl;
         stmtLines.erase(stmtLines.begin());
     }
 
@@ -372,6 +405,7 @@ void ParentsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
         }
         for(auto j: stmtLines) {
             std::cout << "populating parents: " << "(" << line << "," << j << ")"<< endl ;
+            pkbPopulator->addParent(line, j);
         }
         std::cout<<endl;
         //populate pkb - key,vector or key,value permutations??
@@ -388,6 +422,7 @@ void ParentsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
         }
         for(auto j: stmtLines) {
             std::cout << "populating parents: " << "(" << line << "," << j << ")"<< endl ;
+            pkbPopulator->addParent(line, j);
         }
         //populate pkb - key,vector or key,value permutations??
 }
@@ -475,6 +510,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     }
     for(auto j: stmtLines) {
         std::cout<<"populating parents*:" <<  "(" << lineNo << "," << j << ")" <<endl;
+        pkbPopulator->addParent(lineNo, j);
     }
     //populate pkb - key,vector or key,value permutations??
 }
@@ -497,6 +533,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     }
     for(auto j: stmtLines) {
         std::cout<<"populating parents*:" << "("  << lineNo << "," << j << ")" <<endl;
+        pkbPopulator->addParent(lineNo, j);
     }
     //populate pkb - key,vector or key,value permutations??
 }

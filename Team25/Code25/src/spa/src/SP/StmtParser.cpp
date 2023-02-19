@@ -41,10 +41,6 @@ StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<SPParserUtils> utils, std::
 
 std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     std::string lhs = utils->expect(std::make_shared<Name>());
-    //pkb populate lhs
-    //parser->pkbPopulator->addVar(lhs);
-
-//    std::cout << "populating:" << lhs << std::endl;
 
     utils->expect(std::make_shared<Equal>());
     std::string rhs = "";
@@ -54,24 +50,7 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> uti
         rhs = rhs + next;
         rhsTokens.push_back(next);
     }
-    if(ExpressionParser::isExpr((rhs))) {
-        std::smatch result;
-        std::vector<std::string> variableVector;
-        for (std::string token: rhsTokens) {
-            std::regex_search(token, result, value);
-            variableVector.push_back(result[0]);
-        }
-        for (string entity: variableVector)
-            if (Token::isValidName((entity))) {
-
-                //std::cout << "populating:" << entity << std::endl;
-                //parser->pkbPopulator->addVar(entity);
-            } else if (Token::isNumber(entity)) {
-                //parser->pkbPopulator->addConst(std::stoi(entity));
-                //std::cout << "populating:" << entity << std::endl;
-
-            }
-    } else {
+    if (!ExpressionParser::isExpr((rhs))) {
         throw std::invalid_argument("Invalid expression ");
     }
     std::cout<< rhs << " " << utils->getCurrentStmtNo()<<endl;
@@ -113,22 +92,7 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> util
     } else {
         throw std::invalid_argument("no parenthesis for cond_expr");
     }
-    if(ExpressionParser::isCondExpr(rhs)) {
-        std::smatch result;
-        std::vector<std::string> variableVector;
-        for (std::string token: rhsTokens) {
-            std::regex_search(token, result, value);
-            variableVector.push_back(result[0]);
-        }
-        for (string entity: variableVector)
-            if (Token::isValidName((entity))) {
-//                std::cout << "populating:" << entity << std::endl;
-                //parser->pkbPopulator->addVar(entity);
-            } else if (Token::isNumber(entity)) {
-                //parser->pkbPopulator->addConst(std::stoi(entity));
-//                std::cout << "populating:" << entity << std::endl;
-            }
-    } else {
+    if(!ExpressionParser::isCondExpr(rhs)) {
         throw std::invalid_argument("Invalid expression ");
     }
 
@@ -158,22 +122,7 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, 
     }else {
         throw std::invalid_argument("no parenthesis for cond_expr");
     }
-    if(ExpressionParser::isCondExpr(rhs)) {
-        std::smatch result;
-        std::vector<std::string> variableVector;
-        for (std::string token: rhsTokens) {
-            std::regex_search(token, result, value);
-            variableVector.push_back(result[0]);
-        }
-        for (string entity: variableVector)
-            if (Token::isValidName((entity))) {
-//                std::cout << "populating:" << entity << std::endl;
-                //parser->pkbPopulator->addVar(entity);
-            } else if (Token::isNumber(entity)) {
-                //parser->pkbPopulator->addConst(std::stoi(entity));
-//                std::cout << "populating:" << entity << std::endl;
-            }
-    } else {
+    if(!ExpressionParser::isCondExpr(rhs)) {
         throw std::invalid_argument("Invalid expression ");
     }
 

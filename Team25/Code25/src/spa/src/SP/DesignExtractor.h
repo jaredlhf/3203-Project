@@ -23,9 +23,9 @@ public:
     static bool isIfNode(std::shared_ptr<TNode> n);
     static bool isWhileNode(std::shared_ptr<TNode> n);
     static bool isStmtLstNode(std::shared_ptr<TNode> n);
-    static void extractVar(vector<std::string> tokens);
-    static void extractConst(vector<std::string> tokens);
-private:
+    void extractVar(vector<std::string> tokens);
+    void extractConst(vector<std::string> tokens);
+protected:
     std::shared_ptr<PkbPopulator> pkbPopulator;
 };
 
