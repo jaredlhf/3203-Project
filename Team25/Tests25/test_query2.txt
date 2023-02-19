@@ -1,0 +1,80 @@
+2 - comment
+variable v;
+Select v such that Modifies (5, v)
+count
+5000
+3 - comment
+variable v;
+Select v such that Uses (12, v)
+cenX, cenY
+5000
+4 - comment
+assign a; while w;
+Select a such that Parent* (w, a)
+5, 6, 7
+5000
+5 - comment
+stmt s;
+Select s such that Parent (s, 6)
+4
+5000
+6 - comment
+variable v; assign a;
+Select a pattern a(_, _"cenX"_)
+6, 10, 12
+5000
+7 - comment
+variable v; assign a;
+Select v pattern a(v, _"cenX"_)
+cenX, normSq
+5000
+8 - comment
+variable v; assign a;
+Select v pattern a(v, _)
+count, cenX, cenY, flag, normSq
+5000
+9 - comment
+variable v; assign a;
+Select a pattern a(_, _)
+1, 2, 3, 5, 6, 7, 9, 10, 11, 12
+5000
+10 - comment
+variable v; assign a;
+Select a pattern a("cenY", _"count"_)
+11
+5000
+11 - comment
+variable v; assign a;
+Select a pattern a(_, _"1"_)
+5, 9
+5000
+12 - comment
+variable v; assign a;
+Select a pattern a("count", _)
+1, 5
+5000
+13 - comment
+variable v; assign a;
+Select a pattern a("cenX", _) such that Modifies(6, "cenX")
+2, 6, 10
+5000
+14 - comment
+variable v; assign a;
+Select v pattern a(v, _"cenX"_) such that Uses(12, v)
+cenX
+5000
+15 - comment
+assign a; while w;
+Select a such that Parent* (w, a) pattern a ("count", _)
+5
+5000
+16 - comment
+assign a;
+Select a such that Uses (a, "x") pattern a ("x", _)
+
+5000
+16 - comment
+assign a;
+Select a1 such that Uses (a, "x") pattern a ("x", _)
+SemanticError
+5000
