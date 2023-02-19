@@ -8,7 +8,6 @@ FollowsStore::FollowsStore() {}
 void FollowsStore::addFollows(int followee, int follower) {
 	followeeStore[follower] = followee;
 	followerStore[followee] = follower;
-	
 }
 
 int FollowsStore::getFollowee(int follower) {

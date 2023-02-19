@@ -1,7 +1,6 @@
 file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_executable(unit_testing ${srcs} 
-"src/TestConstStore.cpp"
 "src/TestEntityStore.cpp"
 "src/TestFollowsStar.cpp"
 "src/TestFollowsStore.cpp"
@@ -10,7 +9,6 @@ add_executable(unit_testing ${srcs}
 "src/TestParentStore.cpp"
 "src/TestPkbPopulator.cpp"
 "src/TestPkbRetriever.cpp"
-"src/TestProcStore.cpp"
 "src/TestQPS.cpp"
 "src/TestQpsClause.cpp"
 "src/TestQpsConstants.cpp"
@@ -31,7 +29,6 @@ add_executable(unit_testing ${srcs}
 "src/TestQueryTokenizer.cpp"
 "src/TestStmtStore.cpp"
 "src/TestUsesStore.cpp"
-"src/TestVarStore.cpp"
 "src/TestTNode.cpp"
 "src/TestSourceProcessor.cpp"
 "src/TestTokenizer.cpp"
