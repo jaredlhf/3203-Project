@@ -6,7 +6,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
-
+/* Storage class for Follows* relationship between direct and indirect statements.
+In Follows*(s1, s2), Followee star is s1 and Follower star is s2 */
 class FollowsStarStore {
 private:
 	std::unordered_map<int, std::unordered_set<int>> followeeStar;

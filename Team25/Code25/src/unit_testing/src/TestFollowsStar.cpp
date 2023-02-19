@@ -1,49 +1,55 @@
 #include "PKB/FollowsStarStore.h"
 
 #include "catch.hpp"
-using namespace std;
 
-FollowsStarStore followsStar;
+SCENARIO("Populating follows star store") {
+	GIVEN("New instance of follows star store") {
+		FollowsStarStore followsStar;
 
-TEST_CASE("Empty follows star store") {
-	unordered_set<int> output({ });
-	followsStar.clear();
-	REQUIRE(followsStar.getAllFollowers().size() == 0);
-	REQUIRE(followsStar.getAllFollowees().size() == 0);
-	REQUIRE(followsStar.getAllFollowers() == output);
-	REQUIRE(followsStar.getAllFollowees() == output);
+		THEN("It should start empty") {
+			REQUIRE(followsStar.getAllFollowees().size() == 0);
+			REQUIRE(followsStar.getAllFollowers().size() == 0);
+		}
 
-}
+		WHEN("One follows star is added") {
+			followsStar.addFollowsStar(1, std::unordered_set<int>({ 2, 3, 4 }));
 
-TEST_CASE("Add one follows star") {
-	
-	followsStar.clear();
-	std::unordered_set<int> followeeLst({ 1 });
-	std::unordered_set<int> followerLst({ 2, 3, 4 });
-	followsStar.addFollowsStar(1, followerLst);
+			THEN("Followee should be mapped to Followers") {
+				REQUIRE(followsStar.getFollowerStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+				REQUIRE(followsStar.getFolloweeStar(2) == std::unordered_set<int>({ 1 }));
+				REQUIRE(followsStar.getFolloweeStar(3) == std::unordered_set<int>({ 1 }));
+				REQUIRE(followsStar.getFolloweeStar(4) == std::unordered_set<int>({ 1 }));
+			}
 
-	REQUIRE(followsStar.getFolloweeStar(2) == followeeLst);
-	REQUIRE(followsStar.getFollowerStar(1) == followerLst);
-	REQUIRE(followsStar.hasFollowee(1));
-	REQUIRE(followsStar.hasFollower(3));
-	REQUIRE(!followsStar.hasFollowee(3));
-	REQUIRE(!followsStar.hasFollower(1));
-	REQUIRE(followsStar.getAllFollowers() == followerLst);
-}
+			WHEN("Duplicate follows star is added") {
+				followsStar.addFollowsStar(1, std::unordered_set<int>({ 2, 3, 4 }));
 
-TEST_CASE("Add two follows star") {
-	followsStar.clear();
-	std::unordered_set<int> followeeLstA({ 1 });
-	std::unordered_set<int> followerLstA({ 2, 3, 4 });
-	std::unordered_set<int> followeeLstB({ 1, 2 });
-	std::unordered_set<int> followerLstB({ 3, 4 });
-	followsStar.addFollowsStar(1, followerLstA);
-	followsStar.addFollowsStar(2, followerLstB);
+				THEN("Follows star store should remain the same") {
+					REQUIRE(followsStar.getFollowerStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+					REQUIRE(followsStar.getFolloweeStar(2) == std::unordered_set<int>({ 1 }));
+					REQUIRE(followsStar.getFolloweeStar(3) == std::unordered_set<int>({ 1 }));
+					REQUIRE(followsStar.getFolloweeStar(4) == std::unordered_set<int>({ 1 }));
+				}
+			}
+		}
 
-	REQUIRE(followsStar.getFolloweeStar(3) == followeeLstB);
-	REQUIRE(followsStar.getFollowerStar(2) == followerLstB);
-	REQUIRE(followsStar.hasFollowee(2));
-	REQUIRE(followsStar.hasFollower(3));
-	REQUIRE(followsStar.hasFollower(4));
-	REQUIRE(!followsStar.hasFollowee(4));
+		WHEN("Two follows star is added") {
+			followsStar.addFollowsStar(1, std::unordered_set<int>({ 2, 3, 4 }));
+			followsStar.addFollowsStar(2, std::unordered_set<int>({ 3, 4 }));
+
+			THEN("There should be 2 Followees and 3 Followers") {
+				REQUIRE(followsStar.getAllFollowees() == std::unordered_set<int>({ 1, 2 }));
+				REQUIRE(followsStar.getAllFollowers() == std::unordered_set<int>({ 2, 3, 4 }));
+			}
+
+			THEN("Followers and followees should be mapped correctly") {
+				REQUIRE(followsStar.getFollowerStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+				REQUIRE(followsStar.getFollowerStar(2) == std::unordered_set<int>({ 3, 4 }));
+				
+				REQUIRE(followsStar.getFolloweeStar(2) == std::unordered_set<int>({ 1 }));
+				REQUIRE(followsStar.getFolloweeStar(3) == std::unordered_set<int>({ 1, 2 }));
+				REQUIRE(followsStar.getFolloweeStar(4) == std::unordered_set<int>({ 1, 2 }));
+			}
+		}
+	}
 }
