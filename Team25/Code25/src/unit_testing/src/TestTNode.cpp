@@ -25,11 +25,11 @@ SCENARIO("Testing getChildren()") {
         WHEN("getChildren() on a StmtLstNode") {
             std::vector<std::shared_ptr<TNode>> children = sln2.getChildren();
             THEN ("it should return correct children") {
-                std::shared_ptr<AssignNode> c1 = dynamic_pointer_cast<AssignNode>(children[0]);
+                std::shared_ptr<AssignNode> c1 =std::dynamic_pointer_cast<AssignNode>(children[0]);
                 REQUIRE(c1->getLine() == 1);
                 REQUIRE(c1->getExpr() == "y+z");
                 REQUIRE(c1->getVar() == "x");
-                std::shared_ptr<PrintNode> c2 = dynamic_pointer_cast<PrintNode>(children[1]);
+                std::shared_ptr<PrintNode> c2 =std::dynamic_pointer_cast<PrintNode>(children[1]);
                 REQUIRE(c2->getVar() == "w");
                 REQUIRE(c2->getLine() == 2);
             }
@@ -59,17 +59,17 @@ SCENARIO("Testing getChildren()") {
         WHEN("getChildren() on a IfNode") {
             std::vector<std::shared_ptr<TNode>> children = if1.getChildren();
             THEN ("it should return correct children") {
-                std::shared_ptr<StmtLstNode> c1 = dynamic_pointer_cast<StmtLstNode>(children[0]);
-                std::shared_ptr<AssignNode> a1 = dynamic_pointer_cast<AssignNode>(c1->getStatements()[0]);
+                std::shared_ptr<StmtLstNode> c1 =std::dynamic_pointer_cast<StmtLstNode>(children[0]);
+                std::shared_ptr<AssignNode> a1 =std::dynamic_pointer_cast<AssignNode>(c1->getStatements()[0]);
                 REQUIRE(a1->getLine() == 4);
                 REQUIRE(a1->getVar() == "a");
                 REQUIRE(a1->getExpr() == "b+c");
-                std::shared_ptr<StmtLstNode> c2 = dynamic_pointer_cast<StmtLstNode>(children[1]);
-                std::shared_ptr<AssignNode> a2 = dynamic_pointer_cast<AssignNode>(c2->getStatements()[0]);
+                std::shared_ptr<StmtLstNode> c2 =std::dynamic_pointer_cast<StmtLstNode>(children[1]);
+                std::shared_ptr<AssignNode> a2 =std::dynamic_pointer_cast<AssignNode>(c2->getStatements()[0]);
                 REQUIRE(a2->getLine() == 1);
                 REQUIRE(a2->getExpr() == "y+z");
                 REQUIRE(a2->getVar() == "x");
-                std::shared_ptr<PrintNode> p1 = dynamic_pointer_cast<PrintNode>(c2->getStatements()[1]);
+                std::shared_ptr<PrintNode> p1 =std::dynamic_pointer_cast<PrintNode>(c2->getStatements()[1]);
                 REQUIRE(p1->getVar() == "w");
                 REQUIRE(p1->getLine() == 2);
             }
@@ -78,8 +78,8 @@ SCENARIO("Testing getChildren()") {
         WHEN("getChildren() on a WhileNode") {
             std::vector<std::shared_ptr<TNode>> children = w1.getChildren();
             THEN ("it should return correct children") {
-                std::shared_ptr<StmtLstNode> c1 = dynamic_pointer_cast<StmtLstNode>(children[0]);
-                std::shared_ptr<AssignNode> a1 = dynamic_pointer_cast<AssignNode>(c1->getStatements()[0]);
+                std::shared_ptr<StmtLstNode> c1 =std::dynamic_pointer_cast<StmtLstNode>(children[0]);
+                std::shared_ptr<AssignNode> a1 =std::dynamic_pointer_cast<AssignNode>(c1->getStatements()[0]);
                 REQUIRE(a1->getLine() == 4);
                 REQUIRE(a1->getVar() == "a");
                 REQUIRE(a1->getExpr() == "b+c");

@@ -207,7 +207,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         }
         // retrieve a declaration phrase
         std::vector<std::string> declaration = {};
-        while (tokens[ptr] != DECLARATION_END_TOKEN && ptr < tokenLength) {
+        while (ptr < tokenLength && tokens[ptr] != DECLARATION_END_TOKEN) {
             declaration.push_back(tokens[ptr]);
             ptr++;
         }
