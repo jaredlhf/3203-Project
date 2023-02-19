@@ -11,7 +11,6 @@ SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) 
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<AssignNode> n) {
-    //std::cout << "assign visit SE" << std::endl;
     n->accept(modifiesExtractor);
     n->accept(usesExtractor);
     n->accept(stmtExtractor);
@@ -44,7 +43,6 @@ void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<StmtLstNode> n) {
-    //std::cout << "visit StmtLst SE" <<std::endl;
     n->accept(followsExtractor);
     n->accept(followsStarExtractor);
 }
@@ -59,11 +57,9 @@ void SelectiveExtractor::visitProgramTree(std::shared_ptr<TNode> root) {
     while (!stack.empty()) {
         std::shared_ptr<TNode> node = stack.top();
         stack.pop();
-        std::cout << " ---- visiting: " << node->print() << std::endl;
         node->accept(shared_from_this());
 
         for (const auto child: node->getChildren()) {
-            //std::cout << "adding to stack" << node ->print() << std::endl;
             stack.push(child);
         }
     }

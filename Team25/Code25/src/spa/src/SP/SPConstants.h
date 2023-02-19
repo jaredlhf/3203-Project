@@ -11,5 +11,4 @@ namespace SPConstants {
     const std::string IF_TYPE = "if";
 }
 
-
 #endif

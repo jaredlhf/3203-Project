@@ -53,7 +53,6 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> uti
     if (!ExpressionParser::isExpr((rhs))) {
         throw std::invalid_argument("Invalid expression ");
     }
-    std::cout<< rhs << " " << utils->getCurrentStmtNo()<<endl;
     AssignNode node = AssignNode(utils->getCurrentStmtNo(), lhs, rhs);
     utils->expect(std::make_shared<Semicolon>());
 
@@ -65,7 +64,6 @@ std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<SPParserUtils> util
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), var);
-    std::cout<< var << " " << utils->getCurrentStmtNo()<<endl;
     return std::make_shared<PrintNode>(node);
 }
 
@@ -100,7 +98,6 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> util
     StmtLstNode stmtLstNode = parseStmtLst(utils, tokenizer);
     utils->expect(std::make_shared<RightBrace>());
 
-    std::cout<< rhs << " " << lineNo<<endl;
     WhileNode node = WhileNode(lineNo, rhs, std::make_shared<StmtLstNode>(stmtLstNode));
     return std::make_shared<WhileNode>(node);
 }
@@ -108,7 +105,7 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> util
 std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<If>());
-    //parse conditional expr
+
     std::string rhs = "";
     vector<string> rhsTokens;
     while(tokenizer->peek() != "then") {
@@ -137,7 +134,6 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, 
     utils->expect(std::make_shared<RightBrace>());
 
     IfNode node = IfNode(lineNo, rhs, std::make_shared<StmtLstNode>(ifLstNode), std::make_shared<StmtLstNode>(elseLstNode));
-    std::cout<< rhs << " " << lineNo<<endl;
     return std::make_shared<IfNode>(node);;
 }
 
@@ -145,7 +141,6 @@ std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<SPParserUtils> utils
     utils->expect(std::make_shared<Read>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
-    std::cout<< var << " " << utils->getCurrentStmtNo()<<endl;
     ReadNode node = ReadNode(utils->getCurrentStmtNo(), var);
     return std::make_shared<ReadNode>(node);;
 }

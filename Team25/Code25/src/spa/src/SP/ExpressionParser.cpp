@@ -125,8 +125,6 @@ bool ExpressionParser::isCondExpr(std::string expr) {
     // remove ()
     // for ! case
     if (isRelExpr(expr)) {
-//        std::cout<<expr<<endl;
-//        std::cout<<"test"<<endl;
         return true;
     } else if (expr[0] == '!') {
         //erase !
@@ -135,8 +133,6 @@ bool ExpressionParser::isCondExpr(std::string expr) {
         //remove ()
         expr.erase(bracket);
         expr.erase(expr.begin());
-//        std::cout << bracket << endl;
-//        std::cout << expr << " test1 " << endl;
         return isCondExpr((expr));
         // for && case
     }
@@ -157,9 +153,6 @@ bool ExpressionParser::isCondExpr(std::string expr) {
                 //erase last )
                 secondSub.pop_back();
             }
-//            std::cout << expr << " test2 " << endl;
-//            std::cout << firstSub << endl;
-//            std::cout << secondSub << endl;
             return isCondExpr(firstSub) && isCondExpr((secondSub));
         }
     }
@@ -181,9 +174,6 @@ bool ExpressionParser::isCondExpr(std::string expr) {
                 //erase last )
                 secondSub.pop_back();
             }
-//            std::cout << expr << " test3 " << endl;
-//            std::cout << firstSub << endl;
-//            std::cout << secondSub << endl;
             return isCondExpr(firstSub) && isCondExpr((secondSub));
         }
     }
