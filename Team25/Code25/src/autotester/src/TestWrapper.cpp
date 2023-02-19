@@ -17,7 +17,7 @@ TestWrapper::TestWrapper() {
     sp = SourceProcessor();
     PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
     PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
-    Qps qps1 = Qps(std::make_shared<PkbRetriever>(ret));
+    Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
 
 }
 
@@ -32,7 +32,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 // call your evaluator to evaluate the query here
   // ...code to evaluate query...
 
-    qps1.query(query, results);
+    qps.query(query, results);
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
 

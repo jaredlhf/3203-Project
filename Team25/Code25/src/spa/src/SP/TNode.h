@@ -136,7 +136,6 @@ public:
     std::vector<std::shared_ptr<TNode>> getChildren() override;
     void accept(std::shared_ptr<DesignExtractor> extractor) override;
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
-//    void print() const override{ std::cout << "proc" <<endl;  }
 private:
     std::shared_ptr<StmtLstNode> stmtLst;
 };

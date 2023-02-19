@@ -44,7 +44,7 @@ class TestWrapper : public AbstractWrapper {
 
     PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
     PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
-    Qps qps1 = Qps(std::make_shared<PkbRetriever>(ret));
+    Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
  public:
   // default constructor
   TestWrapper();
