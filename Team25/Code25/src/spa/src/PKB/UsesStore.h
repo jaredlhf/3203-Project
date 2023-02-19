@@ -7,11 +7,12 @@
 #include <unordered_map>
 #include <string>
 
+/* Storage class for Uses relationship between statements and variables.
+In Uses(a, v), statement line number is a and variable name is v.*/
 class UsesStore {
 private:
 	std::unordered_map<int, std::unordered_set<std::string>> varStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
-
 
 public:
 	UsesStore();
