@@ -37,31 +37,76 @@ SCENARIO("Working version of PkbPopulator") {
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
-				REQUIRE(vsPointer -> size() == 0);
+				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
-				REQUIRE(vsPointer -> size() == 1);
+				REQUIRE(vsPointer->size() == 1);
 			}
 			THEN("Adding one constant should increase the constant store size by 1") {
-				REQUIRE(csPointer -> size() == 0);
+				REQUIRE(csPointer->size() == 0);
 				pkbPop.addConst(10000);
-				REQUIRE(csPointer -> size() == 1);
+				REQUIRE(csPointer->size() == 1);
 			}
 			THEN("Adding one procedure should increase the procedure store size by 1") {
-				REQUIRE(psPointer -> size() == 0);
+				REQUIRE(psPointer->size() == 0);
 				pkbPop.addProc("sampleProc");
-				REQUIRE(psPointer -> size() == 1);
+				REQUIRE(psPointer->size() == 1);
 			}
 			THEN("Adding one statement should increase the statement store size by 1") {
-				REQUIRE(ssPointer -> size() == 0);
+				REQUIRE(ssPointer->size() == 0);
 				pkbPop.addStmt("assign", 2);
-				REQUIRE(ssPointer -> size() == 1);
+				REQUIRE(ssPointer->size() == 1);
 			}
 			THEN("Adding one follows relationship should increase the follows store size by 1") {
-				REQUIRE(fsPointer -> getAllFollowers().size() == 0);
-				REQUIRE(fsPointer -> getAllFollowees().size() == 0);
+				REQUIRE(fsPointer->getAllFollowers().size() == 0);
+				REQUIRE(fsPointer->getAllFollowees().size() == 0);
 				pkbPop.addFollows(1, 2);
-				REQUIRE(fsPointer -> getAllFollowers().size() == 1);
-				REQUIRE(fsPointer -> getAllFollowees().size() == 1);
+				REQUIRE(fsPointer->getAllFollowers().size() == 1);
+				REQUIRE(fsPointer->getAllFollowees().size() == 1);
+			}
+			THEN("Adding one pattern should increase the LHS pattern store size by 1") {
+				REQUIRE(pattsPointer->LhsAssignStoreSize() == 0);
+				pkbPop.addAssignLhs("x", 1);
+				REQUIRE(pattsPointer->LhsAssignStoreSize() == 1);
+			}
+			THEN("Adding one pattern should increase the RHS pattern store size by 1") {
+				REQUIRE(pattsPointer->RhsAssignStoreSize() == 0);
+				pkbPop.addAssignRhs(1, "x + y");
+				REQUIRE(pattsPointer->RhsAssignStoreSize() == 1);
+			}
+			THEN("Adding one follows star should increase the follows star store size by 1") {
+				REQUIRE(fstarsPointer->getAllFollowers().size() == 0);
+				REQUIRE(fstarsPointer->getAllFollowees().size() == 0);
+				pkbPop.addFollowsStar(1, std::unordered_set<int>({1, 2, 3}));
+				REQUIRE(fstarsPointer->getAllFollowers().size() == 3);
+				REQUIRE(fstarsPointer->getAllFollowees().size() == 1);
+			}
+			THEN("Adding one modifes should increase the modifies store size by 1") {
+				REQUIRE(msPointer->getAllStmt().size() == 0);
+				REQUIRE(msPointer->getAllVar().size() == 0);
+				pkbPop.addModifies(1, "x");
+				REQUIRE(msPointer->getAllStmt().size() == 1);
+				REQUIRE(msPointer->getAllVar().size() == 1);
+			}
+			THEN("Adding one parentsStar should increase the parentsStar store size by 1") {
+				REQUIRE(pStarsPointer->getAllParents().size() == 0);
+				REQUIRE(pStarsPointer->getAllChildren().size() == 0);
+				pkbPop.addParentStar(1, 1);
+				REQUIRE(pStarsPointer->getAllParents().size() == 1);
+				REQUIRE(pStarsPointer->getAllChildren().size() == 1);
+			}
+			THEN("Adding one parent should increase the parent store size by 1") {
+				REQUIRE(parentsPointer->getAllParents().size() == 0);
+				REQUIRE(parentsPointer->getAllChildren().size() == 0);
+				pkbPop.addParent(1, 1);
+				REQUIRE(parentsPointer->getAllParents().size() == 1);
+				REQUIRE(parentsPointer->getAllChildren().size() == 1);
+			}
+			THEN("Adding one uses should increase the uses store size by 1") {
+				REQUIRE(usesPointer->getAllStmt().size() == 0);
+				REQUIRE(usesPointer->getAllVar().size() == 0);
+				pkbPop.addUses(1, "y");
+				REQUIRE(usesPointer->getAllStmt().size() == 1);
+				REQUIRE(usesPointer->getAllVar().size() == 1);
 			}
 		}
 	}
