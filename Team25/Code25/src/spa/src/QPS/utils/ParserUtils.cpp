@@ -123,7 +123,6 @@ bool ParserUtils::isValidExpression(const std::string& s) {
 
 bool ParserUtils::isDesignEntityToken(const std::string& s) {
     if (DESIGN_ENTITIES.find(s) == DESIGN_ENTITIES.end()) {
-        std::cout << "invalid design entity" << std::endl;
         return false;
     }
     return true;
@@ -131,7 +130,6 @@ bool ParserUtils::isDesignEntityToken(const std::string& s) {
 
 bool ParserUtils::isRelRefToken(const std::string& s) {
     if (RELREF.find(s) == RELREF.end()) {
-        std::cout << "invalid relref" << std::endl;
         return false;
     }
     return true;
