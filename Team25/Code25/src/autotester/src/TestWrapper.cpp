@@ -17,7 +17,7 @@ TestWrapper::TestWrapper() {
     sp = SourceProcessor();
     PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
     PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
-    Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
+    Qps qps1 = Qps(std::make_shared<PkbRetriever>(ret));
 
 }
 

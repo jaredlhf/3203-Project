@@ -1,7 +1,7 @@
 #include "QueryParser.h"
 
 int MIN_DECLARATION_LENGTH = 2;
-int SUCH_THAT_LENGTH = 6;
+int SUCH_THAT_LENGTH = 8;
 const std::string SELECT_MARKER = "Select";
 const std::string PATTERN_MARKER = "pattern";
 const std::string OPEN_BRACKET = "(";
@@ -125,16 +125,22 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
 }
 
 std::vector<std::string> QueryParser::validateSuchThatClause(std::vector<std::string> s) {
-    int tokensLength = s.size();
-    if (tokensLength != SUCH_THAT_LENGTH) {
+    if (s.size() != SUCH_THAT_LENGTH) {
         return {};
+    }
+    
+    if (s[0] != SUCHTHAT_MARKER[0] || s[1] != SUCHTHAT_MARKER[1]) {
+        return {};
+    }
+    for (int i = 0; i < 2; i++) {
+        s.erase(s.begin());
     }
 
     if (!ParserUtils::isRelRefToken(s[0])) {
         return {};
     }
 
-    if (s[1] != OPEN_BRACKET || s[tokensLength - 1] != CLOSE_BRACKET) {
+    if (s[1] != OPEN_BRACKET || s[s.size() - 1] != CLOSE_BRACKET) {
         return {};
     }
 
@@ -227,20 +233,23 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     }
 
     // get synonym for select statement
+    bool hasSeenSelectToken = false;
     while (ptr < tokenLength) {
-
-        if (afterSynonym) {
+        if (hasSeenSelectToken && afterSynonym) {
             if (tokens[ptr] != PATTERN_MARKER && tokens[ptr] != SUCHTHAT_MARKER[0]) {
                 std::cout << "invalid select synonym" << std::endl;
-                return generateSyntaxErrorResponse(); 
+                return generateSyntaxErrorResponse();
             }
             if (tokens[ptr] == PATTERN_MARKER || tokens[ptr] == SUCHTHAT_MARKER[0]) {
                 break;
             }
         }
-
-        if (tokens[ptr] != SELECT_MARKER) {
-            // check if synonym used in select statement exists in declaration
+        if (tokens[ptr] == SELECT_MARKER && !hasSeenSelectToken) {
+            ptr++;
+            hasSeenSelectToken = true;
+            continue;
+        }
+        if (hasSeenSelectToken) {
             for (auto& element: declarations) {
                 if (element->matchesName(tokens[ptr])) {
                     synonym = element;
@@ -250,13 +259,12 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             }
             if (!afterSynonym) {
                 hasSemanticError = true;
+                break;
             }
-
-            
         }
+
         ptr++;
     }
-
     while (ptr < tokenLength) {
         if (tokens[ptr] == DECLARATION_END_TOKEN) {
             std::cout << "invalid semicolon token after declarations" << std::endl;
@@ -289,7 +297,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
             assignSynonym = response.getAssignSyn();
         }
-        if (tokens[ptr] == SUCHTHAT_MARKER[1]) {
+
+        if (tokens[ptr] == SUCHTHAT_MARKER[0]) {
             std::vector<std::string> suchThatTokens;
             while (ptr < tokenLength) {
                 if (tokens[ptr] == CLOSE_BRACKET) {
@@ -299,7 +308,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 suchThatTokens.push_back(tokens[ptr]);
                 ptr++;
             }
-            suchThatTokens.erase(suchThatTokens.begin());
+
             std::vector<std::string> suchThatArgs = validateSuchThatClause(suchThatTokens);
             if (suchThatArgs.size() == 0) {
                 return generateSyntaxErrorResponse();
