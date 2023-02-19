@@ -7,7 +7,7 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
-#include "SourceProcessor.h"
+#include "SP/SourceProcessor.h"
 #include "PKB/PkbRetriever.h"
 #include "PKB/PkbPopulator.h"
 #include "QPS/Qps.h"
@@ -16,7 +16,6 @@
 class TestWrapper : public AbstractWrapper {
  private:
     SourceProcessor sp;
-    Qps qps;
 	VariableStore vs;
 	ConstantStore cs;
 	FollowsStore fs;
@@ -43,8 +42,9 @@ class TestWrapper : public AbstractWrapper {
 	std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 	std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-    PkbRetriever pkbRetriever;
-    PkbPopulator pkbPopulator;
+    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    Qps qps1 = Qps(std::make_shared<PkbRetriever>(ret));
  public:
   // default constructor
   TestWrapper();

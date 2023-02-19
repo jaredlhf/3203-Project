@@ -2,13 +2,11 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_executable(unit_testing ${srcs} 
 "src/TestEntityStore.cpp"
-"src/TestExpressionParser.cpp"
 "src/TestFollowsStar.cpp"
 "src/TestFollowsStore.cpp"
 "src/TestModifiesStore.cpp"
 "src/TestParentStar.cpp"
 "src/TestParentStore.cpp"
-"src/TestParser.cpp"
 "src/TestPkbPopulator.cpp"
 "src/TestPkbRetriever.cpp"
 "src/TestQPS.cpp"
@@ -29,11 +27,15 @@ add_executable(unit_testing ${srcs}
 "src/TestQueryEvaluator.cpp"
 "src/TestQueryParser.cpp"
 "src/TestQueryTokenizer.cpp"
-"src/TestSourceProcessor.cpp"
 "src/TestStmtStore.cpp"
-"src/TestTNode.cpp"
-"src/TestTokenizer.cpp"
 "src/TestUsesStore.cpp"
-)
+"src/TestTNode.cpp"
+"src/TestSourceProcessor.cpp"
+"src/TestTokenizer.cpp"
+"src/TestParser.cpp"
+"src/TestExpressionParser.cpp"
+src/TestDesignExtractor.cpp
+src/TestStmtParser.cpp)
+
 target_link_libraries(unit_testing spa)
 

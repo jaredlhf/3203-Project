@@ -1,5 +1,5 @@
 
-#include "SourceProcessor.h"
+#include "SP/SourceProcessor.h"
 #include "catch.hpp"
 
 #include "PKB/PkbPopulator.h"
@@ -63,10 +63,29 @@ TEST_CASE("Test processSimple()") {
     PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
-                                 "  x = 2;\n"
-                                 "  z = 3;\n"
-                                 "  } "
-                                ;
+                            "  x = 2+d;\n"
+                            "  if (a < b) then {\n"
+                            "    y = z;\n"
+                            "    i = j + k;\n"
+                            "  } else {\n"
+                            "    W = n;\n"
+                            "  }\n"
+                            "  while (c > d) {\n"
+                            "    U = o + p;\n"
+                            "  }\n"
+                            "  read z;\n"
+                            "  h = 232141;\n"
+                            "  f1 = h3;\n"
+                            "}";
+
+
+//            "procedure Example {\n"
+//                                 "  x = 2;\n"
+//                                 "  z = 3;\n"
+//                                 "  read x;\n"
+//                            "  print x;\n"
+//                                 "  } "
+//                                ;
 
 
     std::ofstream file(fileLocation);
@@ -74,7 +93,8 @@ TEST_CASE("Test processSimple()") {
     file.close();
     //std::cout << vs.getAllVar().size() << std::endl;
 
-    sp.processSimple(fileLocation, &pkbPop);
+    sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
+
 
     //std::cout << vs.getAllVar().size() << std::endl;
 

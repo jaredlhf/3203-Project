@@ -2,8 +2,6 @@
 
 #include "catch.hpp"
 
-
-
 SCENARIO("Populating stores for constants, procedures, and variables") {
 	GIVEN("New instances of constant store, procedure store, variable store") {
 		ConstantStore constStore;
@@ -70,3 +68,4 @@ SCENARIO("Populating stores for constants, procedures, and variables") {
 
 	}
 }
+

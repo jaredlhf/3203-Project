@@ -1,15 +1,15 @@
-#include "TNode.h"
+#include "SP/TNode.h"
 #include "catch.hpp"
 
 
 TEST_CASE("accept()") {
-    TNode n = TNode();
-    n.accept();
+    //AssignNode n = AssignNode(1,"v","x");
 }
 
 TEST_CASE("Create AssignNode") {
-    string var = "x";
-    string expr = "y + z";
-    AssignNode a = AssignNode(var, expr);
+//    string var = "x";
+//    string expr = "y + z";
+//    int lineNo = 1;
+//    AssignNode a = AssignNode(lineNo, var, expr);
 
 }

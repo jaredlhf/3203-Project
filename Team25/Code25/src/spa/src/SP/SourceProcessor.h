@@ -8,10 +8,12 @@ using namespace std;
 
 #include "Tokenizer.h"
 #include "Parser.h"
+#include "SelectiveExtractor.h"
+
 #include "PKB/PkbPopulator.h"
 
 class SourceProcessor {
 public:
     std::string processFile(std::string &filename);
-    void processSimple(std::string &filename, PkbPopulator* pkbPopulator);
+    void processSimple(std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator);
 };

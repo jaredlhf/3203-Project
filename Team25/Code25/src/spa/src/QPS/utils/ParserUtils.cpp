@@ -61,10 +61,9 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
     }
 
     if (isValidNaming(s)) {
-        std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, s);
         for (auto& d : declarations) {
-            if (d->compare(varSyn)) {
-                return varSyn;
+            if (d->getName() == s) {
+                return d;
             }
         }
         return Synonym::create(Constants::SEMANTIC_ERROR, "");
@@ -84,7 +83,6 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
     }
 
     if (isValidNaming(s)) {
-        std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, s);
         for (auto& d : declarations) {
             if (d->getName() == s) {
                 return d;

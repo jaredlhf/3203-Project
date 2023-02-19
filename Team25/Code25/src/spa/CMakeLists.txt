@@ -1,8 +1,7 @@
 file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers} 
-"src/ExpressionParser.cpp"
-"src/ExpressionParser.h"
+
 "src/PKB/EntityInterface.h"
 "src/PKB/EntityStore.h"
 "src/PKB/FollowsStarStore.cpp"
@@ -26,8 +25,6 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/StatementStore.h"
 "src/PKB/UsesStore.cpp"
 "src/PKB/UsesStore.h"
-"src/Parser.cpp"
-"src/Parser.h"
 "src/QPS/ParserResponse.cpp"
 "src/QPS/ParserResponse.h"
 "src/QPS/Qps.cpp"
@@ -57,14 +54,26 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/utils/ParserUtils.h"
 "src/QPS/utils/StringUtils.cpp"
 "src/QPS/utils/StringUtils.h"
-"src/SourceProcessor.cpp"
-"src/SourceProcessor.h"
-"src/TNode.cpp"
-"src/TNode.h"
-"src/Token.cpp"
-"src/Token.h"
-"src/Tokenizer.cpp"
-"src/Tokenizer.h")
+"src/SP/Tokenizer.cpp"
+"src/SP/Tokenizer.h"
+"src/SP/SourceProcessor.cpp"
+"src/SP/SourceProcessor.h"
+"src/SP/Token.cpp"
+"src/SP/Token.h"
+"src/SP/ExpressionParser.cpp"
+"src/SP/ExpressionParser.h"
+src/SP/Parser.cpp
+src/SP/DesignExtractor.cpp
+src/SP/TNode.cpp
+src/SP/StmtParser.cpp
+src/SP/StmtParser.h
+src/SP/SPParserUtils.cpp
+src/SP/SPParserUtils.h
+src/SP/DesignExtractor.h
+src/SP/SelectiveExtractor.cpp
+src/SP/SelectiveExtractor.h
+src/SP/SPConstants.h)
+
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
