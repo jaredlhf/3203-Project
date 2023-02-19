@@ -306,7 +306,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 				list<string> expected = { "y" };
 				list<string> res;
 
-				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(a1,v1) pattern a1 (_,_\"y\"_) ";
+				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(a1,v1) pattern a1 (_,_\"y\"_)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
