@@ -187,4 +187,5 @@ bool ExpressionParser::isCondExpr(std::string expr) {
             return isCondExpr(firstSub) && isCondExpr((secondSub));
         }
     }
+    return false;
 }

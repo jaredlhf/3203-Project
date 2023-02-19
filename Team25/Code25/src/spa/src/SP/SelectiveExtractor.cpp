@@ -7,20 +7,24 @@ SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) 
     followsStarExtractor = make_shared<FollowsStarExtractor>(populator);
     parentsExtractor = make_shared<ParentsExtractor>(populator);
     parentsStarExtractor = make_shared<ParentsStarExtractor>(populator);
+    stmtExtractor = make_shared<StatementExtractor>(populator);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<AssignNode> n) {
     //std::cout << "assign visit SE" << std::endl;
     n->accept(modifiesExtractor);
     n->accept(usesExtractor);
+    n->accept(stmtExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<PrintNode> n) {
     n->accept(usesExtractor);
+    n->accept(stmtExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<ReadNode> n) {
     n->accept(modifiesExtractor);
+    n->accept(stmtExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<IfNode> n) {
@@ -28,6 +32,7 @@ void SelectiveExtractor::visit(std::shared_ptr<IfNode> n) {
     n->accept(modifiesExtractor);
     n->accept(parentsExtractor);
     n->accept(parentsStarExtractor);
+    n->accept(stmtExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
@@ -35,6 +40,7 @@ void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
     n->accept(modifiesExtractor);
     n->accept(parentsExtractor);
     n->accept(parentsStarExtractor);
+    n->accept(stmtExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<StmtLstNode> n) {
