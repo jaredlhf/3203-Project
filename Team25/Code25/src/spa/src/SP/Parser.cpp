@@ -1,9 +1,9 @@
 #include "Parser.h"
 
 
-Parser::Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> populator) {
+Parser::Parser(std::shared_ptr<Tokenizer> t) {
     this->tokenizer = t;
-    this->pkbPopulator = populator;
+    //this->pkbPopulator = populator;
     this->utils = std::make_shared<ParserUtils>(t);
 };
 

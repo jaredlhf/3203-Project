@@ -11,6 +11,10 @@
 using namespace std;
 Tokenizer tok;
 
+DesignExtractor::DesignExtractor(std::shared_ptr<PkbPopulator> populator) {
+    this->pkbPopulator = populator;
+}
+
 bool DesignExtractor::isAssignNode(std::shared_ptr<TNode> n) {
     return (dynamic_pointer_cast<AssignNode>(n) != nullptr);
 }

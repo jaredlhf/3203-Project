@@ -16,10 +16,10 @@
 
 class Parser {
 public:
-    Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<PkbPopulator> populator);
+    Parser(std::shared_ptr<Tokenizer> t);
     ProcedureNode parseProgram();
 private:
-    std::shared_ptr<PkbPopulator> pkbPopulator;
+    //std::shared_ptr<PkbPopulator> pkbPopulator;
     std::shared_ptr<Tokenizer> tokenizer;
     std::shared_ptr<ParserUtils> utils;
 

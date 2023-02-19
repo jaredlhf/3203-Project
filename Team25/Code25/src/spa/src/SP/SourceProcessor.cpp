@@ -21,26 +21,12 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
     std::cout << "----------- Done Tokenizing ----------- " << std::endl;
     std::cout << "----------- Start Parsing ----------- " << std::endl;
 
-    Parser p(std::make_shared<Tokenizer>(t), pkbPopulator);
+    Parser p(std::make_shared<Tokenizer>(t));
     std::shared_ptr<TNode> root = std::make_shared<ProcedureNode>(p.parseProgram());
 
     std::cout << "----------- Done Parsing ----------- " << std::endl;
     std::cout << "----------- Start Traversing ----------- " << std::endl;
 
-    std::shared_ptr<SelectiveExtractor> se = std::make_shared<SelectiveExtractor>();
-    std::stack<shared_ptr<TNode>> stack;
-    stack.push(root);
-    while (!stack.empty()) {
-        std::shared_ptr<TNode> node = stack.top();
-        stack.pop();
-        std::cout << " ---- visiting: " << node->print() << std::endl;
-        node->accept(se);
-
-        for (const auto child: node->getChildren()) {
-            //std::cout << "adding to stack" << node ->print() << std::endl;
-            stack.push(child);
-        }
-    }
-
-
+    std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator);
+    selectiveExtractor->visitProgramTree(root);
 }
