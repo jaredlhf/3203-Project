@@ -100,8 +100,6 @@ bool ExpressionParser::isRelExpr(std::string expr) {
     std::vector<string> double_rel_ops({ ">=", "<=", "==", "!="});
     int index;
     if (checkParenthesis(expr)) {
-//        expr.erase(std::remove(expr.begin(), expr.end(), '('), expr.end());
-//        expr.erase(std::remove(expr.begin(), expr.end(), ')'), expr.end());
         for (string i: double_rel_ops) {
             if (expr.find(i) != std::string::npos) {
                 index = expr.find(i);
