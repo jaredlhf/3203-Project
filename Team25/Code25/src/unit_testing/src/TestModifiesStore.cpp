@@ -1,81 +1,52 @@
 #include "PKB/ModifiesStore.h"
 
 #include "catch.hpp"
-using namespace std;
 
-ModifiesStore modStore;
+SCENARIO("Populating modifies store") {
+	GIVEN("New instance of modifies store") {
+		ModifiesStore modStore;
 
+		THEN("It should start empty") {
+			REQUIRE(modStore.getAllStmt().size() == 0);
+			REQUIRE(modStore.getAllVar().size() == 0);
+		}
 
-TEST_CASE("Empty mod store") {
-	unordered_set<int> outputStmt({ });
-	unordered_set<string> outputVar({ });
-	
-	modStore.clear();
+		WHEN("One modifies is added") {
+			modStore.add(1, "x");
 
-	REQUIRE(modStore.getAllStmt() == outputStmt);
-	REQUIRE(modStore.getAllVar() == outputVar);
+			THEN("Statement should be mapped to variable") {
+				REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
+				REQUIRE(modStore.getVar(1) == "x");
+			}
+
+			WHEN("Duplicate modifies is added") {
+				modStore.add(1, "x");
+
+				THEN("Modifies store should remain the same") {
+					REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
+					REQUIRE(modStore.getVar(1) == "x");
+				}
+			}
+		}
+
+		WHEN("Three modifies are added") {
+			modStore.add(1, "x");
+			modStore.add(2, "x");
+			modStore.add(3, "y");
+
+			THEN("There should be 3 statements and 2 variables") {
+				REQUIRE(modStore.getAllStmt() == std::unordered_set<int>({ 1, 2, 3 }));
+				REQUIRE(modStore.getAllVar() == std::unordered_set<std::string>({ "x", "y"}));
+			}
+
+			THEN("Statements should be mapped to variables correctly") {
+				REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({1, 2}));
+				REQUIRE(modStore.getStmt("y") == std::unordered_set<int>({ 3 }));
+				REQUIRE(modStore.getVar(1) == "x");
+				REQUIRE(modStore.getVar(2) == "x");
+				REQUIRE(modStore.getVar(3) == "y");
+			}
+		}
+	}
 }
 
-TEST_CASE("Add one mod") {
-	unordered_set<int> outputStmt({ 2 });
-	string outputVarA = "x";
-	unordered_set<string> outputVarB({ "x" });
-	
-	modStore.clear();
-	modStore.add(2, "x");
-
-	REQUIRE(modStore.getVar(2) == outputVarA);
-	REQUIRE(modStore.getStmt("x") == outputStmt);
-	REQUIRE(modStore.hasVar("x"));
-	REQUIRE(modStore.hasStmt(2));
-	REQUIRE(modStore.getAllStmt() == outputStmt);
-	REQUIRE(modStore.getAllVar() == outputVarB);
-}
-
-TEST_CASE("Add two mod") {
-	unordered_set<int> outputStmtA({ 2 });
-	unordered_set<int> outputStmtB({ 3, 4 });
-	unordered_set<int> outputStmtC({ 2, 3, 4 });
-	string outputVarA({ "x" });
-	unordered_set<string> outputVarB({ "x", "y"});
-
-	modStore.clear();
-	modStore.add(2, "x");
-	modStore.add(3, "y");
-	modStore.add(4, "y");
-
-	REQUIRE(modStore.getVar(2) == outputVarA);
-	REQUIRE(modStore.getStmt("x") == outputStmtA);
-	REQUIRE(modStore.getStmt("y") == outputStmtB);
-	REQUIRE(modStore.hasVar("x"));
-	REQUIRE(modStore.hasVar("y"));
-	REQUIRE(modStore.hasStmt(2));
-	REQUIRE(modStore.getAllStmt() == outputStmtC);
-	REQUIRE(modStore.getAllVar() == outputVarB);
-}
-
-TEST_CASE("Add multiple modifies") {
-	unordered_set<int> outputStmtA({ 2, 3 });
-	unordered_set<int> outputStmtB({ 2 });
-	unordered_set<int> outputStmtC({ 3 });
-	string outputVarA = "y" ;
-	unordered_set<string> outputVarB({ "x","v" });
-	unordered_set<string> outputVarC({ "x","y" });
-
-	modStore.clear();
-	modStore.add(2, "x");
-	modStore.add(2, "y");
-	modStore.add(3, "v");
-	modStore.add(3, "x");
-
-	REQUIRE(modStore.getVar(2) == outputVarA);
-	REQUIRE(modStore.getStmt("x") == outputStmtA);
-	REQUIRE(modStore.getStmt("y") == outputStmtB);
-	REQUIRE(modStore.hasVar("x"));
-	REQUIRE(modStore.hasVar("y"));
-	REQUIRE(modStore.hasVar("v"));
-	REQUIRE(modStore.hasStmt(2));
-	REQUIRE(modStore.hasStmt(3));
-	REQUIRE(modStore.getAllStmt() == outputStmtA);
-	REQUIRE(modStore.getAllVar() == outputVarC);
-}

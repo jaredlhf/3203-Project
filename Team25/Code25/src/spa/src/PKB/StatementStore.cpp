@@ -10,12 +10,12 @@ void StatementStore::addStmt(std::string stmtType, int lineNum) {
 	stmtStore[stmtType].emplace(lineNum);
 }
 
-unordered_set<int> StatementStore::getAllStmt(std::string stmtType) {
+std::unordered_set<int> StatementStore::getAllStmt(std::string stmtType) {
 	if (has(stmtType)) {
 		return stmtStore[stmtType];
 	}
 	else {
-		return unordered_set<int>{};
+		return std::unordered_set<int>{};
 	}
 }
 
