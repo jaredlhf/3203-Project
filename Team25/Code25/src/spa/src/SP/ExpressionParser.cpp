@@ -107,15 +107,18 @@ bool ExpressionParser::isCondExpr(std::string expr) {
     } else if (expr[0] == '!') {
         //erase !
         expr.erase(expr.begin());
-        int bracket = matchingBracket(expr.substr(1));
-        //remove ()
-        expr.erase(bracket);
-        expr.erase(expr.begin());
+        if(checkParenthesis(expr)) {
+            int bracket = matchingBracket(expr.substr(1));
+            //remove ()
+            expr.erase(bracket);
+            expr.erase(expr.begin());
 //        std::cout << bracket << endl;
 //        std::cout << expr << " test1 " << endl;
-        return isCondExpr((expr));
-        // for && case
+            return isCondExpr((expr));
+        }
+        return false;
     }
+    // for && case
     if ((expr.find("&&") != std::string::npos)) {
         if (checkParenthesis(expr.substr(0, expr.find("&&")))) {
             index = expr.find("&&");
