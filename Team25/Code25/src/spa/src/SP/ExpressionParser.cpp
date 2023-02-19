@@ -7,9 +7,6 @@
 
 using namespace std;
 
-std::regex terms("(\\w+)");
-std::regex validExpression("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*[+\\*\\-%\\/]\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
-
 bool ExpressionParser::isNumber(std::string str)
 {
     std::string::const_iterator it = str.begin();
@@ -36,7 +33,7 @@ bool ExpressionParser::isName(std::string var)
 bool ExpressionParser::checkParenthesis(std::string expr) {
     std::stack<char> stack;
 
-    for (size_t i = 0; i < expr.length(); i++) {
+    for (int i = 0; i < expr.length(); i++) {
         if (expr.at(i) == '(') {
             stack.push('(');
         }
@@ -49,7 +46,6 @@ bool ExpressionParser::checkParenthesis(std::string expr) {
             }
         }
     }
-
     if (stack.empty()) {
         return true;
     }
@@ -74,18 +70,19 @@ int ExpressionParser::matchingBracket(std::string str) {
     }
 }
 
-bool ExpressionParser::isExpr(std::string expr) {
-    if (regex_match(expr, validExpression)) {
-        if (checkParenthesis(expr)) {
+bool ExpressionParser::isExpr(std::string str) {
+    //regex for char string
+    std::regex term("(\\w+)");
+    std::regex exprRegex("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*[+\\*\\-%\\/]\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
+    if (regex_match(str, exprRegex)) {
+        if (checkParenthesis(str)) {
             std::smatch result;
-
-            while (std::regex_search(expr, result, terms)) {
-                bool isValidName = isName(result[0]);
-                bool isValidInteger = isNumber(result[0]);
-                if (!isValidName && !isValidInteger) {
+            while (std::regex_search(str, result, term)) {
+                // check if char string is a valid name or number
+                if (!(isName(result[0]) || isNumber(result[0]))) {
                     return false;
                 }
-                expr = result.suffix().str();
+                str = result.suffix().str();
             }
             return true;
         }
@@ -103,8 +100,6 @@ bool ExpressionParser::isRelExpr(std::string expr) {
     std::vector<string> double_rel_ops({ ">=", "<=", "==", "!="});
     int index;
     if (checkParenthesis(expr)) {
-//        expr.erase(std::remove(expr.begin(), expr.end(), '('), expr.end());
-//        expr.erase(std::remove(expr.begin(), expr.end(), ')'), expr.end());
         for (string i: double_rel_ops) {
             if (expr.find(i) != std::string::npos) {
                 index = expr.find(i);
