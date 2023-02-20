@@ -1,16 +1,19 @@
 procedure computeCentroid {
-     
-      while ((x != 0) && (y != 6)) {
-          count1 = count2 + 8;
+      count = 0;
+      cenX = 0;
+      cenY = 0;
+      
+      while ((x != 0) && (y != 0)) {
+          count = count + 1;
+          cenX = cenX + x;
+          cenY = cenY + y;
           
-	if (count3 == 0) then {
+        }
+      if (count == 0) then {
           flag = 1;
         } else {
-          cenX = cenX1 / count;
-          if (x > 2) then { w = e + 3; } else { r = t *5; } 
+          cenX = cenX / count;
+          cenY = cenY / count;
         }
-          
-        }
-      
       normSq = cenX * cenX + cenY * cenY;
     }
