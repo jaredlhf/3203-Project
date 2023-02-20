@@ -1,6 +1,16 @@
-procedure Example {
-  x = 2 + x;
-		z = 3 + y + (a + b);
-  h = 232141;
-  f1 = h3;
-}
+procedure computeCentroid {
+     
+      while ((x != 0) && (y != 6)) {
+          count1 = count2 + 8;
+          
+	if (count3 == 0) then {
+          flag = 1;
+        } else {
+          cenX = cenX1 / count;
+          if (x > 2) then { w = e + 3; } else { r = t *5; } 
+        }
+          
+        }
+      
+      normSq = cenX * cenX + cenY * cenY;
+    }

@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 #include "QueryTokenizer.h"
 #include "QueryParser.h"
 #include "ParserResponse.h"
@@ -11,12 +12,12 @@
 
 class Qps {
 private:
-	PkbRetriever* pkbRetriever;
+	std::shared_ptr<PkbRetriever> pkbRetriever;
 	QueryTokenizer tokenizer;
 	QueryParser parser;
 	QueryEvaluator evaluator;
 
 public:
-	Qps(PkbRetriever* pkbRetriever);
+	Qps(std::shared_ptr<PkbRetriever> pkbRetriever);
 	void query(const std::string& queryStr, std::list<std::string>& uiList);
 };

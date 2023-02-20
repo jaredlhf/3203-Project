@@ -27,6 +27,15 @@ std::shared_ptr<Value> Value::create(const std::string& val) {
 	return std::make_shared<Value>(Value(val));
 }
 
-const std::string& Value::getVal() const {
+// Value class functions
+const std::string& Value::getVal() {
 	return this->val;
+}
+
+bool Value::isInt() {
+	return StringUtils::isValidInt(this->val);
+}
+
+bool Value::compare(std::shared_ptr<Value> other) {
+	return this->val == other->val;
 }

@@ -7,7 +7,8 @@
 #include <unordered_map>
 #include <string>
 
-
+/* Storage class for Modifies relationship between a statement and variable. 
+In Modifies(a, v), statement line number is a and variable name is v.*/
 class ModifiesStore {
 private:
 	std::unordered_map<int, std::string> varStore;

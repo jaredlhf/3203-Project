@@ -46,7 +46,7 @@ bool ParentStore::hasChildren(int lineNum) {
 	}
 }
 
-unordered_set<int> ParentStore::getAllParents() {
+std::unordered_set<int> ParentStore::getAllParents() {
 	std::unordered_set<int> parentList;
 	for (const auto& [key, value] : parentStore) {
 		parentList.insert(value);
@@ -54,7 +54,7 @@ unordered_set<int> ParentStore::getAllParents() {
 	return parentList;
 }
 
-unordered_set<int> ParentStore::getAllChildren() {
+std::unordered_set<int> ParentStore::getAllChildren() {
 	std::unordered_set<int> childrenList;
 	for (const auto& [key, value] : childrenStore) {
 		childrenList.insert(value.begin(), value.end());

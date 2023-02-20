@@ -5,21 +5,25 @@
 using namespace std;
 
 #include "PkbRetriever.h"
-#include "FollowsStore.h"
-#include "StatementStore.h"
-#include "EntityStore.h"
 
 /*
  * Constructor class for PkbRetriever
  * param: VarStorage* varStore
  */
 
-PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore) {
+PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesStore> usesStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
 	this->procedureStorage = procedureStore;
 	this->statementStorage = statementStore;
+	this->patternStorage = patternStore;
+	this->followsStarStorage = followsStarStore;
+	this->modifiesProcStorage = modifiesProcStore;
+	this->modifiesStorage = modifiesStore;
+	this->parentStarStorage = parentStarStore;
+	this->parentStorage = parentStore;
+	this->usesStorage = usesStore;
 };
 
 std::unordered_set<std::string> PkbRetriever::getAllVar() {
@@ -52,4 +56,50 @@ std::unordered_set<std::string> PkbRetriever::getAllProc() {
 
 std::unordered_set<int> PkbRetriever::getAllStmt(std::string stmtType) {
 	return this->statementStorage->getAllStmt(stmtType);
+}
+
+std::unordered_set<int> PkbRetriever::getAssignLhs(std::string leftVar) {
+	return this->patternStorage->getAssignLhs(leftVar);
+}
+	
+std::string PkbRetriever::getAssignRhs(int stmtNo) {
+	return this->patternStorage->getAssignRhs(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getFolloweeStar(int follower) {
+	return this->followsStarStorage->getFolloweeStar(follower);
+}
+
+std::unordered_set<int> PkbRetriever::getFollowerStar(int followee) {
+	return this->followsStarStorage->getFollowerStar(followee);
+}
+
+std::string PkbRetriever::getModVar(int lineNum) {
+	return this->modifiesStorage->getVar(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getModStmt(std::string varName) {
+	return this->modifiesStorage->getStmt(varName);
+}
+
+std::unordered_set<int> PkbRetriever::getParentStar(int child) {
+	return this->parentStarStorage->getParentStar(child);
+}
+std::unordered_set<int> PkbRetriever::getChildrenStar(int parent) {
+	return this->parentStarStorage->getChildrenStar(parent);
+}
+
+int PkbRetriever::getParent(int child) {
+	return this->parentStorage->getParent(child);
+}
+
+std::unordered_set<int> PkbRetriever::getChildren(int parent) {
+	return this->parentStorage->getChildren(parent);
+}
+
+std::unordered_set<std::string> PkbRetriever::getUsesVar(int lineNum) {
+	return this->usesStorage->getVar(lineNum);
+}
+std::unordered_set<int> PkbRetriever::getUsesStmt(std::string varName) {
+	return this->usesStorage->getStmt(varName);
 }

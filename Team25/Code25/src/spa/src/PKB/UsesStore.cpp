@@ -7,11 +7,11 @@
 UsesStore::UsesStore() {}
 
 void UsesStore::add(int lineNum, std::string varName) {
-	varStore[lineNum] = varName;
+	varStore[lineNum].emplace(varName);
 	stmtStore[varName].emplace(lineNum);
 }
 
-std::string UsesStore::getVar(int lineNum) {
+std::unordered_set<std::string> UsesStore::getVar(int lineNum) {
 	if (hasStmt(lineNum)) {
 		return varStore[lineNum];
 	}
@@ -25,7 +25,7 @@ std::unordered_set<int> UsesStore::getStmt(std::string varName) {
 		return stmtStore[varName];
 	}
 	else {
-		return std::unordered_set<int>{};
+		return {};
 	}
 }
 
@@ -48,11 +48,11 @@ bool UsesStore::hasStmt(int lineNum) {
 }
 
 std::unordered_set<std::string> UsesStore::getAllVar() {
-	std::unordered_set<string> varList;
-	
+	std::unordered_set<std::string> varList;
+
 	for (const auto& [key, value] : varStore) {
-			varList.insert(value);
-		}
+		varList.insert(value.begin(), value.end());
+	}
 	return varList;
 }
 

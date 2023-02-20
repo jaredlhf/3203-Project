@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class Constants {
 public:
@@ -28,4 +29,14 @@ public:
 	static const std::string PATTERN;
 	static const std::string WILDCARD;
 
+	enum class ClauseResult{
+		SYN_ERR = 0,
+		SEM_ERR = 1,
+		NO_MATCH = 2,
+		OK = 3
+	};
+
+	// ClauseResult related functions
+	static Constants::ClauseResult getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2);
+	static Constants::ClauseResult getLowerBound(std::vector<Constants::ClauseResult> clauseList);
 };

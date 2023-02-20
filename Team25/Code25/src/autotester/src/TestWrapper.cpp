@@ -3,23 +3,28 @@
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
 AbstractWrapper* WrapperFactory::createWrapper() {
-  if (wrapper == 0) wrapper = new TestWrapper;
+  if (wrapper == 0) wrapper = new TestWrapper();
   return wrapper;
 }
 // Do not modify the following line
 volatile bool AbstractWrapper::GlobalStop = false;
 
+
 // a default constructor
-TestWrapper::TestWrapper() : pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer), pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer), qps(&pkbRetriever)  {
+TestWrapper::TestWrapper() {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
-  sp = SourceProcessor();
+    sp = SourceProcessor();
+    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
+
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
-    sp.processSimple(filename, &pkbPopulator);
+    sp.processSimple(filename, std::make_shared<PkbPopulator>(pop));
 }
 
 // method to evaluating a query
