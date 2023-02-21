@@ -10,6 +10,7 @@ class DesignExtractor {
 public:
     virtual void visit(std::shared_ptr<AssignNode> n, int lineNo) {};
     virtual void visit(std::shared_ptr<ReadNode> n, int lineNo) {};
+    virtual void visit(std::shared_ptr<CallNode> n, int lineNo) {};
     virtual void visit(std::shared_ptr<PrintNode> n, int lineNo) {};
     virtual void visit(std::shared_ptr<IfNode> n, int lineNo) {};
     virtual void visit(std::shared_ptr<WhileNode> n, int lineNo) {};
@@ -20,9 +21,11 @@ public:
     static bool isAssignNode(std::shared_ptr<TNode> n);
     static bool isPrintNode(std::shared_ptr<TNode> n);
     static bool isReadNode(std::shared_ptr<TNode> n);
+    static bool isCallNode(std::shared_ptr<TNode> n);
     static bool isIfNode(std::shared_ptr<TNode> n);
     static bool isWhileNode(std::shared_ptr<TNode> n);
     static bool isStmtLstNode(std::shared_ptr<TNode> n);
+    static bool isProcedureNode(std::shared_ptr<TNode> n);
     void extractVar(vector<std::string> tokens);
     void extractConst(vector<std::string> tokens);
 protected:
@@ -35,18 +38,22 @@ public:
     void visit(std::shared_ptr<TNode> n, int lineNo);
     void visit(std::shared_ptr<AssignNode> n, int lineNo);
     void visit(std::shared_ptr<ReadNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
+    void visit(std::shared_ptr<ProcedureNode> n);
 };
 
 class UsesExtractor: public DesignExtractor {
 public:
     using DesignExtractor::DesignExtractor;
     void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<AssignNode> n, int lineNo);
     void visit(std::shared_ptr<PrintNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
+    void visit(std::shared_ptr<ProcedureNode> n);
 };
 
 class FollowsExtractor: public DesignExtractor {
@@ -84,6 +91,7 @@ public:
     void visit(std::shared_ptr<ReadNode> n, int lineNo);
     void visit(std::shared_ptr<PrintNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
