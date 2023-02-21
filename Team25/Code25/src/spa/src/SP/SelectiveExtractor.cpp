@@ -26,6 +26,12 @@ void SelectiveExtractor::visit(std::shared_ptr<ReadNode> n) {
     n->accept(stmtExtractor);
 }
 
+void SelectiveExtractor::visit(std::shared_ptr<CallNode> n) {
+    n->accept(modifiesExtractor);
+    n->accept(usesExtractor);
+    n->accept(stmtExtractor);
+}
+
 void SelectiveExtractor::visit(std::shared_ptr<IfNode> n) {
     n->accept(usesExtractor);
     n->accept(modifiesExtractor);
@@ -48,7 +54,9 @@ void SelectiveExtractor::visit(std::shared_ptr<StmtLstNode> n) {
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<ProcedureNode> n) {
-
+    setProc(n->getProc());
+    n->accept(modifiesExtractor);
+    n->accept(usesExtractor);
 }
 
 void SelectiveExtractor::visitProgramTree(std::shared_ptr<TNode> root) {
