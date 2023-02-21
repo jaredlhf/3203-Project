@@ -48,6 +48,4 @@ public:
     std::shared_ptr<StmtNode> parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) override;
 };
 
-
-
 #endif //STMTPARSER_H

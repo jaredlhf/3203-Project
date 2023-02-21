@@ -17,7 +17,6 @@ std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
     } else if (Token::isValidName(stmtType)) {
         return std::make_shared<AssignParser>();
     } else {
-
         throw std::invalid_argument("Not a statement keyword or valid name");
     }
 }
@@ -64,12 +63,6 @@ std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<SPParserUtils> util
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), var);
-    return std::make_shared<PrintNode>(node);
-}
-
-//TODO: implementation
-std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
-    PrintNode node = PrintNode(utils->getCurrentStmtNo(), "ds");
     return std::make_shared<PrintNode>(node);
 }
 
@@ -143,4 +136,12 @@ std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<SPParserUtils> utils
     utils->expect(std::make_shared<Semicolon>());
     ReadNode node = ReadNode(utils->getCurrentStmtNo(), var);
     return std::make_shared<ReadNode>(node);;
+}
+
+std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    utils->expect(std::make_shared<Call>());
+    std::string var = utils->expect(std::make_shared<Name>());
+    utils->expect(std::make_shared<Semicolon>());
+    CallNode node = CallNode(utils->getCurrentStmtNo(), var);
+    return std::make_shared<CallNode>(node);;
 }
