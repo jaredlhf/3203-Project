@@ -21,10 +21,10 @@ ProcedureNode Parser::parseProgram() {
 
 ProcedureNode Parser::parseProcedure() {
     utils->expect(std::make_shared<Procedure>());
-    utils->expect(std::make_shared<Name>());
+    std::string proc = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<LeftBrace>());
     StmtLstNode stmtLst = StmtParser::parseStmtLst(this->utils, this->tokenizer);
-    ProcedureNode node = ProcedureNode(std::make_shared<StmtLstNode>(stmtLst));
+    ProcedureNode node = ProcedureNode(std::make_shared<StmtLstNode>(stmtLst), proc);
     utils->expect(std::make_shared<RightBrace>());
     return node;
 }
