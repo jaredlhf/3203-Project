@@ -71,6 +71,23 @@ private:
     std::string variable;
 };
 
+class CallNode: public StmtNode {
+public:
+    CallNode(int lineNo, const std::string& var);
+    std::string getProc() { return this->proc; };
+    std::string getVar() { return this->variable; };
+    int getLine() override { return lineNo; };
+
+    std::string print() const override {return "read node";};
+    std::vector<std::shared_ptr<TNode>> getChildren() override;
+    void accept(std::shared_ptr<DesignExtractor> extractor) override;
+    void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
+private:
+    int lineNo;
+    std::string proc;
+    std::string variable;
+};
+
 class PrintNode: public StmtNode {
 public:
     PrintNode(int lineNo, const std::string& var);
@@ -127,9 +144,12 @@ private:
 
 class ProcedureNode: public TNode {
 public:
-    ProcedureNode(std::shared_ptr<StmtLstNode> stmtLst);
+    ProcedureNode(std::shared_ptr<StmtLstNode> stmtLst, std::string proc);
     std::shared_ptr<StmtLstNode> getStmtLst() {
         return this->stmtLst;
+    };
+    std::string getProc() {
+        return this->proc;
     };
 
     std::string print() const override {return "procedure node";};
@@ -138,6 +158,7 @@ public:
     void accept(std::shared_ptr<SelectiveExtractor> extractor) override;
 private:
     std::shared_ptr<StmtLstNode> stmtLst;
+    std::string proc;
 };
 
 

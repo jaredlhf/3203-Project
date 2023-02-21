@@ -83,6 +83,25 @@ std::vector<std::shared_ptr<TNode>> PrintNode::getChildren() {
     return std::vector<std::shared_ptr<TNode>>();
 }
 
+CallNode::CallNode(int line, const std::string& var) {
+    variable = var;
+    lineNo = line;
+}
+
+void CallNode::accept(std::shared_ptr<DesignExtractor> extractor) {
+    std::shared_ptr<CallNode> node = std::dynamic_pointer_cast<CallNode>(shared_from_this());
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
+}
+
+void CallNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
+    std::shared_ptr<CallNode> node = std::dynamic_pointer_cast<CallNode>(shared_from_this());
+    selectiveExtractor->visit(node);
+}
+
+std::vector<std::shared_ptr<TNode>> CallNode::getChildren() {
+    return std::vector<std::shared_ptr<TNode>>();
+}
+
 IfNode::IfNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> ifList, std::shared_ptr<StmtLstNode> elseList) {
    condExpr = condExp;
    ifLst = ifList;
@@ -130,8 +149,9 @@ std::vector<std::shared_ptr<TNode>> WhileNode::getChildren() {
 }
 
 
-ProcedureNode::ProcedureNode(std::shared_ptr<StmtLstNode> stmtList) {
+ProcedureNode::ProcedureNode(std::shared_ptr<StmtLstNode> stmtList, std::string proc) {
     stmtLst = stmtList;
+    proc = proc;
 }
 
 void ProcedureNode::accept(std::shared_ptr<DesignExtractor> extractor) {
