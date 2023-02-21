@@ -9,6 +9,7 @@ namespace SPConstants {
     const std::string PRINT_TYPE = "print";
     const std::string WHILE_TYPE = "while";
     const std::string IF_TYPE = "if";
+    const std::string CALL_TYPE = "call";
 
     const char TAB = '\t';
     const char NEWLINE = '\n';
