@@ -4,6 +4,8 @@ add_library(spa ${srcs} ${headers}
 
 "src/PKB/EntityInterface.h"
 "src/PKB/EntityStore.h"
+"src/PKB/EntityStore.cpp"
+"src/PKB/EntityStoreTemp.h"
 "src/PKB/FollowsStarStore.cpp"
 "src/PKB/FollowsStarStore.h"
 "src/PKB/FollowsStore.cpp"
@@ -62,17 +64,17 @@ add_library(spa ${srcs} ${headers}
 "src/SP/Token.h"
 "src/SP/ExpressionParser.cpp"
 "src/SP/ExpressionParser.h"
-src/SP/Parser.cpp
-src/SP/DesignExtractor.cpp
-src/SP/TNode.cpp
-src/SP/StmtParser.cpp
-src/SP/StmtParser.h
-src/SP/SPParserUtils.cpp
-src/SP/SPParserUtils.h
-src/SP/DesignExtractor.h
-src/SP/SelectiveExtractor.cpp
-src/SP/SelectiveExtractor.h
-src/SP/SPConstants.h)
+"src/SP/Parser.cpp"
+"src/SP/DesignExtractor.cpp"
+"src/SP/TNode.cpp"
+"src/SP/StmtParser.cpp"
+"src/SP/StmtParser.h"
+"src/SP/SPParserUtils.cpp"
+"src/SP/SPParserUtils.h"
+"src/SP/DesignExtractor.h"
+"src/SP/SelectiveExtractor.cpp"
+"src/SP/SelectiveExtractor.h"
+"src/SP/SPConstants.h")
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

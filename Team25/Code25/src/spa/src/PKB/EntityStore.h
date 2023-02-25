@@ -3,59 +3,66 @@
 #include<stdio.h>
 #include <iostream>
 #include <unordered_set>
-#include <string>
 
-#include "EntityInterface.h"
-
-/*Generic Class for EntityStores: ConstantStore, ProcedureStore, VariableStore. 
-Implements EntityInterface.*/ 
 template<typename T>
-class EntityStore : public EntityInterface<T> {
-private:
-	std::unordered_set<T> store;
+class EntityStore {
 public:
-	EntityStore();
-	void add(T value) override;
-	std::unordered_set<T> getAll() override;
-	bool has(T value) override;
+	virtual void add(T value) = 0;
+	virtual std::unordered_set<T> getAll() = 0;
+	virtual bool has(T value) = 0;
+	virtual int size() = 0;
+	virtual void clear() = 0;
+};
+
+class ConstantStore : public EntityStore<int> {
+private:
+	std::unordered_set<int> store;
+public:
+	ConstantStore(std::unordered_set<int> store);
+	void add(int value) override;
+	std::unordered_set<int> getAll() override;
+	bool has(int value) override;
 	int size() override;
 	void clear() override;
 };
 
-template<typename T>
-EntityStore<T>::EntityStore() {}
+class VariableStore : public EntityStore<std::string> {
+private:
+	std::unordered_set<std::string> store;
+public:
+	VariableStore(std::unordered_set<std::string> store);
+	void add(std::string value) override;
+	std::unordered_set<std::string> getAll() override;
+	bool has(std::string value) override;
+	int size() override;
+	void clear() override;
+};
 
-template<typename T>
-void EntityStore<T>::add(T value) {
-	store.emplace(value);
-}
+class ProcedureStore : public EntityStore<std::string> {
+private:
+	std::unordered_set<std::string> store;
+public:
+	ProcedureStore(std::unordered_set<std::string> store);
+	void add(std::string value) override;
+	std::unordered_set<std::string> getAll() override;
+	bool has(std::string value) override;
+	int size() override;
+	void clear() override;
+};
 
-template<typename T>
-std::unordered_set<T> EntityStore<T>::getAll() {
-	return store;
-}
+class StatementStore : public EntityStore<std::string> {
+private:
+	std::unordered_map<std::string, std::unordered_set<int>> store;
+public:
+	StatementStore(std::unordered_map<std::string, std::unordered_set<int>> store);
+	
+	// overridden but unused
+	void add(std::string value) override;
+	std::unordered_set<std::string> getAll() override;
 
-template<typename T>
-bool EntityStore<T>::has(T value) {
-	if (store.find(value) != store.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-template<typename T>
-int EntityStore<T>::size() {
-	return store.size();
-}
-
-template<typename T>
-void EntityStore<T>::clear() {
-	store.clear();
-}
-
-typedef EntityStore<int> ConstantStore;
-typedef EntityStore<std::string> ProcedureStore;
-typedef EntityStore<std::string> VariableStore;
-
+	void add(std::string stmtType, int lineNum);
+	std::unordered_set<int> getAll(std::string stmtType);
+	bool has(std::string stmtType) override;
+	int size() override;
+	void clear() override;
+};
