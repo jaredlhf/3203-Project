@@ -4,6 +4,8 @@ add_library(spa ${srcs} ${headers}
 
 "src/PKB/EntityInterface.h"
 "src/PKB/EntityStore.h"
+"src/PKB/EntityStoreTemp.h"
+"src/PKB/EntityStore.cpp"
 "src/PKB/FollowsStarStore.cpp"
 "src/PKB/FollowsStarStore.h"
 "src/PKB/FollowsStore.cpp"

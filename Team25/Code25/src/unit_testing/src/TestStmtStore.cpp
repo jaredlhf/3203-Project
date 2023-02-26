@@ -1,4 +1,4 @@
-#include "PKB/StatementStore.h"
+#include "PKB/EntityStore.h"
 
 #include "catch.hpp"
 
@@ -11,7 +11,7 @@ SCENARIO("Populating statement store") {
 			REQUIRE(stmtStore.size() == 0);
 		}
 
-		WHEN("One statement is added") {
+		WHEN("One statement is addStmted") {
 			stmtStore.addStmt("assign", 1);
 
 			THEN("Store should have 1 key") {
@@ -24,7 +24,7 @@ SCENARIO("Populating statement store") {
 			}
 
 		}
-		WHEN("2 assign, 1 print, 1 read are added") {
+		WHEN("2 assign, 1 print, 1 read are addStmted") {
 			stmtStore.addStmt("assign", 1);
 			stmtStore.addStmt("assign", 2);
 			stmtStore.addStmt("print", 3);

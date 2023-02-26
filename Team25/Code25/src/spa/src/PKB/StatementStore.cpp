@@ -3,16 +3,20 @@
 #include <string>
 
 #include "StatementStore.h"
+//TODO Delete if unused
 
-StatementStore::StatementStore() {}
+/*
+StatementStore::StatementStore() : store{} {}
+
+StatementStore::StatementStore(std::unordered_map<std::string, std::unordered_set<int>> store) : store{ store } {}
 
 void StatementStore::addStmt(std::string stmtType, int lineNum) {
-	stmtStore[stmtType].emplace(lineNum);
+	store[stmtType].emplace(lineNum);
 }
 
 std::unordered_set<int> StatementStore::getAllStmt(std::string stmtType) {
 	if (has(stmtType)) {
-		return stmtStore[stmtType];
+		return store[stmtType];
 	}
 	else {
 		return std::unordered_set<int>{};
@@ -20,7 +24,7 @@ std::unordered_set<int> StatementStore::getAllStmt(std::string stmtType) {
 }
 
 bool StatementStore::has(std::string stmtType) {
-	if (stmtStore.find(stmtType) != stmtStore.end()) {
+	if (store.find(stmtType) != store.end()) {
 		return true;
 	}
 	else {
@@ -29,9 +33,10 @@ bool StatementStore::has(std::string stmtType) {
 }
 
 int StatementStore::size() {
-	return stmtStore.size();
+	return store.size();
 }
 
 void StatementStore::clear() {
-	stmtStore.clear();
+	store.clear();
 }
+*/
