@@ -44,9 +44,9 @@ SCENARIO("Mocking behavior of QPS") {
 
 				string query = "variable x, v; Select v";
 
-				vsPointer->add("x");
-				vsPointer->add("y");
-				vsPointer->add("z");
+				vsPointer->addVar("x");
+				vsPointer->addVar("y");
+				vsPointer->addVar("z");
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -84,20 +84,20 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 		// Mock variables appearing in the SIMPLE program
-		vsPointer->add("w");
-		vsPointer->add("x");
-		vsPointer->add("y");
-		vsPointer->add("z");
+		vsPointer->addVar("w");
+		vsPointer->addVar("x");
+		vsPointer->addVar("y");
+		vsPointer->addVar("z");
 
 		// Mock constants appearing in the SIMPLE program
-		csPointer->add(123);
-		csPointer->add(456);
-		csPointer->add(789);
+		csPointer->addConst(123);
+		csPointer->addConst(456);
+		csPointer->addConst(789);
 
 		// Mock procedures appearing in the SIMPLE program
-		psPointer->add("main");
-		psPointer->add("factorial");
-		psPointer->add("beta");
+		psPointer->addProc("main");
+		psPointer->addProc("factorial");
+		psPointer->addProc("beta");
 
 		// Mock statements appearing in the SIMPLE program
 		ssPointer->addStmt(Constants::ASSIGN, 1);

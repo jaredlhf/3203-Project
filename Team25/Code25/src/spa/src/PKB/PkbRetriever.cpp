@@ -27,11 +27,11 @@ PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 };
 
 std::unordered_set<std::string> PkbRetriever::getAllVar() {
-	return this->varStorage->getAll();
+	return this->varStorage->getAllVar();
 }
 
 std::unordered_set<int> PkbRetriever::getAllConst() {
-	return this->constStorage->getAll();
+	return this->constStorage->getAllConst();
 }
 
 int PkbRetriever::getFollowee(int rightLineNum) {
@@ -51,7 +51,7 @@ std::unordered_set<int> PkbRetriever::getAllFollowees() {
 }
 
 std::unordered_set<std::string> PkbRetriever::getAllProc() {
-	return this->procedureStorage->getAll();
+	return this->procedureStorage->getAllProc();
 }
 
 std::unordered_set<int> PkbRetriever::getAllStmt(std::string stmtType) {

@@ -8,11 +8,11 @@ ConstantStore::ConstantStore() : store{} {}
 
 ConstantStore::ConstantStore(std::unordered_set<int> store) : store{ store } {}
 
-void ConstantStore::add(int constNum) {
+void ConstantStore::addConst(int constNum) {
 	this->store.emplace(constNum);
 }
 
-std::unordered_set<int> ConstantStore::getAll() {
+std::unordered_set<int> ConstantStore::getAllConst() {
 	return this->store;
 }
 
@@ -40,11 +40,11 @@ VariableStore::VariableStore() : store{} {}
 
 VariableStore::VariableStore(std::unordered_set<std::string> store) : store{ store } {}
 
-void VariableStore::add(std::string varName) {
+void VariableStore::addVar(std::string varName) {
 	this->store.emplace(varName);
 }
 
-std::unordered_set<std::string> VariableStore::getAll() {
+std::unordered_set<std::string> VariableStore::getAllVar() {
 	return this->store;
 }
 
@@ -72,11 +72,11 @@ ProcedureStore::ProcedureStore() : store{} {}
 
 ProcedureStore::ProcedureStore(std::unordered_set<std::string> store) : store{ store } {}
 
-void ProcedureStore::add(std::string procName) {
+void ProcedureStore::addProc(std::string procName) {
 	this->store.emplace(procName);
 }
 
-std::unordered_set<std::string> ProcedureStore::getAll() {
+std::unordered_set<std::string> ProcedureStore::getAllProc() {
 	return this->store;
 }
 

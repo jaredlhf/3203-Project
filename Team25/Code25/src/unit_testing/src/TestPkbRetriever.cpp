@@ -131,10 +131,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
-			vsPointer -> add("x");
-			csPointer -> add(1);
+			vsPointer -> addVar("x");
+			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
-			psPointer -> add("testProc");
+			psPointer -> addProc("testProc");
 			ssPointer -> addStmt("assign", 1);
 			pattsPointer->addAssignLhs("x", 1);
 			pattsPointer->addAssignLhs("y", 2);

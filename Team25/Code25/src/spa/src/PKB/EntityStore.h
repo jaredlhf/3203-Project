@@ -19,8 +19,8 @@ private:
 public:
 	ConstantStore();
 	ConstantStore(std::unordered_set<int> store);
-	void add(int constNum);
-	std::unordered_set<int> getAll();
+	void addConst(int constNum);
+	std::unordered_set<int> getAllConst();
 	bool has(int constNum);
 	int size() override;
 	void clear() override;
@@ -32,8 +32,8 @@ private:
 public:
 	VariableStore();
 	VariableStore(std::unordered_set<std::string> store);
-	void add(std::string varName);
-	std::unordered_set<std::string> getAll();
+	void addVar(std::string varName);
+	std::unordered_set<std::string> getAllVar();
 	bool has(std::string varName);
 	int size() override;
 	void clear() override;
@@ -45,8 +45,8 @@ private:
 public:
 	ProcedureStore();
 	ProcedureStore(std::unordered_set<std::string> store);
-	void add(std::string procName);
-	std::unordered_set<std::string> getAll();
+	void addProc(std::string procName);
+	std::unordered_set<std::string> getAllProc();
 	bool has(std::string procName);
 	int size() override;
 	void clear() override;
