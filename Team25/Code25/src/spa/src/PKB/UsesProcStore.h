@@ -8,16 +8,16 @@
 
 #include "AbstractionStore.h"
 
-class ModifiesProcStore : public ProcVarStore {
-private: 
+class UsesProcStore : public ProcVarStore {
+private:
 	std::unordered_map<std::string, std::unordered_set<std::string>> procStore;
 	std::unordered_map<std::string, std::unordered_set<std::string>> varStore;
 
 public:
-	ModifiesProcStore();
-	ModifiesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore, std::unordered_map<std::string, std::unordered_set<std::string>> varStore);
-	
-	void addModifiesProc(std::string procName, std::string varName);
+	UsesProcStore();
+	UsesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore, std::unordered_map<std::string, std::unordered_set<std::string>> varStore);
+
+	void addUsesProc(std::string procName, std::string varName);
 	std::unordered_set<std::string> getVar(std::string procName);
 	std::unordered_set<std::string> getProc(std::string varName);
 	bool hasVar(std::string varName) override;

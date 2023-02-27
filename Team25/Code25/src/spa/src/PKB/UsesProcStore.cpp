@@ -1,20 +1,20 @@
 #include<stdio.h>
 #include <iostream>
 
-#include "ModifiesProcStore.h"
+#include "UsesProcStore.h"
 
-ModifiesProcStore::ModifiesProcStore() : procStore{}, varStore{} {}
+UsesProcStore::UsesProcStore() : procStore{}, varStore{} {}
 
-ModifiesProcStore::ModifiesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore, 
+UsesProcStore::UsesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore,
 	std::unordered_map<std::string, std::unordered_set<std::string>> varStore)
 	: procStore{ procStore }, varStore{ varStore } {}
 
-void ModifiesProcStore::addModifiesProc(std::string procName, std::string varName) {
+void UsesProcStore::addUsesProc(std::string procName, std::string varName) {
 	procStore[varName].emplace(procName);
 	varStore[procName].emplace(varName);
 }
 
-std::unordered_set<std::string> ModifiesProcStore::getVar(std::string procName) {
+std::unordered_set<std::string> UsesProcStore::getVar(std::string procName) {
 	if (hasProc(procName)) {
 		return varStore[procName];
 	}
@@ -23,7 +23,7 @@ std::unordered_set<std::string> ModifiesProcStore::getVar(std::string procName) 
 	}
 }
 
-std::unordered_set<std::string> ModifiesProcStore::getProc(std::string varName) {
+std::unordered_set<std::string> UsesProcStore::getProc(std::string varName) {
 	if (hasVar(varName)) {
 		return procStore[varName];
 	}
@@ -32,7 +32,7 @@ std::unordered_set<std::string> ModifiesProcStore::getProc(std::string varName) 
 	}
 }
 
-bool ModifiesProcStore::hasVar(std::string varName) {
+bool UsesProcStore::hasVar(std::string varName) {
 	if (varStore.find(varName) != varStore.end()) {
 		return true;
 	}
@@ -41,7 +41,7 @@ bool ModifiesProcStore::hasVar(std::string varName) {
 	}
 }
 
-bool ModifiesProcStore::hasProc(std::string procName) {
+bool UsesProcStore::hasProc(std::string procName) {
 	if (procStore.find(procName) != procStore.end()) {
 		return true;
 	}
@@ -50,7 +50,7 @@ bool ModifiesProcStore::hasProc(std::string procName) {
 	}
 }
 
-std::unordered_set<std::string> ModifiesProcStore::getAllVar()
+std::unordered_set<std::string> UsesProcStore::getAllVar()
 {
 	std::unordered_set<std::string> varList;
 
@@ -60,7 +60,7 @@ std::unordered_set<std::string> ModifiesProcStore::getAllVar()
 	return varList;
 }
 
-std::unordered_set<std::string> ModifiesProcStore::getAllProc()
+std::unordered_set<std::string> UsesProcStore::getAllProc()
 {
 	std::unordered_set<std::string> procList;
 
@@ -70,7 +70,7 @@ std::unordered_set<std::string> ModifiesProcStore::getAllProc()
 	return procList;
 }
 
-void ModifiesProcStore::clear() {
+void UsesProcStore::clear() {
 	procStore.clear();
 	varStore.clear();
 }

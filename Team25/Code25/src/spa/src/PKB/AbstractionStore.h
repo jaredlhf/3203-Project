@@ -24,3 +24,4 @@ class ProcVarStore : public AbstractionStore {
 	virtual std::unordered_set<std::string> getAllVar() = 0;
 	virtual std::unordered_set<std::string> getAllProc() = 0;
 };
+
