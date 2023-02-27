@@ -41,7 +41,7 @@ public:
     void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
-    void visit(std::shared_ptr<ProcedureNode> n);
+    void visit(std::shared_ptr<ProcedureNode> n, int lineNo);
 };
 
 class UsesExtractor: public DesignExtractor {
@@ -53,7 +53,7 @@ public:
     void visit(std::shared_ptr<PrintNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
-    void visit(std::shared_ptr<ProcedureNode> n);
+    void visit(std::shared_ptr<ProcedureNode> n, int lineNo);
 };
 
 class FollowsExtractor: public DesignExtractor {
