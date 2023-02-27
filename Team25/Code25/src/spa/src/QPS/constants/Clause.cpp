@@ -1349,3 +1349,35 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
 bool PatternClause::isPatternClause() {
     return true;
 }
+
+// With clause overriden clause functions
+/*
+    For With clauses, args is wrong if either is a wildcard, or either doesnt have attrName
+*/
+bool WithClause::isWrongArgs() {
+    if (this->arg1->isWildcard() || this->arg2->isWildcard()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->hasAttrName()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->hasAttrName()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For with clauses, semantics are incorrect if types are not both int or both string
+*/
+bool WithClause::isSemInvalid() {
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithClause::resolve(
+    std::shared_ptr<PkbRetriever> pkbRet, std::shared_ptr<Synonym> patternSynonym) {
+    return QpsTable::getDefaultNoMatch();
+}
