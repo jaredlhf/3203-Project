@@ -21,9 +21,14 @@ const std::string Constants::PARENT = "Parent";
 const std::string Constants::PARENTST = "Parent*";
 const std::string Constants::FOLLOWS = "Follows";
 const std::string Constants::FOLLOWSST = "Follows*";
+const std::string Constants::CALLS = "Calls";
+const std::string Constants::CALLSST = "Calls*";
+const std::string Constants::NEXT = "Next";
+const std::string Constants::NEXTST = "Next*";
 const std::string Constants::PATTERN = "pattern";
 const std::string Constants::WITH = "with";
 const std::string Constants::WILDCARD = "_";
+const std::string Constants::BOOLEAN = "BOOLEAN";
 
 // Constant declaration for attribute names
 const std::string Constants::PROCNAME = "procName";
