@@ -23,8 +23,9 @@ ProcedureNode Parser::parseProcedure() {
     utils->expect(std::make_shared<Procedure>());
     std::string proc = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode stmtLst = StmtParser::parseStmtLst(this->utils, this->tokenizer);
+    StmtLstNode stmtLst = StmtParser::parseStmtLst(this->utils, this->tokenizer, proc);
     ProcedureNode node = ProcedureNode(std::make_shared<StmtLstNode>(stmtLst), proc);
+    std::cout<< "parser procedure name: " << node.getProc()<<endl;
     utils->expect(std::make_shared<RightBrace>());
     return node;
 }
