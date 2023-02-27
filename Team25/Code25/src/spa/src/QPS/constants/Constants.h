@@ -43,6 +43,9 @@ public:
 		OK = 3
 	};
 
+	// Functions for attrName
+	static bool isAttrNameInt(const std::string& attrName);
+
 	// ClauseResult related functions
 	static Constants::ClauseResult getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2);
 	static Constants::ClauseResult getLowerBound(std::vector<Constants::ClauseResult> clauseList);

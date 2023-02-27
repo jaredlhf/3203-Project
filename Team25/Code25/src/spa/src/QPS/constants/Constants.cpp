@@ -31,6 +31,11 @@ const std::string Constants::VARNAME = "varName";
 const std::string Constants::VALUE = "value";
 const std::string Constants::STMTNUM = "stmt#";
 
+// AttrName related functions
+bool Constants::isAttrNameInt(const std::string& attrName) {
+	return attrName == Constants::VALUE || attrName == Constants::STMTNUM;
+}
+
 // ClauseResult related functions
 Constants::ClauseResult Constants::getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2) {
 	return std::min(c1, c2);

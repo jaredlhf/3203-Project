@@ -70,6 +70,7 @@ std::shared_ptr<Clause> Clause::create(const std::string clauseType, std::shared
     if (clauseType == Constants::FOLLOWS) res = std::make_shared<FollowsClause>(FollowsClause(arg1, arg2));
     if (clauseType == Constants::FOLLOWSST) res = std::make_shared<FollowsStClause>(FollowsStClause(arg1, arg2));
     if (clauseType == Constants::PATTERN) res = std::make_shared<PatternClause>(PatternClause(arg1, arg2));
+    if (clauseType == Constants::WITH) res = std::make_shared<WithClause>(WithClause(arg1, arg2));
 
     return res;
 }
@@ -101,6 +102,10 @@ FollowsStClause::FollowsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<E
 
 PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
     this->keyword = Constants::PATTERN;
+}
+
+WithClause::WithClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::WITH;
 }
 
 // Overriden clause functions
@@ -1374,7 +1379,28 @@ bool WithClause::isWrongArgs() {
     For with clauses, semantics are incorrect if types are not both int or both string
 */
 bool WithClause::isSemInvalid() {
-    return false;
+    bool isArg1Int = false;
+    bool isArg2Int = false;
+
+    if (this->arg1->isConstant()) {
+        isArg1Int = std::static_pointer_cast<Value>(this->arg1)->isInt();
+    }
+
+    if (this->arg2->isConstant()) {
+        isArg2Int = std::static_pointer_cast<Value>(this->arg2)->isInt();
+    }
+
+    if (this->arg1->isSynonym()) {
+        isArg1Int = Constants::isAttrNameInt(
+            std::static_pointer_cast<Synonym>(this->arg1)->getAttrName());
+    }
+
+    if (this->arg2->isSynonym()) {
+        isArg2Int = Constants::isAttrNameInt(
+            std::static_pointer_cast<Synonym>(this->arg2)->getAttrName());
+    }
+
+    return isArg1Int != isArg2Int;
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithClause::resolve(
