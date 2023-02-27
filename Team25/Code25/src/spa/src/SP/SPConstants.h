@@ -3,6 +3,7 @@
 
 namespace SPConstants {
     const int INVALID_LINE_NO = -1;
+    const int PROCEDURE = -2;
 
     const std::string ASSIGN_TYPE = "assign";
     const std::string READ_TYPE = "read";
