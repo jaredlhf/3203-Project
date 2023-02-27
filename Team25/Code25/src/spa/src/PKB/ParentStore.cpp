@@ -3,33 +3,36 @@
 
 #include "ParentStore.h"
 
-ParentStore::ParentStore() {}
+ParentStore::ParentStore() : leftStmtStore{ }, rightStmtStore{ } {}
 
-void ParentStore::addParent(int parent, int child) {
-	parentStore[child] = parent;
-	childrenStore[parent].emplace(child);
+ParentStore::ParentStore(std::unordered_map<int, int> leftStmtStore, std::unordered_map<int, std::unordered_set<int>> rightStmtStore)
+	: leftStmtStore{ leftStmtStore }, rightStmtStore{ rightStmtStore } {}
+
+void ParentStore::addParent(int leftStmt, int rightStmt) {
+	leftStmtStore[rightStmt] = leftStmt;
+	rightStmtStore[leftStmt].emplace(rightStmt);
 }
 
-int ParentStore::getParent(int child) {
-	if (hasChildren(child)) {
-		return parentStore[child];
+int ParentStore::getLeftStmt(int rightStmt) {
+	if (hasRightStmt(rightStmt)) {
+		return leftStmtStore[rightStmt];
 	}
 	else {
 		return -1;
 	}
 }
 
-std::unordered_set<int> ParentStore::getChildren(int parent) {
-	if (hasParent(parent)) {
-		return childrenStore[parent];
+std::unordered_set<int> ParentStore::getRightStmt(int parent) {
+	if (hasLeftStmt(parent)) {
+		return rightStmtStore[parent];
 	}
 	else {
 		return {};
 	}
 }
 
-bool ParentStore::hasParent(int lineNum) {
-	if (childrenStore.find(lineNum) != childrenStore.end()) {
+bool ParentStore::hasLeftStmt(int lineNum) {
+	if (rightStmtStore.find(lineNum) != rightStmtStore.end()) {
 		return true;
 	}
 	else {
@@ -37,8 +40,8 @@ bool ParentStore::hasParent(int lineNum) {
 	}
 }
 
-bool ParentStore::hasChildren(int lineNum) {
-	if (parentStore.find(lineNum) != parentStore.end()) {
+bool ParentStore::hasRightStmt(int lineNum) {
+	if (leftStmtStore.find(lineNum) != leftStmtStore.end()) {
 		return true;
 	}
 	else {
@@ -46,23 +49,23 @@ bool ParentStore::hasChildren(int lineNum) {
 	}
 }
 
-std::unordered_set<int> ParentStore::getAllParents() {
-	std::unordered_set<int> parentList;
-	for (const auto& [key, value] : parentStore) {
-		parentList.insert(value);
+std::unordered_set<int> ParentStore::getAllLeft() {
+	std::unordered_set<int> leftStmtList;
+	for (const auto& [key, value] : leftStmtStore) {
+		leftStmtList.insert(value);
 	}
-	return parentList;
+	return leftStmtList;
 }
 
-std::unordered_set<int> ParentStore::getAllChildren() {
-	std::unordered_set<int> childrenList;
-	for (const auto& [key, value] : childrenStore) {
-		childrenList.insert(value.begin(), value.end());
+std::unordered_set<int> ParentStore::getAllRight() {
+	std::unordered_set<int> rightStmtList;
+	for (const auto& [key, value] : rightStmtStore) {
+		rightStmtList.insert(value.begin(), value.end());
 	}
-	return childrenList;
+	return rightStmtList;
 }
 
 void ParentStore::clear() {
-	parentStore.clear();
-	childrenStore.clear();
+	leftStmtStore.clear();
+	rightStmtStore.clear();
 }

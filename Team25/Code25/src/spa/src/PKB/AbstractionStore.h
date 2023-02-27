@@ -25,3 +25,9 @@ class ProcVarStore : public AbstractionStore {
 	virtual std::unordered_set<std::string> getAllProc() = 0;
 };
 
+class StmtStmtStore : public AbstractionStore {
+	virtual bool hasLeftStmt(int lineNum) = 0;
+	virtual bool hasRightStmt(int lineNum) = 0;
+	virtual std::unordered_set<int> getAllLeft() = 0;
+	virtual std::unordered_set<int> getAllRight() = 0;
+};

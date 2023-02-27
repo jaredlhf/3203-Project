@@ -2,24 +2,27 @@
 
 #include<stdio.h>
 #include <iostream>
-#include <vector>
 #include <unordered_set>
 #include <unordered_map>
 
+#include "AbstractionStore.h"
+
 /* Storage class for Parent relationship between two statements. 
-In Parent(s1, s2), Parent is s1 and Child is s2.*/
-class ParentStore {
+In Parent(s1, s2), LeftStmt is s1 and RightStmt is s2.*/
+class ParentStore : public StmtStmtStore {
 private:
-	std::unordered_map<int, int> parentStore;
-	std::unordered_map<int, std::unordered_set<int>> childrenStore;
+	std::unordered_map<int, int> leftStmtStore;
+	std::unordered_map<int, std::unordered_set<int>> rightStmtStore;
 public:
 	ParentStore();
-	void addParent(int parent, int child);
-	int getParent(int child);
-	std::unordered_set<int> getChildren(int parent);
-	bool hasParent(int lineNum);
-	bool hasChildren(int lineNum);
-	std::unordered_set<int> getAllParents();
-	std::unordered_set<int> getAllChildren();
-	void clear();
+	ParentStore(std::unordered_map<int, int> leftStmtStore, std::unordered_map<int, std::unordered_set<int>> rightStmtStore);
+	
+	void addParent(int leftStmt, int rightStmt);
+	int getLeftStmt(int rightStmt);
+	std::unordered_set<int> getRightStmt(int leftStmt);
+	bool hasLeftStmt(int lineNum) override;
+	bool hasRightStmt(int lineNum) override;
+	std::unordered_set<int> getAllLeft() override;
+	std::unordered_set<int> getAllRight() override;
+	void clear() override;
 };
