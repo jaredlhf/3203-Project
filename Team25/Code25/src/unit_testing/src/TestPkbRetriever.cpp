@@ -143,10 +143,10 @@ SCENARIO("Working version of PkbRetriever") {
 			pattsPointer->addAssignRhs(2, "y + x");
 			pattsPointer->addAssignRhs(3, "z + 2");
 			fstarsPointer->addFollowsStar(1, std::unordered_set({ 1, 2, 3 }));
-			msPointer->add(1, "x");
+			msPointer->addModifies(1, "x");
 			pStarsPointer->addParentStar(1, 2);
 			parentsPointer->addParent(1, 2);
-			usesPointer->add(1, "x");
+			usesPointer->addUses(1, "x");
 			THEN("Getting a variables hsould return a non empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);
 				REQUIRE(pkbRet.getAllVar().count("x") == 1);

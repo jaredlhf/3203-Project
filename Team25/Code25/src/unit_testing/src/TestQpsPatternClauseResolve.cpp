@@ -60,9 +60,9 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 			ssPointer->addStmt(Constants::READ, 4);
 
 			// Mock variables modified in the SIMPLE program
-			msPointer->add(1, "z");
-			msPointer->add(2, "x");
-			msPointer->add(4, "z");
+			msPointer->addModifies(1, "z");
+			msPointer->addModifies(2, "x");
+			msPointer->addModifies(4, "z");
 
 			// Mock Patterns in SIMPLE program
 			pattsPointer->addAssignLhs("z", 1);

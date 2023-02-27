@@ -54,9 +54,9 @@ SCENARIO("Mocking behavior of ModifiesClause::resolve") {
 			ssPointer->addStmt(Constants::READ, 4);
 
 			// Mock Modifies relationship in SIMPLE program
-			msPointer->add(1, "z");
-			msPointer->add(2, "x");
-			msPointer->add(4, "z");
+			msPointer->addModifies(1, "z");
+			msPointer->addModifies(2, "x");
+			msPointer->addModifies(4, "z");
 
 			THEN("When ModifiesClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =

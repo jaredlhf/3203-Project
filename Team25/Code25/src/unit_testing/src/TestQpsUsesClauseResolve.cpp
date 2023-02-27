@@ -54,11 +54,11 @@ SCENARIO("Mocking behavior of UsesClause::resolve") {
 			ssPointer->addStmt(Constants::READ, 4);
 
 			// Mock Uses relationship in SIMPLE program
-			usesPointer->add(1, "x");
-			usesPointer->add(1, "y");
-			usesPointer->add(2, "z");
-			usesPointer->add(2, "x");
-			usesPointer->add(3, "y");
+			usesPointer->addUses(1, "x");
+			usesPointer->addUses(1, "y");
+			usesPointer->addUses(2, "z");
+			usesPointer->addUses(2, "x");
+			usesPointer->addUses(3, "y");
 
 			THEN("When UsesClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =

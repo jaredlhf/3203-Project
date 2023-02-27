@@ -55,30 +55,30 @@ SCENARIO("Integration testing between SP and PKB") {
 			sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
 			THEN("PKB variable store should contain the correct variables") {
 				REQUIRE(vsPointer->size() == 18);
-				REQUIRE(vsPointer->getAll().count("x") == 1);
-				REQUIRE(vsPointer->getAll().count("d") == 1);
-				REQUIRE(vsPointer->getAll().count("a") == 1);
-				REQUIRE(vsPointer->getAll().count("b") == 1);
-				REQUIRE(vsPointer->getAll().count("y") == 1);
-				REQUIRE(vsPointer->getAll().count("z") == 1);
-				REQUIRE(vsPointer->getAll().count("i") == 1);
-				REQUIRE(vsPointer->getAll().count("j") == 1);
-				REQUIRE(vsPointer->getAll().count("k") == 1);
-				REQUIRE(vsPointer->getAll().count("W") == 1);
-				REQUIRE(vsPointer->getAll().count("n") == 1);
-				REQUIRE(vsPointer->getAll().count("c") == 1);
-				REQUIRE(vsPointer->getAll().count("U") == 1);
-				REQUIRE(vsPointer->getAll().count("o") == 1);
-				REQUIRE(vsPointer->getAll().count("p") == 1);
-				REQUIRE(vsPointer->getAll().count("z") == 1);
-				REQUIRE(vsPointer->getAll().count("h") == 1);
-				REQUIRE(vsPointer->getAll().count("f1") == 1);
-				REQUIRE(vsPointer->getAll().count("h3") == 1);
+				REQUIRE(vsPointer->getAllVar().count("x") == 1);
+				REQUIRE(vsPointer->getAllVar().count("d") == 1);
+				REQUIRE(vsPointer->getAllVar().count("a") == 1);
+				REQUIRE(vsPointer->getAllVar().count("b") == 1);
+				REQUIRE(vsPointer->getAllVar().count("y") == 1);
+				REQUIRE(vsPointer->getAllVar().count("z") == 1);
+				REQUIRE(vsPointer->getAllVar().count("i") == 1);
+				REQUIRE(vsPointer->getAllVar().count("j") == 1);
+				REQUIRE(vsPointer->getAllVar().count("k") == 1);
+				REQUIRE(vsPointer->getAllVar().count("W") == 1);
+				REQUIRE(vsPointer->getAllVar().count("n") == 1);
+				REQUIRE(vsPointer->getAllVar().count("c") == 1);
+				REQUIRE(vsPointer->getAllVar().count("U") == 1);
+				REQUIRE(vsPointer->getAllVar().count("o") == 1);
+				REQUIRE(vsPointer->getAllVar().count("p") == 1);
+				REQUIRE(vsPointer->getAllVar().count("z") == 1);
+				REQUIRE(vsPointer->getAllVar().count("h") == 1);
+				REQUIRE(vsPointer->getAllVar().count("f1") == 1);
+				REQUIRE(vsPointer->getAllVar().count("h3") == 1);
 			}
 			THEN("PKB constants store should contain the correct constants") {
 				REQUIRE(csPointer->size() == 2);
-				REQUIRE(csPointer->getAll().count(2) == 1);
-				REQUIRE(csPointer->getAll().count(232141) == 1);
+				REQUIRE(csPointer->getAllConst().count(2) == 1);
+				REQUIRE(csPointer->getAllConst().count(232141) == 1);
 			}
 			THEN("PKB follows store should contain the correct follows") {
 				REQUIRE(fsPointer->getAllFollowers().size() == 6);

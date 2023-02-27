@@ -63,7 +63,7 @@ void PkbPopulator::addModifiesProc(std::string procName, std::string varName) {
 }
 
 void PkbPopulator::addModifies(int lineNum, std::string varName) {
-	this->modifiesStorage->add(lineNum, varName);
+	this->modifiesStorage->addModifies(lineNum, varName);
 }
 
 void PkbPopulator::addParentStar(int parent, int child) {
@@ -75,7 +75,7 @@ void PkbPopulator::addParent(int parent, int child) {
 }
 
 void PkbPopulator::addUses(int lineNum, std::string varName) {
-	this->usesStorage->add(lineNum, varName);
+	this->usesStorage->addUses(lineNum, varName);
 }
 
 

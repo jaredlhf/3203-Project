@@ -6,7 +6,10 @@
 
 UsesStore::UsesStore() {}
 
-void UsesStore::add(int lineNum, std::string varName) {
+UsesStore::UsesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore)
+	: varStore{ varStore }, stmtStore{ stmtStore } {}
+
+void UsesStore::addUses(int lineNum, std::string varName) {
 	varStore[lineNum].emplace(varName);
 	stmtStore[varName].emplace(lineNum);
 }

@@ -147,18 +147,18 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		parentsPointer->addParent(8, 9);
 
 		// Mock Modifies relationship in SIMPLE program
-		msPointer->add(1, "x");
-		msPointer->add(3, "w");
-		msPointer->add(5, "y");
-		msPointer->add(7, "x");
-		msPointer->add(9, "x");
+		msPointer->addModifies(1, "x");
+		msPointer->addModifies(3, "w");
+		msPointer->addModifies(5, "y");
+		msPointer->addModifies(7, "x");
+		msPointer->addModifies(9, "x");
 
 		// Mock Uses relationship in SIMPLE program
-		usesPointer->add(1, "y");
-		usesPointer->add(3, "x");
-		usesPointer->add(6, "x");
-		usesPointer->add(7, "x");
-		usesPointer->add(9, "x");
+		usesPointer->addUses(1, "y");
+		usesPointer->addUses(3, "x");
+		usesPointer->addUses(6, "x");
+		usesPointer->addUses(7, "x");
+		usesPointer->addUses(9, "x");
 
 		// Mock Patterns in SIMPLE program
 		pattsPointer->addAssignLhs("x", 1);

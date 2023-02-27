@@ -301,11 +301,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			parentsPointer->addParent(8, 9);
 
 			// Mock Modifies relationship in SIMPLE program
-			msPointer->add(1, "x");
-			msPointer->add(3, "w");
-			msPointer->add(5, "y");
-			msPointer->add(7, "x");
-			msPointer->add(9, "x");
+			msPointer->addModifies(1, "x");
+			msPointer->addModifies(3, "w");
+			msPointer->addModifies(5, "y");
+			msPointer->addModifies(7, "x");
+			msPointer->addModifies(9, "x");
 
 			// Mock Patterns in SIMPLE program
 			pattsPointer->addAssignLhs("x", 1);

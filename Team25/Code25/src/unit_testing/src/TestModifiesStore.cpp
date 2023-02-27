@@ -12,7 +12,7 @@ SCENARIO("Populating modifies store") {
 		}
 
 		WHEN("One modifies is added") {
-			modStore.add(1, "x");
+			modStore.addModifies(1, "x");
 
 			THEN("Statement should be mapped to variable") {
 				REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
@@ -20,7 +20,7 @@ SCENARIO("Populating modifies store") {
 			}
 
 			WHEN("Duplicate modifies is added") {
-				modStore.add(1, "x");
+				modStore.addModifies(1, "x");
 
 				THEN("Modifies store should remain the same") {
 					REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
@@ -30,9 +30,9 @@ SCENARIO("Populating modifies store") {
 		}
 
 		WHEN("Three modifies are added") {
-			modStore.add(1, "x");
-			modStore.add(2, "x");
-			modStore.add(3, "y");
+			modStore.addModifies(1, "x");
+			modStore.addModifies(2, "x");
+			modStore.addModifies(3, "y");
 
 			THEN("There should be 3 statements and 2 variables") {
 				REQUIRE(modStore.getAllStmt() == std::unordered_set<int>({ 1, 2, 3 }));

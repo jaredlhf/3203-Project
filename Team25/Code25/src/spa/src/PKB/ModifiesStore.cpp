@@ -4,9 +4,12 @@
 
 #include "ModifiesStore.h"
 
-ModifiesStore::ModifiesStore() {}
+ModifiesStore::ModifiesStore() : varStore{}, stmtStore {} {}
 
-void ModifiesStore::add(int lineNum, std::string varName) {
+ModifiesStore::ModifiesStore(std::unordered_map<int, std::string> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore) 
+	: varStore{varStore}, stmtStore{stmtStore} {}
+
+void ModifiesStore::addModifies(int lineNum, std::string varName) {
 	varStore[lineNum] = varName;
 	stmtStore[varName].emplace(lineNum);
 }
