@@ -19,7 +19,6 @@ public:
     void visit(std::shared_ptr<StmtLstNode> n);
     void visit(std::shared_ptr<ProcedureNode> n);
     void visitProgramTree(std::shared_ptr<TNode> root);
-    void setProc(std::string str) { this->proc = str; };
 
 private:
     std::shared_ptr<ModifiesExtractor> modifiesExtractor;
@@ -29,6 +28,5 @@ private:
     std::shared_ptr<ParentsExtractor> parentsExtractor;
     std::shared_ptr<ParentsStarExtractor> parentsStarExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
-    std::string proc;
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H

@@ -54,7 +54,6 @@ void SelectiveExtractor::visit(std::shared_ptr<StmtLstNode> n) {
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<ProcedureNode> n) {
-    setProc(n->getProc());
     n->accept(modifiesExtractor);
     n->accept(usesExtractor);
 }
