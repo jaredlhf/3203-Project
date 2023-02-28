@@ -131,7 +131,7 @@ void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     } else {
         //pkbPopulator->addCalls(lineNo, c->getVar());
         //pkbPopulator->addVar(c->getVar());
-        std::cout << "Populating calls: " << c->getVar() << std::endl;
+        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
     }
 }
 
@@ -233,7 +233,7 @@ void UsesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     if (lineNo == SPConstants::PROCEDURE) {
         std::cout << "Populating procedure use: " <<  c->getProc() + " "  + c->getVar() << std::endl;
     } else {
-    std::cout << "Populating calls: " << c->getVar() << std::endl;
+    std::cout << "Populating uses for calls: " << c->getVar() << std::endl;
     }
 }
 
@@ -434,6 +434,52 @@ void ParentsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
         if (lineNo != j) {
             pkbPopulator->addParentStar(lineNo, j);
         }
+    }
+}
+
+void CallsExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isCallNode(n)) {
+        std::shared_ptr<AssignNode> c = std::dynamic_pointer_cast<AssignNode>(n);
+        CallsExtractor::visit(c, lineNo);
+    } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        CallsExtractor::visit(ifs, lineNo);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        CallsExtractor::visit(wh, lineNo);
+    }
+}
+
+void CallsExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = c->getLine();
+    } else if (lineNo == SPConstants::PROCEDURE) {
+        lineNo = SPConstants::PROCEDURE;
+    }
+    std::cout << "Populating calls: " <<  c->getProc() + " "  + c->getVar() << std::endl;
+}
+
+void CallsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = ifs->getLine();
+    }
+    std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
+    std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+    for (auto i : ifStmts) {
+        visit(i, lineNo);
+    }
+    for (auto i : elseStmts) {
+        visit(i, lineNo);
+    }
+}
+
+void CallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = wh->getLine();
+    }
+    std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+    for (auto j: whStmts) {
+        visit(j, lineNo);
     }
 }
 

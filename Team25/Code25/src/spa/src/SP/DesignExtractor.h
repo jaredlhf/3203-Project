@@ -76,6 +76,15 @@ public:
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
+class CallsExtractor: public DesignExtractor {
+public:
+    using DesignExtractor::DesignExtractor;
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
+};
+
 class ParentsStarExtractor: public DesignExtractor {
 public:
     using DesignExtractor::DesignExtractor;
