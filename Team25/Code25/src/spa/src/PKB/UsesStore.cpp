@@ -69,7 +69,3 @@ std::unordered_set<int> UsesStore::getAllStmt() {
 }
 
 
-void UsesStore::clear() {
-	stmtStore.clear();
-	varStore.clear();
-}

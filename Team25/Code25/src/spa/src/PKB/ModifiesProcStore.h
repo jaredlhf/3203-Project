@@ -24,5 +24,4 @@ public:
 	bool hasProc(std::string procName) override;
 	std::unordered_set<std::string> getAllVar() override;
 	std::unordered_set<std::string> getAllProc() override;
-	void clear() override;
 };

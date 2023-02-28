@@ -10,7 +10,6 @@
 class EntityStore {
 public:
 	virtual int size() = 0;
-	virtual void clear() = 0;
 };
 
 class ConstantStore : public EntityStore {
@@ -23,7 +22,6 @@ public:
 	std::unordered_set<int> getAllConst();
 	bool has(int constNum);
 	int size() override;
-	void clear() override;
 };
 
 class VariableStore : public EntityStore {
@@ -36,7 +34,6 @@ public:
 	std::unordered_set<std::string> getAllVar();
 	bool has(std::string varName);
 	int size() override;
-	void clear() override;
 };
 
 class ProcedureStore : public EntityStore {
@@ -49,7 +46,6 @@ public:
 	std::unordered_set<std::string> getAllProc();
 	bool has(std::string procName);
 	int size() override;
-	void clear() override;
 };
 
 class StatementStore : public EntityStore {
@@ -62,5 +58,4 @@ public:
 	std::unordered_set<int> getAllStmt(std::string stmtType);
 	bool has(std::string stmtType);
 	int size() override;
-	void clear() override;
 };

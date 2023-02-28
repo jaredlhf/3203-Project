@@ -65,7 +65,3 @@ std::unordered_set<int> ParentStore::getAllRight() {
 	return rightStmtList;
 }
 
-void ParentStore::clear() {
-	leftStmtStore.clear();
-	rightStmtStore.clear();
-}

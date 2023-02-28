@@ -67,8 +67,3 @@ std::unordered_set<int> ModifiesStore::getAllStmt() {
 	return stmtList;
 }
 
-
-void ModifiesStore::clear() {
-	stmtStore.clear();
-	varStore.clear();
-}

@@ -70,7 +70,3 @@ std::unordered_set<std::string> ModifiesProcStore::getAllProc()
 	return procList;
 }
 
-void ModifiesProcStore::clear() {
-	procStore.clear();
-	varStore.clear();
-}

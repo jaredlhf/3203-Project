@@ -29,9 +29,6 @@ int ConstantStore::size() {
 	return this->store.size();
 }
 
-void ConstantStore::clear() {
-	return this->store.clear();
-}
 
 
 /* Variable Store*/
@@ -59,10 +56,6 @@ bool VariableStore::has(std::string varName) {
 
 int VariableStore::size() {
 	return this->store.size();
-}
-
-void VariableStore::clear() {
-	return this->store.clear();
 }
 
 
@@ -93,9 +86,6 @@ int ProcedureStore::size() {
 	return this->store.size();
 }
 
-void ProcedureStore::clear() {
-	return this->store.clear();
-}
 
 
 /* Statement Store*/
@@ -128,8 +118,4 @@ bool StatementStore::has(std::string stmtType) {
 
 int StatementStore::size() {
 	return store.size();
-}
-
-void StatementStore::clear() {
-	store.clear();
 }

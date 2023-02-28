@@ -26,5 +26,4 @@ public:
 	bool hasStmt(int lineNum) override;
 	std::unordered_set<std::string> getAllVar() override;
 	std::unordered_set<int> getAllStmt() override;
-	void clear() override;
 };

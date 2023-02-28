@@ -6,28 +6,27 @@
 #include <unordered_map>
 #include <string>
 
-class AbstractionStore {
-public:
-	virtual void clear() = 0;
-};
-
-class StmtVarStore : public AbstractionStore {
+class StmtVarStore {
 	virtual bool hasVar(std::string varName) = 0;
 	virtual bool hasStmt(int lineNum) = 0;
 	virtual std::unordered_set<std::string> getAllVar() = 0;
 	virtual std::unordered_set<int> getAllStmt() = 0;
 };
 
-class ProcVarStore : public AbstractionStore {
+class ProcVarStore {
 	virtual bool hasVar(std::string varName) = 0;
 	virtual bool hasProc(std::string procName) = 0;
 	virtual std::unordered_set<std::string> getAllVar() = 0;
 	virtual std::unordered_set<std::string> getAllProc() = 0;
 };
 
-class StmtStmtStore : public AbstractionStore {
+class StmtStmtStore {
 	virtual bool hasLeftStmt(int lineNum) = 0;
 	virtual bool hasRightStmt(int lineNum) = 0;
 	virtual std::unordered_set<int> getAllLeft() = 0;
 	virtual std::unordered_set<int> getAllRight() = 0;
+};
+
+class StmtStmtlstStore {
+
 };

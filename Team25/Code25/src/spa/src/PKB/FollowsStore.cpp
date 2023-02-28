@@ -64,9 +64,3 @@ std::unordered_set<int> FollowsStore::getAllRight() {
 	}
 	return rightStmtList;
 }
-
-
-void FollowsStore::clear() {
-	rightStmtStore.clear();
-	leftStmtStore.clear();
-}
