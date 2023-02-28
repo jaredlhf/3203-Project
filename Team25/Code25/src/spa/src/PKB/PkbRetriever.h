@@ -54,7 +54,7 @@ public:
 	std::unordered_set<int> getFolloweeStar(int follower);
 	std::unordered_set<int> getFollowerStar(int followee);
 	/*Modifies Store*/
-	std::string getModVar(int lineNum); 
+	std::unordered_set<std::string> getModVar(int lineNum); 
 	std::unordered_set<int> getModStmt(std::string varName);
 	/*ParentStar Store*/
 	std::unordered_set<int> getParentStar(int child); 

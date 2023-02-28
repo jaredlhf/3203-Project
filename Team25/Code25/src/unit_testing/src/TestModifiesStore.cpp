@@ -16,7 +16,7 @@ SCENARIO("Populating modifies store") {
 
 			THEN("Statement should be mapped to variable") {
 				REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
-				REQUIRE(modStore.getVar(1) == "x");
+				REQUIRE(modStore.getVar(1) == std::unordered_set < std::string>({ "x" }));
 			}
 
 			WHEN("Duplicate modifies is added") {
@@ -24,7 +24,7 @@ SCENARIO("Populating modifies store") {
 
 				THEN("Modifies store should remain the same") {
 					REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({ 1 }));
-					REQUIRE(modStore.getVar(1) == "x");
+					REQUIRE(modStore.getVar(1) == std::unordered_set < std::string>({ "x" }));
 				}
 			}
 		}
@@ -42,9 +42,9 @@ SCENARIO("Populating modifies store") {
 			THEN("Statements should be mapped to variables correctly") {
 				REQUIRE(modStore.getStmt("x") == std::unordered_set<int>({1, 2}));
 				REQUIRE(modStore.getStmt("y") == std::unordered_set<int>({ 3 }));
-				REQUIRE(modStore.getVar(1) == "x");
-				REQUIRE(modStore.getVar(2) == "x");
-				REQUIRE(modStore.getVar(3) == "y");
+				REQUIRE(modStore.getVar(1) == std::unordered_set < std::string>({ "x" }));
+				REQUIRE(modStore.getVar(2) == std::unordered_set < std::string>({ "x" }));
+				REQUIRE(modStore.getVar(3) == std::unordered_set < std::string>({ "y" }));
 			}
 		}
 	}

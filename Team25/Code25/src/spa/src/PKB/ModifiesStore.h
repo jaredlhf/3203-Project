@@ -12,15 +12,15 @@
 In Modifies(a, v), statement line number is a and variable name is v.*/
 class ModifiesStore : public StmtVarStore {
 private:
-	std::unordered_map<int, std::string> varStore;
+	std::unordered_map<int, std::unordered_set<std::string>> varStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
 
 public:
 	ModifiesStore();
-	ModifiesStore(std::unordered_map<int, std::string> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore);
+	ModifiesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore);
 
 	void addModifies(int lineNum, std::string varName);
-	std::string getVar(int lineNum);
+	std::unordered_set<std::string> getVar(int lineNum);
 	std::unordered_set<int> getStmt(std::string varName);
 	bool hasVar(std::string varName) override;
 	bool hasStmt(int lineNum) override;

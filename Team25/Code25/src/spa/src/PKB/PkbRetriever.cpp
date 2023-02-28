@@ -74,7 +74,7 @@ std::unordered_set<int> PkbRetriever::getFollowerStar(int followee) {
 	return this->followsStarStorage->getFollowerStar(followee);
 }
 
-std::string PkbRetriever::getModVar(int lineNum) {
+std::unordered_set<std::string> PkbRetriever::getModVar(int lineNum) {
 	return this->modifiesStorage->getVar(lineNum);
 }
 
