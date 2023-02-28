@@ -33,7 +33,7 @@ bool ExpressionParser::checkParenthesis(const std::string& expr) {
 int ExpressionParser::matchingBracket(const std::string& str) {
     int count = 1;
     int pos = 1;
-    for (char &c: str) {
+    for (char c: str) {
         if (c == '(') {
             count++;
         } else if (c == ')') {
@@ -46,7 +46,7 @@ int ExpressionParser::matchingBracket(const std::string& str) {
     }
 }
 
-bool ExpressionParser::isExpr(const std::string&str) {
+bool ExpressionParser::isExpr(std::string str) {
     //regex for char string
     std::regex term("(\\w+)");
     std::regex exprRegex("^(?:[\\(\\s]*(\\w+)[\\s\\)]*)(?:\\s*[+\\*\\-%\\/]\\s*(?:[\\(\\s]*(\\w+)[\\s\\)]*))*$");
@@ -96,7 +96,7 @@ bool ExpressionParser::isRelExpr(const std::string& expr) {
     return false;
 };
 
-bool ExpressionParser::isCondExpr(const std::string& expr) {
+bool ExpressionParser::isCondExpr(std::string expr) {
     int index;
     // remove ()
     // for ! case
