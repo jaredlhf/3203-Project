@@ -4,14 +4,17 @@
 
 #include "ModifiesStore.h"
 
-ModifiesStore::ModifiesStore() {}
+ModifiesStore::ModifiesStore() : varStore{}, stmtStore {} {}
 
-void ModifiesStore::add(int lineNum, std::string varName) {
-	varStore[lineNum] = varName;
+ModifiesStore::ModifiesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore)
+	: varStore{varStore}, stmtStore{stmtStore} {}
+
+void ModifiesStore::addModifies(int lineNum, std::string varName) {
+	varStore[lineNum].emplace(varName);
 	stmtStore[varName].emplace(lineNum);
 }
 
-std::string ModifiesStore::getVar(int lineNum) {
+std::unordered_set<std::string> ModifiesStore::getVar(int lineNum) {
 	if (hasStmt(lineNum)) {
 		return varStore[lineNum];
 	}
@@ -51,7 +54,7 @@ std::unordered_set<std::string> ModifiesStore::getAllVar() {
 	std::unordered_set<std::string> varList;
 	
 	for (const auto& [key, value] : varStore) {
-			varList.insert(value);
+			varList.insert(value.begin(), value.end());
 		}
 	return varList;
 }
@@ -64,8 +67,3 @@ std::unordered_set<int> ModifiesStore::getAllStmt() {
 	return stmtList;
 }
 
-
-void ModifiesStore::clear() {
-	stmtStore.clear();
-	varStore.clear();
-}

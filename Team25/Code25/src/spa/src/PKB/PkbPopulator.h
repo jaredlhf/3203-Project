@@ -6,7 +6,7 @@
 using namespace std;
 
 #include "FollowsStore.h"
-#include "StatementStore.h"
+//#include "StatementStore.h"
 #include "EntityStore.h"
 #include "PatternStore.h"
 #include "FollowsStarStore.h"

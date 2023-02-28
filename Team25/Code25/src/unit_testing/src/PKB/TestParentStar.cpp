@@ -7,8 +7,8 @@ SCENARIO("Populating parent star store") {
 		ParentStarStore parentStar;
 
 		THEN("It should start empty") {
-			REQUIRE(parentStar.getAllParents().size() == 0);
-			REQUIRE(parentStar.getAllChildren().size() == 0);
+			REQUIRE(parentStar.getAllLeft().size() == 0);
+			REQUIRE(parentStar.getAllRight().size() == 0);
 		}
 
 		WHEN("One parent star is added") {
@@ -17,10 +17,10 @@ SCENARIO("Populating parent star store") {
 			parentStar.addParentStar(1, 4);
 
 			THEN("Parents should be mapped to Children") {
-				REQUIRE(parentStar.getChildrenStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
-				REQUIRE(parentStar.getParentStar(2) == std::unordered_set<int>({ 1 }));
-				REQUIRE(parentStar.getParentStar(3) == std::unordered_set<int>({ 1 }));
-				REQUIRE(parentStar.getParentStar(4) == std::unordered_set<int>({ 1 }));
+				REQUIRE(parentStar.getRightStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+				REQUIRE(parentStar.getLeftStar(2) == std::unordered_set<int>({ 1 }));
+				REQUIRE(parentStar.getLeftStar(3) == std::unordered_set<int>({ 1 }));
+				REQUIRE(parentStar.getLeftStar(4) == std::unordered_set<int>({ 1 }));
 			}
 
 			WHEN("Duplicate parent star is added") {
@@ -29,10 +29,10 @@ SCENARIO("Populating parent star store") {
 				parentStar.addParentStar(1, 4);
 
 				THEN("Parent star store should remain the same") {
-					REQUIRE(parentStar.getChildrenStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
-					REQUIRE(parentStar.getParentStar(2) == std::unordered_set<int>({ 1 }));
-					REQUIRE(parentStar.getParentStar(3) == std::unordered_set<int>({ 1 }));
-					REQUIRE(parentStar.getParentStar(4) == std::unordered_set<int>({ 1 }));
+					REQUIRE(parentStar.getRightStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+					REQUIRE(parentStar.getLeftStar(2) == std::unordered_set<int>({ 1 }));
+					REQUIRE(parentStar.getLeftStar(3) == std::unordered_set<int>({ 1 }));
+					REQUIRE(parentStar.getLeftStar(4) == std::unordered_set<int>({ 1 }));
 				}
 			}
 		}
@@ -46,18 +46,18 @@ SCENARIO("Populating parent star store") {
 			parentStar.addParentStar(3, 4);
 
 			THEN("There should be 3 Parents and 3 Children") {
-				REQUIRE(parentStar.getAllParents() == std::unordered_set<int>({ 1, 2, 3 }));
-				REQUIRE(parentStar.getAllChildren() == std::unordered_set<int>({ 2, 3, 4 }));
+				REQUIRE(parentStar.getAllLeft() == std::unordered_set<int>({ 1, 2, 3 }));
+				REQUIRE(parentStar.getAllRight() == std::unordered_set<int>({ 2, 3, 4 }));
 			}
 
 			THEN("Parents and Children should be mapped correctly") {
-				REQUIRE(parentStar.getChildrenStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
-				REQUIRE(parentStar.getChildrenStar(2) == std::unordered_set<int>({ 3, 4 }));
-				REQUIRE(parentStar.getChildrenStar(3) == std::unordered_set<int>({ 4 }));
+				REQUIRE(parentStar.getRightStar(1) == std::unordered_set<int>({ 2, 3, 4 }));
+				REQUIRE(parentStar.getRightStar(2) == std::unordered_set<int>({ 3, 4 }));
+				REQUIRE(parentStar.getRightStar(3) == std::unordered_set<int>({ 4 }));
 
-				REQUIRE(parentStar.getParentStar(2) == std::unordered_set<int>({ 1 }));
-				REQUIRE(parentStar.getParentStar(3) == std::unordered_set<int>({ 1, 2 }));
-				REQUIRE(parentStar.getParentStar(4) == std::unordered_set<int>({ 1, 2, 3 }));
+				REQUIRE(parentStar.getLeftStar(2) == std::unordered_set<int>({ 1 }));
+				REQUIRE(parentStar.getLeftStar(3) == std::unordered_set<int>({ 1, 2 }));
+				REQUIRE(parentStar.getLeftStar(4) == std::unordered_set<int>({ 1, 2, 3 }));
 			}
 		}
 	}

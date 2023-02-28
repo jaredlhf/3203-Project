@@ -27,11 +27,11 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 
 
 void PkbPopulator::addVar(std::string varName) {
-	this->varStorage->add(varName);
+	this->varStorage->addVar(varName);
 }
 
 void PkbPopulator::addConst(int constNum) {
-	this->constStorage->add(constNum);
+	this->constStorage->addConst(constNum);
 }
 
 void PkbPopulator::addFollows(int leftLineNum, int rightLineNum) {
@@ -39,7 +39,7 @@ void PkbPopulator::addFollows(int leftLineNum, int rightLineNum) {
 }
 
 void PkbPopulator::addProc(std::string procName) {
-	this->procedureStorage->add(procName);
+	this->procedureStorage->addProc(procName);
 }
 
 void PkbPopulator::addStmt(std::string stmtType, int lineNum) {
@@ -63,7 +63,7 @@ void PkbPopulator::addModifiesProc(std::string procName, std::string varName) {
 }
 
 void PkbPopulator::addModifies(int lineNum, std::string varName) {
-	this->modifiesStorage->add(lineNum, varName);
+	this->modifiesStorage->addModifies(lineNum, varName);
 }
 
 void PkbPopulator::addParentStar(int parent, int child) {
@@ -75,7 +75,7 @@ void PkbPopulator::addParent(int parent, int child) {
 }
 
 void PkbPopulator::addUses(int lineNum, std::string varName) {
-	this->usesStorage->add(lineNum, varName);
+	this->usesStorage->addUses(lineNum, varName);
 }
 
 
