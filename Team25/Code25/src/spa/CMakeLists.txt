@@ -1,10 +1,8 @@
 file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers} 
-
-"src/PKB/EntityInterface.h"
+"src/PKB/AbstractionStore.h"
 "src/PKB/EntityStore.h"
-"src/PKB/EntityStoreTemp.h"
 "src/PKB/EntityStore.cpp"
 "src/PKB/FollowsStarStore.cpp"
 "src/PKB/FollowsStarStore.h"
@@ -23,8 +21,6 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/PkbPopulator.h"
 "src/PKB/PkbRetriever.cpp"
 "src/PKB/PkbRetriever.h"
-"src/PKB/StatementStore.cpp"
-"src/PKB/StatementStore.h"
 "src/PKB/UsesStore.cpp"
 "src/PKB/UsesStore.h"
 "src/QPS/ParserResponse.cpp"

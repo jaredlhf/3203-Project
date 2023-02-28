@@ -81,8 +81,8 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(csPointer->getAllConst().count(232141) == 1);
 			}
 			THEN("PKB follows store should contain the correct follows") {
-				REQUIRE(fsPointer->getAllFollowers().size() == 6);
-				REQUIRE(fsPointer->getAllFollowees().size() == 6);
+				REQUIRE(fsPointer->getAllRight().size() == 6);
+				REQUIRE(fsPointer->getAllLeft().size() == 6);
 			}
 			THEN("PKB statment store should contain the correct statement") {
 				REQUIRE(ssPointer->getAllStmt("assign").size() == 7);
@@ -95,20 +95,20 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 9);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
-				REQUIRE(fstarsPointer->getAllFollowers().size() == 6);
-				REQUIRE(fstarsPointer->getAllFollowees().size() == 6);
+				REQUIRE(fstarsPointer->getAllRight().size() == 6);
+				REQUIRE(fstarsPointer->getAllLeft().size() == 6);
 			}
 			THEN("PKB modifies store should contain the modifies relationships") {
 				REQUIRE(msPointer->getAllVar().size() == 8);
 				REQUIRE(msPointer->getAllStmt().size() == 10);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(pStarsPointer->getAllParents().size() == 2);
-				REQUIRE(pStarsPointer->getAllChildren().size() == 4);
+				REQUIRE(pStarsPointer->getAllLeft().size() == 2);
+				REQUIRE(pStarsPointer->getAllRight().size() == 4);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(parentsPointer->getAllParents().size() == 2);
-				REQUIRE(parentsPointer->getAllChildren().size() == 4);
+				REQUIRE(parentsPointer->getAllLeft().size() == 2);
+				REQUIRE(parentsPointer->getAllRight().size() == 4);
 			}
 			THEN("PKB uses store should contain the uses relationships") {
 				REQUIRE(usesPointer->getAllVar().size() == 11);
