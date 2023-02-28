@@ -20,8 +20,8 @@ public:
 	ModifiesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore);
 
 	void addModifies(int lineNum, std::string varName);
-	std::unordered_set<std::string> getVar(int lineNum);
-	std::unordered_set<int> getStmt(std::string varName);
+	std::unordered_set<std::string> getVar(int lineNum) override;
+	std::unordered_set<int> getStmt(std::string varName) override;
 	bool hasVar(std::string varName) override;
 	bool hasStmt(int lineNum) override;
 	std::unordered_set<std::string> getAllVar() override;
