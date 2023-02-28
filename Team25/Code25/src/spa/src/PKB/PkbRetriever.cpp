@@ -67,11 +67,11 @@ std::string PkbRetriever::getAssignRhs(int stmtNo) {
 }
 
 std::unordered_set<int> PkbRetriever::getFolloweeStar(int follower) {
-	return this->followsStarStorage->getFolloweeStar(follower);
+	return this->followsStarStorage->getLeftStar(follower);
 }
 
 std::unordered_set<int> PkbRetriever::getFollowerStar(int followee) {
-	return this->followsStarStorage->getFollowerStar(followee);
+	return this->followsStarStorage->getRightStar(followee);
 }
 
 std::unordered_set<std::string> PkbRetriever::getModVar(int lineNum) {
@@ -83,10 +83,10 @@ std::unordered_set<int> PkbRetriever::getModStmt(std::string varName) {
 }
 
 std::unordered_set<int> PkbRetriever::getParentStar(int child) {
-	return this->parentStarStorage->getParentStar(child);
+	return this->parentStarStorage->getLeftStar(child);
 }
 std::unordered_set<int> PkbRetriever::getChildrenStar(int parent) {
-	return this->parentStarStorage->getChildrenStar(parent);
+	return this->parentStarStorage->getRightStar(parent);
 }
 
 int PkbRetriever::getParent(int child) {
