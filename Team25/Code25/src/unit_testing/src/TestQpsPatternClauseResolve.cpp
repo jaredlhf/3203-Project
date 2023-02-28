@@ -166,6 +166,21 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getData() == expectedTable->getData());
 			}
 
+			THEN("When PatternClause resolves case pattern a1 (_, _'w'_) with tab spaces, it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ a1->getName() });
+
+				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create("w	");
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, wcArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getData() == expectedTable->getData());
+			}
+
 			THEN("When PatternClause resolves case pattern a1 ('x', _), it should return the right results") {
 				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
 				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ a1->getName() });
