@@ -66,6 +66,24 @@ std::string Synonym::getAttrName() {
     return this->attrName;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    std::set<std::vector<std::string>> resData;
+    std::unordered_set<int> results = pkbRet->getAllStmt(this->getKeyword());
+    for (int ans : results) {
+        resData.insert(std::vector<std::string>({ std::to_string(ans) }));
+    }
+    std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ this->getName() }), resData);
+
+    res.second = resTable;
+    res.first = resTable->getData().size() == 0
+        ? Constants::ClauseResult::NO_MATCH
+        : Constants::ClauseResult::OK;
+
+    return res;
+}
+
 // Factory class for Synonyms
 std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::string& name) {
     return Synonym::create(type, name, "");
@@ -112,6 +130,30 @@ StmtSynonym::StmtSynonym(const std::string& name, const std::string& attrName) :
 
 bool StmtSynonym::isStmtRef() {
     return true;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> StmtSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    std::set<std::vector<std::string>> resData;
+
+    std::vector<std::string> stmtTypes({ Constants::ASSIGN, Constants::CALL, Constants::IF,
+                Constants::WHILE, Constants::PRINT, Constants::READ });
+
+    for (const std::string& stmtType : stmtTypes) {
+        std::unordered_set<int> results = pkbRet->getAllStmt(stmtType);
+        for (int ans : results) {
+            resData.insert(std::vector<std::string>({ std::to_string(ans) }));
+        }
+    }
+
+    std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ this->getName() }), resData);
+    res.second = resTable;
+    res.first = resTable->getData().size() == 0
+        ? Constants::ClauseResult::NO_MATCH
+        : Constants::ClauseResult::OK;
+
+    return res;
 }
 
 ReadSynonym::ReadSynonym(const std::string& name) : Synonym(name) {
@@ -202,6 +244,25 @@ bool VariableSynonym::isVariableSyn() {
     return true;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> VariableSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    std::set<std::vector<std::string>> resData;
+
+    std::unordered_set<std::string> results = pkbRet->getAllVar();
+    for (const std::string& ans : results) {
+        resData.insert(std::vector<std::string>({ ans }));
+    }
+
+    std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ this->getName() }), resData);
+    res.second = resTable;
+    res.first = resTable->getData().size() == 0
+        ? Constants::ClauseResult::NO_MATCH
+        : Constants::ClauseResult::OK;
+
+    return res;
+}
+
 ConstantSynonym::ConstantSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::CONSTANT;
 }
@@ -212,6 +273,25 @@ ConstantSynonym::ConstantSynonym(const std::string& name, const std::string& att
 
 bool ConstantSynonym::isStmtRef() {
     return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ConstantSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    std::set<std::vector<std::string>> resData;
+
+    std::unordered_set<int> results = pkbRet->getAllConst();
+    for (int ans : results) {
+        resData.insert(std::vector<std::string>({ std::to_string(ans) }));
+    }
+
+    std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ this->getName() }), resData);
+    res.second = resTable;
+    res.first = resTable->getData().size() == 0
+        ? Constants::ClauseResult::NO_MATCH
+        : Constants::ClauseResult::OK;
+
+    return res;
 }
 
 ProcedureSynonym::ProcedureSynonym(const std::string& name) : Synonym(name) {
@@ -226,6 +306,25 @@ bool ProcedureSynonym::isStmtRef() {
     return false;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ProcedureSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    std::set<std::vector<std::string>> resData;
+
+    std::unordered_set<std::string> results = pkbRet->getAllProc();
+    for (const std::string& ans : results) {
+        resData.insert(std::vector<std::string>({ ans }));
+    }
+
+    std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ this->getName() }), resData);
+    res.second = resTable;
+    res.first = resTable->getData().size() == 0
+        ? Constants::ClauseResult::NO_MATCH
+        : Constants::ClauseResult::OK;
+
+    return res;
+}
+
 SyntaxErrorSynonym::SyntaxErrorSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::SYNTAX_ERROR;
 }
@@ -238,6 +337,14 @@ bool SyntaxErrorSynonym::isStmtRef() {
     return false;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> SyntaxErrorSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    res.first = Constants::ClauseResult::SYN_ERR;
+    res.second = QpsTable::create();
+    return res;
+}
+
 SemanticErrorSynonym::SemanticErrorSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::SEMANTIC_ERROR;
 }
@@ -248,4 +355,12 @@ SemanticErrorSynonym::SemanticErrorSynonym(const std::string& name, const std::s
 
 bool SemanticErrorSynonym::isStmtRef() {
     return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> SemanticErrorSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
+    res.first = Constants::ClauseResult::SEM_ERR;
+    res.second = QpsTable::create();
+    return res;
 }

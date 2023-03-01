@@ -4,6 +4,8 @@
 #include <unordered_set>
 #include <memory>
 #include "Entity.h"
+#include "QPS/QpsTable.h"
+#include "PKB/PkbRetriever.h"
 
 
 class Synonym : public Entity {
@@ -32,6 +34,8 @@ public:
     virtual bool isVariableSyn();
     virtual bool hasAttrName();
     std::string getAttrName();
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet);
 
     // Static functions
     static std::shared_ptr<Synonym> create(const std::string& type, const std::string& name);
@@ -48,6 +52,8 @@ public:
     StmtSynonym(const std::string& name);
     StmtSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class ReadSynonym : public Synonym {
@@ -98,6 +104,8 @@ public:
     VariableSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
     virtual bool isVariableSyn() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class ConstantSynonym : public Synonym {
@@ -105,6 +113,8 @@ public:
     ConstantSynonym(const std::string& name);
     ConstantSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class ProcedureSynonym : public Synonym {
@@ -112,6 +122,8 @@ public:
     ProcedureSynonym(const std::string& name);
     ProcedureSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class SyntaxErrorSynonym : public Synonym {
@@ -119,6 +131,8 @@ public:
     SyntaxErrorSynonym(const std::string& name);
     SyntaxErrorSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class SemanticErrorSynonym : public Synonym {
@@ -126,4 +140,6 @@ public:
     SemanticErrorSynonym(const std::string& name);
     SemanticErrorSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
