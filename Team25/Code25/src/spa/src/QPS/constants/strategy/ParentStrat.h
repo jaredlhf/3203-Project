@@ -4,9 +4,12 @@
 
 class ClauseStrat;
 
-class ModStrat : public ClauseStrat {
+class ParentStrat : public ClauseStrat {
 private:
 	// Strategy functions used
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardWildcard();
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardConst();
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardSyn();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constWildcard();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constConst();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constSyn();
@@ -16,7 +19,7 @@ private:
 
 public:
 	// Constructor function for Strat
-	ModStrat(std::string clauseKeyword, std::shared_ptr<Entity> arg1,
+	ParentStrat(std::string clauseKeyword, std::shared_ptr<Entity> arg1,
 		std::shared_ptr<Entity> arg2, std::shared_ptr<PkbRetriever> pkbRet);
 
 	// Overriden functions for ClauseStrat
