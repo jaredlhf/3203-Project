@@ -3,59 +3,59 @@
 #include<stdio.h>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 #include <string>
 
-#include "EntityInterface.h"
 
-/*Generic Class for EntityStores: ConstantStore, ProcedureStore, VariableStore. 
-Implements EntityInterface.*/ 
-template<typename T>
-class EntityStore : public EntityInterface<T> {
-private:
-	std::unordered_set<T> store;
+class EntityStore {
 public:
-	EntityStore();
-	void add(T value) override;
-	std::unordered_set<T> getAll() override;
-	bool has(T value) override;
-	int size() override;
-	void clear() override;
+	virtual int size() = 0;
 };
 
-template<typename T>
-EntityStore<T>::EntityStore() {}
+class ConstantStore : public EntityStore {
+private:
+	std::unordered_set<int> store;
+public:
+	ConstantStore();
+	ConstantStore(std::unordered_set<int> store);
+	void addConst(int constNum);
+	std::unordered_set<int> getAllConst();
+	bool has(int constNum);
+	int size() override;
+};
 
-template<typename T>
-void EntityStore<T>::add(T value) {
-	store.emplace(value);
-}
+class VariableStore : public EntityStore {
+private:
+	std::unordered_set<std::string> store;
+public:
+	VariableStore();
+	VariableStore(std::unordered_set<std::string> store);
+	void addVar(std::string varName);
+	std::unordered_set<std::string> getAllVar();
+	bool has(std::string varName);
+	int size() override;
+};
 
-template<typename T>
-std::unordered_set<T> EntityStore<T>::getAll() {
-	return store;
-}
+class ProcedureStore : public EntityStore {
+private:
+	std::unordered_set<std::string> store;
+public:
+	ProcedureStore();
+	ProcedureStore(std::unordered_set<std::string> store);
+	void addProc(std::string procName);
+	std::unordered_set<std::string> getAllProc();
+	bool has(std::string procName);
+	int size() override;
+};
 
-template<typename T>
-bool EntityStore<T>::has(T value) {
-	if (store.find(value) != store.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-template<typename T>
-int EntityStore<T>::size() {
-	return store.size();
-}
-
-template<typename T>
-void EntityStore<T>::clear() {
-	store.clear();
-}
-
-typedef EntityStore<int> ConstantStore;
-typedef EntityStore<std::string> ProcedureStore;
-typedef EntityStore<std::string> VariableStore;
-
+class StatementStore : public EntityStore {
+private:
+	std::unordered_map<std::string, std::unordered_set<int>> store;
+public:
+	StatementStore();
+	StatementStore(std::unordered_map<std::string, std::unordered_set<int>> store);
+	void addStmt(std::string stmtType, int lineNum);
+	std::unordered_set<int> getAllStmt(std::string stmtType);
+	bool has(std::string stmtType);
+	int size() override;
+};

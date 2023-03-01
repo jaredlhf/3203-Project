@@ -12,7 +12,7 @@ SCENARIO("Populating uses store") {
 		}
 
 		WHEN("One uses is added") {
-			usesStore.add(1, "x");
+			usesStore.addUses(1, "x");
 
 			THEN("Statement should be mapped to variable") {
 				REQUIRE(usesStore.getStmt("x") == std::unordered_set<int>({ 1 }));
@@ -20,7 +20,7 @@ SCENARIO("Populating uses store") {
 			}
 
 			WHEN("Duplicate uses is added") {
-				usesStore.add(1, "x");
+				usesStore.addUses(1, "x");
 
 				THEN("Uses store should remain the same") {
 					REQUIRE(usesStore.getStmt("x") == std::unordered_set<int>({ 1 }));
@@ -30,10 +30,10 @@ SCENARIO("Populating uses store") {
 		}
 
 		WHEN("Four uses are added") {
-			usesStore.add(2, "x");
-			usesStore.add(2, "y");
-			usesStore.add(3, "v");
-			usesStore.add(3, "x");
+			usesStore.addUses(2, "x");
+			usesStore.addUses(2, "y");
+			usesStore.addUses(3, "v");
+			usesStore.addUses(3, "x");
 
 			THEN("There should be 2 statements and 3 variables") {
 				REQUIRE(usesStore.getAllStmt() == std::unordered_set<int>({ 2, 3 }));

@@ -334,8 +334,8 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
     if (this->arg1->isConstant() && this->arg2->isConstant()) {
         const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
         const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        const std::string& pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
-        return pkbRes == arg2Val
+        std::unordered_set<std::string> pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
+        return std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()
             ? QpsTable::getDefaultOk()
             : QpsTable::getDefaultNoMatch();
     }
@@ -345,9 +345,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
         const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
         const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
         std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
-        const std::string& pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
-        if (!pkbRes.empty()) {
-            resTable->addRow({ pkbRes });
+        std::unordered_set<std::string> pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
+        for (const std::string& res : pkbRes) {
+            resTable->addRow({ res });
         }
 
         return resTable->getData().size() > 0
@@ -364,7 +364,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum) /*TODO replace computation with getUsesVar(stmtNum);*/;
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
             if (!pkbRes.empty()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -385,8 +385,8 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum);
-            if (pkbRes == arg2Val) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
         }
@@ -407,8 +407,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum);
-            resTable->addRow({ std::to_string(stmtNum), pkbRes });
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            for (const std::string& res : pkbRes) {
+                resTable->addRow({ std::to_string(stmtNum), res });
+            }
         }
 
         return resTable->getData().size() > 0
@@ -1318,9 +1320,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
         if (wcArg2->isGenericWildcard()) {
             std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName, synArg1->getName() });
             for (const std::string& a1SynMatch : synMatches) {
-                const std::string& v1Match = pkbRet->getModVar(std::stoi(a1SynMatch)) /*TODO replace with getModVar(std::atoi(a1SynMatch))*/;
-                if (!v1Match.empty()) {
-                    resTable->addRow({ a1SynMatch, v1Match });
+                std::unordered_set<std::string> v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
+                for (const std::string& res : v1Match) {
+                    resTable->addRow({ a1SynMatch, res });
                 }
             }
 
@@ -1335,9 +1337,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
         for (const std::string& a1SynMatch : synMatches) {
             const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(a1SynMatch));
             if (StringUtils::tokenInOp(pkbPattern, wcPattern)) {
-                const std::string& v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
-                if (!v1Match.empty()) {
-                    resTable->addRow({ a1SynMatch, v1Match });
+                std::unordered_set<std::string> v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
+                for (const std::string& res : v1Match) {
+                    resTable->addRow({ a1SynMatch, res });
                 }
             }
             
