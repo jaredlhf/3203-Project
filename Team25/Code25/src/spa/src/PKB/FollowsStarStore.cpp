@@ -3,36 +3,39 @@
 
 #include "FollowsStarStore.h"
 
-FollowsStarStore::FollowsStarStore() {}
+FollowsStarStore::FollowsStarStore() : leftStmtStar{}, rightStmtStar{} {}
+
+FollowsStarStore::FollowsStarStore(std::unordered_map<int, std::unordered_set<int>> leftStmtStar, std::unordered_map<int, std::unordered_set<int>> rightStmtStar) : leftStmtStar{ leftStmtStar }, rightStmtStar{ rightStmtStar } {}
 
 
-void FollowsStarStore::addFollowsStar(int followee, std::unordered_set<int> followerLst) {
-	followerStar[followee] = followerLst;
-	for (const auto& follower : followerLst) {
-		followeeStar[follower].emplace(followee);
+void FollowsStarStore::addFollowsStar(int leftStmt, std::unordered_set<int> rightStmtLst) {
+	rightStmtStar[leftStmt] = rightStmtLst;
+	for (const auto& rightStmt : rightStmtLst) {
+		leftStmtStar[rightStmt].emplace(leftStmt);
 	}
 }
 
 
-std::unordered_set<int> FollowsStarStore::getFolloweeStar(int follower) {
-	if (hasFollower(follower)) {
-		return followeeStar[follower];
+std::unordered_set<int> FollowsStarStore::getLeftStar(int rightStmt) {
+	if (hasRightStmt(rightStmt)) {
+		return leftStmtStar[rightStmt];
 	}
 	else {
 		return {};
 	}
 }
 
-std::unordered_set<int> FollowsStarStore::getFollowerStar(int followee) {
-	if (hasFollowee(followee)) {
-		return followerStar[followee];
+std::unordered_set<int> FollowsStarStore::getRightStar(int leftStmt) {
+	if (hasLeftStmt(leftStmt)) {
+		return rightStmtStar[leftStmt];
 	}
 	else {
 		return {};
 	}
 }
-bool FollowsStarStore::hasFollowee(int lineNum) {
-	if (followerStar.find(lineNum) != followerStar.end()) {
+
+bool FollowsStarStore::hasLeftStmt(int lineNum) {
+	if (rightStmtStar.find(lineNum) != rightStmtStar.end()) {
 		return true;
 	}
 	else {
@@ -40,8 +43,8 @@ bool FollowsStarStore::hasFollowee(int lineNum) {
 	}
 }
 
-bool FollowsStarStore::hasFollower(int lineNum) {
-	if (followeeStar.find(lineNum) != followeeStar.end()) {
+bool FollowsStarStore::hasRightStmt(int lineNum) {
+	if (leftStmtStar.find(lineNum) != leftStmtStar.end()) {
 		return true;
 	}
 	else {
@@ -49,24 +52,20 @@ bool FollowsStarStore::hasFollower(int lineNum) {
 	}
 }
 
-std::unordered_set<int> FollowsStarStore::getAllFollowers() {
-	std::unordered_set<int> followerList;
-	for (const auto& [key, value] : followerStar) {
-		followerList.insert(value.begin(), value.end());
+std::unordered_set<int> FollowsStarStore::getAllRight() {
+	std::unordered_set<int> rightStmtList;
+	for (const auto& [key, value] : rightStmtStar) {
+		rightStmtList.insert(value.begin(), value.end());
 	}
-	return followerList;
+	return rightStmtList;
 }
 
-std::unordered_set<int> FollowsStarStore::getAllFollowees() {
-	std::unordered_set<int> followeeList;
-	for (const auto& [key, value] : followeeStar) {
-		followeeList.insert(value.begin(), value.end());
+std::unordered_set<int> FollowsStarStore::getAllLeft() {
+	std::unordered_set<int> leftStmtList;
+	for (const auto& [key, value] : leftStmtStar) {
+		leftStmtList.insert(value.begin(), value.end());
 	}
-	return followeeList;
+	return leftStmtList;
 }
 
 
-void FollowsStarStore::clear() {
-	followeeStar.clear();
-	followerStar.clear();
-}

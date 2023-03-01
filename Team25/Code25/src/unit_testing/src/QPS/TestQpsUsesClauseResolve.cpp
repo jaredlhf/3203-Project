@@ -37,15 +37,15 @@ SCENARIO("Mocking behavior of UsesClause::resolve") {
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {
 			// Mock variables appearing in the SIMPLE program
-			vsPointer->add("x");
-			vsPointer->add("y");
-			vsPointer->add("z");
+			vsPointer->addVar("x");
+			vsPointer->addVar("y");
+			vsPointer->addVar("z");
 
 			// Mock constants appearing in the SIMPLE program
-			csPointer->add(1);
+			csPointer->addConst(1);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->add("main");
+			psPointer->addProc("main");
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -54,11 +54,11 @@ SCENARIO("Mocking behavior of UsesClause::resolve") {
 			ssPointer->addStmt(Constants::READ, 4);
 
 			// Mock Uses relationship in SIMPLE program
-			usesPointer->add(1, "x");
-			usesPointer->add(1, "y");
-			usesPointer->add(2, "z");
-			usesPointer->add(2, "x");
-			usesPointer->add(3, "y");
+			usesPointer->addUses(1, "x");
+			usesPointer->addUses(1, "y");
+			usesPointer->addUses(2, "z");
+			usesPointer->addUses(2, "x");
+			usesPointer->addUses(3, "y");
 
 			THEN("When UsesClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =

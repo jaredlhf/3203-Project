@@ -42,14 +42,14 @@ SCENARIO("ExtractingNode") {
             shared_ptr<AssignNode> sp = make_shared<AssignNode>(a);
             m.visit(sp, a.getLine());
             THEN("v should populate") {
-                REQUIRE(msPointer->getVar(a.getLine()) == "v");
+                REQUIRE(msPointer->getVar(a.getLine()) == std::unordered_set<std::string>({ "v" }));
             }
         }WHEN("a read node is visited parsed") {
             ReadNode r = ReadNode(2, "x");
             shared_ptr<ReadNode> sp = make_shared<ReadNode>(r);
             m.visit(sp, r.getLine());
             THEN("v should populate") {
-                REQUIRE(msPointer->getVar(r.getLine()) == "x");
+                REQUIRE(msPointer->getVar(r.getLine()) == std::unordered_set < std::string>({ "x" }));
             }
         }
     }

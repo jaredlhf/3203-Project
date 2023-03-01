@@ -1,36 +1,37 @@
-	#include<stdio.h>
+#include<stdio.h>
 #include <iostream>
 
 #include "ParentStarStore.h"
 
-ParentStarStore::ParentStarStore() {}
+ParentStarStore::ParentStarStore() : leftStmtStar{}, rightStmtStar{} {}
 
+ParentStarStore::ParentStarStore(std::unordered_map<int, std::unordered_set<int>> leftStmtStar, std::unordered_map<int, std::unordered_set<int>> rightStmtStar) : leftStmtStar{ leftStmtStar }, rightStmtStar{ rightStmtStar } {}
 
-void ParentStarStore::addParentStar(int parent, int child) {
-	childrenStar[parent].emplace(child);
-	parentStar[child].emplace(parent);
+void ParentStarStore::addParentStar(int leftStmt, int rightStmt) {
+	rightStmtStar[leftStmt].emplace(rightStmt);
+	leftStmtStar[rightStmt].emplace(leftStmt);
 }
 
-std::unordered_set<int> ParentStarStore::getParentStar(int child) {
-	if (hasChildren(child)) {
-		return parentStar[child];
+std::unordered_set<int> ParentStarStore::getLeftStar(int rightStmt) {
+	if (hasRightStmt(rightStmt)) {
+		return leftStmtStar[rightStmt];
 	}
 	else {
 		return {};
 	}
 }
 
-std::unordered_set<int> ParentStarStore::getChildrenStar(int parent) {
-	if (hasParent(parent)) {
-		return childrenStar[parent];
+std::unordered_set<int> ParentStarStore::getRightStar(int leftStmt) {
+	if (hasLeftStmt(leftStmt)) {
+		return rightStmtStar[leftStmt];
 	}
 	else {
 		return {};
 	}
 }
 
-bool ParentStarStore::hasParent(int lineNum) {
-	if (childrenStar.find(lineNum) != childrenStar.end()) {
+bool ParentStarStore::hasLeftStmt(int lineNum) {
+	if (rightStmtStar.find(lineNum) != rightStmtStar.end()) {
 		return true;
 	}
 	else {
@@ -38,8 +39,8 @@ bool ParentStarStore::hasParent(int lineNum) {
 	}
 }
 
-bool ParentStarStore::hasChildren(int lineNum) {
-	if (parentStar.find(lineNum) != parentStar.end()) {
+bool ParentStarStore::hasRightStmt(int lineNum) {
+	if (leftStmtStar.find(lineNum) != leftStmtStar.end()) {
 		return true;
 	}
 	else {
@@ -47,23 +48,18 @@ bool ParentStarStore::hasChildren(int lineNum) {
 	}
 }
 
-std::unordered_set<int> ParentStarStore::getAllParents() {
-	std::unordered_set<int> parentList;
-	for (const auto& [key, value] : parentStar) {
-		parentList.insert(value.begin(), value.end());
+std::unordered_set<int> ParentStarStore::getAllRight() {
+	std::unordered_set<int> rightStmtList;
+	for (const auto& [key, value] : rightStmtStar) {
+		rightStmtList.insert(value.begin(), value.end());
 	}
-	return parentList;
+	return rightStmtList;
 }
 
-std::unordered_set<int> ParentStarStore::getAllChildren() {
-	std::unordered_set<int> childrenList;
-	for (const auto& [key, value] : childrenStar) {
-		childrenList.insert(value.begin(), value.end());
+std::unordered_set<int> ParentStarStore::getAllLeft() {
+	std::unordered_set<int> leftStmtList;
+	for (const auto& [key, value] : leftStmtStar) {
+		leftStmtList.insert(value.begin(), value.end());
 	}
-	return childrenList;
-}
-
-void ParentStarStore::clear() {
-	parentStar.clear();
-	childrenStar.clear();
+	return leftStmtList;
 }

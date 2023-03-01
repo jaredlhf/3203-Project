@@ -57,11 +57,11 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(ssPointer->size() == 1);
 			}
 			THEN("Adding one follows relationship should increase the follows store size by 1") {
-				REQUIRE(fsPointer->getAllFollowers().size() == 0);
-				REQUIRE(fsPointer->getAllFollowees().size() == 0);
+				REQUIRE(fsPointer->getAllRight().size() == 0);
+				REQUIRE(fsPointer->getAllLeft().size() == 0);
 				pkbPop.addFollows(1, 2);
-				REQUIRE(fsPointer->getAllFollowers().size() == 1);
-				REQUIRE(fsPointer->getAllFollowees().size() == 1);
+				REQUIRE(fsPointer->getAllRight().size() == 1);
+				REQUIRE(fsPointer->getAllLeft().size() == 1);
 			}
 			THEN("Adding one pattern should increase the LHS pattern store size by 1") {
 				REQUIRE(pattsPointer->LhsAssignStoreSize() == 0);
@@ -74,11 +74,11 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 1);
 			}
 			THEN("Adding one follows star should increase the follows star store size by 1") {
-				REQUIRE(fstarsPointer->getAllFollowers().size() == 0);
-				REQUIRE(fstarsPointer->getAllFollowees().size() == 0);
+				REQUIRE(fstarsPointer->getAllRight().size() == 0);
+				REQUIRE(fstarsPointer->getAllLeft().size() == 0);
 				pkbPop.addFollowsStar(1, std::unordered_set<int>({1, 2, 3}));
-				REQUIRE(fstarsPointer->getAllFollowers().size() == 3);
-				REQUIRE(fstarsPointer->getAllFollowees().size() == 1);
+				REQUIRE(fstarsPointer->getAllRight().size() == 3);
+				REQUIRE(fstarsPointer->getAllLeft().size() == 1);
 			}
 			THEN("Adding one modifes should increase the modifies store size by 1") {
 				REQUIRE(msPointer->getAllStmt().size() == 0);
@@ -88,18 +88,18 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(msPointer->getAllVar().size() == 1);
 			}
 			THEN("Adding one parentsStar should increase the parentsStar store size by 1") {
-				REQUIRE(pStarsPointer->getAllParents().size() == 0);
-				REQUIRE(pStarsPointer->getAllChildren().size() == 0);
+				REQUIRE(pStarsPointer->getAllLeft().size() == 0);
+				REQUIRE(pStarsPointer->getAllRight().size() == 0);
 				pkbPop.addParentStar(1, 1);
-				REQUIRE(pStarsPointer->getAllParents().size() == 1);
-				REQUIRE(pStarsPointer->getAllChildren().size() == 1);
+				REQUIRE(pStarsPointer->getAllLeft().size() == 1);
+				REQUIRE(pStarsPointer->getAllRight().size() == 1);
 			}
 			THEN("Adding one parent should increase the parent store size by 1") {
-				REQUIRE(parentsPointer->getAllParents().size() == 0);
-				REQUIRE(parentsPointer->getAllChildren().size() == 0);
+				REQUIRE(parentsPointer->getAllLeft().size() == 0);
+				REQUIRE(parentsPointer->getAllRight().size() == 0);
 				pkbPop.addParent(1, 1);
-				REQUIRE(parentsPointer->getAllParents().size() == 1);
-				REQUIRE(parentsPointer->getAllChildren().size() == 1);
+				REQUIRE(parentsPointer->getAllLeft().size() == 1);
+				REQUIRE(parentsPointer->getAllRight().size() == 1);
 			}
 			THEN("Adding one uses should increase the uses store size by 1") {
 				REQUIRE(usesPointer->getAllStmt().size() == 0);
