@@ -29,12 +29,22 @@ public:
 	static const std::string PATTERN;
 	static const std::string WILDCARD;
 
+	// Constant declaration for attrName
+	static const std::string PROCNAME;
+	static const std::string VARNAME;
+	static const std::string VALUE;
+	static const std::string STMTNUM;
+	static const std::string WITH;
+
 	enum class ClauseResult{
 		SYN_ERR = 0,
 		SEM_ERR = 1,
 		NO_MATCH = 2,
 		OK = 3
 	};
+
+	// Functions for attrName
+	static bool isAttrNameInt(const std::string& attrName);
 
 	// ClauseResult related functions
 	static Constants::ClauseResult getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2);

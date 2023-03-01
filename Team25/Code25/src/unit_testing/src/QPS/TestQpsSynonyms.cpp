@@ -89,6 +89,42 @@ TEST_CASE("create function creates the right classes based on the keywords passe
 	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->matchesKeyword(Constants::PROCEDURE));
 }
 
+TEST_CASE("create function with attrName creates the right classes based on the keywords passed in") {
+	const std::string& attr1 = Constants::PROCNAME;
+	const std::string& attr2 = Constants::VARNAME;
+	const std::string& attr3 = Constants::VALUE;
+	const std::string& attr4 = Constants::STMTNUM;
+	REQUIRE(Synonym::create(Constants::STMT, "x", attr1)->matchesKeyword(Constants::STMT));
+	REQUIRE(Synonym::create(Constants::STMT, "x", attr1)->matchesAttrName(attr1));
+
+	REQUIRE(Synonym::create(Constants::READ, "x", attr2)->matchesKeyword(Constants::READ));
+	REQUIRE(Synonym::create(Constants::READ, "x", attr2)->matchesAttrName(attr2));
+
+	REQUIRE(Synonym::create(Constants::PRINT, "x", attr3)->matchesKeyword(Constants::PRINT));
+	REQUIRE(Synonym::create(Constants::PRINT, "x", attr3)->matchesAttrName(attr3));
+
+	REQUIRE(Synonym::create(Constants::CALL, "x", attr4)->matchesKeyword(Constants::CALL));
+	REQUIRE(Synonym::create(Constants::CALL, "x", attr4)->matchesAttrName(attr4));
+
+	REQUIRE(Synonym::create(Constants::WHILE, "x", attr1)->matchesKeyword(Constants::WHILE));
+	REQUIRE(Synonym::create(Constants::WHILE, "x", attr1)->matchesAttrName(attr1));
+
+	REQUIRE(Synonym::create(Constants::IF, "x", attr2)->matchesKeyword(Constants::IF));
+	REQUIRE(Synonym::create(Constants::IF, "x", attr2)->matchesAttrName(attr2));
+
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x", attr3)->matchesKeyword(Constants::ASSIGN));
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x", attr3)->matchesAttrName(attr3));
+
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x", attr4)->matchesKeyword(Constants::VARIABLE));
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x", attr4)->matchesAttrName(attr4));
+
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x", attr1)->matchesKeyword(Constants::CONSTANT));
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x", attr1)->matchesAttrName(attr1));
+
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x", attr2)->matchesKeyword(Constants::PROCEDURE));
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x", attr2)->matchesAttrName(attr2));
+}
+
 
 // TESTS FOR POLYMORPHIC FUNCTIONS IN CONCRETE SYNONYM CLASSES
 TEST_CASE("All concrete synonym classes match the correct keywords") {

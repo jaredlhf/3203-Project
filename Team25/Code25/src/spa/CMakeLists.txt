@@ -23,6 +23,9 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/PkbRetriever.h"
 "src/PKB/UsesStore.cpp"
 "src/PKB/UsesStore.h"
+"src/PKB/AbstractionStore.h" 
+"src/PKB/UsesProcStore.h" 
+"src/PKB/UsesProcStore.cpp" 
 "src/QPS/ParserResponse.cpp"
 "src/QPS/ParserResponse.h"
 "src/QPS/Qps.cpp"
@@ -48,6 +51,22 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/Value.h"
 "src/QPS/constants/Wildcard.cpp"
 "src/QPS/constants/Wildcard.h"
+"src/QPS/constants/strategy/UsesStrat.h" 
+"src/QPS/constants/strategy/ClauseStrat.h" 
+"src/QPS/constants/strategy/ClauseStrat.cpp" 
+"src/QPS/constants/strategy/UsesStrat.cpp"
+"src/QPS/constants/strategy/ModStrat.h" 
+"src/QPS/constants/strategy/ModStrat.cpp" 
+"src/QPS/constants/strategy/ParentStrat.h" 
+"src/QPS/constants/strategy/ParentStrat.cpp" 
+"src/QPS/constants/strategy/FollowsStrat.h" 
+"src/QPS/constants/strategy/FollowsStrat.cpp" 
+"src/QPS/constants/strategy/ParentStStrat.h" 
+"src/QPS/constants/strategy/ParentStStrat.cpp" 
+"src/QPS/constants/strategy/FollowsStStrat.h" 
+"src/QPS/constants/strategy/FollowsStStrat.cpp" 
+"src/QPS/constants/strategy/PatternStrat.h" 
+"src/QPS/constants/strategy/PatternStrat.cpp"
 "src/QPS/utils/ParserUtils.cpp"
 "src/QPS/utils/ParserUtils.h"
 "src/QPS/utils/StringUtils.cpp"
@@ -70,7 +89,7 @@ src/SP/SPParserUtils.h
 src/SP/DesignExtractor.h
 src/SP/SelectiveExtractor.cpp
 src/SP/SelectiveExtractor.h
-src/SP/SPConstants.h "src/PKB/AbstractionStore.h" "src/PKB/UsesProcStore.h" "src/PKB/UsesProcStore.cpp")
+src/SP/SPConstants.h)
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

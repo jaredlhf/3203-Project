@@ -22,7 +22,19 @@ const std::string Constants::PARENTST = "Parent*";
 const std::string Constants::FOLLOWS = "Follows";
 const std::string Constants::FOLLOWSST = "Follows*";
 const std::string Constants::PATTERN = "pattern";
+const std::string Constants::WITH = "with";
 const std::string Constants::WILDCARD = "_";
+
+// Constant declaration for attribute names
+const std::string Constants::PROCNAME = "procName";
+const std::string Constants::VARNAME = "varName";
+const std::string Constants::VALUE = "value";
+const std::string Constants::STMTNUM = "stmt#";
+
+// AttrName related functions
+bool Constants::isAttrNameInt(const std::string& attrName) {
+	return attrName == Constants::VALUE || attrName == Constants::STMTNUM;
+}
 
 // ClauseResult related functions
 Constants::ClauseResult Constants::getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2) {
