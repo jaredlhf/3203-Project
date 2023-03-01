@@ -284,6 +284,16 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For pattern query in the form (_, 'x') with tab spaces, the right result is returned") {
+				list<string> expected = { "3", "7", "9" };
+				list<string> res;
+
+				string query = "assign a1; stmt s2; Select a1 pattern a1 (_, _\"x\t\t\t\"_)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For pattern query in the form (_, _), the right result is returned") {
 				list<string> expected = { "1", "3", "7", "9" };
 				list<string> res;
