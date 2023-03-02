@@ -18,8 +18,8 @@ class ParserResponse {
     public:
         void setDeclarations(std::vector<std::shared_ptr<Synonym>> declarations);
         void setSelectSynonyms(std::vector<std::shared_ptr<Synonym>> synonyms);
-        void setPatternClause(std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>> >  patternClause);
-        void setSuchThatClause(std::vector<std::shared_ptr<Clause>> suchThatClause);
+        void setPatternClauses(std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>> >  patternClause);
+        void setSuchThatClauses(std::vector<std::shared_ptr<Clause>> suchThatClause);
         std::vector<std::shared_ptr<Synonym>> getSelectSynonyms();
         std::vector<std::shared_ptr<Synonym>> getDeclarations();
         std::vector<std::shared_ptr<Clause>> getSuchThatClauses();

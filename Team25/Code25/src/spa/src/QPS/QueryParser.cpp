@@ -8,6 +8,8 @@ const std::string OPEN_BRACKET = "(";
 const std::string CLOSE_BRACKET = ")";
 const std::string DECLARATION_END_TOKEN = ";";
 const std::string SEPARATOR = ",";
+const std::string OPEN_SELECT_BRACKET = "<";
+const std::string CLOSE_SELECT_BRACKET = ">";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
 
 bool QueryParser::isValidDeclaration(std::vector<std::string> s,
@@ -44,6 +46,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     return true;
 }
 
+// might need to redo
 ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, 
         std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations) {
     
@@ -59,6 +62,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         }
 
         // check if syn-assign is declared
+        // TODO: no longer just assign, can be while or if
         if (ptr == 1) {
             if (assignment_synonyms.find(s[ptr]) == assignment_synonyms.end()) {
                 response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
@@ -140,6 +144,39 @@ std::vector<std::string> QueryParser::validateSuchThatClause(std::vector<std::st
     return { s[0], s[2], s[4] };
 }
 
+std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::vector<std::string> tokens, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+
+    int tokenLength = tokens.size();
+    int synCount = 0;
+    std::vector<std::shared_ptr<Synonym>> result = {};
+    if (tokens[0] != OPEN_SELECT_BRACKET && tokens[tokenLength - 1] != CLOSE_BRACKET) {
+        return result;
+    }
+    // delete the open and close brackets
+    tokens.erase(tokens.begin());
+    tokens.pop_back();
+
+    for (int i = 0; i < tokens.size(); i++) {
+        if (1 % 2 != 0) {
+            if (tokens[i] != SEPARATOR) {
+                return {};
+            }
+        }
+        synCount++;
+        for (auto& element: declarations) {
+            if (element->matchesName(tokens[i])) {
+                result.push_back(element);
+            }
+        }
+    }
+    // mismatch in parsed synonyms vs approved synonyms
+    if (synCount != result.size()) {
+        return {Synonym::create(Constants::SEMANTIC_ERROR, "")};
+    }
+
+    return result;
+}
+
 std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vector<std::string> declaration, 
         std::unordered_set<std::string> declared_synonyms) {
 
@@ -153,13 +190,11 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vecto
         }
         
         // creating the Synonym
-        if (i % 2 != 0) {
-            if (declared_synonyms.find(declaration[i]) != declared_synonyms.end()) {
-                return {};
-            }
-            declared_synonyms.insert(declaration[i]);
-            declarations.push_back(Synonym::create(keyword, declaration[i]));
+        if (declared_synonyms.find(declaration[i]) != declared_synonyms.end()) {
+            return {};
         }
+        declared_synonyms.insert(declaration[i]);
+        declarations.push_back(Synonym::create(keyword, declaration[i]));
     }
     return declarations;
 }
@@ -167,14 +202,14 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::processDeclaration(std::vecto
 ParserResponse QueryParser::generateSyntaxErrorResponse() {
     ParserResponse responseObject;
     std::shared_ptr<Synonym> synonym = Synonym::create(Constants::SYNTAX_ERROR, "");
-    responseObject.setSynonym(synonym);
+    responseObject.setSelectSynonyms({synonym});
     return responseObject;
 }
 
 ParserResponse QueryParser::generateSemanticErrorResponse() {
     ParserResponse responseObject;
     std::shared_ptr<Synonym> synonym = Synonym::create(Constants::SEMANTIC_ERROR, "");
-    responseObject.setSynonym(synonym);
+    responseObject.setSelectSynonyms({synonym});
     return responseObject;
 }
 
@@ -189,10 +224,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     bool hasSemanticError = false;
 
     std::vector<std::shared_ptr<Synonym>> declarations = {};
-    std::shared_ptr<Synonym> synonym;
-    std::shared_ptr<Synonym> assignSynonym;
-    std::shared_ptr<Clause> patternClause;
-    std::shared_ptr<Clause> suchThatClause;
+    std::vector<std::shared_ptr<Synonym>> selectSynonyms = {};
+    std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> patternClauses;
+    std:vector<std::shared_ptr<Clause>> suchThatClauses;
 
     int ptr = 0;
 
@@ -220,7 +254,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         ptr++;
     }
 
-    // get synonym for select statement
+    // get synonyms for select statement
     bool hasSeenSelectToken = false;
     bool afterSynonym = false;
     while (ptr < tokenLength) {
@@ -242,15 +276,49 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             continue;
         }
         if (hasSeenSelectToken) {
+            if (tokens[ptr] == Constants::BOOLEAN) {
+                selectSynonyms.push_back(Synonym::create(Constants::BOOLEAN, ""));
+                afterSynonym = true;
+                break;
+            }
+
+            std::shared_ptr<Synonym> syn;
             for (auto& element: declarations) {
                 if (element->matchesName(tokens[ptr])) {
-                    synonym = element;
-                    afterSynonym = true;
-                    break;
+                    syn = element;
                 }
             }
-            if (!afterSynonym) {
+            // confirms its a semantic error and not an open bracket token
+            if (syn == nullptr && tokens[ptr] != OPEN_SELECT_BRACKET) {
                 hasSemanticError = true;
+                afterSynonym = true;
+                break;
+            }
+            // if theres a match, means its a valid select synonym
+            if (syn != nullptr) {
+                selectSynonyms.push_back(syn);
+                afterSynonym = true;
+                break;
+            }
+            // if not semantic error and synonym is empty, means its some other token
+            if (tokens[ptr] != OPEN_SELECT_BRACKET) {
+                return generateSyntaxErrorResponse();
+            }
+            // get items within bracket if any
+            std::vector<std::string> selectTokens = {};
+            while (ptr < tokenLength && tokens[ptr] != CLOSE_SELECT_BRACKET) {
+                selectTokens.push_back(tokens[ptr]);
+                ptr++;
+            }
+            // add close bracket to select tokens
+            selectTokens.push_back(tokens[ptr]);
+            std::vector<std::shared_ptr<Synonym>> synonyms = validateSelectSynonyms(selectTokens, declarations);
+            if (synonyms.empty()) {
+                return generateSyntaxErrorResponse();
+            }
+            if (ParserUtils::isSemanticError(synonyms[0])) {
+                hasSemanticError = true;
+                afterSynonym = true;
                 break;
             }
         }
@@ -283,8 +351,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             if (response.isIncomplete() || response.getAssignSyn()->getKeyword() == Constants::SYNTAX_ERROR) {
                 return generateSyntaxErrorResponse();
             }
-            patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
-            assignSynonym = response.getAssignSyn();
+            std::shared_ptr<Clause> patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
+            std::shared_ptr<Synonym> patternSynonym = response.getAssignSyn();
+            patternClauses.push_back(make_pair(patternSynonym, patternClause));
         }
 
         if (tokens[ptr] == SUCHTHAT_MARKER[0]) {
@@ -323,7 +392,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 hasSemanticError = true;
             }
 
-            suchThatClause = Clause::create(relationshipValidator->getKeyword(), firstRef, secondRef);
+            suchThatClauses.push_back(Clause::create(relationshipValidator->getKeyword(), firstRef, secondRef));
         }
 
         ptr++;    
@@ -332,10 +401,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         return generateSemanticErrorResponse();
     }
     responseObject.setDeclarations(declarations);
-    responseObject.setSynonym(synonym);
-    responseObject.setAssignSynonym(assignSynonym);
-    responseObject.setPatternClause(patternClause);
-    responseObject.setSuchThatClause(suchThatClause);
+    responseObject.setSelectSynonyms(selectSynonyms);
+    responseObject.setPatternClauses(patternClauses);
+    responseObject.setSuchThatClauses(suchThatClauses);
     
 
 

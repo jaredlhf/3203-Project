@@ -52,7 +52,7 @@ class QueryParser {
         static std::vector<std::string> validateSuchThatClause(std::vector<std::string> s);
         static ParserResponse generateSyntaxErrorResponse();
         static ParserResponse generateSemanticErrorResponse();
-
+        static std::vector<std::shared_ptr<Synonym>> validateSelectSynonyms(std::vector<std::string> tokens, const std::vector<std::shared_ptr<Synonym>>& declarations);
     public:
         ParserResponse parseQueryTokens(std::vector<std::string> tokens);
 };
