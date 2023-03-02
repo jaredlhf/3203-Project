@@ -146,10 +146,12 @@ bool UsesClause::isWrongArgs() {
 }
 
 /*
-    For uses clauses, args is sem invalid if arg1 is not stmtsyn, or arg2 is not varsyn
+    For uses clauses, args is sem invalid if arg1 is not stmtsyn or procedure, or arg2 is not varsyn
 */
 bool UsesClause::isSemInvalid() {
-    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+    if (this->arg1->isSynonym() && 
+        !(std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()
+            || std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE))) {
         return true;
     }
 
@@ -199,7 +201,8 @@ bool ModifiesClause::isWrongArgs() {
     For modifies clauses, args is sem invalid if arg1 is not stmtsyn, or arg2 is not varsyn
 */
 bool ModifiesClause::isSemInvalid() {
-    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+    if (this->arg1->isSynonym() && !(std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()
+        || std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE))) {
         return true;
     }
 
