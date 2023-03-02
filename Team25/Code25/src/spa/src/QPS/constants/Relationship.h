@@ -35,9 +35,9 @@ class FollowsRelationship : public Relationship {
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
 
-class FollowsTRelationship : public Relationship {
+class FollowsSTRelationship : public Relationship {
     public:
-        FollowsTRelationship(const std::string& arg1, const std::string& arg2);
+        FollowsSTRelationship(const std::string& arg1, const std::string& arg2);
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
 
@@ -47,20 +47,44 @@ class ParentRelationship : public Relationship {
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
 
-class ParentTRelationship : public Relationship {
+class ParentSTRelationship : public Relationship {
     public:
-        ParentTRelationship(const std::string& arg1, const std::string& arg2);
+        ParentSTRelationship(const std::string& arg1, const std::string& arg2);
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
 
-class UsesSRelationship : public Relationship {
+class UsesRelationship : public Relationship {
     public:
-        UsesSRelationship(const std::string& arg1, const std::string& arg2);
+        UsesRelationship(const std::string& arg1, const std::string& arg2);
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
 
-class ModifiesSSRelationship : public Relationship {
+class ModifiesRelationship : public Relationship {
     public:
-        ModifiesSSRelationship(const std::string& arg1, const std::string& arg2);
+        ModifiesRelationship(const std::string& arg1, const std::string& arg2);
+        virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
+
+class CallsRelationship : public Relationship {
+    public:
+        CallsRelationship(const std::string& arg1, const std::string& arg2);
+        virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
+
+class CallsSTRelationship : public Relationship {
+    public:
+        CallsSTRelationship(const std::string& arg1, const std::string& arg2);
+        virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
+
+class NextRelationship : public Relationship {
+    public:
+        NextRelationship(const std::string& arg1, const std::string& arg2);
+        virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
+
+class NextSTRelationship : public Relationship {
+    public:
+        NextSTRelationship(const std::string& arg1, const std::string& arg2);
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
