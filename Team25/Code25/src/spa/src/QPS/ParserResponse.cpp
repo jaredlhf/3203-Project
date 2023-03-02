@@ -1,29 +1,22 @@
 #include "ParserResponse.h"
 
-
-
 void ParserResponse::setDeclarations(std::vector<std::shared_ptr<Synonym>> declarations) {
     this->declarations = declarations;
     return;
 }
 
-void ParserResponse::setSynonym(std::shared_ptr<Synonym> synonym) {
-    this->synonym = synonym;
+void ParserResponse::setSelectSynonyms(std::vector<std::shared_ptr<Synonym>> synonyms) {
+    this->selectSynonyms = synonyms;
     return;
 }
 
-void ParserResponse::setAssignSynonym(std::shared_ptr<Synonym> synonym) {
-    this->assignSynonym = synonym;
+void ParserResponse::setPatternClause(std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> patternClauses) {
+    this->patternClauses = patternClauses;
     return;
 }
 
-void ParserResponse::setPatternClause(std::shared_ptr<Clause> patternClause) {
-    this->patternClause = patternClause;
-    return;
-}
-
-void ParserResponse::setSuchThatClause(std::shared_ptr<Clause> suchThatClause) {
-    this->suchThatClause = suchThatClause;
+void ParserResponse::setSuchThatClause(std::vector<std::shared_ptr<Clause>> suchThatClauses) {
+    this->suchThatClauses = suchThatClauses;
     return;
 }
 
@@ -31,29 +24,22 @@ std::vector<std::shared_ptr<Synonym>> ParserResponse::getDeclarations() {
     return this->declarations;
 }
 
-std::shared_ptr<Synonym> ParserResponse::getSynonym() {
-    return this->synonym;
+std::vector<std::shared_ptr<Synonym>> ParserResponse::getSelectSynonyms() {
+    return this->selectSynonyms;
 }
 
-std::shared_ptr<Synonym> ParserResponse::getAssignSynonym() {
-    return this->assignSynonym;
+std::vector<std::shared_ptr<Clause>> ParserResponse::getSuchThatClauses() {
+    return this->suchThatClauses;
 }
 
-std::shared_ptr<Clause> ParserResponse::getPatternClause() {
-    return this->patternClause;
+std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> ParserResponse::getPatternClauses() {
+    return this->patternClauses;
 }
 
-std::shared_ptr<Clause> ParserResponse::getSuchThatClause() {
-    return this->suchThatClause;
-}
-
-// add a compare for patternClause
 bool ParserResponse::compare(ParserResponse other) {
-    bool isSamePattern = true;
-    bool isSameSuchThat = true;
-    bool isSameAssignSyn = true;
 
     std::vector<std::shared_ptr<Synonym>> otherDeclarations = other.getDeclarations();
+    // compare declarations
     if (otherDeclarations.size() != this->declarations.size()) {
         return false;
     }
@@ -65,21 +51,56 @@ bool ParserResponse::compare(ParserResponse other) {
         }
     }
 
-    if (other.getSynonym() == nullptr || this->synonym == nullptr) {
+    // if is an error
+    if (other.getSelectSynonyms().empty() || this->selectSynonyms.empty()) {
         return false;
     }
 
-    if (other.getAssignSynonym() != nullptr && this->assignSynonym != nullptr) {
-        isSameAssignSyn = other.getAssignSynonym()->compare(this->assignSynonym) ;
+    std::vector<std::shared_ptr<Synonym>> otherSynonyms = other.getSelectSynonyms();
+    // compare synonyms
+    if (otherSynonyms.size() != this->selectSynonyms.size()) {
+        return false;
+    }
+    for (int i = 0; i < otherSynonyms.size(); i++) {
+        std::shared_ptr<Synonym> d = this->selectSynonyms[i];
+        if (!otherSynonyms[i]->compare(d)) {
+            return false;
+        }
     }
 
-    if (other.getPatternClause() != nullptr && this->patternClause != nullptr) {
-        isSamePattern = other.getPatternClause()->compare(this->patternClause);
+    // compare patterns
+    if (!other.getPatternClauses().empty() && !this->patternClauses.empty()) {
+        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>>  pc1 = other.getPatternClauses();
+        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>>  pc2 = this->patternClauses;
+
+        if (pc1.size() != pc2.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < pc1.size(); i++) {
+            if (pc1[i].first->compare(pc2[i].first)) {
+                return false;
+            }
+            if (pc1[i].second->compare(pc2[i].second)) {
+                return false;
+            }
+        }
     }
 
-    if (other.getSuchThatClause() != nullptr && this->suchThatClause != nullptr) {
-        isSameSuchThat = other.getSuchThatClause()->compare(this->suchThatClause);
+    if (!other.getSuchThatClauses().empty() && !this->suchThatClauses.empty()) {
+        std::vector<std::shared_ptr<Clause>> otherSuchThatClauses = other.getSuchThatClauses();
+
+        if (otherSuchThatClauses.size() != this->suchThatClauses.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < otherSuchThatClauses.size(); i++) {
+            std::shared_ptr<Clause> c = this->suchThatClauses[i];
+            if (!otherSuchThatClauses[i]->compare(c)) {
+                return false;
+            }
+        }
     }
     
-    return other.getSynonym()->compare(this->synonym) && isSameAssignSyn && isSamePattern && isSameSuchThat;
+    return true;
 }

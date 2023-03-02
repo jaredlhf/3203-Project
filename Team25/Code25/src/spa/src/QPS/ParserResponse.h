@@ -6,28 +6,23 @@
 #include "constants/Synonym.h"
 #include "constants/Clause.h"
 
+// TODO: add typedef for pair type
 class ParserResponse {
     private:
         std::vector<std::shared_ptr<Synonym>> declarations;
-        std::shared_ptr<Synonym> synonym;
-        std::shared_ptr<Synonym> assignSynonym;
-        std::shared_ptr<Clause> patternClause;
-        std::shared_ptr<Clause> suchThatClause;
-        
+        std::vector<std::shared_ptr<Synonym>> selectSynonyms;
+        std::vector<std::shared_ptr<Clause>> suchThatClauses;
+        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> patternClauses;
+
         
     public:
         void setDeclarations(std::vector<std::shared_ptr<Synonym>> declarations);
-        void setSynonym(std::shared_ptr<Synonym> synonym);
-        void setAssignSynonym(std::shared_ptr<Synonym> synonym);
-        void setPatternClause(std::shared_ptr<Clause> patternClause);
-        void setSuchThatClause(std::shared_ptr<Clause> suchThatClause);
-        std::shared_ptr<Synonym> getSynonym();
-        std::shared_ptr<Synonym> getAssignSynonym();
+        void setSelectSynonyms(std::vector<std::shared_ptr<Synonym>> synonyms);
+        void setPatternClause(std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>> >  patternClause);
+        void setSuchThatClause(std::vector<std::shared_ptr<Clause>> suchThatClause);
+        std::vector<std::shared_ptr<Synonym>> getSelectSynonyms();
         std::vector<std::shared_ptr<Synonym>> getDeclarations();
-        std::shared_ptr<Clause> getPatternClause();
-        std::shared_ptr<Clause> getSuchThatClause();
+        std::vector<std::shared_ptr<Clause>> getSuchThatClauses();
+        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> getPatternClauses();
         bool compare(ParserResponse other);
-
-
-
 };
