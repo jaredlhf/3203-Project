@@ -77,11 +77,14 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         // check if entRef is valid
         if (ptr == 3) {
             std::shared_ptr<Entity> entRef = ParserUtils::getValidEntRef(s[ptr], declarations);
-            if (ParserUtils::isSyntaxError(entRef)) {
-                response.setAssignSyn(Synonym::create(Constants::SYNTAX_ERROR, ""));
-            }
-            if (ParserUtils::isSemanticError(entRef)) {
-                response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
+
+            if (entRef->isSynonym()) {
+                // TODO: extract this to a function
+                if (std::static_pointer_cast<Synonym>(entRef)->getKeyword() == Constants::SYNTAX_ERROR) {
+                    response.setAssignSyn(Synonym::create(Constants::SYNTAX_ERROR, ""));
+                } else if (std::static_pointer_cast<Synonym>(entRef)->getKeyword() == Constants::SEMANTIC_ERROR) {
+                    response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
+                }
             }
             response.setEntRef(entRef);
         }
@@ -305,25 +308,26 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
             std::shared_ptr<Relationship> relationshipValidator = Relationship::create(suchThatArgs[0], suchThatArgs[1], suchThatArgs[2]);
             std::vector<std::shared_ptr<Entity>> refs = relationshipValidator->verifyRelationship(declarations); 
-
-            std::shared_ptr<Entity> firstRef = refs[0];
-            std::shared_ptr<Entity> secondRef = refs[1];
-
-            if (ParserUtils::isSyntaxError(firstRef)) {
-                return generateSyntaxErrorResponse();
-            }
-            if (ParserUtils::isSemanticError(firstRef)) {
-                hasSemanticError = true;
-            }
-
-            if (ParserUtils::isSyntaxError(secondRef)) {
-                return generateSyntaxErrorResponse();
-            }
-            if (ParserUtils::isSemanticError(secondRef)) {
-                hasSemanticError = true;
+            std::string refKeyword;
+            if (refs[0]->isSynonym()) {
+                refKeyword = std::static_pointer_cast<Synonym>(refs[0])->getKeyword();
+                if (refKeyword == Constants::SYNTAX_ERROR) {
+                    return generateSyntaxErrorResponse();
+                } else if (refKeyword == Constants::SEMANTIC_ERROR) {
+                    hasSemanticError = true;
+                }
             }
 
-            suchThatClause = Clause::create(relationshipValidator->getKeyword(), firstRef, secondRef);
+            if (refs[1]->isSynonym()) {
+                refKeyword = std::static_pointer_cast<Synonym>(refs[1])->getKeyword();
+                if (refKeyword == Constants::SYNTAX_ERROR) {
+                    return generateSyntaxErrorResponse();
+                } else if (refKeyword == Constants::SEMANTIC_ERROR) {
+                    hasSemanticError = true;
+                }
+            }
+
+            suchThatClause = Clause::create(relationshipValidator->getKeyword(), refs[0], refs[1]);
         }
 
         ptr++;    
