@@ -279,6 +279,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             if (tokens[ptr] == Constants::BOOLEAN) {
                 selectSynonyms.push_back(Synonym::create(Constants::BOOLEAN, ""));
                 afterSynonym = true;
+                ptr++;
                 break;
             }
 
@@ -292,12 +293,14 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             if (syn == nullptr && tokens[ptr] != OPEN_SELECT_BRACKET) {
                 hasSemanticError = true;
                 afterSynonym = true;
+                ptr++;
                 break;
             }
             // if theres a match, means its a valid select synonym
             if (syn != nullptr) {
                 selectSynonyms.push_back(syn);
                 afterSynonym = true;
+                ptr++;
                 break;
             }
             // if not semantic error and synonym is empty, means its some other token
@@ -306,12 +309,15 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             }
             // get items within bracket if any
             std::vector<std::string> selectTokens = {};
-            while (ptr < tokenLength && tokens[ptr] != CLOSE_SELECT_BRACKET) {
+            while (ptr < tokenLength) {
+                if (tokens[ptr] == CLOSE_SELECT_BRACKET) {
+                    selectTokens.push_back(tokens[ptr]);
+                    ptr++;
+                    break;    
+                }
                 selectTokens.push_back(tokens[ptr]);
                 ptr++;
             }
-            // add close bracket to select tokens
-            selectTokens.push_back(tokens[ptr]);
             std::vector<std::shared_ptr<Synonym>> synonyms = validateSelectSynonyms(selectTokens, declarations);
             if (synonyms.empty()) {
                 return generateSyntaxErrorResponse();
@@ -361,6 +367,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             while (ptr < tokenLength) {
                 if (tokens[ptr] == CLOSE_BRACKET) {
                     suchThatTokens.push_back(tokens[ptr]);
+                    ptr++;
                     break;
                 }
                 suchThatTokens.push_back(tokens[ptr]);
