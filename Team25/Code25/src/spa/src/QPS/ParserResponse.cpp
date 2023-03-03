@@ -10,12 +10,12 @@ void ParserResponse::setSelectSynonyms(std::vector<std::shared_ptr<Synonym>> syn
     return;
 }
 
-void ParserResponse::setPatternClause(std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> patternClauses) {
+void ParserResponse::setPatternClauses(std::vector<PatternClausePair> patternClauses) {
     this->patternClauses = patternClauses;
     return;
 }
 
-void ParserResponse::setSuchThatClause(std::vector<std::shared_ptr<Clause>> suchThatClauses) {
+void ParserResponse::setSuchThatClauses(std::vector<std::shared_ptr<Clause>> suchThatClauses) {
     this->suchThatClauses = suchThatClauses;
     return;
 }
@@ -32,7 +32,7 @@ std::vector<std::shared_ptr<Clause>> ParserResponse::getSuchThatClauses() {
     return this->suchThatClauses;
 }
 
-std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>> ParserResponse::getPatternClauses() {
+std::vector<PatternClausePair> ParserResponse::getPatternClauses() {
     return this->patternClauses;
 }
 
@@ -70,8 +70,8 @@ bool ParserResponse::compare(ParserResponse other) {
 
     // compare patterns
     if (!other.getPatternClauses().empty() && !this->patternClauses.empty()) {
-        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>>  pc1 = other.getPatternClauses();
-        std::vector<std::pair<std::shared_ptr<Synonym>, std::shared_ptr<Clause>>>  pc2 = this->patternClauses;
+        std::vector<PatternClausePair>  pc1 = other.getPatternClauses();
+        std::vector<PatternClausePair>  pc2 = this->patternClauses;
 
         if (pc1.size() != pc2.size()) {
             return false;

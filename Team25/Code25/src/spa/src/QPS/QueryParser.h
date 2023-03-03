@@ -15,12 +15,12 @@
 
 class ValidatePatternResponse {
     private:
-        std::shared_ptr<Synonym> assignSynonym;
+        std::shared_ptr<Synonym> synonym;
         std::shared_ptr<Entity> entRef;
         std::shared_ptr<Entity> pattern;
     public: 
-        void setAssignSyn(std::shared_ptr<Synonym> a) {
-            this->assignSynonym = a;
+        void setSynonym(std::shared_ptr<Synonym> s) {
+            this->synonym = s;
         }
         void setEntRef(std::shared_ptr<Entity> e) {
             this->entRef = e;
@@ -28,8 +28,8 @@ class ValidatePatternResponse {
         void setPattern(std::shared_ptr<Entity> p) {
             this->pattern = p;
         }
-        std::shared_ptr<Synonym> getAssignSyn() {
-            return this->assignSynonym;
+        std::shared_ptr<Synonym> getSynonym() {
+            return this->synonym;
         }
         std::shared_ptr<Entity> getEntRef() {
             return this->entRef;
@@ -38,7 +38,7 @@ class ValidatePatternResponse {
             return this->pattern;
         }
         bool isIncomplete() {
-            return this->assignSynonym == nullptr || this->entRef == nullptr || this->pattern == nullptr; 
+            return this->synonym == nullptr || this->entRef == nullptr || this->pattern == nullptr; 
         }
 };
 

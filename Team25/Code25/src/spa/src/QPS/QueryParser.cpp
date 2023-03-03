@@ -49,7 +49,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
 // might need to redo
 ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, 
         std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations) {
-    
+    std::unordered_set<std::string> APPROVED_SYN_KEYWORDS = {"assign", "while", "if"};
     std::string keyword;
     std::string entRef;
     std::string expression;
@@ -61,13 +61,21 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
             keyword = s[ptr];
         }
 
-        // check if syn-assign is declared
-        // TODO: no longer just assign, can be while or if
+        // check if synonym is declared
         if (ptr == 1) {
-            if (assignment_synonyms.find(s[ptr]) == assignment_synonyms.end()) {
-                response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
+            std::string synonymToken = s[ptr];
+            std::shared_ptr<Synonym> synonym;
+            for (auto& d : declarations) {
+                if (d->getName() == synonymToken && APPROVED_SYN_KEYWORDS.find(d->getKeyword()) !=  APPROVED_SYN_KEYWORDS.end()) {
+                    synonym = d;
+                    break;
+                }
+            }
+
+            if (synonym == nullptr) {
+                response.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, ""));
             } else {
-                response.setAssignSyn(Synonym::create(Constants::ASSIGN, s[ptr]));
+                response.setSynonym(synonym);
             }
         }
         
@@ -82,10 +90,10 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         if (ptr == 3) {
             std::shared_ptr<Entity> entRef = ParserUtils::getValidEntRef(s[ptr], declarations);
             if (ParserUtils::isSyntaxError(entRef)) {
-                response.setAssignSyn(Synonym::create(Constants::SYNTAX_ERROR, ""));
+                response.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
             }
             if (ParserUtils::isSemanticError(entRef)) {
-                response.setAssignSyn(Synonym::create(Constants::SEMANTIC_ERROR, ""));
+                response.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, ""));
             }
             response.setEntRef(entRef);
         }
@@ -166,6 +174,7 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::v
         for (auto& element: declarations) {
             if (element->matchesName(tokens[i])) {
                 result.push_back(element);
+                break;
             }
         }
     }
@@ -287,6 +296,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             for (auto& element: declarations) {
                 if (element->matchesName(tokens[ptr])) {
                     syn = element;
+                    break;
                 }
             }
             // confirms its a semantic error and not an open bracket token
@@ -350,15 +360,15 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
             ValidatePatternResponse response = validatePatternClause(patternTokens, assignment_synonyms, declarations);
 
-            if (response.getAssignSyn()->getKeyword() == Constants::SEMANTIC_ERROR) {
+            if (response.getSynonym()->getKeyword() == Constants::SEMANTIC_ERROR) {
                 hasSemanticError = true;
             }
 
-            if (response.isIncomplete() || response.getAssignSyn()->getKeyword() == Constants::SYNTAX_ERROR) {
+            if (response.isIncomplete() || response.getSynonym()->getKeyword() == Constants::SYNTAX_ERROR) {
                 return generateSyntaxErrorResponse();
             }
             std::shared_ptr<Clause> patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
-            std::shared_ptr<Synonym> patternSynonym = response.getAssignSyn();
+            std::shared_ptr<Synonym> patternSynonym = response.getSynonym();
             patternClauses.push_back(make_pair(patternSynonym, patternClause));
         }
 
