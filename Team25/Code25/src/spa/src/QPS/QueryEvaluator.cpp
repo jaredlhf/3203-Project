@@ -4,10 +4,9 @@
 // Adds the data from the parser into the class attributes
 void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->declarations = response.getDeclarations();
-	this->resultSynonym = response.getSynonym();
-	this->patternSynonym = response.getAssignSynonym();
-	this->patternClause = response.getPatternClause();
-	this->suchThatClause = response.getSuchThatClause();
+	this->resultSynonyms = response.getSelectSynonyms();
+	this->patternClauses = response.getPatternClauses();
+	this->suchThatClauses = response.getSuchThatClauses();
 }
 
 
@@ -47,28 +46,28 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	handleParserResponse(response);
 
 	// Edge case: If resultSynonym is a syntax or semantic error, return immediately
-	if (this->resultSynonym->matchesKeyword(Constants::SYNTAX_ERROR) || this->resultSynonym->matchesKeyword(Constants::SEMANTIC_ERROR)) {
-		return std::list<std::string>({ this->resultSynonym->getKeyword() });
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR) || resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
+			return std::list<std::string>({ resSyn->getKeyword() });
+		}
 	}
+	
 
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
-		resolveSelectSynonym(this->resultSynonym, pkbRetriever);
+		resolveSelectSynonym(this->resultSynonyms[0], pkbRetriever); /*TODO CHANGE TO RESOLVE ALL SELECTS*/
 	clauseResults.push_back(selectRes);
 
-	if (this->suchThatClause) {
-		// TODO write implementation for suchThat clause retrieval
-		clauseResults.push_back(this->suchThatClause->resolve(pkbRetriever));
+	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
+		clauseResults.push_back(stClause->resolve(pkbRetriever));
 	}
 
-	if (this->patternClause) {
-		// TODO write implementation for pattern clause retrieval
-		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(this->patternClause);
-		clauseResults.push_back(ptnClause->resolve(pkbRetriever, this->patternSynonym));
+	for (PatternClausePair ptClausePair : this->patternClauses) {
+		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
+		clauseResults.push_back(ptnClause->resolve(pkbRetriever, ptClausePair.first));
 	}
 
-	// TODO update implementation for join all logic
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =
 		resolveClauses(clauseResults);
 
@@ -88,7 +87,8 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	}
 
 	// Retrieve answer of resultSyn col in table
-	std::set<std::string> ansSet = finalResTable->getColResults(resultSynonym->getName());
+	/*TODO RESOLVE ANSWER FOR ALL SELECT SYNONYMS*/
+	std::set<std::string> ansSet = finalResTable->getColResults(this->resultSynonyms[0]->getName());
 	for (const std::string& answer : ansSet) {
 		result.push_back(answer);
 	}

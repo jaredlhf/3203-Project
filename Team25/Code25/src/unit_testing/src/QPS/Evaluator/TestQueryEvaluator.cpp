@@ -77,7 +77,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, "v"));
+				response.setSelectSynonyms({ Synonym::create(Constants::SYNTAX_ERROR, "v") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -88,7 +88,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, "v"));
+				response.setSelectSynonyms({ Synonym::create(Constants::SEMANTIC_ERROR, "v") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -99,7 +99,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::VARIABLE, "x"));
+				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "x") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -110,7 +110,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::PROCEDURE, "pr"));
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "pr") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -121,7 +121,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::CONSTANT, "cs"));
+				response.setSelectSynonyms({ Synonym::create(Constants::CONSTANT, "cs") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -132,7 +132,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::STMT, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::STMT, "cs"));
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "cs") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -143,7 +143,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::ASSIGN, "a"));
+				response.setSelectSynonyms({ Synonym::create(Constants::ASSIGN, "a") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -154,7 +154,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::CALL, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::CALL, "cl"));
+				response.setSelectSynonyms({ Synonym::create(Constants::CALL, "cl") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -165,7 +165,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::WHILE, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::WHILE, "wl"));
+				response.setSelectSynonyms({ Synonym::create(Constants::WHILE, "wl") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -176,7 +176,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::IF, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::IF, "ifs"));
+				response.setSelectSynonyms({ Synonym::create(Constants::IF, "ifs") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -187,7 +187,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::PRINT, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::PRINT, "ifs"));
+				response.setSelectSynonyms({ Synonym::create(Constants::PRINT, "ifs") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -198,7 +198,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::READ, "x"), Synonym::create(Constants::VARIABLE, "v") });
-				response.setSynonym(Synonym::create(Constants::READ, "rd"));
+				response.setSelectSynonyms({ Synonym::create(Constants::READ, "rd") });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -322,9 +322,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2") });
-				response.setSynonym(Synonym::create(Constants::ASSIGN, "a1"));
-				response.setSuchThatClause(Clause::create(Constants::FOLLOWSST, 
-					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")));
+				response.setSelectSynonyms({ Synonym::create(Constants::ASSIGN, "a1") });
+				response.setSuchThatClauses({ Clause::create(Constants::FOLLOWSST,
+					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -335,9 +335,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::STMT, "s2") });
-				response.setSynonym(Synonym::create(Constants::STMT, "s2"));
-				response.setSuchThatClause(Clause::create(Constants::FOLLOWS,
-					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::STMT, "s2")));
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s2") });
+				response.setSuchThatClauses({ Clause::create(Constants::FOLLOWS,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::STMT, "s2")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -348,9 +348,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
-				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
-				response.setSuchThatClause(Clause::create(Constants::PARENTST,
-					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")));
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -361,9 +361,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::ASSIGN, "a2") });
-				response.setSynonym(Synonym::create(Constants::ASSIGN, "a2"));
-				response.setSuchThatClause(Clause::create(Constants::PARENT,
-					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::ASSIGN, "a2")));
+				response.setSelectSynonyms({ Synonym::create(Constants::ASSIGN, "a2") });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENT,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::ASSIGN, "a2")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -374,9 +374,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::STMT, "s1") });
-				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
-				response.setSuchThatClause(Clause::create(Constants::MODIFIES,
-					Synonym::create(Constants::STMT, "s1"), Value::create("x")));
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Synonym::create(Constants::STMT, "s1"), Value::create("x")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -387,10 +387,10 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1") });
-				response.setSynonym(Synonym::create(Constants::ASSIGN, "a1"));
-				response.setPatternClause(Clause::create(Constants::PATTERN,
-					Wildcard::create(), Wildcard::create("x")));
-				response.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a1"));
+				response.setSelectSynonyms({ Synonym::create(Constants::ASSIGN, "a1") });
+				response.setPatternClauses({ { Synonym::create(Constants::ASSIGN, "a1"),
+					Clause::create(Constants::PATTERN,
+					Wildcard::create(), Wildcard::create("x"))} });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
@@ -402,12 +402,12 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 
 				response.setDeclarations({ Synonym::create(Constants::ASSIGN, "a1"),
 					Synonym::create(Constants::STMT, "s1") });
-				response.setSynonym(Synonym::create(Constants::STMT, "s1"));
-				response.setPatternClause(Clause::create(Constants::PATTERN,
-					Wildcard::create(), Wildcard::create("y")));
-				response.setAssignSynonym(Synonym::create(Constants::ASSIGN, "a1"));
-				response.setSuchThatClause(Clause::create(Constants::FOLLOWS,
-					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s1")));
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
+				response.setPatternClauses({ { Synonym::create(Constants::ASSIGN, "a1"),
+					Clause::create(Constants::PATTERN,
+					Wildcard::create(), Wildcard::create("y")) } });
+				response.setSuchThatClauses({ Clause::create(Constants::FOLLOWS,
+					Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s1")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);

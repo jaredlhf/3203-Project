@@ -17,10 +17,9 @@
 class QueryEvaluator {
 private:
 	std::vector<std::shared_ptr<Synonym>> declarations;
-	std::shared_ptr<Synonym> resultSynonym;
-	std::shared_ptr<Synonym> patternSynonym;
-	std::shared_ptr<Clause> patternClause;
-	std::shared_ptr<Clause> suchThatClause;
+	std::vector<std::shared_ptr<Synonym>> resultSynonyms;
+	std::vector<PatternClausePair> patternClauses;
+	std::vector<std::shared_ptr<Clause>> suchThatClauses;
 	void handleParserResponse(ParserResponse& response);
 	
 
