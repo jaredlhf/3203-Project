@@ -26,6 +26,8 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/AbstractionStore.h" 
 "src/PKB/UsesProcStore.h" 
 "src/PKB/UsesProcStore.cpp" 
+"src/QPS/ResultFormatter.h" 
+"src/QPS/ResultFormatter.cpp"
 "src/QPS/ParserResponse.cpp"
 "src/QPS/ParserResponse.h"
 "src/QPS/Qps.cpp"

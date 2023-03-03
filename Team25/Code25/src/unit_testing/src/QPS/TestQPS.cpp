@@ -258,7 +258,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				list<string> expected = { "6" };
 				list<string> res;
 
-				string query = "print pn1; Select pn1 such that Uses(1, \"y\")";
+				string query = "print pn; Select pn such that Uses(1, \"y\")";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
