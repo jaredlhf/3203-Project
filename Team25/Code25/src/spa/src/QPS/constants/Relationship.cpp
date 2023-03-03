@@ -82,7 +82,7 @@ UsesRelationship::UsesRelationship(const std::string& arg1, const std::string& a
 
 std::vector<std::shared_ptr<Entity>> UsesRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
     // checks if this is procedure call
-    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcEntRef(arg1, declarations);
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
 
     if (ParserUtils::isExpectedSynonym(arg1Value, Constants::READ)) {
@@ -97,7 +97,7 @@ ModifiesRelationship::ModifiesRelationship(const std::string& arg1, const std::s
 
 std::vector<std::shared_ptr<Entity>> ModifiesRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
     // checks if this is procedure call
-    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcEntRef(arg1, declarations);
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
 
     if (ParserUtils::isExpectedSynonym(arg1Value, Constants::PRINT)) {

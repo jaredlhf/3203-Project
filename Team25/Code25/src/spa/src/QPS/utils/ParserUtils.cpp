@@ -5,6 +5,7 @@
 //             Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
 std::unordered_set<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
 std::unordered_set<std::string> RELREF = {"Follows", "Follows*", "Parent", "Parent*", "Uses", "Modifies", "Calls", "Calls*", "Next", "Next*"};
+std::unordered_set<std::string> PROC_DESIGN_ENTITIES = {"assign", "call", "if", "while", "read", "print", "stmt", "procedure"};
 
 bool ParserUtils::isValidIntegerString(const std::string& s) {
     // checks if string exists
@@ -71,11 +72,14 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
 
-std::shared_ptr<Entity> ParserUtils::getValidProcEntRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
-    std::unordered_set<std::string> PROC_DESIGN_ENTITIES = {"assign", "call", "if", "while", "read", "print", "stmt", "procedure"};
-    
+std::shared_ptr<Entity> ParserUtils::getValidProcRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+
     if (s == Constants::WILDCARD) {
         return Wildcard::create();
+    }
+
+    if (isValidIntegerString(s)) {
+        return Value::create(s);
     }
 
     if (s.find('"') != std::string::npos) {
@@ -97,6 +101,7 @@ std::shared_ptr<Entity> ParserUtils::getValidProcEntRef(const std::string& s, co
 }
 
 std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+
     if (s == Constants::WILDCARD) {
         return Wildcard::create();
     }
