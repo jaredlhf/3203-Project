@@ -88,11 +88,11 @@ void PkbPopulator::addUses(int lineNum, std::string varName) {
 }
 
 void PkbPopulator::addCallsStar(std::string leftProc, std::string rightProc) {
-	this->callsStorage->addCalls(leftProc, rightProc);
+	this->callsStarStorage->addCallsStar(leftProc, rightProc);
 }
 
 void PkbPopulator::addCalls(std::string leftProc, std::string rightProc) {
-	this->callsStarStorage->addCallsStar(leftProc, rightProc);
+	this->callsStorage->addCalls(leftProc, rightProc);
 }
 
 
