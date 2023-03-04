@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <map>
 #include "TNode.h"
 #include "SPConstants.h"
 #include "PKB/PkbPopulator.h"
@@ -92,6 +93,21 @@ public:
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
+
+class CallsStarExtractor: public DesignExtractor {
+public:
+    using DesignExtractor::DesignExtractor;
+    std::unordered_map<std::string, std::vector<std::string>> getCallsStorage() {
+        return this->callsStorage;
+    }
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
+    void visit(std::shared_ptr<IfNode> n, int lineNo);
+    void visit(std::shared_ptr<WhileNode> n, int lineNo);
+private:
+    std::unordered_map<std::string, std::vector<std::string>> callsStorage;
+};
+
 
 class StatementExtractor: public DesignExtractor {
 public:
