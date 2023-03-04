@@ -28,6 +28,8 @@ private:
     std::shared_ptr<ParentsExtractor> parentsExtractor;
     std::shared_ptr<ParentsStarExtractor> parentsStarExtractor;
     std::shared_ptr<CallsExtractor> callsExtractor;
+    std::shared_ptr<CallsStarExtractor> callsStarExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
+
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H
