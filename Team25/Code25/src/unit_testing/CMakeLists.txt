@@ -4,6 +4,7 @@ add_executable(unit_testing ${srcs}
 "src/PKB/TestEntityStore.cpp"
 "src/PKB/TestFollowsStar.cpp"
 "src/PKB/TestFollowsStore.cpp"
+"src/PKB/TestModifiesProcStore.cpp"
 "src/PKB/TestModifiesStore.cpp"
 "src/PKB/TestParentStar.cpp"
 "src/PKB/TestParentStore.cpp"
@@ -22,6 +23,7 @@ add_executable(unit_testing ${srcs}
 "src/QPS/Constants/ClauseResolve/TestQpsPatternClauseResolve.cpp"
 "src/QPS/TestQpsStringUtils.cpp"
 "src/QPS/Constants/TestQpsSynonyms.cpp"
+"src/QPS/Evaluator/TestResultFormatter.cpp"
 "src/QPS/Evaluator/TestQpsTable.cpp"
 "src/QPS/Constants/ClauseResolve/TestQpsUsesClauseResolve.cpp"
 "src/QPS/Constants/TestQpsValue.cpp"
@@ -35,7 +37,7 @@ add_executable(unit_testing ${srcs}
 "src/SP/TestSourceProcessor.cpp"
 "src/SP/TestStmtParser.cpp"
 "src/SP/TestTNode.cpp"
-"src/SP/TestTokenizer.cpp")
+"src/SP/TestTokenizer.cpp" "src/PKB/TestUsesProcStore.cpp")
 
 target_link_libraries(unit_testing spa)
 

@@ -16,6 +16,7 @@ SCENARIO("Mocking behavior of QPS") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		ParserResponse response;
@@ -31,9 +32,10 @@ SCENARIO("Mocking behavior of QPS") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -68,6 +70,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -81,6 +84,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 		// Mock variables appearing in the SIMPLE program
@@ -170,7 +174,23 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		pattsPointer->addAssignLhs("x", 9);
 		pattsPointer->addAssignRhs(9, "x+1");
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+		// Mock Modifies Relationship for Procedures in SIMPLE program
+		mprocsPointer->addModifiesProc("main", "x");
+		mprocsPointer->addModifiesProc("main", "y");
+		mprocsPointer->addModifiesProc("main", "z");
+		mprocsPointer->addModifiesProc("factorial", "x");
+		mprocsPointer->addModifiesProc("factorial", "y");
+		mprocsPointer->addModifiesProc("beta", "z");
+
+		// Mock UsesRelationship for Procedures in SIMPLE program
+		uprocsPointer->addUsesProc("main", "x");
+		uprocsPointer->addUsesProc("main", "y");
+		uprocsPointer->addUsesProc("main", "z");
+		uprocsPointer->addUsesProc("factorial", "x");
+		uprocsPointer->addUsesProc("factorial", "y");
+		uprocsPointer->addUsesProc("beta", "z");
+
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 
@@ -225,10 +245,30 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For uses query, the right result is returned") {
-				list<string> expected = { "3", "4", "5", "6", "7", "8", "9" };
+				list<string> expected = { "3", "6", "7", "9" };
 				list<string> res;
 
-				string query = "stmt s1; Select s1 such that Parent(_, s1)";
+				string query = "stmt s1; Select s1 such that Uses(s1, \"x\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For uses query with procedures, the right result is returned") {
+				list<string> expected = { "factorial", "main" };
+				list<string> res;
+
+				string query = "procedure p1; Select p1 such that Uses(p1, \"x\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For procedure constant uses query, the right result is returned") {
+				list<string> expected = { "x", "y" };
+				list<string> res;
+
+				string query = "variable p1; Select p1 such that Uses(\"factorial\", p1)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -254,11 +294,31 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For modifies query in the form (s1, 'y') with procedure, the right result is returned") {
+				list<string> expected = { "beta", "main" };
+				list<string> res;
+
+				string query = "procedure p1; Select p1 such that Modifies(p1, \"z\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For procedure constant modifies query in the form (s1, 'y'), the right result is returned") {
+				list<string> expected = { "w", "x", "y", "z" };
+				list<string> res;
+
+				string query = "variable p1; Select p1 such that Modifies(\"beta\", \"z\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For uses query in the form (1, 'y'), the right result is returned") {
 				list<string> expected = { "6" };
 				list<string> res;
 
-				string query = "print pn1; Select pn1 such that Uses(1, \"y\")";
+				string query = "print pn; Select pn such that Uses(1, \"y\")";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -364,11 +424,31 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For combined query with clauses order swapped, the right result is returned") {
+				list<string> expected = { "w", "x" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; Select v1 pattern a1 (v1, _) such that Parent(2,3)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For combined query with 1 overlapping synonym, the right result is returned") {
 				list<string> expected = { "y" };
 				list<string> res;
 
 				string query = "assign a1; variable v1; stmt s1; Select v1 such that Uses(a1,v1) pattern a1 (_,_\"y\"_) ";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For combined query with such that and pattern reversed with 1 overlapping synonym, the right result is returned") {
+				list<string> expected = { "y" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; stmt s1; Select v1 pattern a1 (_,_\"y\"_) such that Uses(a1,v1)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);

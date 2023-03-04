@@ -148,20 +148,27 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStStrat::synSy
         ? Clause::getEveryStmt(pkbRet)
         : pkbRet->getAllStmt(s2Syn->getKeyword());
 
-    // Edge case: if s1 and s2 are the same var name, return no match
+    std::shared_ptr<QpsTable> resTable;
+    // Edge case: if s1 and s2 are the same var name, create only one col for table
     if (s1Syn->getName() == s2Syn->getName()) {
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
-    for (int arg1StNum : s1Stmts) {
-        for (int arg2StNum : s2Stmts) {
-            if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
-                resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
+        resTable = QpsTable::create({ s1Syn->getName() });
+        for (int arg1StNum : s1Stmts) {
+            for (int arg2StNum : s2Stmts) {
+                if (arg1StNum == arg2StNum && pkbRet->getFollower(arg1StNum) == arg2StNum) {
+                    resTable->addRow({ std::to_string(arg1StNum) });
+                }
             }
         }
-
+    }
+    else {
+        resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
+        for (int arg1StNum : s1Stmts) {
+            for (int arg2StNum : s2Stmts) {
+                if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
+                    resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
+                }
+            }
+        }
     }
 
     return resTable->getData().size() > 0

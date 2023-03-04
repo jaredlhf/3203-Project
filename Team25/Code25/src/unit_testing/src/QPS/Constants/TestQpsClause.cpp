@@ -186,7 +186,6 @@ TEST_CASE("isWrongArgs function in UsesClause class behaves as expected") {
 	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
 	std::shared_ptr<Synonym> procSyn = Synonym::create(Constants::PROCEDURE, "yy");
 
-	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::USES, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> intArg2Clause = Clause::create(Constants::USES, intValue, intValue);
 	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::USES, nonIntValue, intValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::USES, intValue, nonIntValue);
@@ -195,7 +194,6 @@ TEST_CASE("isWrongArgs function in UsesClause class behaves as expected") {
 	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::USES, stmtSyn, nonIntValue);
 	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::USES, intValue, varSyn);
 
-	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(intArg2Clause->isWrongArgs() == true);
 	REQUIRE(bothInvalidClause->isWrongArgs() == true);
 	REQUIRE(validConstClause->isWrongArgs() == false);
@@ -237,7 +235,6 @@ TEST_CASE("isWrongArgs function in ModifiesClause class behaves as expected") {
 	std::shared_ptr<Synonym> varSyn = Synonym::create(Constants::VARIABLE, "xx");
 	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
 
-	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::MODIFIES, nonIntValue, nonIntValue);
 	std::shared_ptr<Clause> intArg2Clause = Clause::create(Constants::MODIFIES, intValue, intValue);
 	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::MODIFIES, nonIntValue, intValue);
 	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::MODIFIES, intValue, nonIntValue);
@@ -245,7 +242,6 @@ TEST_CASE("isWrongArgs function in ModifiesClause class behaves as expected") {
 	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::MODIFIES, stmtSyn, nonIntValue);
 	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::MODIFIES, intValue, varSyn);
 
-	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
 	REQUIRE(intArg2Clause->isWrongArgs() == true);
 	REQUIRE(bothInvalidClause->isWrongArgs() == true);
 	REQUIRE(validConstClause->isWrongArgs() == false);
