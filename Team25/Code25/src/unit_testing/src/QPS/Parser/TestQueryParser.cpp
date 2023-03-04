@@ -212,6 +212,19 @@ TEST_CASE("Parse correct query with pattern: wildcard on LHS and partial pattern
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse correct query with pattern: wildcard on LHS and partial pattern x + y on RHS") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "_\"x + y\"_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
+    PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create("x + y")));
+    expectedResObject.setPatternClauses({pair});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse correct query with pattern: wildcard on LHS and nested equation pattern x + (y + z) on RHS") {
     std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "\"x + (y + z)\"", ")"};
     ParserResponse expectedResObject;
