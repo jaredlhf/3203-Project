@@ -78,10 +78,10 @@ bool ParserResponse::compare(ParserResponse other) {
         }
 
         for (int i = 0; i < pc1.size(); i++) {
-            if (pc1[i].first->compare(pc2[i].first)) {
+            if (!pc1[i].first->compare(pc2[i].first)) {
                 return false;
             }
-            if (pc1[i].second->compare(pc2[i].second)) {
+            if (!pc1[i].second->compare(pc2[i].second)) {
                 return false;
             }
         }

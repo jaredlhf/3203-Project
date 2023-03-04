@@ -165,10 +165,11 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::v
     tokens.pop_back();
 
     for (int i = 0; i < tokens.size(); i++) {
-        if (1 % 2 != 0) {
+        if (i % 2 != 0) {
             if (tokens[i] != SEPARATOR) {
                 return {};
             }
+            continue;
         }
         synCount++;
         for (auto& element: declarations) {
@@ -296,7 +297,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             for (auto& element: declarations) {
                 if (element->matchesName(tokens[ptr])) {
                     syn = element;
-                    break;
+                    continue;
                 }
             }
             // confirms its a semantic error and not an open bracket token
@@ -304,14 +305,14 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 hasSemanticError = true;
                 afterSynonym = true;
                 ptr++;
-                break;
+                continue;
             }
             // if theres a match, means its a valid select synonym
             if (syn != nullptr) {
                 selectSynonyms.push_back(syn);
                 afterSynonym = true;
                 ptr++;
-                break;
+                continue;
             }
             // if not semantic error and synonym is empty, means its some other token
             if (tokens[ptr] != OPEN_SELECT_BRACKET) {
@@ -323,7 +324,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 if (tokens[ptr] == CLOSE_SELECT_BRACKET) {
                     selectTokens.push_back(tokens[ptr]);
                     ptr++;
-                    break;    
+                    break;
                 }
                 selectTokens.push_back(tokens[ptr]);
                 ptr++;
@@ -335,8 +336,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             if (ParserUtils::isSemanticError(synonyms[0])) {
                 hasSemanticError = true;
                 afterSynonym = true;
-                break;
+                continue;
             }
+            selectSynonyms = synonyms;
         }
 
         ptr++;
@@ -377,7 +379,6 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             while (ptr < tokenLength) {
                 if (tokens[ptr] == CLOSE_BRACKET) {
                     suchThatTokens.push_back(tokens[ptr]);
-                    ptr++;
                     break;
                 }
                 suchThatTokens.push_back(tokens[ptr]);
