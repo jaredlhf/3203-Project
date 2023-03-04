@@ -40,3 +40,19 @@ class StmtStmtStarStore {
 	virtual std::unordered_set<int> getAllLeft() = 0;
 	virtual std::unordered_set<int> getAllRight() = 0;
 };
+
+class ProcProcStore {
+	virtual bool hasLeftProc(std::string procName) = 0;
+	virtual bool hasRightProc(std::string procName) = 0;
+	virtual std::unordered_set<std::string> getAllLeft() = 0;
+	virtual std::unordered_set<std::string> getAllRight() = 0;
+};
+
+class ProcProcStarStore {
+	virtual std::unordered_set<std::string> getLeftStar(std::string rightProc) = 0;
+	virtual std::unordered_set<std::string> getRightStar(std::string leftProc) = 0;
+	virtual bool hasLeftProc(std::string procName) = 0;
+	virtual bool hasRightProc(std::string procName) = 0;
+	virtual std::unordered_set<std::string> getAllLeft() = 0;
+	virtual std::unordered_set<std::string> getAllRight() = 0;
+};
