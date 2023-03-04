@@ -19,6 +19,7 @@ SCENARIO("Working version of PkbRetriever") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		WHEN("The PkbRetriever references empty stores") {
@@ -33,9 +34,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -128,9 +130,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);

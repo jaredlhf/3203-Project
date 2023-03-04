@@ -17,6 +17,7 @@ SCENARIO("Working version of PkbPopulator") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 	
@@ -33,9 +34,10 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
@@ -80,6 +82,13 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(fstarsPointer->getAllRight().size() == 3);
 				REQUIRE(fstarsPointer->getAllLeft().size() == 1);
 			}
+			THEN("Adding one modifes procedure should increase the modifiesProc store size by 1") {
+				REQUIRE(mprocsPointer->getAllProc().size() == 0);
+				REQUIRE(mprocsPointer->getAllVar().size() == 0);
+				pkbPop.addModifiesProc("sampleProc", "x");
+				REQUIRE(mprocsPointer->getAllProc().size() == 1);
+				REQUIRE(mprocsPointer->getAllVar().size() == 1);
+			}
 			THEN("Adding one modifes should increase the modifies store size by 1") {
 				REQUIRE(msPointer->getAllStmt().size() == 0);
 				REQUIRE(msPointer->getAllVar().size() == 0);
@@ -100,6 +109,13 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addParent(1, 1);
 				REQUIRE(parentsPointer->getAllLeft().size() == 1);
 				REQUIRE(parentsPointer->getAllRight().size() == 1);
+			}
+			THEN("Adding one uses procedure should increase the usesProc store size by 1") {
+				REQUIRE(uprocsPointer->getAllProc().size() == 0);
+				REQUIRE(uprocsPointer->getAllVar().size() == 0);
+				pkbPop.addUsesProc("sampleProc", "y");
+				REQUIRE(uprocsPointer->getAllProc().size() == 1);
+				REQUIRE(uprocsPointer->getAllVar().size() == 1);
 			}
 			THEN("Adding one uses should increase the uses store size by 1") {
 				REQUIRE(usesPointer->getAllStmt().size() == 0);

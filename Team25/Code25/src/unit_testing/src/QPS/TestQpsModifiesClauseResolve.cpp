@@ -16,6 +16,7 @@ SCENARIO("Mocking behavior of ModifiesClause::resolve") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -29,10 +30,11 @@ SCENARIO("Mocking behavior of ModifiesClause::resolve") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {
