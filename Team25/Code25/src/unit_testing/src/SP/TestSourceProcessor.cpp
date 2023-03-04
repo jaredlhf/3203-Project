@@ -46,21 +46,23 @@ TEST_CASE("Test processSimple()") {
     ModifiesStore ms;
     ParentStarStore pStars;
     ParentStore parents;
+    UsesProcStore uprocs;
     UsesStore uses;
-    std::shared_ptr vsPointer = std::make_shared<VariableStore>(vs);
-    std::shared_ptr csPointer = std::make_shared<ConstantStore>(cs);
-    std::shared_ptr fsPointer = std::make_shared<FollowsStore>(fs);
-    std::shared_ptr psPointer = std::make_shared<ProcedureStore>(ps);
-    std::shared_ptr ssPointer = std::make_shared<StatementStore>(ss);
-    std::shared_ptr pattsPointer = std::make_shared<PatternStore>(patts);
+    std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+    std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+    std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+    std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+    std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+    std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
     std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
     std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
     std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
     std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
     std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+    std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
     std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                             "  x = 2+d;\n"

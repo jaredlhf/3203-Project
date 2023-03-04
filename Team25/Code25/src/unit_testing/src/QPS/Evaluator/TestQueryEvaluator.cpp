@@ -23,6 +23,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
 
 			ParserResponse response;
@@ -38,10 +39,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -228,6 +230,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
 
 			ParserResponse response;
@@ -243,10 +246,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("w");
@@ -444,6 +448,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
 
 			ParserResponse response;
@@ -459,10 +464,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -684,6 +690,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
 
 			ParserResponse response;
@@ -699,10 +706,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->addConst(123);
