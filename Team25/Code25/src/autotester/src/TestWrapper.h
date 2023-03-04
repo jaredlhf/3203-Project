@@ -27,6 +27,7 @@ class TestWrapper : public AbstractWrapper {
 	ModifiesStore ms;
 	ParentStarStore pStars;
 	ParentStore parents;
+	UsesProcStore usesProcs;
 	UsesStore uses;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -40,10 +41,11 @@ class TestWrapper : public AbstractWrapper {
 	std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 	std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 	std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+	std::shared_ptr<UsesProcStore> usesProcPointer = std::make_shared<UsesProcStore>(usesProcs);
 	std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
-    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
-    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesProcPointer, usesPointer);
+    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesProcPointer, usesPointer);
     Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
  public:
   // default constructor
