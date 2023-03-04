@@ -14,6 +14,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -27,6 +28,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 		// Populating variables appearing in the SIMPLE program
@@ -117,7 +119,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		pattsPointer->addAssignRhs(9, "x+1");
 
 		// PKB class that interacts with the QPS class
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 
 		WHEN("The QPS object is instantiated and interacts with the PKB	") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));

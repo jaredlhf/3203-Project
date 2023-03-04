@@ -322,6 +322,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			msPointer->addModifies(7, "x");
 			msPointer->addModifies(9, "x");
 
+			// Mock Uses relationship in SIMPLE program
+			usesPointer->addUses(1, "y");
+			usesPointer->addUses(3, "x");
+			usesPointer->addUses(5, "z");
+			usesPointer->addUses(7, "x");
+			usesPointer->addUses(9, "y");
+
 			// Mock Patterns in SIMPLE program
 			pattsPointer->addAssignLhs("x", 1);
 			pattsPointer->addAssignRhs(1, "y+1");
@@ -331,6 +338,22 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			pattsPointer->addAssignRhs(7, "x+1");
 			pattsPointer->addAssignLhs("x", 9);
 			pattsPointer->addAssignRhs(9, "x+1");
+
+			// Mock Modifies Relationship for Procedures in SIMPLE program
+			mprocsPointer->addModifiesProc("main", "x");
+			mprocsPointer->addModifiesProc("main", "y");
+			mprocsPointer->addModifiesProc("main", "z");
+			mprocsPointer->addModifiesProc("factorial", "x");
+			mprocsPointer->addModifiesProc("factorial", "y");
+			mprocsPointer->addModifiesProc("beta", "z");
+
+			// Mock UsesRelationship for Procedures in SIMPLE program
+			uprocsPointer->addUsesProc("main", "x");
+			uprocsPointer->addUsesProc("main", "y");
+			uprocsPointer->addUsesProc("main", "z");
+			uprocsPointer->addUsesProc("factorial", "x");
+			uprocsPointer->addUsesProc("factorial", "y");
+			uprocsPointer->addUsesProc("beta", "z");
 
 			THEN("When QpsEvaluator evaluates a followsSt clause, it returns the right result") {
 				list<string> expected = { "1", "3" };
@@ -392,6 +415,71 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
 				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
 					Synonym::create(Constants::STMT, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a modifies clause with procedure, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Synonym::create(Constants::PROCEDURE, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a modifies clause with procedure constant, it returns the right result") {
+				list<string> expected = { "x", "y" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Value::create("factorial"), Synonym::create(Constants::VARIABLE, "v2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause, it returns the right result") {
+				list<string> expected = { "3", "7" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Synonym::create(Constants::STMT, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause with procedure, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Synonym::create(Constants::PROCEDURE, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause with procedure constant, it returns the right result") {
+				list<string> expected = { "z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Value::create("beta"), Synonym::create(Constants::VARIABLE, "v2")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);

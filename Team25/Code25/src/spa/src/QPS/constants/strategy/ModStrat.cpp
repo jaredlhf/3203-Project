@@ -25,17 +25,25 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::createRe
 
 // Case: Modifies(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constWildcard() {
-    const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    return !pkbRet->getModVar(std::stoi(arg1Val)).empty()
+    std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
+    const std::string& arg1Val = v1->getVal();
+    std::unordered_set<std::string> res = v1->isInt()
+        ? pkbRet->getModVar(std::stoi(arg1Val))
+        : pkbRet->getModPVar(arg1Val);
+    return !res.empty()
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
 
 // Case: Modifies(1, "x")
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constConst() {
-    const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
+    std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
+    const std::string& arg1Val = v1->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    std::unordered_set<std::string> pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
+
+    std::unordered_set<std::string> pkbRes = v1->isInt()
+        ? pkbRet->getModVar(std::stoi(arg1Val))
+        : pkbRet->getModPVar(arg1Val);
     return std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
@@ -43,10 +51,14 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constCon
 
 // Case: Modifies(1, v1)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constSyn() {
-    const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
+    std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
+    const std::string& arg1Val = v1->getVal();
     const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
-    std::unordered_set<std::string> pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
+
+    std::unordered_set<std::string> pkbRes = v1->isInt()
+        ? pkbRet->getModVar(std::stoi(arg1Val))
+        : pkbRet->getModPVar(arg1Val);
     for (const std::string& res : pkbRes) {
         resTable->addRow({ res });
     }
@@ -61,13 +73,23 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synWildc
     std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
     const std::string& arg1Name = arg1Syn->getName();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-    std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(arg1Syn->getKeyword());
-    for (int stmtNum : arg1Stmts) {
-        std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
-        if (!pkbRes.empty()) {
-            resTable->addRow({ std::to_string(stmtNum) });
+
+    // Account for cases of procedure or stmtref
+    if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        for (std::string proc : arg1Procs) {
+            resTable->addRow({ proc });
+        }
+    }
+    else {
+        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
+            ? Clause::getEveryStmt(pkbRet)
+            : pkbRet->getAllStmt(arg1Syn->getKeyword());
+        for (int stmtNum : arg1Stmts) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            if (!pkbRes.empty()) {
+                resTable->addRow({ std::to_string(stmtNum) });
+            }
         }
     }
 
@@ -82,13 +104,26 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synConst
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
     const std::string& arg1Name = arg1Syn->getName();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-    std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(arg1Syn->getKeyword());
-    for (int stmtNum : arg1Stmts) {
-        std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
-        if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
-            resTable->addRow({ std::to_string(stmtNum) });
+
+    // Account for procedures
+    if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        for (std::string proc : arg1Procs) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModPVar(proc);
+            if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
+                resTable->addRow({ proc });
+            }
+        }
+    }
+    else {
+        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
+            ? Clause::getEveryStmt(pkbRet)
+            : pkbRet->getAllStmt(arg1Syn->getKeyword());
+        for (int stmtNum : arg1Stmts) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
+                resTable->addRow({ std::to_string(stmtNum) });
+            }
         }
     }
 
@@ -104,13 +139,26 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synSyn()
     const std::string& arg1Name = arg1Syn->getName();
     const std::string& arg2Name = arg2Syn->getName();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name, arg2Name });
-    std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(arg1Syn->getKeyword());
-    for (int stmtNum : arg1Stmts) {
-        std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
-        for (const std::string& res : pkbRes) {
-            resTable->addRow({ std::to_string(stmtNum), res });
+
+    // Account for procedures
+    if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        for (std::string proc : arg1Procs) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModPVar(proc);
+            for (const std::string& arg2Match : pkbRes) {
+                resTable->addRow({ proc, arg2Match });
+            }
+        }
+    }
+    else {
+        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
+            ? Clause::getEveryStmt(pkbRet)
+            : pkbRet->getAllStmt(arg1Syn->getKeyword());
+        for (int stmtNum : arg1Stmts) {
+            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            for (const std::string& res : pkbRes) {
+                resTable->addRow({ std::to_string(stmtNum), res });
+            }
         }
     }
 
