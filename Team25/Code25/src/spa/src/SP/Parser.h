@@ -17,7 +17,7 @@
 class Parser {
 public:
     Parser(std::shared_ptr<Tokenizer> t);
-    ProcedureNode parseProgram();
+    std::vector<ProcedureNode> parseProgram();
 private:
     std::shared_ptr<Tokenizer> tokenizer;
     std::shared_ptr<SPParserUtils> utils;

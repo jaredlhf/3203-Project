@@ -7,15 +7,17 @@ Parser::Parser(std::shared_ptr<Tokenizer> t) {
 };
 
 // Returns just a ProcedureNode for milestone 1
-ProcedureNode Parser::parseProgram() {
+std::vector<ProcedureNode> Parser::parseProgram() {
+    std::vector<ProcedureNode> procs;
     do {
         if (tokenizer->getTokens().empty()) {
             throw std::invalid_argument("error: no procedures found");
         } else {
             ProcedureNode proc = parseProcedure();
-            return proc;
+            procs.push_back(proc);
         }
     } while (!tokenizer->getTokens().empty());
+    return procs;
 }
 
 
