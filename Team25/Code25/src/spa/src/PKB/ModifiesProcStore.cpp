@@ -33,7 +33,7 @@ std::unordered_set<std::string> ModifiesProcStore::getProc(std::string varName) 
 }
 
 bool ModifiesProcStore::hasVar(std::string varName) {
-	if (varStore.find(varName) != varStore.end()) {
+	if (procStore.find(varName) != procStore.end()) {
 		return true;
 	}
 	else {
@@ -42,7 +42,7 @@ bool ModifiesProcStore::hasVar(std::string varName) {
 }
 
 bool ModifiesProcStore::hasProc(std::string procName) {
-	if (procStore.find(procName) != procStore.end()) {
+	if (varStore.find(procName) != varStore.end()) {
 		return true;
 	}
 	else {
