@@ -13,6 +13,8 @@
 #include "ParentStore.h"
 #include "UsesProcStore.h"
 #include "UsesStore.h"
+#include "CallsStore.h"
+#include "CallsStarStore.h"
 
 class PkbPopulator {
 
@@ -30,9 +32,14 @@ private:
 	shared_ptr<ParentStore> parentStorage;
 	shared_ptr<UsesProcStore> usesProcStorage;
 	shared_ptr<UsesStore> usesStorage;
+	shared_ptr<CallsStore> callsStorage;
+	shared_ptr<CallsStarStore> callsStarStorage;
 
 public:
-	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, shared_ptr<UsesStore> usesStore);
+	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
+		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
+		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, 
+		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore);
 	void addVar(std::string varName);
 	void addConst(int constNum);
 	void addFollows(int leftLineNum, int rightLineNum);
@@ -40,11 +47,14 @@ public:
 	void addStmt(std::string stmtType, int lineNum);
 	void addAssignLhs(std::string leftVar, int stmtNo);
 	void addAssignRhs(int stmtNo, std::string rightStmt);
-	void addFollowsStar(int followee, std::unordered_set<int> followerLst);
+	void addFollowsStar(int leftLineNum, std::unordered_set<int> rightLineNumLst);
 	void addModifiesProc(std::string procName, std::string varName);
 	void addModifies(int lineNum, std::string varName);
 	void addParentStar(int parent, int child);
 	void addParent(int parent, int child);
 	void addUsesProc(std::string procName, std::string varName);
 	void addUses(int lineNum, std::string varName);
+	void addCallsStar(std::string leftProc, std::string rightProc);
+	void addCalls(std::string leftProc, std::string rightProc);
+	
 };
