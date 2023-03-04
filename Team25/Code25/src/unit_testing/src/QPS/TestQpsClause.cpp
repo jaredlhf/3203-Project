@@ -170,6 +170,7 @@ TEST_CASE("clause create function creates the right classes based on the keyword
 	REQUIRE(Clause::create(Constants::FOLLOWS, arg1, arg2)->getKeyword() == Constants::FOLLOWS);
 	REQUIRE(Clause::create(Constants::FOLLOWSST, arg1, arg2)->getKeyword() == Constants::FOLLOWSST);
 	REQUIRE(Clause::create(Constants::PATTERN, arg1, arg2)->getKeyword() == Constants::PATTERN);
+	REQUIRE(Clause::create(Constants::WITH, arg1, arg2)->getKeyword() == Constants::WITH);
 }
 
 
@@ -529,4 +530,68 @@ TEST_CASE("isPatternClause function in clause classes behaves as expected") {
 	REQUIRE(follows->isPatternClause() == false);
 	REQUIRE(followsst->isPatternClause() == false);
 	REQUIRE(pattern->isPatternClause() == true);
+}
+
+TEST_CASE("isWrongArgs function in With class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Wildcard> genericWildcard = Wildcard::create();
+	std::shared_ptr<Synonym> noAttrSyn = Synonym::create(Constants::VARIABLE, "xx");
+	std::shared_ptr<Synonym> attrSyn = Synonym::create(Constants::CALL, "yy", Constants::VALUE);
+
+	std::shared_ptr<Clause> wildcardArg1 = Clause::create(Constants::WITH, genericWildcard, intValue);
+	std::shared_ptr<Clause> wildcardArg2 = Clause::create(Constants::WITH, intValue, genericWildcard);
+	std::shared_ptr<Clause> noAttrArg1 = Clause::create(Constants::WITH, noAttrSyn, intValue);
+	std::shared_ptr<Clause> noAttrArg2 = Clause::create(Constants::WITH, intValue, noAttrSyn);
+	std::shared_ptr<Clause> valid2Clause = Clause::create(Constants::WITH, intValue, intValue);
+	std::shared_ptr<Clause> valid3Clause = Clause::create(Constants::WITH, attrSyn, attrSyn);
+	std::shared_ptr<Clause> valid4Clause = Clause::create(Constants::WITH, nonIntValue, nonIntValue);
+	std::shared_ptr<Clause> valid5Clause = Clause::create(Constants::WITH, attrSyn, intValue);
+	std::shared_ptr<Clause> valid6Clause = Clause::create(Constants::WITH, intValue, attrSyn);
+
+	REQUIRE(wildcardArg1->isWrongArgs() == true);
+	REQUIRE(wildcardArg2->isWrongArgs() == true);
+	REQUIRE(noAttrArg1->isWrongArgs() == true);
+	REQUIRE(noAttrArg2->isWrongArgs() == true);
+	REQUIRE(valid2Clause->isWrongArgs() == false);
+	REQUIRE(valid3Clause->isWrongArgs() == false);
+	REQUIRE(valid4Clause->isWrongArgs() == false);
+	REQUIRE(valid5Clause->isWrongArgs() == false);
+	REQUIRE(valid6Clause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in With class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> intAttrSyn1 = Synonym::create(Constants::STMT, "xx", Constants::STMTNUM);
+	std::shared_ptr<Synonym> intAttrSyn2 = Synonym::create(Constants::CONSTANT, "yy", Constants::VALUE);
+	std::shared_ptr<Synonym> nonIntAttrSyn1 = Synonym::create(Constants::PROCEDURE, "xx", Constants::PROCNAME);
+	std::shared_ptr<Synonym> nonIntAttrSyn2 = Synonym::create(Constants::VARIABLE, "yy", Constants::VARNAME);
+
+	std::shared_ptr<Clause> notMatchingValues1 = Clause::create(Constants::WITH, intValue, nonIntValue);
+	std::shared_ptr<Clause> notMatchingValues2 = Clause::create(Constants::WITH, nonIntValue, intValue);
+	std::shared_ptr<Clause> matchingValues1 = Clause::create(Constants::WITH, intValue, intValue);
+	std::shared_ptr<Clause> matchingValues2 = Clause::create(Constants::WITH, nonIntValue, nonIntValue);
+	std::shared_ptr<Clause> notMatchingSyn1 = Clause::create(Constants::WITH, intAttrSyn1, nonIntAttrSyn1);
+	std::shared_ptr<Clause> notMatchingSyn2 = Clause::create(Constants::WITH, intAttrSyn2, nonIntAttrSyn2);
+	std::shared_ptr<Clause> matchingSyn1 = Clause::create(Constants::WITH, intAttrSyn1, intAttrSyn2);
+	std::shared_ptr<Clause> matchingSyn2 = Clause::create(Constants::WITH, nonIntAttrSyn2, nonIntAttrSyn1);
+	std::shared_ptr<Clause> notMatchingMixed1 = Clause::create(Constants::WITH, intValue, nonIntAttrSyn1);
+	std::shared_ptr<Clause> notMatchingMixed2 = Clause::create(Constants::WITH, intAttrSyn2, nonIntValue);
+	std::shared_ptr<Clause> matchingMixed1 = Clause::create(Constants::WITH, intAttrSyn2, intValue);
+	std::shared_ptr<Clause> matchingMixed2 = Clause::create(Constants::WITH, nonIntValue, nonIntAttrSyn1);
+
+
+	REQUIRE(notMatchingValues1->isSemInvalid() == true);
+	REQUIRE(notMatchingValues2->isSemInvalid() == true);
+	REQUIRE(matchingValues1->isSemInvalid() == false);
+	REQUIRE(matchingValues2->isSemInvalid() == false);
+	REQUIRE(notMatchingSyn1->isSemInvalid() == true);
+	REQUIRE(notMatchingSyn2->isSemInvalid() == true);
+	REQUIRE(matchingSyn1->isSemInvalid() == false);
+	REQUIRE(matchingSyn2->isSemInvalid() == false);
+	REQUIRE(notMatchingMixed1->isSemInvalid() == true);
+	REQUIRE(notMatchingMixed2->isSemInvalid() == true);
+	REQUIRE(matchingMixed1->isSemInvalid() == false);
+	REQUIRE(matchingMixed2->isSemInvalid() == false);
 }

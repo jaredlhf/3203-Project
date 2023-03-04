@@ -19,6 +19,7 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+		UsesProcStore uprocs;
 		UsesStore uses;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -32,10 +33,11 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		std::shared_ptr<Synonym> a1 = Synonym::create(Constants::ASSIGN, "a1");
@@ -157,6 +159,21 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 
 				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
 				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create("w");
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, wcArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When PatternClause resolves case pattern a1 (_, _'w'_) with tab spaces, it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ a1->getName() });
+
+				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create("w	");
 
 				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, wcArg1, wcArg2);
 				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);

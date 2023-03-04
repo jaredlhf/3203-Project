@@ -3,10 +3,7 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 #include "FollowsStore.h"
-//#include "StatementStore.h"
 #include "EntityStore.h"
 #include "PatternStore.h"
 #include "FollowsStarStore.h"
@@ -14,6 +11,7 @@ using namespace std;
 #include "ModifiesStore.h"
 #include "ParentStarStore.h"
 #include "ParentStore.h"
+#include "UsesProcStore.h"
 #include "UsesStore.h"
 
 class PkbPopulator {
@@ -30,10 +28,11 @@ private:
 	shared_ptr<ModifiesStore> modifiesStorage;
 	shared_ptr<ParentStarStore> parentStarStorage;
 	shared_ptr<ParentStore> parentStorage;
+	shared_ptr<UsesProcStore> usesProcStorage;
 	shared_ptr<UsesStore> usesStorage;
 
 public:
-	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesStore> usesStore);
+	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, shared_ptr<UsesStore> usesStore);
 	void addVar(std::string varName);
 	void addConst(int constNum);
 	void addFollows(int leftLineNum, int rightLineNum);
@@ -46,5 +45,6 @@ public:
 	void addModifies(int lineNum, std::string varName);
 	void addParentStar(int parent, int child);
 	void addParent(int parent, int child);
+	void addUsesProc(std::string procName, std::string varName);
 	void addUses(int lineNum, std::string varName);
 };

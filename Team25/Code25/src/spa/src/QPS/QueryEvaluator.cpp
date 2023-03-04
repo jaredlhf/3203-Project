@@ -14,70 +14,7 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 // Public functions
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveSelectSynonym(
 	std::shared_ptr<Synonym> resultSynonym, std::shared_ptr<PkbRetriever> pkbRet) {
-
-	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
-	if (resultSynonym->matchesKeyword(Constants::SYNTAX_ERROR)) {
-		res.first = Constants::ClauseResult::SYN_ERR;
-		res.second = QpsTable::create();
-		return res;
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::SEMANTIC_ERROR)) {
-		res.first = Constants::ClauseResult::SEM_ERR;
-		res.second = QpsTable::create();
-		return res;
-	}
-
-	const std::string& synName = resultSynonym->getName();
-	std::set<std::vector<std::string>> resData;
-
-	if (resultSynonym->matchesKeyword(Constants::CONSTANT)) {
-		std::unordered_set<int> results = pkbRet->getAllConst();
-		for (int ans : results) {
-			resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::VARIABLE)) {
-		std::unordered_set<std::string> results = pkbRet->getAllVar();
-		for (const std::string& ans : results) {
-			resData.insert(std::vector<std::string>({ ans }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::PROCEDURE)) {
-		std::unordered_set<std::string> results = pkbRet->getAllProc();
-		for (const std::string& ans : results) {
-			resData.insert(std::vector<std::string>({ ans }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::STMT)) {
-		std::vector<std::string> stmtTypes({ Constants::ASSIGN, Constants::CALL, Constants::IF,
-			Constants::WHILE, Constants::PRINT, Constants::READ });
-
-		for (const std::string& stmtType : stmtTypes) {
-			std::unordered_set<int> results = pkbRet->getAllStmt(stmtType);
-			for (int ans : results) {
-				resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-			}
-		}
-	}
-
-	if (resultSynonym->isStmtRef() && !resultSynonym->matchesKeyword(Constants::STMT)) {
-		std::unordered_set<int> results = pkbRet->getAllStmt(resultSynonym->getKeyword());
-		for (int ans : results) {
-			resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-		}
-	}
-
-	std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ synName }), resData);
-	res.second = resTable;
-	res.first = resTable->getData().size() == 0 
-		? Constants::ClauseResult::NO_MATCH 
-		: Constants::ClauseResult::OK;
-
-	return res;
+	return resultSynonym->resolveSelectResult(pkbRet);
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveClauses(
