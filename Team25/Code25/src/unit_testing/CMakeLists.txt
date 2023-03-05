@@ -37,7 +37,7 @@ add_executable(unit_testing ${srcs}
 "src/SP/TestSourceProcessor.cpp"
 "src/SP/TestStmtParser.cpp"
 "src/SP/TestTNode.cpp"
-"src/SP/TestTokenizer.cpp" "src/PKB/TestUsesProcStore.cpp" "src/PKB/TestCallsStore.cpp" "src/PKB/TestCallsStarStore.cpp")
+"src/SP/TestTokenizer.cpp" "src/PKB/TestUsesProcStore.cpp" "src/PKB/TestCallsStore.cpp" "src/PKB/TestCallsStarStore.cpp" "src/QPS/Constants/ClauseResolve/TestQpsCallsStClause.cpp" )
 
 target_link_libraries(unit_testing spa)
 

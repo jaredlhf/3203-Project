@@ -374,6 +374,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			uprocsPointer->addUsesProc("factorial", "y");
 			uprocsPointer->addUsesProc("beta", "z");
 
+			// Mock callsSt relationship in SIMPLE program
+			cStarsPointer->addCallsStar("main", "factorial");
+			cStarsPointer->addCallsStar("main", "beta");
+			cStarsPointer->addCallsStar("factorial", "beta");
+
 			THEN("When QpsEvaluator evaluates a followsSt clause, it returns the right result") {
 				list<string> expected = { "1", "3" };
 				ParserResponse response;
@@ -499,6 +504,19 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "v2") });
 				response.setSuchThatClauses({ Clause::create(Constants::USES,
 					Value::create("beta"), Synonym::create(Constants::VARIABLE, "v2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a calls* clause, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::CALLSST,
+					Synonym::create(Constants::PROCEDURE, "v2"), Value::create("beta")) });
 
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);

@@ -28,7 +28,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::create
 
 // Case: Calls(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardWildcard() {
-    return pkbRet->getAllFollowees().size() > 0
+    return pkbRet->getAllLeftCall().size() > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }

@@ -218,6 +218,11 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		uprocsPointer->addUsesProc("factorial", "y");
 		uprocsPointer->addUsesProc("beta", "z");
 
+		// Mock callsSt relationship in SIMPLE program
+		cStarsPointer->addCallsStar("main", "factorial");
+		cStarsPointer->addCallsStar("main", "beta");
+		cStarsPointer->addCallsStar("factorial", "beta");
+
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -357,6 +362,16 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				list<string> res;
 
 				string query = "stmt s2; Select s2 such that Follows(1, s2)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For calls* query in the form (_, s1), the right result is returned") {
+				list<string> expected = { "beta", "factorial" };
+				list<string> res;
+
+				string query = "procedure s2; Select s2 such that Calls*(_, s2)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
