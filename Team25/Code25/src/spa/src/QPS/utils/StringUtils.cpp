@@ -73,12 +73,11 @@ bool StringUtils::tokenInOp(const std::string& opStr, const std::string& token) 
 /*
 	Creates postfix notation expression string when given an prefix notation expression string
 */
-std::string StringUtils::createPostFixNotation(const std::string& prefix) {
+std::string StringUtils::createPostFixNotation(const std::string& infix) {
 	std::string result;
-	std::vector<std::string> prefixVector;
 	std::stack<char> opStack;
 
-	for (const char c : prefix) {
+	for (const char c : infix) {
 		// if its an expression 
 		if (std::isalnum(c)) {
 			result.push_back(c);
@@ -87,11 +86,20 @@ std::string StringUtils::createPostFixNotation(const std::string& prefix) {
 		else if (c == ' ' || c == '\t') {
 			// ignore white space and tab spacing
 		}
+		else if (c == '(') {
+			opStack.push(c);
+		}
+		else if (c == ')') {
+			while (!opStack.empty() && opStack.top() != '(') {
+				result.push_back(opStack.top());
+				opStack.pop();
+			}
+			opStack.pop();
+		}
 		// if its an operator or brackets
 		else {
 			// add all operators on opStack to string
-			while (!opStack.empty() && opStack.top() != ')' && opStack.top() != '(' &&
-				StringUtils::opPrecedence(c) < StringUtils::opPrecedence(opStack.top())) {
+			while (!opStack.empty() && opStack.top() != '(' && StringUtils::opPrecedence(c) <= StringUtils::opPrecedence(opStack.top())) {
 				result.push_back(opStack.top());
 				opStack.pop();
 			}
@@ -102,8 +110,7 @@ std::string StringUtils::createPostFixNotation(const std::string& prefix) {
 	while (!opStack.empty()) {
 		result.push_back(opStack.top());
 		opStack.pop();
-	}
-	std::reverse(result.begin(), result.end());	
+	}	
 	return result;
 }
 
@@ -122,6 +129,10 @@ int StringUtils::opPrecedence(char op) {
 		return 0;
 	}
 }
+
+/*
+	Returns true if postFix(arg1) exists in fullPostFix(arg2)
+*/
 
 bool StringUtils::postFixInFullpostFix(const std::string& postFix, const std::string& fullPostFix) {
 	if (fullPostFix.find(postFix) != std::string::npos) {
