@@ -195,11 +195,11 @@ std::unordered_set<int> PkbRetriever::getAllUsesStmt() {
 }
 
 /*Calls Store*/
-std::string PkbRetriever::getLeftCall(std::string rightProc) {
+std::unordered_set<std::string> PkbRetriever::getLeftCall(std::string rightProc) {
 	return this->callsStorage->getLeftProc(rightProc);
 }
 
-std::string PkbRetriever::getRightCall(std::string leftProc) {
+std::unordered_set<std::string> PkbRetriever::getRightCall(std::string leftProc) {
 	return this->callsStorage->getRightProc(leftProc);
 }
 
