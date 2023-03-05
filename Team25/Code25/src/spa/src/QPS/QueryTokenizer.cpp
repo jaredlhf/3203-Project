@@ -11,9 +11,9 @@ std::string QueryTokenizer::preprocess(const std::string& word) {
         }
 
         // If characters in quotes, do not account for whitespaces
-        if (inQuotes && c != ' ') {
+        if (inQuotes && !std::isspace(c)) {
             res += c;
-        } else if (inQuotes && c == ' ') {
+        } else if (inQuotes && std::isspace(c)) {
             continue;
         // Handle the case where * is part of the clause name
         } else if (c == '*') {

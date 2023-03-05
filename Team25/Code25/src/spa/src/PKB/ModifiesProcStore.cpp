@@ -1,37 +1,39 @@
 #include<stdio.h>
 #include <iostream>
 
-using namespace std;
-
 #include "ModifiesProcStore.h"
 
-ModifiesProcStore::ModifiesProcStore() {}
+ModifiesProcStore::ModifiesProcStore() : procStore{}, varStore{} {}
 
-void ModifiesProcStore::addModifiesProc(string procName, string varName) {
-	modProcStore[varName].emplace(procName);
-	modVarStore[procName].emplace(varName);
+ModifiesProcStore::ModifiesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore, 
+	std::unordered_map<std::string, std::unordered_set<std::string>> varStore)
+	: procStore{ procStore }, varStore{ varStore } {}
+
+void ModifiesProcStore::addModifiesProc(std::string procName, std::string varName) {
+	procStore[varName].emplace(procName);
+	varStore[procName].emplace(varName);
 }
 
-unordered_set<string> ModifiesProcStore::getModVar(string procName) {
-	if (hasModProc(procName)) {
-		return modVarStore[procName];
+std::unordered_set<std::string> ModifiesProcStore::getVar(std::string procName) {
+	if (hasProc(procName)) {
+		return varStore[procName];
 	}
 	else {
-		return unordered_set<string>{};
+		return {};
 	}
 }
 
-unordered_set<string> ModifiesProcStore::getModProc(string varName) {
-	if (hasModVar(varName)) {
-		return modProcStore[varName];
+std::unordered_set<std::string> ModifiesProcStore::getProc(std::string varName) {
+	if (hasVar(varName)) {
+		return procStore[varName];
 	}
 	else {
-		return unordered_set<string>{};
+		return {};
 	}
 }
 
-bool ModifiesProcStore::hasModVar(string varName) {
-	if (modVarStore.find(varName) != modVarStore.end()) {
+bool ModifiesProcStore::hasVar(std::string varName) {
+	if (procStore.find(varName) != procStore.end()) {
 		return true;
 	}
 	else {
@@ -39,8 +41,8 @@ bool ModifiesProcStore::hasModVar(string varName) {
 	}
 }
 
-bool ModifiesProcStore::hasModProc(string procName) {
-	if (modProcStore.find(procName) != modProcStore.end()) {
+bool ModifiesProcStore::hasProc(std::string procName) {
+	if (varStore.find(procName) != varStore.end()) {
 		return true;
 	}
 	else {
@@ -48,7 +50,23 @@ bool ModifiesProcStore::hasModProc(string procName) {
 	}
 }
 
-void ModifiesProcStore::clear() {
-	modProcStore.clear();
-	modVarStore.clear();
+std::unordered_set<std::string> ModifiesProcStore::getAllVar()
+{
+	std::unordered_set<std::string> varList;
+
+	for (const auto& [key, value] : varStore) {
+		varList.insert(value.begin(), value.end());
+	}
+	return varList;
 }
+
+std::unordered_set<std::string> ModifiesProcStore::getAllProc()
+{
+	std::unordered_set<std::string> procList;
+
+	for (const auto& [key, value] : procStore) {
+		procList.insert(value.begin(), value.end());
+	}
+	return procList;
+}
+

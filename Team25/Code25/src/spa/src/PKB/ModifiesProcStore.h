@@ -2,27 +2,26 @@
 
 #include<stdio.h>
 #include <iostream>
-#include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <string>
 
-using namespace std;
+#include "AbstractionStore.h"
 
-class ModifiesProcStore {
+class ModifiesProcStore : public ProcVarStore {
 private: 
-	unordered_map<string, unordered_set<string>> modProcStore;
-	unordered_map<string, unordered_set<string>> modVarStore;
+	std::unordered_map<std::string, std::unordered_set<std::string>> procStore;
+	std::unordered_map<std::string, std::unordered_set<std::string>> varStore;
 
 public:
 	ModifiesProcStore();
-
-	void addModifiesProc(string procName, string varName);
-	unordered_set<string> getModVar(string procName);
-	unordered_set<string> getModProc(string varName);
-	bool hasModVar(string varName);
-	bool hasModProc(string procName);
-	/*unordered_set<string> getAllModVarProc();
-	unordered_set<string> getAllModProc();*/
-
-	void clear();
+	ModifiesProcStore(std::unordered_map<std::string, std::unordered_set<std::string>> procStore, std::unordered_map<std::string, std::unordered_set<std::string>> varStore);
+	
+	void addModifiesProc(std::string procName, std::string varName);
+	std::unordered_set<std::string> getVar(std::string procName) override;
+	std::unordered_set<std::string> getProc(std::string varName) override;
+	bool hasVar(std::string varName) override;
+	bool hasProc(std::string procName) override;
+	std::unordered_set<std::string> getAllVar() override;
+	std::unordered_set<std::string> getAllProc() override;
 };
