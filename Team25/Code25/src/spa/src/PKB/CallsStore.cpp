@@ -4,15 +4,15 @@
 #include "CallsStore.h"
 
 CallsStore::CallsStore() : leftProcStore{}, rightProcStore{} {}
-CallsStore::CallsStore(std::unordered_map<std::string, std::string> leftProcStore, std::unordered_map<std::string, std::string> rightProcStore) 
+CallsStore::CallsStore(std::unordered_map<std::string, std::unordered_set<std::string>> leftProcStore, std::unordered_map<std::string, std::unordered_set<std::string>> rightProcStore)
 	: leftProcStore{ leftProcStore }, rightProcStore{ rightProcStore } {}
 
 void CallsStore::addCalls(std::string leftProc, std::string rightProc) {
-	leftProcStore[rightProc] = leftProc;
-	rightProcStore[leftProc] = rightProc;
+	leftProcStore[rightProc].emplace(leftProc);
+	rightProcStore[leftProc].emplace(rightProc);
 }
 
-std::string CallsStore::getLeftProc(std::string rightProc) {
+std::unordered_set<std::string> CallsStore::getLeftProc(std::string rightProc) {
 	if (hasRightProc(rightProc)) {
 		return leftProcStore[rightProc];
 	}
@@ -21,7 +21,7 @@ std::string CallsStore::getLeftProc(std::string rightProc) {
 	}
 }
 
-std::string CallsStore::getRightProc(std::string leftProc) {
+std::unordered_set<std::string> CallsStore::getRightProc(std::string leftProc) {
 	if (hasLeftProc(leftProc)) {
 		return rightProcStore[leftProc];
 	}
@@ -51,7 +51,7 @@ bool CallsStore::hasRightProc(std::string procName) {
 std::unordered_set<std::string> CallsStore::getAllLeft() {
 	std::unordered_set<std::string> leftProcList;
 	for (const auto& [key, value] : leftProcStore) {
-		leftProcList.insert(value);
+		leftProcList.insert(value.begin(), value.end());
 	}
 	return leftProcList;
 }
@@ -59,7 +59,7 @@ std::unordered_set<std::string> CallsStore::getAllLeft() {
 std::unordered_set<std::string> CallsStore::getAllRight() {
 	std::unordered_set<std::string> rightProcList;
 	for (const auto& [key, value] : rightProcStore) {
-		rightProcList.insert(value);
+		rightProcList.insert(value.begin(), value.end());
 	}
 	return rightProcList;
 }
