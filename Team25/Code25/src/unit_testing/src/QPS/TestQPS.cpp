@@ -18,6 +18,8 @@ SCENARIO("Mocking behavior of QPS") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		ParserResponse response;
 
@@ -34,8 +36,10 @@ SCENARIO("Mocking behavior of QPS") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -92,6 +96,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -106,6 +112,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 		// Mock variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -210,7 +218,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		uprocsPointer->addUsesProc("factorial", "y");
 		uprocsPointer->addUsesProc("beta", "z");
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 

@@ -15,6 +15,8 @@
 #include "ParentStore.h"
 #include "UsesProcStore.h"
 #include "UsesStore.h"
+#include "CallsStore.h"
+#include "CallsStarStore.h"
 
 class PkbRetriever{
 private:
@@ -31,9 +33,14 @@ private:
 	shared_ptr<ParentStore> parentStorage;
 	shared_ptr<UsesProcStore> usesProcStorage;
 	shared_ptr<UsesStore> usesStorage;
+	shared_ptr<CallsStore> callsStorage;
+	shared_ptr<CallsStarStore> callsStarStorage;
 
 public:
-	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, shared_ptr<UsesStore> usesStore);
+	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
+		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
+		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, 
+		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore);
 	/*Var Store*/
 	std::unordered_set<std::string> getAllVar(); 
 	/*Const Store*/
@@ -85,4 +92,14 @@ public:
 	std::unordered_set<int> getUsesStmt(std::string varName);
 	std::unordered_set<std::string> getAllUsesVar();
 	std::unordered_set<int> getAllUsesStmt();
+	/*Calls Store*/
+	std::string getLeftCall(std::string rightProc);
+	std::string getRightCall(std::string leftProc);
+	std::unordered_set<std::string> getAllLeftCall();
+	std::unordered_set<std::string> getAllRightCall();
+	/*CallsStar Store*/
+	std::unordered_set<std::string> getLeftCallStar(std::string rightProc);
+	std::unordered_set<std::string> getRightCallStar(std::string leftProc);
+	std::unordered_set<std::string> getAllLeftCallStar();
+	std::unordered_set<std::string> getAllRightCallStar();
 };

@@ -21,6 +21,8 @@ SCENARIO("Working version of PkbRetriever") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		WHEN("The PkbRetriever references empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -36,8 +38,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -132,8 +136,10 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);

@@ -6,7 +6,7 @@ add_executable(unit_testing ${srcs}
 "src/PKB/TestFollowsStore.cpp"
 "src/PKB/TestModifiesProcStore.cpp"
 "src/PKB/TestModifiesStore.cpp"
-"src/PKB/TestParentStar.cpp"
+"src/PKB/TestParentStarStore.cpp"
 "src/PKB/TestParentStore.cpp"
 "src/PKB/TestPkbPopulator.cpp"
 "src/PKB/TestPkbRetriever.cpp"
@@ -37,7 +37,7 @@ add_executable(unit_testing ${srcs}
 "src/SP/TestSourceProcessor.cpp"
 "src/SP/TestStmtParser.cpp"
 "src/SP/TestTNode.cpp"
-"src/SP/TestTokenizer.cpp" "src/PKB/TestUsesProcStore.cpp")
+"src/SP/TestTokenizer.cpp" "src/PKB/TestUsesProcStore.cpp" "src/PKB/TestCallsStore.cpp" "src/PKB/TestCallsStarStore.cpp")
 
 target_link_libraries(unit_testing spa)
 
