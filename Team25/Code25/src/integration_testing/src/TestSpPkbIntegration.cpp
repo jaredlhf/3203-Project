@@ -55,34 +55,34 @@ SCENARIO("Integration testing between SP and PKB") {
 			sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
 			THEN("PKB variable store should contain the correct variables") {
 				REQUIRE(vsPointer->size() == 18);
-				REQUIRE(vsPointer->getAll().count("x") == 1);
-				REQUIRE(vsPointer->getAll().count("d") == 1);
-				REQUIRE(vsPointer->getAll().count("a") == 1);
-				REQUIRE(vsPointer->getAll().count("b") == 1);
-				REQUIRE(vsPointer->getAll().count("y") == 1);
-				REQUIRE(vsPointer->getAll().count("z") == 1);
-				REQUIRE(vsPointer->getAll().count("i") == 1);
-				REQUIRE(vsPointer->getAll().count("j") == 1);
-				REQUIRE(vsPointer->getAll().count("k") == 1);
-				REQUIRE(vsPointer->getAll().count("W") == 1);
-				REQUIRE(vsPointer->getAll().count("n") == 1);
-				REQUIRE(vsPointer->getAll().count("c") == 1);
-				REQUIRE(vsPointer->getAll().count("U") == 1);
-				REQUIRE(vsPointer->getAll().count("o") == 1);
-				REQUIRE(vsPointer->getAll().count("p") == 1);
-				REQUIRE(vsPointer->getAll().count("z") == 1);
-				REQUIRE(vsPointer->getAll().count("h") == 1);
-				REQUIRE(vsPointer->getAll().count("f1") == 1);
-				REQUIRE(vsPointer->getAll().count("h3") == 1);
+				REQUIRE(vsPointer->getAllVar().count("x") == 1);
+				REQUIRE(vsPointer->getAllVar().count("d") == 1);
+				REQUIRE(vsPointer->getAllVar().count("a") == 1);
+				REQUIRE(vsPointer->getAllVar().count("b") == 1);
+				REQUIRE(vsPointer->getAllVar().count("y") == 1);
+				REQUIRE(vsPointer->getAllVar().count("z") == 1);
+				REQUIRE(vsPointer->getAllVar().count("i") == 1);
+				REQUIRE(vsPointer->getAllVar().count("j") == 1);
+				REQUIRE(vsPointer->getAllVar().count("k") == 1);
+				REQUIRE(vsPointer->getAllVar().count("W") == 1);
+				REQUIRE(vsPointer->getAllVar().count("n") == 1);
+				REQUIRE(vsPointer->getAllVar().count("c") == 1);
+				REQUIRE(vsPointer->getAllVar().count("U") == 1);
+				REQUIRE(vsPointer->getAllVar().count("o") == 1);
+				REQUIRE(vsPointer->getAllVar().count("p") == 1);
+				REQUIRE(vsPointer->getAllVar().count("z") == 1);
+				REQUIRE(vsPointer->getAllVar().count("h") == 1);
+				REQUIRE(vsPointer->getAllVar().count("f1") == 1);
+				REQUIRE(vsPointer->getAllVar().count("h3") == 1);
 			}
 			THEN("PKB constants store should contain the correct constants") {
 				REQUIRE(csPointer->size() == 2);
-				REQUIRE(csPointer->getAll().count(2) == 1);
-				REQUIRE(csPointer->getAll().count(232141) == 1);
+				REQUIRE(csPointer->getAllConst().count(2) == 1);
+				REQUIRE(csPointer->getAllConst().count(232141) == 1);
 			}
 			THEN("PKB follows store should contain the correct follows") {
-				REQUIRE(fsPointer->getAllFollowers().size() == 6);
-				REQUIRE(fsPointer->getAllFollowees().size() == 6);
+				REQUIRE(fsPointer->getAllRight().size() == 6);
+				REQUIRE(fsPointer->getAllLeft().size() == 6);
 			}
 			THEN("PKB statment store should contain the correct statement") {
 				REQUIRE(ssPointer->getAllStmt("assign").size() == 7);
@@ -95,20 +95,20 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 9);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
-				REQUIRE(fstarsPointer->getAllFollowers().size() == 6);
-				REQUIRE(fstarsPointer->getAllFollowees().size() == 6);
+				REQUIRE(fstarsPointer->getAllRight().size() == 6);
+				REQUIRE(fstarsPointer->getAllLeft().size() == 6);
 			}
 			THEN("PKB modifies store should contain the modifies relationships") {
 				REQUIRE(msPointer->getAllVar().size() == 8);
 				REQUIRE(msPointer->getAllStmt().size() == 10);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(pStarsPointer->getAllParents().size() == 2);
-				REQUIRE(pStarsPointer->getAllChildren().size() == 4);
+				REQUIRE(pStarsPointer->getAllLeft().size() == 2);
+				REQUIRE(pStarsPointer->getAllRight().size() == 4);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(parentsPointer->getAllParents().size() == 2);
-				REQUIRE(parentsPointer->getAllChildren().size() == 4);
+				REQUIRE(parentsPointer->getAllLeft().size() == 2);
+				REQUIRE(parentsPointer->getAllRight().size() == 4);
 			}
 			THEN("PKB uses store should contain the uses relationships") {
 				REQUIRE(usesPointer->getAllVar().size() == 11);

@@ -18,7 +18,7 @@
 class Parser {
 public:
     Parser(std::shared_ptr<Tokenizer> t);
-    std::shared_ptr<ParserDTO> parseProgram();
+    std::vector<std::shared_ptr<ParserDTO>> parseProgram();
 private:
     std::shared_ptr<Tokenizer> tokenizer;
     std::shared_ptr<SPParserUtils> utils;

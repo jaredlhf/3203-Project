@@ -11,13 +11,13 @@
 #include "PKB/PkbRetriever.h"
 #include "QPS/QpsTable.h"
 #include "QPS/utils/StringUtils.h"
+#include "QPS/constants/strategy/ClauseStrat.h"
 
-class Clause {
+class Clause : public std::enable_shared_from_this<Clause> {
 protected:
 	std::string keyword;
 	std::shared_ptr<Entity> arg1;
 	std::shared_ptr<Entity> arg2;
-	static std::unordered_set<int> getEveryStmt(std::shared_ptr<PkbRetriever> pkbRet);
 
 public:
 	// Constructor functions
@@ -35,6 +35,9 @@ public:
 
 	// Factory method for Clause subclasses
 	static std::shared_ptr<Clause> create(const std::string clauseType, std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+
+	// Static functions
+	static std::unordered_set<int> getEveryStmt(std::shared_ptr<PkbRetriever> pkbRet);
 };
 
 class UsesClause : public Clause {
@@ -93,4 +96,12 @@ public:
 	virtual bool isPatternClause() override;
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(
 		std::shared_ptr<PkbRetriever> pkbRet, std::shared_ptr<Synonym> patternSynonym);
+};
+
+class WithClause : public Clause {
+public:
+	WithClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
 };

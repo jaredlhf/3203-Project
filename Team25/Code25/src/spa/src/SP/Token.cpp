@@ -54,6 +54,10 @@ bool Read::isEqual(std::string tokenString) {
     return tokenString == "read";
 }
 
+bool Call::isEqual(std::string tokenString) {
+    return tokenString == "call";
+}
+
 bool Print::isEqual(std::string tokenString) {
     return tokenString == "print";
 }

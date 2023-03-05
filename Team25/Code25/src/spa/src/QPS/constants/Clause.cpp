@@ -70,6 +70,7 @@ std::shared_ptr<Clause> Clause::create(const std::string clauseType, std::shared
     if (clauseType == Constants::FOLLOWS) res = std::make_shared<FollowsClause>(FollowsClause(arg1, arg2));
     if (clauseType == Constants::FOLLOWSST) res = std::make_shared<FollowsStClause>(FollowsStClause(arg1, arg2));
     if (clauseType == Constants::PATTERN) res = std::make_shared<PatternClause>(PatternClause(arg1, arg2));
+    if (clauseType == Constants::WITH) res = std::make_shared<WithClause>(WithClause(arg1, arg2));
 
     return res;
 }
@@ -103,6 +104,10 @@ PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entit
     this->keyword = Constants::PATTERN;
 }
 
+WithClause::WithClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::WITH;
+}
+
 // Overriden clause functions
 bool Clause::isWrongArgs() {
     return true;
@@ -113,7 +118,6 @@ bool Clause::isSemInvalid() {
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Clause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
-    std::cout << "resolve clause" << std::endl;
     if (this->isWrongArgs()) {
         return QpsTable::getDefaultSynErr();
     }
@@ -170,104 +174,8 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
     if (this->arg1->isWildcard()) {
         return QpsTable::getDefaultSemErr();
     }
-
-    // Case: Uses(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        return !pkbRet->getUsesVar(std::stoi(arg1Val)).empty()
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Uses(1, "x")
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(std::stoi(arg1Val));
-        return pkbRes.count(arg2Val) > 0
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Uses(1, v1)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
-        std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(std::stoi(arg1Val)) /*TODO replace computation with getUsesVar(arg1Val);*/;
-        for (std::string val : pkbRes) {
-            resTable->addRow({ val });
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Uses(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        const std::string& arg1Name = arg1Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
-            if (pkbRes.size() > 0) {
-                resTable->addRow({ std::to_string(stmtNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Uses(s1, "x")
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        const std::string& arg1Name = arg1Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
-            if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
-                resTable->addRow({ std::to_string(stmtNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Uses(s1, v2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::shared_ptr<Synonym> arg2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        const std::string& arg1Name = arg1Syn->getName();
-        const std::string& arg2Name = arg2Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name, arg2Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
-            for (const std::string& arg2Match : pkbRes) {
-                resTable->addRow({ std::to_string(stmtNum), arg2Match });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 
@@ -317,101 +225,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModifiesClause::re
         return QpsTable::getDefaultSemErr();
     }
 
-    // Case: Modifies(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        return !pkbRet->getModVar(std::stoi(arg1Val)).empty()
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Modifies(1, "x")
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        const std::string& pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
-        return pkbRes == arg2Val
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Modifies(1, v1)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
-        const std::string& pkbRes = pkbRet->getModVar(std::stoi(arg1Val));
-        if (!pkbRes.empty()) {
-            resTable->addRow({ pkbRes });
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Modifies(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        const std::string& arg1Name = arg1Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum) /*TODO replace computation with getUsesVar(stmtNum);*/;
-            if (!pkbRes.empty()) {
-                resTable->addRow({ std::to_string(stmtNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Modifies(s1, "x")
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        const std::string& arg1Name = arg1Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum);
-            if (pkbRes == arg2Val) {
-                resTable->addRow({ std::to_string(stmtNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Modifies(s1, v2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> arg1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::shared_ptr<Synonym> arg2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        const std::string& arg1Name = arg1Syn->getName();
-        const std::string& arg2Name = arg2Syn->getName();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg1Name, arg2Name });
-        std::unordered_set<int> arg1Stmts = arg1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(arg1Syn->getKeyword());
-        for (int stmtNum : arg1Stmts) {
-            const std::string& pkbRes = pkbRet->getModVar(stmtNum);
-            resTable->addRow({ std::to_string(stmtNum), pkbRes });
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 // Parent overriden clause functions
@@ -455,160 +269,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentClause::reso
         return QpsTable::getDefaultSemErr();
     }
 
-    // Case: Parent(_, _)
-    if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        for (int stNum : stmts) {
-            if (pkbRet->getChildren(stNum).size() > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Parent(_, 2)
-    if (this->arg1->isWildcard() && this->arg2->isConstant()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getChildren(stNum).count(std::stoi(arg2Val)) > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Parent(_, s2)
-    if (this->arg1->isWildcard() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getParent(stNum) != -1) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Parent(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getParent(stNum) == std::stoi(arg1Val)) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Parent(1, 2)
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-
-        if (pkbRet->getChildren(std::stoi(arg1Val)).count(std::stoi(arg2Val)) > 0) {
-            return QpsTable::getDefaultOk();
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Parent(1, s2)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getParent(stNum) == std::stoi(arg1Val)) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Parent(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getChildren(stNum).size() > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Parent(s1, 2)
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getParent(std::stoi(arg2Val)) == stNum) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Parent(s1, s2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-
-        // Edge case: if s1 and s2 are the same var name, return no match
-        if (s1Syn->getName() == s2Syn->getName()) {
-            return QpsTable::getDefaultNoMatch();
-        }
-
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
-        for (int arg1StNum : s1Stmts) {
-            for (int arg2StNum : s2Stmts) {
-                if (pkbRet->getParent(arg2StNum) == arg1StNum) {
-                    resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-                }
-            }
-
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 // Follows overriden clause functions
@@ -652,150 +313,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsClause::res
         return QpsTable::getDefaultSemErr();
     }
 
-    // Case: Follows(_, _)
-    if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
-        return pkbRet->getAllFollowees().size() > 0 
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Follows(_, 2)
-    if (this->arg1->isWildcard() && this->arg2->isConstant()) {
-        std::unordered_set<int> stmts = pkbRet->getAllFollowers();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        return stmts.count(std::stoi(arg2Val)) > 0
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Follows(_, s2)
-    if (this->arg1->isWildcard() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getFollowee(stNum) != -1) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Follows(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = pkbRet->getAllFollowees();
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        return stmts.count(std::stoi(arg1Val)) > 0
-            ? QpsTable::getDefaultOk()
-            : QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Follows(1, 2)
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-
-        if (pkbRet->getFollower(std::stoi(arg1Val)) == std::stoi(arg2Val)) {
-            return QpsTable::getDefaultOk();
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: Follows(1, s2)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getFollower(std::stoi(arg1Val)) == stNum) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Follows(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getFollower(stNum) != -1) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Follows(s1, 2)
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getFollowee(std::stoi(arg2Val)) == stNum) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: Follows(s1, s2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-
-        // Edge case: if s1 and s2 are the same var name, return no match
-        if (s1Syn->getName() == s2Syn->getName()) {
-            return QpsTable::getDefaultNoMatch();
-        }
-
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
-        for (int arg1StNum : s1Stmts) {
-            for (int arg2StNum : s2Stmts) {
-                if (pkbRet->getFollower(arg1StNum) == arg2StNum /*TODO replace with getChild(arg1StNum) == arg2StNum  */) {
-                    resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-                }
-            }
-
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 // ParentSt overriden clause functions
@@ -839,159 +357,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStClause::re
         return QpsTable::getDefaultSemErr();
     }
 
-    // Case: ParentSt(_, _)
-    if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        for (int stNum : stmts) {
-            if (pkbRet->getChildrenStar(stNum).size() > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: ParentSt(_, 2)
-    if (this->arg1->isWildcard() && this->arg2->isConstant()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getChildrenStar(stNum).count(std::stoi(arg2Val)) > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: ParentSt(_, s2)
-    if (this->arg1->isWildcard() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getParentStar(stNum).size() > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: ParentSt(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getParentStar(stNum).count(std::stoi(arg1Val)) > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: ParentSt(1, 2)
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-
-        if (pkbRet->getChildrenStar(std::stoi(arg1Val)).count(std::stoi(arg2Val)) > 0) {
-            return QpsTable::getDefaultOk();
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: ParentSt(1, s2)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getParentStar(stNum).count(std::stoi(arg1Val)) > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: ParentSt(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getChildrenStar(stNum).size() > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: ParentSt(s1, 2)
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getChildrenStar(stNum).count(std::stoi(arg2Val)) > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: ParentSt(s1, s2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-
-        // Edge case: if s1 and s2 are the same var name, return no match
-        if (s1Syn->getName() == s2Syn->getName()) {
-            return QpsTable::getDefaultNoMatch();
-        }
-
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
-        for (int arg1StNum : s1Stmts) {
-            for (int arg2StNum : s2Stmts) {
-                if (pkbRet->getParentStar(arg2StNum).count(arg1StNum) > 0) {
-                    resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-                }
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 // FollowsSt overriden clause functions
@@ -1035,159 +401,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStClause::r
         return QpsTable::getDefaultSemErr();
     }
 
-    // Case: FollowsSt(_, _)
-    if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        for (int stNum : stmts) {
-            if (pkbRet->getFollowerStar(stNum).size() > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: FollowsSt(_, 2)
-    if (this->arg1->isWildcard() && this->arg2->isConstant()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getFollowerStar(stNum).count(std::stoi(arg2Val)) > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: FollowsSt(_, s2)
-    if (this->arg1->isWildcard() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getFolloweeStar(stNum).size() > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: FollowsSt(1, _)
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        for (int stNum : stmts) {
-            if (pkbRet->getFolloweeStar(stNum).count(std::stoi(arg1Val)) > 0) {
-                return QpsTable::getDefaultOk();
-            }
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: FollowsSt(1, 2)
-    if (this->arg1->isConstant() && this->arg2->isConstant()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-
-        if (pkbRet->getFollowerStar(std::stoi(arg1Val)).count(std::stoi(arg2Val)) > 0) {
-            return QpsTable::getDefaultOk();
-        }
-        return QpsTable::getDefaultNoMatch();
-    }
-
-    // Case: FollowsSt(1, s2)
-    if (this->arg1->isConstant() && this->arg2->isSynonym()) {
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-
-        for (int stNum : s2Stmts) {
-            if (pkbRet->getFolloweeStar(stNum).count(std::stoi(arg1Val)) > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: FollowsSt(s1, _)
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getFollowerStar(stNum).size() > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: FollowsSt(s1, 2)
-    if (this->arg1->isSynonym() && this->arg2->isConstant()) {
-        const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-
-        for (int stNum : s1Stmts) {
-            if (pkbRet->getFollowerStar(stNum).count(std::stoi(arg2Val)) > 0) {
-                resTable->addRow({ std::to_string(stNum) });
-            }
-        }
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // Case: FollowsSt(s1, s2)
-    if (this->arg1->isSynonym() && this->arg2->isSynonym()) {
-        std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-        std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s1Syn->getKeyword());
-
-        std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-        std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-            ? Clause::getEveryStmt(pkbRet)
-            : pkbRet->getAllStmt(s2Syn->getKeyword());
-
-        // Edge case: if s1 and s2 are the same var name, return no match
-        if (s1Syn->getName() == s2Syn->getName()) {
-            return QpsTable::getDefaultNoMatch();
-        }
-
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
-        for (int arg1StNum : s1Stmts) {
-            for (int arg2StNum : s2Stmts) {
-                if (pkbRet->getFolloweeStar(arg2StNum).count(arg1StNum) > 0) {
-                    resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-                }
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }
 
 // Pattern overriden clause functions
@@ -1232,120 +446,61 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
         return QpsTable::getDefaultSemErr();
     }
 
-    // Preprocessing: Get all matches for the assign/while/if synonym
-    std::vector<std::string> synMatches;
-    const std::string& synName = patternSynonym->getName();
-    for (int val : pkbRet->getAllStmt(patternSynonym->getKeyword())) {
-        synMatches.push_back(std::to_string(val));
-    }
-    
-    // If both args are wildcard
-    if (this->arg1->isWildcard() && this->arg2->isWildcard()) {
-        std::shared_ptr<Wildcard> wcArg2 = std::static_pointer_cast<Wildcard>(this->arg2);
-
-        // Case: pattern a1 (_, _)
-        if (wcArg2->isGenericWildcard()) {
-            std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName });
-            for (const std::string& val : synMatches) {
-                resTable->addRow({ val });
-            }
-
-            return resTable->getData().size() > 0
-                ? std::make_pair(Constants::ClauseResult::OK, resTable)
-                : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-        }
-
-        // Case: pattern a1 (_, _"x"_)
-        const std::string& wcPattern = wcArg2->getVal();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName });
-        for (const std::string& stNum : synMatches) {
-            const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(stNum));
-            if (StringUtils::tokenInOp(pkbPattern, wcPattern)) {
-                resTable->addRow({ stNum });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // If arg1 is constant and arg2 is wildcard
-    if (this->arg1->isConstant() && this->arg2->isWildcard()) {
-        std::shared_ptr<Wildcard> wcArg2 = std::static_pointer_cast<Wildcard>(this->arg2);
-        const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-
-        // Case: pattern a1 ("x", _)
-        if (wcArg2->isGenericWildcard()) {
-            std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName });
-            std::unordered_set<int> pkbStmtMatches = pkbRet->getAssignLhs(arg1Val);
-            for (int intVal : pkbStmtMatches) {
-                resTable->addRow({ std::to_string(intVal) });
-            }
-
-            return resTable->getData().size() > 0
-                ? std::make_pair(Constants::ClauseResult::OK, resTable)
-                : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-        }
-
-        // Case: pattern a1 ("x", _"y"_)
-        const std::string& wcPattern = wcArg2->getVal();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName });
-        std::unordered_set<int> pkbStmtMatches = pkbRet->getAssignLhs(arg1Val);
-        for (int intVal : pkbStmtMatches) {
-            const std::string& pkbPattern = pkbRet->getAssignRhs(intVal);
-            if (StringUtils::tokenInOp(pkbPattern, wcPattern)) {
-                resTable->addRow({ std::to_string(intVal) });
-            }
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    // If arg1 is VariableSynonym and arg2 is wildcard
-    if (this->arg1->isSynonym() && this->arg2->isWildcard()) {
-        std::shared_ptr<Wildcard> wcArg2 = std::static_pointer_cast<Wildcard>(this->arg2);
-        std::shared_ptr<Synonym> synArg1 = std::static_pointer_cast<Synonym>(this->arg1);
-
-        // Case: pattern a1 (v1, _)
-        if (wcArg2->isGenericWildcard()) {
-            std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName, synArg1->getName() });
-            for (const std::string& a1SynMatch : synMatches) {
-                const std::string& v1Match = pkbRet->getModVar(std::stoi(a1SynMatch)) /*TODO replace with getModVar(std::atoi(a1SynMatch))*/;
-                if (!v1Match.empty()) {
-                    resTable->addRow({ a1SynMatch, v1Match });
-                }
-            }
-
-            return resTable->getData().size() > 0
-                ? std::make_pair(Constants::ClauseResult::OK, resTable)
-                : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-        }
-
-        // Case: pattern a1 (v1, _"y"_)
-        const std::string& wcPattern = wcArg2->getVal();
-        std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName, synArg1->getName() });
-        for (const std::string& a1SynMatch : synMatches) {
-            const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(a1SynMatch));
-            if (StringUtils::tokenInOp(pkbPattern, wcPattern)) {
-                const std::string& v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
-                if (!v1Match.empty()) {
-                    resTable->addRow({ a1SynMatch, v1Match });
-                }
-            }
-            
-        }
-
-        return resTable->getData().size() > 0
-            ? std::make_pair(Constants::ClauseResult::OK, resTable)
-            : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
-    }
-
-    return QpsTable::getDefaultSynErr();
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet, patternSynonym)->resolve();
 }
 
 bool PatternClause::isPatternClause() {
     return true;
+}
+
+// With clause overriden clause functions
+/*
+    For With clauses, args is wrong if either is a wildcard, or either doesnt have attrName
+*/
+bool WithClause::isWrongArgs() {
+    if (this->arg1->isWildcard() || this->arg2->isWildcard()) {
+        return true;
+    }
+
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->hasAttrName()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->hasAttrName()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For with clauses, semantics are incorrect if types are not both int or both string
+*/
+bool WithClause::isSemInvalid() {
+    bool isArg1Int = false;
+    bool isArg2Int = false;
+
+    if (this->arg1->isConstant()) {
+        isArg1Int = std::static_pointer_cast<Value>(this->arg1)->isInt();
+    }
+
+    if (this->arg2->isConstant()) {
+        isArg2Int = std::static_pointer_cast<Value>(this->arg2)->isInt();
+    }
+
+    if (this->arg1->isSynonym()) {
+        isArg1Int = Constants::isAttrNameInt(
+            std::static_pointer_cast<Synonym>(this->arg1)->getAttrName());
+    }
+
+    if (this->arg2->isSynonym()) {
+        isArg2Int = Constants::isAttrNameInt(
+            std::static_pointer_cast<Synonym>(this->arg2)->getAttrName());
+    }
+
+    return isArg1Int != isArg2Int;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    return QpsTable::getDefaultNoMatch();
 }

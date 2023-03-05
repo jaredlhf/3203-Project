@@ -132,7 +132,7 @@ SCENARIO("System testing between all components") {
 			}
 
 			THEN("For modifies query in the form (s1, 'y'), the right result is returned") {
-				list<string> expected = { "3" };
+				list<string> expected = { "2", "3" };
 				list<string> res;
 
 				string query = "stmt stmt; Select stmt such that Modifies(stmt, \"y\")";

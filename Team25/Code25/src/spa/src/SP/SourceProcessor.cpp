@@ -19,9 +19,13 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
     t.tokenize(fileStr);
 
     Parser p(std::make_shared<Tokenizer>(t));
-    std::shared_ptr<ParserDTO> programDTO = p.parseProgram();
-    std::shared_ptr<TNode> root = programDTO->getNode();
+    std::vector<std::shared_ptr<ParserDTO>> programDTOs = p.parseProgram();
 
     std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator);
-    selectiveExtractor->visitProgramTree(root);
+
+    for (auto programDTO : programDTOs) {
+        std::shared_ptr<TNode> root = programDTO->getNode();
+        selectiveExtractor->visitProgramTree(root);
+    }
+
 }

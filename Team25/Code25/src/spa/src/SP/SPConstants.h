@@ -3,12 +3,14 @@
 
 namespace SPConstants {
     const int INVALID_LINE_NO = -1;
+    const int PROCEDURE = -2;
 
     const std::string ASSIGN_TYPE = "assign";
     const std::string READ_TYPE = "read";
     const std::string PRINT_TYPE = "print";
     const std::string WHILE_TYPE = "while";
     const std::string IF_TYPE = "if";
+    const std::string CALL_TYPE = "call";
 
     const char TAB = '\t';
     const char NEWLINE = '\n';
