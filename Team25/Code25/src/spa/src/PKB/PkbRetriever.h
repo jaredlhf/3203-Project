@@ -93,8 +93,8 @@ public:
 	std::unordered_set<std::string> getAllUsesVar();
 	std::unordered_set<int> getAllUsesStmt();
 	/*Calls Store*/
-	std::string getLeftCall(std::string rightProc);
-	std::string getRightCall(std::string leftProc);
+	std::unordered_set<std::string> getLeftCall(std::string rightProc);
+	std::unordered_set<std::string> getRightCall(std::string leftProc);
 	std::unordered_set<std::string> getAllLeftCall();
 	std::unordered_set<std::string> getAllRightCall();
 	/*CallsStar Store*/
