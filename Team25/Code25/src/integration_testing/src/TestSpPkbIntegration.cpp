@@ -16,6 +16,8 @@ SCENARIO("Integration testing between SP and PKB") {
 		ParentStore parents;
 		UsesStore uses;
 		UsesProcStore uprocs;
+		CallsStore calls;
+		CallsStarStore cStars;
 		SourceProcessor sp;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -31,8 +33,10 @@ SCENARIO("Integration testing between SP and PKB") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
-		PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 		WHEN("Given a SIMPLE program") {
 			std::string fileLocation = "sample_source.txt";
 

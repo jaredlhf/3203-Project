@@ -17,6 +17,8 @@ SCENARIO("System testing between all components") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -31,10 +33,12 @@ SCENARIO("System testing between all components") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 		// PKB classes instantiation
-		PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 		WHEN("The SP and QPS objects are instantiated and a SIMPLE program is defined") {
 			// Simulating SIMPLE program in temp file
