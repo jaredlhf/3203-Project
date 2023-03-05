@@ -216,6 +216,17 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates multiple with repeating, it should return the right results") {
+				list<string> expected = { "11 11 x", "11 11 y", "11 11 z", "12 12 x", "12 12 y", "12 12 z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+				response.setSelectSynonyms({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 
 		WHEN("ParserResponse and PkbRetriever are populated with suchthat and/or pattern") {

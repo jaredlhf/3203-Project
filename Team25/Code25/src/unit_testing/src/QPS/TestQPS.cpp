@@ -53,6 +53,26 @@ SCENARIO("Mocking behavior of QPS") {
 				qps.query(query, res);
 				REQUIRE(res == expected);
 			}
+
+			THEN("For a given multi select query string and population of the pkbRetriever") {
+				list<string> expected = { "1 x x", "1 x y", "1 x z", "1 y x", "1 y y", "1 y z", 
+					"1 z x", "1 z y", "1 z z", "2 x x", "2 x y", "2 x z", "2 y x", "2 y y", 
+					"2 y z", "2 z x", "2 z y", "2 z z", "3 x x", "3 x y", "3 x z", "3 y x", 
+					"3 y y", "3 y z", "3 z x", "3 z y", "3 z z" };
+				list<string> res;
+
+				string query = "variable x, v; assign a; Select <a, x, v>";
+
+				vsPointer->addVar("x");
+				vsPointer->addVar("y");
+				vsPointer->addVar("z");
+				ssPointer->addStmt("assign", 1);
+				ssPointer->addStmt("assign", 2);
+				ssPointer->addStmt("assign", 3);
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
 		}
 	}
 }
