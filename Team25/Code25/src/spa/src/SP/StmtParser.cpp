@@ -2,44 +2,58 @@
 
 std::regex value("(\\w+)");
 
-std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string stmtType) {
-//    std::cout << "creating: " << stmtType << std::endl;
-    if (stmtType == "read") {
-        return std::make_shared<ReadParser>();
-    } else if (stmtType == "print") {
-        return std::make_shared<PrintParser>();
-    } else if (stmtType == "call") {
-        return std::make_shared<CallParser>();
-    } else if (stmtType == "while") {
-        return std::make_shared<WhileParser>();
-    } else if (stmtType == "if") {
-        return std::make_shared<IfParser>();
-    } else if (Token::isValidName(stmtType)) {
+std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string firstToken, std::string secondToken) {
+    if (Token::isValidName(firstToken) && secondToken == "=") {
         return std::make_shared<AssignParser>();
-    } else {
-
+    } else if (firstToken == "read") {
+        return std::make_shared<ReadParser>();
+    } else if (firstToken == "print") {
+        return std::make_shared<PrintParser>();
+    } else if (firstToken == "call") {
+        return std::make_shared<CallParser>();
+    } else if (firstToken == "while") {
+        return std::make_shared<WhileParser>();
+    } else if (firstToken == "if") {
+        return std::make_shared<IfParser>();
+    }  else {
         throw std::invalid_argument("Not a statement keyword or valid name");
     }
 }
 
-std::shared_ptr<StmtNode> StmtParser::parseStmt(std::string stmtType, std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
-    shared_ptr<StmtParser> sp = createStmtParser(stmtType);
+std::shared_ptr<ParserDTO> StmtParser::parseStmt(std::string firstToken, std::string secondToken, std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+    shared_ptr<StmtParser> sp = createStmtParser(firstToken, secondToken);
     utils->incrementStmtNo();
-    std::shared_ptr<StmtNode> sn = sp->parse(utils, tokenizer);
-    return sn;
+    std::shared_ptr<ParserDTO> resultDTO = sp->parse(utils, tokenizer);
+    return resultDTO;
 }
 
-StmtLstNode StmtParser::parseStmtLst(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> StmtParser::parseStmtLst(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     std::vector<std::shared_ptr<StmtNode>> StmtLsts;
+    std::shared_ptr<CFGNode> head = std::make_shared<CFGNode>();
+    std::shared_ptr<CFGNode> cfgNode = head;
+
     do {
-        std::shared_ptr<StmtNode> sn = parseStmt(tokenizer->peek(), utils, tokenizer);
-        StmtLsts.push_back(sn);
+        std::shared_ptr<ParserDTO> stmtDTO = parseStmt(tokenizer->peek(), tokenizer->peekTwice(), utils, tokenizer);
+        StmtLsts.push_back(std::dynamic_pointer_cast<StmtNode>(stmtDTO->getNode()));
+
+        if (stmtDTO->getCFGNode() != nullptr) {
+            std::shared_ptr<CFGNode> nextCfgNode = stmtDTO->getCFGNode();
+            cfgNode->setNextNode(nextCfgNode);
+            std::shared_ptr<CFGNode> newCfgNode = std::make_shared<CFGNode>();
+            nextCfgNode->setNextNode(newCfgNode);
+            cfgNode = newCfgNode;
+        } else {
+            int nextLineNo = stmtDTO->getLine();
+            cfgNode->addLineNo(nextLineNo);
+        }
     } while(!RightBrace().isEqual(tokenizer->peek()));
     StmtLstNode node = StmtLstNode(StmtLsts);
-    return node;
+
+    std::shared_ptr<ParserDTO> resultDTO = std::make_shared<ParserDTO>(std::make_shared<StmtLstNode>(node), head);
+    return resultDTO;
 }
 
-std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> AssignParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     std::string lhs = utils->expect(std::make_shared<Name>());
 
     utils->expect(std::make_shared<Equal>());
@@ -56,24 +70,29 @@ std::shared_ptr<StmtNode> AssignParser::parse(std::shared_ptr<SPParserUtils> uti
     AssignNode node = AssignNode(utils->getCurrentStmtNo(), lhs, rhs);
     utils->expect(std::make_shared<Semicolon>());
 
-    return std::make_shared<AssignNode>(node);
+    ParserDTO resultDTO = ParserDTO(std::make_shared<AssignNode>(node), utils->getCurrentStmtNo());
+    return std::make_shared<ParserDTO>(resultDTO);
 }
 
-std::shared_ptr<StmtNode> PrintParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> PrintParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Print>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), var);
-    return std::make_shared<PrintNode>(node);
+
+    ParserDTO resultDTO = ParserDTO(std::make_shared<PrintNode>(node), utils->getCurrentStmtNo());
+    return std::make_shared<ParserDTO>(resultDTO);
 }
 
 //TODO: implementation
-std::shared_ptr<StmtNode> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), "ds");
-    return std::make_shared<PrintNode>(node);
+
+    ParserDTO resultDTO = ParserDTO(std::make_shared<PrintNode>(node), utils->getCurrentStmtNo());
+    return std::make_shared<ParserDTO>(resultDTO);
 }
 
-std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<While>());
     //parse conditional expr
@@ -95,14 +114,22 @@ std::shared_ptr<StmtNode> WhileParser::parse(std::shared_ptr<SPParserUtils> util
     }
 
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode stmtLstNode = parseStmtLst(utils, tokenizer);
+    shared_ptr<ParserDTO> stmtLstDTO = parseStmtLst(utils, tokenizer);
+    shared_ptr<StmtLstNode> stmtLstNode = std::dynamic_pointer_cast<StmtLstNode>(stmtLstDTO->getNode());
     utils->expect(std::make_shared<RightBrace>());
 
-    WhileNode node = WhileNode(lineNo, rhs, std::make_shared<StmtLstNode>(stmtLstNode));
-    return std::make_shared<WhileNode>(node);
+    WhileNode node = WhileNode(lineNo, rhs, stmtLstNode);
+
+    std::shared_ptr<CFGWhileNode> cfgNode = std::make_shared<CFGWhileNode>(std::vector<int>(lineNo));
+    std::shared_ptr<CFGNode> loopCfgNode = stmtLstDTO->getCFGNode();
+    cfgNode->setLoopNode(loopCfgNode);
+    loopCfgNode->setNextNode(cfgNode);
+
+    ParserDTO resultDTO = ParserDTO(std::make_shared<WhileNode>(node), cfgNode);
+    return std::make_shared<ParserDTO>(resultDTO);
 }
 
-std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> IfParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     int lineNo = utils->getCurrentStmtNo();
     utils->expect(std::make_shared<If>());
 
@@ -126,21 +153,33 @@ std::shared_ptr<StmtNode> IfParser::parse(std::shared_ptr<SPParserUtils> utils, 
 
     utils->expect(std::make_shared<Then>());
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode ifLstNode = parseStmtLst(utils, tokenizer);
+    shared_ptr<ParserDTO> ifLstDTO = parseStmtLst(utils, tokenizer);
+    shared_ptr<StmtLstNode> ifLstNode = std::dynamic_pointer_cast<StmtLstNode>(ifLstDTO->getNode());
     utils->expect(std::make_shared<RightBrace>());
     utils->expect(std::make_shared<Else>());
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode elseLstNode = parseStmtLst(utils, tokenizer);
+    shared_ptr<ParserDTO> elseLstDTO = parseStmtLst(utils, tokenizer);
+    shared_ptr<StmtLstNode> elseLstNode = std::dynamic_pointer_cast<StmtLstNode>(elseLstDTO->getNode());
     utils->expect(std::make_shared<RightBrace>());
 
-    IfNode node = IfNode(lineNo, rhs, std::make_shared<StmtLstNode>(ifLstNode), std::make_shared<StmtLstNode>(elseLstNode));
-    return std::make_shared<IfNode>(node);;
+    IfNode node = IfNode(lineNo, rhs, ifLstNode, elseLstNode);
+
+    std::shared_ptr<CFGIfNode> cfgNode = std::make_shared<CFGIfNode>(std::vector<int>(lineNo));
+    std::shared_ptr<CFGNode> thenCfgNode = ifLstDTO->getCFGNode();
+    std::shared_ptr<CFGNode> elseCfgNode = elseLstDTO->getCFGNode();
+    cfgNode->setThenNode(thenCfgNode);
+    cfgNode->setElseNode(elseCfgNode);
+
+    ParserDTO resultDTO = ParserDTO(std::make_shared<IfNode>(node), cfgNode);
+    return std::make_shared<ParserDTO>(resultDTO);
 }
 
-std::shared_ptr<StmtNode> ReadParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
+std::shared_ptr<ParserDTO> ReadParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer) {
     utils->expect(std::make_shared<Read>());
     std::string var = utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<Semicolon>());
     ReadNode node = ReadNode(utils->getCurrentStmtNo(), var);
-    return std::make_shared<ReadNode>(node);;
+
+    ParserDTO resultDTO = ParserDTO(std::make_shared<ReadNode>(node), utils->getCurrentStmtNo());
+    return std::make_shared<ParserDTO>(resultDTO);
 }

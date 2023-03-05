@@ -72,7 +72,8 @@ src/SP/SPParserUtils.h
 src/SP/DesignExtractor.h
 src/SP/SelectiveExtractor.cpp
 src/SP/SelectiveExtractor.h
-src/SP/SPConstants.h)
+src/SP/SPConstants.h
+src/SP/ParserDTO.h src/SP/CFGNode.h)
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

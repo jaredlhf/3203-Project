@@ -29,8 +29,8 @@ SCENARIO("Testing ParseProgram") {
             std::shared_ptr<Parser> p = std::make_shared<Parser>(t);
 
             THEN ("it should generate correct AST") {
-                ProcedureNode pn = p->parseProgram();
-                std::shared_ptr<WhileNode> wn = dynamic_pointer_cast<WhileNode>(pn.getStmtLst()->getStatements()[0]);
+                std::shared_ptr<ProcedureNode> pn = dynamic_pointer_cast<ProcedureNode>(p->parseProgram()->getNode());
+                std::shared_ptr<WhileNode> wn = dynamic_pointer_cast<WhileNode>(pn->getStmtLst()->getStatements()[0]);
                 REQUIRE(wn->getCondExpr() == "(x!=0)&&(y!=6)");
                 REQUIRE(wn->getLine() == 1);
                 std::shared_ptr<AssignNode> a = dynamic_pointer_cast<AssignNode>(wn->getStmtLst()->getStatements()[0]);
@@ -59,7 +59,7 @@ SCENARIO("Testing ParseProgram") {
                 REQUIRE(a5->getVar() == "r");
                 REQUIRE(a5->getExpr() == "t*5");
                 REQUIRE(a5->getLine() == 8);
-                std::shared_ptr<AssignNode> a6 = dynamic_pointer_cast<AssignNode>(pn.getStmtLst()->getStatements()[1]);
+                std::shared_ptr<AssignNode> a6 = dynamic_pointer_cast<AssignNode>(pn->getStmtLst()->getStatements()[1]);
                 REQUIRE(a6->getVar() == "normSq");
                 REQUIRE(a6->getExpr() == "cenX*cenX+cenY*cenY");
                 REQUIRE(a6->getLine() == 9);

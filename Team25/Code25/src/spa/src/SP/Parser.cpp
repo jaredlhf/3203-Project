@@ -6,27 +6,31 @@ Parser::Parser(std::shared_ptr<Tokenizer> t) {
     this->utils = std::make_shared<SPParserUtils>(t);
 };
 
-// Returns just a ProcedureNode for milestone 1
-ProcedureNode Parser::parseProgram() {
+
+std::shared_ptr<ParserDTO> Parser::parseProgram() {
     do {
         if (tokenizer->getTokens().empty()) {
             throw std::invalid_argument("error: no procedures found");
         } else {
-            ProcedureNode proc = parseProcedure();
-            return proc;
+            std::shared_ptr<ParserDTO> procedureDTO = parseProcedure();
+            return procedureDTO;
         }
     } while (!tokenizer->getTokens().empty());
 }
 
 
-ProcedureNode Parser::parseProcedure() {
+std::shared_ptr<ParserDTO> Parser::parseProcedure() {
     utils->expect(std::make_shared<Procedure>());
     utils->expect(std::make_shared<Name>());
     utils->expect(std::make_shared<LeftBrace>());
-    StmtLstNode stmtLst = StmtParser::parseStmtLst(this->utils, this->tokenizer);
-    ProcedureNode node = ProcedureNode(std::make_shared<StmtLstNode>(stmtLst));
+    std::shared_ptr<ParserDTO> stmtLstDTO = StmtParser::parseStmtLst(this->utils, this->tokenizer);
+    shared_ptr<StmtLstNode> stmtLstNode = std::dynamic_pointer_cast<StmtLstNode>(stmtLstDTO->getNode());
+    ProcedureNode node = ProcedureNode(stmtLstNode);
     utils->expect(std::make_shared<RightBrace>());
-    return node;
+
+    std::shared_ptr<CFGNode> cfgNode = stmtLstDTO->getCFGNode();
+    std::shared_ptr<ParserDTO> resultDTO = std::make_shared<ParserDTO>(std::make_shared<ProcedureNode>(node), cfgNode);
+    return resultDTO;
 }
 
 
