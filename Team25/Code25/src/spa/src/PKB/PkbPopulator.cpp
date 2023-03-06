@@ -9,7 +9,10 @@
  * Constructor class for PkbPopulator
  * param: VarStorage* varStore
  */
-PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, shared_ptr<UsesStore> usesStore) {
+PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
+	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
+	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
+	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -23,6 +26,8 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	this->parentStorage = parentStore;
 	this->usesProcStorage = usesProcStore;
 	this->usesStorage = usesStore;
+	this->callsStorage = callsStore;
+	this->callsStarStorage = callsStarStore;
 }
 
 
@@ -82,6 +87,13 @@ void PkbPopulator::addUses(int lineNum, std::string varName) {
 	this->usesStorage->addUses(lineNum, varName);
 }
 
+void PkbPopulator::addCallsStar(std::string leftProc, std::string rightProc) {
+	this->callsStarStorage->addCallsStar(leftProc, rightProc);
+}
+
+void PkbPopulator::addCalls(std::string leftProc, std::string rightProc) {
+	this->callsStorage->addCalls(leftProc, rightProc);
+}
 
 
  

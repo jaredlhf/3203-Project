@@ -57,6 +57,29 @@ TEST_CASE("Parse correct query with two synonyms in one declaration and select s
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse correct query with two synonyms in one declaration and select statement with boolean") {
+
+    std::vector<std::string> queryTokens = {"variable", "v", ",", "x", ";", "Select", "BOOLEAN"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "v"), Synonym::create(Constants::VARIABLE, "x")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::BOOLEAN, "")});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with two synonyms in one declaration and select statement with one undeclared variable and one valid variable") {
+
+    std::vector<std::string> queryTokens = {"variable", "v", ",", "x", ";", "Select", "<", "z", ",", "x", ">"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SEMANTIC_ERROR, "")});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse correct query with two declarations but no semicolon") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
     std::vector<std::string> queryTokens = {"variable", "v", "assign", "a", "Select", "v"};
@@ -182,6 +205,58 @@ TEST_CASE("Parse correct query with pattern: wildcard on LHS and partial pattern
     expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
     expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
     PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create("x")));
+    expectedResObject.setPatternClauses({pair});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with pattern: wildcard on LHS and partial pattern x + y on RHS") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "_\"x + y\"_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
+    PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create("x + y")));
+    expectedResObject.setPatternClauses({pair});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with pattern: wildcard on LHS and nested equation pattern x + (y + z) on RHS") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "\"x + (y + z)\"", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
+    PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Value::create("x + (y + z)")));
+    expectedResObject.setPatternClauses({pair});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with pattern: wildcard on LHS and exact equation pattern x + y on RHS") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "\"x + y\"", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
+    PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Value::create("x + y")));
+    expectedResObject.setPatternClauses({pair});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with pattern: wildcard on LHS and exact pattern x on RHS") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "pattern", "a1", "(", "_", ",", "\"x\"", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::ASSIGN, "a1"), Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::ASSIGN, "a1")});
+    PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "a1"), Clause::create(Constants::PATTERN, Wildcard::create(), Value::create("x")));
     expectedResObject.setPatternClauses({pair});
 
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
@@ -435,6 +510,46 @@ TEST_CASE("Parse query with no such that keyword") {
 TEST_CASE("Parse query with no such that clause") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
     std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with Follows and name instead of integer for arg1") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Follows", "(", "\"sxs\"" , ",", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with Parent and name instead of integer for arg1") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Parent", "(", "\"sxs\"" , ",", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with Calls and integer instead of name for arg1") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Calls", "(", "1" , ",", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with Calls and integer instead of name for arg2") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"variable", "x", ";", "assign", "a", ";", "Select", "a", "such", "that", "Calls", "(", "_" , ",", "1", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);

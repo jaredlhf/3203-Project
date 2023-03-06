@@ -18,6 +18,8 @@ SCENARIO("Mocking behavior of QPS") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		ParserResponse response;
 
@@ -34,8 +36,10 @@ SCENARIO("Mocking behavior of QPS") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -49,6 +53,44 @@ SCENARIO("Mocking behavior of QPS") {
 				vsPointer->addVar("x");
 				vsPointer->addVar("y");
 				vsPointer->addVar("z");
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For a given multi select query string and population of the pkbRetriever") {
+				list<string> expected = { "1 x x", "1 x y", "1 x z", "1 y x", "1 y y", "1 y z", 
+					"1 z x", "1 z y", "1 z z", "2 x x", "2 x y", "2 x z", "2 y x", "2 y y", 
+					"2 y z", "2 z x", "2 z y", "2 z z", "3 x x", "3 x y", "3 x z", "3 y x", 
+					"3 y y", "3 y z", "3 z x", "3 z y", "3 z z" };
+				list<string> res;
+
+				string query = "variable x, v; assign a; Select <a, x, v>";
+
+				vsPointer->addVar("x");
+				vsPointer->addVar("y");
+				vsPointer->addVar("z");
+				ssPointer->addStmt("assign", 1);
+				ssPointer->addStmt("assign", 2);
+				ssPointer->addStmt("assign", 3);
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For a given multi select query string with repeated select and population of the pkbRetriever") {
+				list<string> expected = { "1 x x x", "1 y y y", "1 z z z", "2 x x x", "2 y y y", 
+					"2 z z z", "3 x x x", "3 y y y", "3 z z z" };
+				list<string> res;
+
+				string query = "variable x, v; assign a; Select <a, v, v, v>";
+
+				vsPointer->addVar("x");
+				vsPointer->addVar("y");
+				vsPointer->addVar("z");
+				ssPointer->addStmt("assign", 1);
+				ssPointer->addStmt("assign", 2);
+				ssPointer->addStmt("assign", 3);
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
@@ -72,6 +114,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -86,6 +130,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 		// Mock variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -190,7 +236,17 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		uprocsPointer->addUsesProc("factorial", "y");
 		uprocsPointer->addUsesProc("beta", "z");
 
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+		// Mock calls relationship in SIMPLE program
+		callsPointer->addCalls("factorial", "main");
+		callsPointer->addCalls("beta", "main");
+		callsPointer->addCalls("beta", "factorial");
+
+		// Mock callsSt relationship in SIMPLE program
+		cStarsPointer->addCallsStar("main", "factorial");
+		cStarsPointer->addCallsStar("main", "beta");
+		cStarsPointer->addCallsStar("factorial", "beta");
+
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 
@@ -329,6 +385,26 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				list<string> res;
 
 				string query = "stmt s2; Select s2 such that Follows(1, s2)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For calls query in the form ('beta', s1), the right result is returned") {
+				list<string> expected = { "factorial", "main" };
+				list<string> res;
+
+				string query = "procedure s2; Select s2 such that Calls(\"beta\", s2)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For calls* query in the form (_, s1), the right result is returned") {
+				list<string> expected = { "beta", "factorial" };
+				list<string> res;
+
+				string query = "procedure s2; Select s2 such that Calls*(_, s2)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);

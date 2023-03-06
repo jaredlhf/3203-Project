@@ -194,9 +194,9 @@ bool ParserUtils::isSemanticError(std::shared_ptr<Entity> e) {
 }
 
 bool ParserUtils::isExpectedSynonym(std::shared_ptr<Entity> e, const std::string& s) {
-    if (!e->isSynonym()) {
-        false;
+    if (e->isSynonym()) {
+        return std::static_pointer_cast<Synonym>(e)->getKeyword() == s;
     }
 
-    return std::static_pointer_cast<Synonym>(e)->getKeyword() == s;
+    return false;
 }

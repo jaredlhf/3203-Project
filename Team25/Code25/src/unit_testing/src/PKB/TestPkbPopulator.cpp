@@ -2,7 +2,7 @@
 #include <iostream>
 #include "catch.hpp"
 
-using namespace std;
+#include "QPS/constants/Constants.h"
 
 SCENARIO("Working version of PkbPopulator") {
 	GIVEN("Valid instances of empty stores") {
@@ -19,6 +19,8 @@ SCENARIO("Working version of PkbPopulator") {
 		ParentStore parents;
 		UsesProcStore uprocs;
 		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
 
 	
 
@@ -36,8 +38,11 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+		
 
-			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
@@ -55,7 +60,7 @@ SCENARIO("Working version of PkbPopulator") {
 			}
 			THEN("Adding one statement should increase the statement store size by 1") {
 				REQUIRE(ssPointer->size() == 0);
-				pkbPop.addStmt("assign", 2);
+				pkbPop.addStmt(Constants::ASSIGN, 2);
 				REQUIRE(ssPointer->size() == 1);
 			}
 			THEN("Adding one follows relationship should increase the follows store size by 1") {
@@ -123,6 +128,20 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addUses(1, "y");
 				REQUIRE(usesPointer->getAllStmt().size() == 1);
 				REQUIRE(usesPointer->getAllVar().size() == 1);
+			}
+			THEN("Adding one call should increase the calls store size by 1") {
+				REQUIRE(callsPointer->getAllLeft().size() == 0);
+				REQUIRE(callsPointer->getAllRight().size() == 0);
+				pkbPop.addCalls("sampleProc1", "sampleProc2");
+				REQUIRE(callsPointer->getAllLeft().size() == 1);
+				REQUIRE(callsPointer->getAllRight().size() == 1);
+			}
+			THEN("Adding one call star should increase the callsStar store size by 1") {
+				REQUIRE(cStarsPointer->getAllLeft().size() == 0);
+				REQUIRE(cStarsPointer->getAllRight().size() == 0);
+				pkbPop.addCallsStar("sampleProc1", "sampleProc2");
+				REQUIRE(cStarsPointer->getAllLeft().size() == 1);
+				REQUIRE(cStarsPointer->getAllRight().size() == 1);
 			}
 		}
 	}

@@ -10,7 +10,10 @@
  * param: VarStorage* varStore
  */
 
-PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, shared_ptr<UsesStore> usesStore) {
+PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
+	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
+	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
+	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -24,6 +27,8 @@ PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	this->parentStorage = parentStore;
 	this->usesProcStorage = usesProcStore;
 	this->usesStorage = usesStore;
+	this->callsStorage = callsStore;
+	this->callsStarStorage = callsStarStore;
 };
 
 /*Var Store*/
@@ -176,6 +181,7 @@ std::unordered_set<std::string> PkbRetriever::getAllUsesPProc() {
 std::unordered_set<std::string> PkbRetriever::getUsesVar(int lineNum) {
 	return this->usesStorage->getVar(lineNum);
 }
+
 std::unordered_set<int> PkbRetriever::getUsesStmt(std::string varName) {
 	return this->usesStorage->getStmt(varName);
 }
@@ -186,4 +192,38 @@ std::unordered_set<std::string> PkbRetriever::getAllUsesVar() {
 
 std::unordered_set<int> PkbRetriever::getAllUsesStmt() {
 	return this->usesStorage->getAllStmt();
+}
+
+/*Calls Store*/
+std::unordered_set<std::string> PkbRetriever::getLeftCall(std::string rightProc) {
+	return this->callsStorage->getLeftProc(rightProc);
+}
+
+std::unordered_set<std::string> PkbRetriever::getRightCall(std::string leftProc) {
+	return this->callsStorage->getRightProc(leftProc);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllLeftCall() {
+	return this->callsStorage->getAllLeft();
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllRightCall() {
+	return this->callsStorage->getAllRight();
+}
+
+/*CallsStar Store*/
+std::unordered_set<std::string> PkbRetriever::getLeftCallStar(std::string rightProc) {
+	return this->callsStarStorage->getLeftStar(rightProc);
+}
+
+std::unordered_set<std::string> PkbRetriever::getRightCallStar(std::string leftProc) {
+	return this->callsStarStorage->getRightStar(leftProc);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllLeftCallStar() {
+	return this->callsStarStorage->getAllLeft();
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllRightCallStar() {
+	return this->callsStarStorage->getAllRight();
 }

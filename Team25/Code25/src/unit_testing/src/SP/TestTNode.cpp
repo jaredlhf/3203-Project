@@ -4,23 +4,23 @@
 
 SCENARIO("Testing getChildren()") {
     GIVEN("A TNodes ") {
-        AssignNode a1 = AssignNode(1, "x", "y+z");
-        AssignNode a2 = AssignNode(4, "a", "b+c");
-        PrintNode p1 = PrintNode(2, "w");
-        ReadNode r1 = ReadNode(10, "v");
+        AssignNode a1 = AssignNode(1, "x", "y+z","test");
+        AssignNode a2 = AssignNode(4, "a", "b+c","test");
+        PrintNode p1 = PrintNode(2, "w","test");
+        ReadNode r1 = ReadNode(10, "v","test");
 
         std::vector<std::shared_ptr<StmtNode>> stmtLst;
         stmtLst.push_back(std::make_shared<AssignNode>(a2));
-        StmtLstNode sln1 = StmtLstNode(stmtLst);
+        StmtLstNode sln1 = StmtLstNode(stmtLst,"test");
 
         std::vector<std::shared_ptr<StmtNode>> stmtLst2;
         stmtLst2.push_back(std::make_shared<AssignNode>(a1));
         stmtLst2.push_back(std::make_shared<PrintNode>(p1));
-        StmtLstNode sln2 = StmtLstNode(stmtLst2);
+        StmtLstNode sln2 = StmtLstNode(stmtLst2,"test");
 
-        WhileNode w1 = WhileNode(5, "x>0", std::make_shared<StmtLstNode>(stmtLst));
+        WhileNode w1 = WhileNode(5, "x>0", std::make_shared<StmtLstNode>(stmtLst, "test"),"test");
 
-        IfNode if1 = IfNode(6, "y<4", std::make_shared<StmtLstNode>(stmtLst), std::make_shared<StmtLstNode>(stmtLst2));
+        IfNode if1 = IfNode(6, "y<4", std::make_shared<StmtLstNode>(stmtLst,"test"), std::make_shared<StmtLstNode>(stmtLst2,"test"),"test");
 
         WHEN("getChildren() on a StmtLstNode") {
             std::vector<std::shared_ptr<TNode>> children = sln2.getChildren();
