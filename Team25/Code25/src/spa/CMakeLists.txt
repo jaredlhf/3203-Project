@@ -95,7 +95,7 @@ src/SP/SPConstants.h
 src/SP/ParserDTO.h
 src/SP/CFGNode.h
 "src/PKB/CallsStarStore.h"
-"src/PKB/CallsStarStore.cpp")
+"src/PKB/CallsStarStore.cpp" src/SP/CFGNode.cpp)
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

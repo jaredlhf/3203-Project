@@ -6,13 +6,13 @@
 
 class CFGNode {
 public:
-    CFGNode() : lineNo_(std::vector<int>()) {}
-    CFGNode(std::vector<int> lineNo) : lineNo_(lineNo) {}
+    CFGNode();
+    CFGNode(std::vector<int> lineNo);
 
-    //virtual std::shared_ptr<CFGNode> getNextNode() const { return next_; }
-    virtual void setNextNode(std::shared_ptr<CFGNode> next) { next_ = next; }
-    std::vector<int> getLineNo() const { return lineNo_; }
-    void addLineNo(int lineNo) { lineNo_.push_back(lineNo); }
+    virtual std::vector<std::shared_ptr<CFGNode>> getAllNextNodes();
+    virtual void setNextNode(std::shared_ptr<CFGNode> next);
+    std::vector<int> getLineNo() const;
+    void addLineNo(int lineNo);
 
 protected:
     std::vector<int> lineNo_;
@@ -21,10 +21,12 @@ protected:
 
 class CFGIfNode :public CFGNode {
 public:
-    CFGIfNode(std::vector<int> lineNo)  { lineNo_ = lineNo; }
-    void setNextNode(std::shared_ptr<CFGNode> next) override { nextThen_->setNextNode(next); nextElse_->setNextNode(next);  };
-    void setThenNode(std::shared_ptr<CFGNode> next) {nextThen_ = next; };
-    void setElseNode(std::shared_ptr<CFGNode> next) {nextElse_ = next; };
+    CFGIfNode(int lineNo);
+
+    std::vector<std::shared_ptr<CFGNode>> getAllNextNodes() override;
+    void setNextNode(std::shared_ptr<CFGNode> next) override;
+    void setThenNode(std::shared_ptr<CFGNode> next);
+    void setElseNode(std::shared_ptr<CFGNode> next);
 private:
     std::shared_ptr<CFGNode> nextThen_;
     std::shared_ptr<CFGNode> nextElse_;
@@ -33,8 +35,10 @@ private:
 
 class CFGWhileNode :public CFGNode {
 public:
-    CFGWhileNode(std::vector<int> lineNo)  { lineNo_ = lineNo; }
-    void setLoopNode(std::shared_ptr<CFGNode> next) { nextLoop_ = next; };
+    CFGWhileNode(int lineNo);
+
+    std::vector<std::shared_ptr<CFGNode>> getAllNextNodes() override;
+    void setLoopNode(std::shared_ptr<CFGNode> next);
 private:
     std::shared_ptr<CFGNode> nextLoop_;
 };
