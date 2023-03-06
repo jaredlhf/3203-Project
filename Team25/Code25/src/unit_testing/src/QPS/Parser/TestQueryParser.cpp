@@ -292,7 +292,7 @@ TEST_CASE("Parse correct query with pattern: wildcard on both sides") {
 
 TEST_CASE("Parse pattern with undeclared variable count on LHS") {
     std::shared_ptr<Synonym> SEMANTIC_ERROR_SYNONYM = Synonym::create(Constants::SEMANTIC_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "count", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "count", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SEMANTIC_ERROR_SYNONYM});
 
@@ -303,7 +303,7 @@ TEST_CASE("Parse pattern with undeclared variable count on LHS") {
 
 TEST_CASE("Parse pattern with empty string on first param") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -314,7 +314,7 @@ TEST_CASE("Parse pattern with empty string on first param") {
 
 TEST_CASE("Parse pattern with empty string on second param") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"1\"", ",", "_", "", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"1\"", ",", "__", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -325,7 +325,7 @@ TEST_CASE("Parse pattern with empty string on second param") {
 
 TEST_CASE("Parse query with invalid assign syn on pattern") {
     std::shared_ptr<Synonym> SEMANTIC_ERROR_SYNONYM = Synonym::create(Constants::SEMANTIC_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "s", "(", "\"count\"", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "s", "(", "\"count\"", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SEMANTIC_ERROR_SYNONYM});
 
@@ -336,7 +336,7 @@ TEST_CASE("Parse query with invalid assign syn on pattern") {
 
 TEST_CASE("Parse query with pattern that has unclosed brackets") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", "_", "\"s\"", "_"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", "_\"s\"_"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -347,7 +347,7 @@ TEST_CASE("Parse query with pattern that has unclosed brackets") {
 
 TEST_CASE("Parse query with pattern that has random close bracket tokens") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", ")", "\"s\"", "_"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", ")", "\"s\"_"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -358,7 +358,7 @@ TEST_CASE("Parse query with pattern that has random close bracket tokens") {
 
 TEST_CASE("Parse query with pattern that has no open bracket") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "\"count\"", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "\"count\"", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -369,7 +369,7 @@ TEST_CASE("Parse query with pattern that has no open bracket") {
 
 TEST_CASE("Parse query with pattern that has no matching enclosing wildcard") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "\"count\"", ",", "\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -380,7 +380,7 @@ TEST_CASE("Parse query with pattern that has no matching enclosing wildcard") {
 
 TEST_CASE("Parse query with pattern that has undeclared assign synonym") {
     std::shared_ptr<Synonym> SEMANTIC_ERROR_SYNONYM = Synonym::create(Constants::SEMANTIC_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a1", ";", "Select", "a", "pattern", "a", "(", "a", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "Select", "a", "pattern", "a", "(", "a", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SEMANTIC_ERROR_SYNONYM});
 
@@ -391,7 +391,7 @@ TEST_CASE("Parse query with pattern that has undeclared assign synonym") {
 
 TEST_CASE("Parse query with pattern with no pattern keyword") {
     std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
-    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "a", "(", "a", ",", "_", "\"s\"", "_", ")"};
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "(", "a", ",", "_\"s\"_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
 
@@ -400,6 +400,16 @@ TEST_CASE("Parse query with pattern with no pattern keyword") {
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse query with pattern with wrong pattern expression") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "a", ",", "_\"s + s (dd !)\"_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
 
 /**
  * such that parsing with valid declarations

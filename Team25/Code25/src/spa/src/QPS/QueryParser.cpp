@@ -1,4 +1,5 @@
 #include "QueryParser.h"
+#include "../SP/ExpressionParser.h"
 
 int MIN_DECLARATION_LENGTH = 2;
 int SUCH_THAT_LENGTH = 8;
@@ -105,6 +106,7 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         // retrieve pattern
         if (ptr == 5) {
             expression = s[ptr];
+            break;
         }
         ptr++;
     }
@@ -113,13 +115,17 @@ ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::stri
         return response;
     }
 
+    std::string cleanedString;
     if (expression == Constants::WILDCARD) {
         response.setPattern(Wildcard::create());
-    } else {
+    } else if (expression[0] == '_') {
         // only for partial matching
         // TODO: adapt to other possible patterns in future milestones
-        std::string cleanedString = expression.substr(2, expression.size() - 4);
+        cleanedString = expression.substr(2, expression.size() - 4);
         response.setPattern(Wildcard::create(cleanedString));
+    } else {
+        cleanedString = expression.substr(1, expression.size() - 2);
+        response.setPattern(Value::create(cleanedString));
     }
 
     return response;
