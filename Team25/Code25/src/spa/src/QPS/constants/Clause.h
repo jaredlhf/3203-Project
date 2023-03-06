@@ -98,6 +98,38 @@ public:
 		std::shared_ptr<PkbRetriever> pkbRet, std::shared_ptr<Synonym> patternSynonym);
 };
 
+class CallsClause : public Clause {
+public:
+	CallsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
+class NextClause : public Clause {
+public:
+	NextClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
+class CallsStClause : public Clause {
+public:
+	CallsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
+class NextStClause : public Clause {
+public:
+	NextStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
 class WithClause : public Clause {
 public:
 	WithClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);

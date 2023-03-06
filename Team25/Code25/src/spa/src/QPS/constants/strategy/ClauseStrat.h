@@ -8,6 +8,10 @@ class ParentStrat;
 class FollowsStrat;
 class ParentStStrat;
 class FollowsStStrat;
+class CallsStrat;
+class CallsStStrat;
+class NextStrat;
+class NextStStrat;
 class PatternStrat;
 
 class ClauseStrat {

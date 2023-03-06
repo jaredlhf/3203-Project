@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "QPS/utils/ParserUtils.h"
 
+// TODO: add tests for new methods
 TEST_CASE("valid integer string") {
     std::string s = "123";
     REQUIRE(ParserUtils::isValidIntegerString(s) == true);
