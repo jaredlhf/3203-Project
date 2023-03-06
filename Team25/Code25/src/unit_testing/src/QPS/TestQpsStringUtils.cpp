@@ -1,5 +1,6 @@
 #include "QPS/utils/StringUtils.h"
 #include "catch.hpp"
+#include <iostream>
 
 // Unit Tests for isValidInt function
 TEST_CASE("isValidInt Valid int with no negative signs should return true") {
@@ -170,4 +171,111 @@ TEST_CASE("tokenInOp String with a substr of str token in complex expression ret
 	std::string op = "xyz+(z1w*y1)+12";
 	std::string token = "z1";
 	REQUIRE(StringUtils::tokenInOp(op, token) == false);
+}
+
+// Unit Tests for createPostFixNotation function
+
+TEST_CASE("createPostFixNotation String infix expression with '+' arithmetic operations") {
+	std::string infix = "a+b+c+d";
+	std::string postfix = "ab+c+d+";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+', '-' arithmetic operations") {
+	std::string infix = "a+b-c";
+	std::string postfix = "ab+c-";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+', '-' and brackets arithmetic operations") {
+	std::string infix = "a-(b+c)";
+	std::string postfix = "abc+-";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+' and brackets arithmetic operations") {
+	std::string infix = "(a+b)+c";
+	std::string postfix = "ab+c+";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+', '*' arithmetic operations") {
+	std::string infix = "a+b*c";
+	std::string postfix = "abc*+";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' arithmetic operations") {
+	std::string infix1 = "a+b*c-d";
+	std::string postfix1 = "abc*+d-";
+	std::string result1 = StringUtils::createPostFixNotation(infix1);
+	REQUIRE(result1.compare(postfix1) == 0);
+
+
+	std::string infix2 = "v+x*y+z*t";
+	std::string postfix2 = "vxy*+zt*+";
+	std::string result2 = StringUtils::createPostFixNotation(infix2);
+	REQUIRE(result2.compare(postfix2) == 0);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' and brackets arithmetic operations") {
+	std::string infix = "(a+b)*c-d";
+	std::string postfix = "ab+c*d-";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result.compare(postfix) == 0);
+}
+
+// Unit Tests for postFixInFullpostFix function
+
+TEST_CASE("postFixInFullpostFix String full same variables and same ops postfix successful expression match") {
+	std::string postfix = "ab+";
+	std::string fullPostFix = "ab+";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == true);
+}
+
+TEST_CASE("postFixInFullpostFix String full same variable different ops '+', '-' postfix fail expression match") {
+	std::string postfix = "ab+";
+	std::string fullPostFix = "ab-";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == false);
+}
+
+TEST_CASE("postFixInFullpostFix String full postfix same variable, same ops, different ordering fail expression match") {
+	std::string postfix = "ab+";
+	std::string fullPostFix = "ba+";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == false);
+}
+
+TEST_CASE("postFixInFullpostFix String partial postfix same variable and same ops successful expression match") {
+	std::string postfix1 = "x";
+	std::string postfix2 = "y";
+	std::string postfix3 = "z";
+	std::string postfix4 = "t";
+	std::string postfix5 = "v";
+	std::string postfix6 = "xy*";
+	std::string postfix7 = "zt*";
+	std::string postfix8 = "vxy*+";
+	std::string fullPostFix = "vxy*+zt*+";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix1, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix2, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix3, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix4, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix5, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix6, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix7, fullPostFix) == true);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix8, fullPostFix) == true);
+}
+
+TEST_CASE("postFixInFullpostFix String partial postfix same variable and same ops fail expression match") {
+	std::string postfix1 = "vx+";
+	std::string postfix2 = "yz+";
+	std::string postfix3 = "xy*z+";
+	std::string fullPostFix = "vxy*+zt*+";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix1, fullPostFix) == false);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix2, fullPostFix) == false);
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix3, fullPostFix) == false);
 }

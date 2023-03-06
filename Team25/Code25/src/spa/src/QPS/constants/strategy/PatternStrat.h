@@ -14,10 +14,13 @@ private:
 	// Strategy functions used
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardWildcard();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardSoftwildcard();
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> wildcardConst();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constWildcard();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constSoftwildcard();
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> constConst();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synWildcard();
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synSoftwildcard();
+	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synConst();
 
 public:
 	// Constructor function for Strat
