@@ -225,10 +225,15 @@ TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' arit
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' and brackets arithmetic operations") {
-	std::string infix = "(a+b)*c-d";
-	std::string postfix = "(a)(b)+(c)*(d)-";
-	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result == postfix);
+	std::string infix1 = "(a+b)*c-d";
+	std::string postfix1 = "(a)(b)+(c)*(d)-";
+	std::string result1 = StringUtils::createPostFixNotation(infix1);
+	REQUIRE(result1 == postfix1);
+
+	std::string infix2 = "zee*(abc+bed)*cun-dile";
+	std::string postfix2 = "(zee)(abc)(bed)+*(cun)*(dile)-";
+	std::string result2 = StringUtils::createPostFixNotation(infix2);
+	REQUIRE(result2 == postfix2);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+' and tab spacing arithmetic operations") {

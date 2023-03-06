@@ -103,7 +103,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
 
     for (const std::string& stNum : synMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(stNum));
-        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) { // check with Yu Hang, but if the right hand side assign and the const value matches, you add to resTable
+        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
             resTable->addRow({ stNum });
         }
     }
