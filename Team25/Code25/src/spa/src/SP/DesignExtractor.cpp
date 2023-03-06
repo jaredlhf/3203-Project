@@ -508,11 +508,11 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     std::vector<std::string> keys;
     std::string callingProc = c->getProc();
     std::string calledProc = c->getVar();
-//    std::cout<<  "callingProc: " <<callingProc <<endl;
-//    std::cout<< "calledProc: "<< calledProc<< endl;
+    // cyclic call ( A calls A)
     if (callingProc == calledProc) {
         throw std::invalid_argument("Cyclic Call in SPA Program");
     }
+    // cyclic call ( A calls B, B calls A)
     if (this->callsStorage.find(callingProc) != this->callsStorage.end()) {
         // check for cyclic calls
         std::vector<std::string> callingValue =  this->callsStorage.at(callingProc);
@@ -520,6 +520,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             throw std::invalid_argument("Cyclic Call in SPA Program");
         }
     }
+    //
     if (this->callsStorage.find(calledProc) == this->callsStorage.end()) {
         std::vector<std::string> procs;
         if (this->callsStorage.find(callingProc) != this->callsStorage.end()) {
@@ -543,13 +544,14 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
 //                std::cout << "Added to callsStar Storage3: " << i << " " << calledProc << endl;
                 pkbPopulator->addCallsStar(i,calledProc);
             }
+            pkbPopulator->addCallsStar(callingProc,calledProc);
         }
     }
     for(auto kv : this->getCallsStorage()) {
         keys.push_back(kv.first);
-//        std::cout<<"Keys: " << kv.first<<endl;
+        std::cout<<"Keys: " << kv.first<<endl;
         for (auto i : kv.second) {
-//            std::cout<<"Values: " << i <<endl;
+            std::cout<<"Values: " << i <<endl;
         }
     }
 }
