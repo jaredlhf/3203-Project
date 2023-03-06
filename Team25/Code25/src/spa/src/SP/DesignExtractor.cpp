@@ -547,13 +547,13 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }
     }
-    for(auto kv : this->getCallsStorage()) {
-        keys.push_back(kv.first);
-        std::cout<<"Keys: " << kv.first<<endl;
-        for (auto i : kv.second) {
-            std::cout<<"Values: " << i <<endl;
-        }
-    }
+//    for(auto kv : this->getCallsStorage()) {
+//        keys.push_back(kv.first);
+//        std::cout<<"Keys: " << kv.first<<endl;
+//        for (auto i : kv.second) {
+//            std::cout<<"Values: " << i <<endl;
+//        }
+//    }
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
