@@ -44,14 +44,14 @@ SCENARIO("ExtractingNode") {
     GIVEN("ModifiesExtractor") {
         ModifiesExtractor m(pkbPop);
         WHEN("a assign node is visited parsed") {
-            AssignNode a = AssignNode(1, "v", "x");
+            AssignNode a = AssignNode(1, "v", "x", "test");
             shared_ptr<AssignNode> sp = make_shared<AssignNode>(a);
             m.visit(sp, a.getLine());
             THEN("v should populate") {
                 REQUIRE(msPointer->getVar(a.getLine()) == std::unordered_set<std::string>({ "v" }));
             }
         }WHEN("a read node is visited parsed") {
-            ReadNode r = ReadNode(2, "x");
+            ReadNode r = ReadNode(2, "x", "test");
             shared_ptr<ReadNode> sp = make_shared<ReadNode>(r);
             m.visit(sp, r.getLine());
             THEN("v should populate") {

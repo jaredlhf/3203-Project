@@ -3,8 +3,9 @@
 #include "SelectiveExtractor.h"
 
 
-StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts) {
+StmtLstNode::StmtLstNode(std::vector<std::shared_ptr<StmtNode>> stmts,const std::string& proc) {
     statements = stmts;
+    name = proc;
 }
 
 void StmtLstNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -25,10 +26,11 @@ std::vector<std::shared_ptr<TNode>> StmtLstNode::getChildren() {
     return children;
 }
 
-AssignNode::AssignNode(int line, const std::string& var, const std::string& expr)  {
+AssignNode::AssignNode(int line, const std::string& var, const std::string& expr,  const std::string& proc)  {
     variable = var;
     expression = expr;
     lineNo = line;
+    name = proc;
 }
 
 void AssignNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -45,9 +47,10 @@ std::vector<std::shared_ptr<TNode>> AssignNode::getChildren() {
     return std::vector<std::shared_ptr<TNode>>();
 }
 
-ReadNode::ReadNode(int line, const std::string& var) {
+ReadNode::ReadNode(int line, const std::string& var,  const std::string& proc) {
     variable = var;
     lineNo = line;
+    name = proc;
 }
 
 void ReadNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -64,9 +67,10 @@ std::vector<std::shared_ptr<TNode>> ReadNode::getChildren() {
     return std::vector<std::shared_ptr<TNode>>();
 }
 
-PrintNode::PrintNode(int line, const std::string& var) {
+PrintNode::PrintNode(int line, const std::string& var,  const std::string& proc) {
     variable = var;
     lineNo = line;
+    name = proc;
 }
 
 void PrintNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -83,11 +87,32 @@ std::vector<std::shared_ptr<TNode>> PrintNode::getChildren() {
     return std::vector<std::shared_ptr<TNode>>();
 }
 
-IfNode::IfNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> ifList, std::shared_ptr<StmtLstNode> elseList) {
+CallNode::CallNode(int line, const std::string& var,  const std::string& proc) {
+    variable = var;
+    lineNo = line;
+    name= proc;
+}
+
+void CallNode::accept(std::shared_ptr<DesignExtractor> extractor) {
+    std::shared_ptr<CallNode> node = std::dynamic_pointer_cast<CallNode>(shared_from_this());
+    extractor->visit(node, SPConstants::INVALID_LINE_NO);
+}
+
+void CallNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
+    std::shared_ptr<CallNode> node = std::dynamic_pointer_cast<CallNode>(shared_from_this());
+    selectiveExtractor->visit(node);
+}
+
+std::vector<std::shared_ptr<TNode>> CallNode::getChildren() {
+    return std::vector<std::shared_ptr<TNode>>();
+}
+
+IfNode::IfNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> ifList, std::shared_ptr<StmtLstNode> elseList,  const std::string& proc) {
    condExpr = condExp;
    ifLst = ifList;
    elseLst = elseList;
    lineNo = line;
+   name= proc;
 }
 
 void IfNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -107,10 +132,11 @@ std::vector<std::shared_ptr<TNode>> IfNode::getChildren() {
     return children;
 }
 
-WhileNode::WhileNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> stmtList) {
+WhileNode::WhileNode(int line, const std::string& condExp, std::shared_ptr<StmtLstNode> stmtList, const std::string& proc) {
     condExpr = condExp;
     stmtLst = stmtList;
     lineNo = line;
+    name = proc;
 }
 
 void WhileNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -130,8 +156,9 @@ std::vector<std::shared_ptr<TNode>> WhileNode::getChildren() {
 }
 
 
-ProcedureNode::ProcedureNode(std::shared_ptr<StmtLstNode> stmtList) {
+ProcedureNode::ProcedureNode(std::shared_ptr<StmtLstNode> stmtList, const std::string& proc) {
     stmtLst = stmtList;
+    name = proc;
 }
 
 void ProcedureNode::accept(std::shared_ptr<DesignExtractor> extractor) {
@@ -141,7 +168,7 @@ void ProcedureNode::accept(std::shared_ptr<DesignExtractor> extractor) {
 
 void ProcedureNode::accept(std::shared_ptr<SelectiveExtractor> selectiveExtractor) {
     std::shared_ptr<ProcedureNode> node = std::dynamic_pointer_cast<ProcedureNode>(shared_from_this());
-    //selectiveExtractor->visit(node);
+    selectiveExtractor->visit(node);
 }
 
 std::vector<std::shared_ptr<TNode>> ProcedureNode::getChildren() {

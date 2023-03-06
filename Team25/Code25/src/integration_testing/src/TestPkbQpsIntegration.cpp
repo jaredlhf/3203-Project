@@ -14,10 +14,10 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
-		UsesProcStore uprocs;
+        UsesProcStore uprocs;
 		UsesStore uses;
-		CallsStore calls;
-		CallsStarStore cStars;
+        CallsStore calls;
+        CallsStarStore cstars;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -30,12 +30,14 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
-		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
-		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
-		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+        std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
+        std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+        std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
 
-		// Populating variables appearing in the SIMPLE program
+
+
+        // Populating variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
 		vsPointer->addVar("x");
 		vsPointer->addVar("y");
@@ -123,11 +125,10 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		pattsPointer->addAssignRhs(9, "x+1");
 
 		// PKB class that interacts with the QPS class
-		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
 
 		WHEN("The QPS object is instantiated and interacts with the PKB	") {
-			Qps qps(std::make_shared<PkbRetriever>(pkbRetriever));
+			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 
 			THEN("For follows* query, the right result is returned") {
 				list<string> expected = { "1", "3" };

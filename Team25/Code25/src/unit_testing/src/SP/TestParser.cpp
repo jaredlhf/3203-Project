@@ -29,7 +29,8 @@ SCENARIO("Testing ParseProgram") {
             std::shared_ptr<Parser> p = std::make_shared<Parser>(t);
 
             THEN ("it should generate correct AST") {
-                ProcedureNode pn = p->parseProgram();
+                std::vector<ProcedureNode> pnVector = p->parseProgram();
+                ProcedureNode pn = pnVector.front();
                 std::shared_ptr<WhileNode> wn = dynamic_pointer_cast<WhileNode>(pn.getStmtLst()->getStatements()[0]);
                 REQUIRE(wn->getCondExpr() == "(x!=0)&&(y!=6)");
                 REQUIRE(wn->getLine() == 1);
