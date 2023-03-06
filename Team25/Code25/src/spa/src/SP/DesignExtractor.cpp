@@ -92,14 +92,14 @@ void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     }
 
     if (lineNo == SPConstants::PROCEDURE) {
-        std::cout << "populate procedure modifies: " << a->getProc() + " " + a->getVar() << " " << endl;
+//        std::cout << "populate procedure modifies: " << a->getProc() + " " + a->getVar() << " " << endl;
+        pkbPopulator->addModifiesProc(a -> getProc(), a ->getVar());
     } else {
         pkbPopulator->addModifies(lineNo, a->getVar());
         pkbPopulator->addVar(a->getVar());
+        pkbPopulator->addAssignLhs(a->getVar(), lineNo);
+        pkbPopulator->addAssignRhs(lineNo, a->getExpr());
     }
-
-    pkbPopulator->addAssignLhs(a->getVar(), lineNo);
-    pkbPopulator->addAssignRhs(lineNo, a->getExpr());
 }
 
 void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
@@ -110,7 +110,8 @@ void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     }
 
     if (lineNo == SPConstants::PROCEDURE) {
-        std::cout << "populate procedure modifies: " << r->getProc() + " " + r->getVar() << " " << endl;
+//        std::cout << "populate procedure modifies: " << r->getProc() + " " + r->getVar() << " " << endl;
+        pkbPopulator->addModifiesProc(r -> getProc(), r ->getVar());
     } else {
         pkbPopulator->addModifies(lineNo, r->getVar());
         pkbPopulator->addVar(r->getVar());
@@ -125,11 +126,12 @@ void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     }
 
     if (lineNo == SPConstants::PROCEDURE) {
-        std::cout << "populate procedure modifies: " << c->getProc() + " " + c->getVar() << " " << endl;
+//        std::cout << "populate procedure modifies: " << c->getProc() + " " + c->getVar() << " " << endl;
+        pkbPopulator->addModifiesProc(c -> getProc(), c ->getVar());
     } else {
-        //pkbPopulator->addCalls(lineNo, c->getVar());
-        //pkbPopulator->addVar(c->getVar());
-        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
+        pkbPopulator->addVar(c->getVar());
+//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
+        pkbPopulator->addModifies(c->getVar());
     }
 }
 
@@ -198,7 +200,8 @@ void UsesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     for (auto const token: rhs) {
         if (Token::isValidName(token)) {
             if (lineNo == SPConstants::PROCEDURE) {
-                std::cout << "populate procedure use: " << a->getProc() + " " + token << " " << endl;
+//                std::cout << "populate procedure use: " << a->getProc() + " " + token << " " << endl;
+                pkbPopulator->addUsesProc(a->getProc(), token);
             } else {
                 pkbPopulator->addUses(lineNo, token);
             }
@@ -213,7 +216,8 @@ void UsesExtractor::visit(std::shared_ptr<PrintNode> r, int lineNo) {
         lineNo = SPConstants::PROCEDURE;
     }
     if (lineNo == SPConstants::PROCEDURE) {
-        std::cout << "populate procedure use: " << r->getProc() + " " + r->getVar() << " " << endl;
+//        std::cout << "populate procedure use: " << r->getProc() + " " + r->getVar() << " " << endl;
+        pkbPopulator->addUsesProc(r->getProc(), r->getVar());
     } else {
         pkbPopulator->addUses(lineNo, r->getVar());
         pkbPopulator->addVar(r->getVar());
@@ -229,9 +233,11 @@ void UsesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     //pkbPopulator->addUses(lineNo, c->getVar());
     //pkbPopulator->addVar(c->getVar());
     if (lineNo == SPConstants::PROCEDURE) {
-        std::cout << "Populating procedure use: " << c->getProc() + " " + c->getVar() << std::endl;
+//        std::cout << "Populating procedure use: " << c->getProc() + " " + c->getVar() << std::endl;
+        pkbPopulator->addUsesProc(c->getProc(), c->getVar());
     } else {
-        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
+//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
+        pkbPopulator->addUses(lineNo, c->getVar());
     }
 }
 
@@ -253,7 +259,8 @@ void UsesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     for (const auto token: tokens) {
         if (Token::isValidName(token)) {
             if (lineNo == SPConstants::PROCEDURE) {
-                std::cout << "populate procedure use: " << ifs->getProc() + " " + token << " " << endl;
+//                std::cout << "populate procedure use: " << ifs->getProc() + " " + token << " " << endl;
+                pkbPopulator->addUsesProc(ifs->getProc(), token);
             } else {
                 pkbPopulator->addUses(lineNo, token);
             }
@@ -282,10 +289,13 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     extractConst(tokens);
 
     for (const auto token: tokens) {
-        if (lineNo == SPConstants::PROCEDURE) {
-            std::cout << "populate procedure use: " << wh->getProc() + " " + token << " " << endl;
-        } else {
-            pkbPopulator->addUses(lineNo, token);
+        if (Token::isValidName(token)) {
+            if (lineNo == SPConstants::PROCEDURE) {
+//            std::cout << "populate procedure use: " << wh->getProc() + " " + token << " " << endl;
+                pkbPopulator->addUsesProc(wh->getProc(), token);
+            } else {
+                pkbPopulator->addUses(lineNo, token);
+            }
         }
     }
     for (auto j: whStmts) {
@@ -449,7 +459,7 @@ void CallsExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         lineNo = c->getLine();
     }
     pkbPopulator->addCalls(c->getProc(),c->getVar());
-    std::cout << "Populating call: " << c->getProc() + " " + c->getVar() << std::endl;
+//    std::cout << "Populating call: " << c->getProc() + " " + c->getVar() << std::endl;
 }
 
 void CallsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -496,9 +506,12 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     std::vector<std::string> keys;
     std::string callingProc = c->getProc();
     std::string calledProc = c->getVar();
-    std::cout<<  "callingProc: " <<callingProc <<endl;
-    std::cout<< "calledProc: "<< calledProc<< endl;
-    if(this->callsStorage.find(callingProc) != this->callsStorage.end()) {
+//    std::cout<<  "callingProc: " <<callingProc <<endl;
+//    std::cout<< "calledProc: "<< calledProc<< endl;
+    if (callingProc == calledProc) {
+        throw std::invalid_argument("Cyclic Call in SPA Program");
+    }
+    if (this->callsStorage.find(callingProc) != this->callsStorage.end()) {
         // check for cyclic calls
         std::vector<std::string> callingValue =  this->callsStorage.at(callingProc);
         if (std::count(callingValue.begin(), callingValue.end(), calledProc)) {
@@ -513,7 +526,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         procs.push_back(callingProc);
         this->callsStorage.emplace(calledProc,procs);
         for (auto i: procs) {
-            std::cout<<"Added to callsStar Storage1: " << i << " " <<  calledProc << endl;
+//            std::cout<<"Added to callsStar Storage1: " << i << " " <<  calledProc << endl;
             pkbPopulator->addCallsStar(i,calledProc);
         }
     } else {
@@ -521,20 +534,20 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         calledValue.push_back(callingProc);
         this->callsStorage.emplace(calledProc, calledValue);
         if (this->callsStorage.find(callingProc) == this->callsStorage.end()) {
-            std::cout << "Added to callsStar Storage2: " << callingProc << " " << calledProc << endl;
+//            std::cout << "Added to callsStar Storage2: " << callingProc << " " << calledProc << endl;
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }else {
             for (auto i: this->callsStorage.at(callingProc)) {
-                std::cout << "Added to callsStar Storage3: " << i << " " << calledProc << endl;
+//                std::cout << "Added to callsStar Storage3: " << i << " " << calledProc << endl;
                 pkbPopulator->addCallsStar(i,calledProc);
             }
         }
     }
     for(auto kv : this->getCallsStorage()) {
         keys.push_back(kv.first);
-        std::cout<<"Keys: " << kv.first<<endl;
+//        std::cout<<"Keys: " << kv.first<<endl;
         for (auto i : kv.second) {
-            std::cout<<"Values: " << i <<endl;
+//            std::cout<<"Values: " << i <<endl;
         }
     }
 }
