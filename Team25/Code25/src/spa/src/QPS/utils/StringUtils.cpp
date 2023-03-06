@@ -96,11 +96,13 @@ bool StringUtils::isDigitLetters(std::string& s) {
 std::string StringUtils::createPostFixNotation(const std::string& infix) {
 	std::string result;
 	std::stack<std::string> opStack;
+	// string is split and placed in order into a vector
 	std::vector<std::string> spacifiedInfix = StringUtils::splitString(StringUtils::spaceifyString(infix));
 
 	for (std::string str : spacifiedInfix) {
 		// if its an expression 
 		if (StringUtils::isDigitLetters(str)) {
+			// add brackets around it and append to result
 			result.append(StringUtils::addBrackets(str));
 		}
 		// if its a spacing
