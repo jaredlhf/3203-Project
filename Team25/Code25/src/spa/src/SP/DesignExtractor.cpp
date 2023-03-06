@@ -131,7 +131,7 @@ void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     } else {
         pkbPopulator->addVar(c->getVar());
 //        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-        pkbPopulator->addModifies(c->getVar());
+        pkbPopulator->addModifies(lineNo,c->getVar());
     }
 }
 
