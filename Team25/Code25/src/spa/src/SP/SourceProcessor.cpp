@@ -26,6 +26,7 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
     std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator);
 
     for (auto i : p.parseProgram()) {
+        pkbPopulator->addProc(i.getProc());
         std::shared_ptr<TNode> root = std::make_shared<ProcedureNode>(i);
         selectiveExtractor->visitProgramTree(root);
     }
