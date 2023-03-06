@@ -14,5 +14,7 @@ public:
 	static bool tokenInOp(const std::string& opStr, const std::string& token);
 	static bool postFixInFullpostFix(const std::string& postFix, const std::string& fullPostFix);
 	static std::string createPostFixNotation(const std::string& prefixNotation);
-	static int opPrecedence(char op);
+	static int opPrecedence(std::string& op);
+	static std::string addBrackets(const std::string& s);
+	static bool isDigitLetters(std::string& s);
 };

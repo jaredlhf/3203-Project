@@ -227,6 +227,14 @@ TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' and 
 	std::string infix = "(a+b)*c-d";
 	std::string postfix = "ab+c*d-";
 	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result == postfix);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+' and tab spacing arithmetic operations") {
+	std::string infix = "x	";
+	std::string postfix = "x";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	std::cout << result << std::endl;
 	REQUIRE(result.compare(postfix) == 0);
 }
 
