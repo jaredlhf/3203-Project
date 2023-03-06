@@ -6,7 +6,7 @@
 
 using namespace std;
 
-bool ExpressionParser::checkParenthesis(std::string expr) {
+bool ExpressionParser::checkParenthesis(const std::string& expr) {
     std::stack<char> stack;
 
     for (int i = 0; i < expr.length(); i++) {
@@ -30,10 +30,10 @@ bool ExpressionParser::checkParenthesis(std::string expr) {
     }
 }
 
-int ExpressionParser::matchingBracket(std::string str) {
+int ExpressionParser::matchingBracket(const std::string& str) {
     int count = 1;
     int pos = 1;
-    for (char &c: str) {
+    for (char c: str) {
         if (c == '(') {
             count++;
         } else if (c == ')') {
@@ -71,7 +71,7 @@ bool ExpressionParser::isExpr(std::string str) {
     }
 }
 
-bool ExpressionParser::isRelExpr(std::string expr) {
+bool ExpressionParser::isRelExpr(const std::string& expr) {
     std::vector<string> single_rel_ops({">", "<" });
     std::vector<string> double_rel_ops({ ">=", "<=", "==", "!="});
     int index;

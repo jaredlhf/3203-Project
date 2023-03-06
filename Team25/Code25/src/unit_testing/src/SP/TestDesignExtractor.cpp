@@ -19,6 +19,8 @@ SCENARIO("ExtractingNode") {
     ParentStore parents;
     UsesProcStore uprocs;
     UsesStore uses;
+    CallsStore calls;
+    CallsStarStore cStars;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -33,21 +35,23 @@ SCENARIO("ExtractingNode") {
     std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
     std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
     std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+    std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+    std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
     PkbPopulator pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer,
-                              mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+                              mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
     std::shared_ptr<PkbPopulator> pkbPop = std::make_shared<PkbPopulator>(pkbPopulator);
     GIVEN("ModifiesExtractor") {
         ModifiesExtractor m(pkbPop);
         WHEN("a assign node is visited parsed") {
-            AssignNode a = AssignNode(1, "v", "x");
+            AssignNode a = AssignNode(1, "v", "x", "test");
             shared_ptr<AssignNode> sp = make_shared<AssignNode>(a);
             m.visit(sp, a.getLine());
             THEN("v should populate") {
                 REQUIRE(msPointer->getVar(a.getLine()) == std::unordered_set<std::string>({ "v" }));
             }
         }WHEN("a read node is visited parsed") {
-            ReadNode r = ReadNode(2, "x");
+            ReadNode r = ReadNode(2, "x", "test");
             shared_ptr<ReadNode> sp = make_shared<ReadNode>(r);
             m.visit(sp, r.getLine());
             THEN("v should populate") {

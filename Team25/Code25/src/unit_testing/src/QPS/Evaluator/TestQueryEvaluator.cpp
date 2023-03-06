@@ -25,6 +25,8 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ParentStore parents;
 			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -41,9 +43,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -216,6 +220,17 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates multiple with repeating, it should return the right results") {
+				list<string> expected = { "11 11 x", "11 11 y", "11 11 z", "12 12 x", "12 12 y", "12 12 z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+				response.setSelectSynonyms({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 
 		WHEN("ParserResponse and PkbRetriever are populated with suchthat and/or pattern") {
@@ -232,6 +247,8 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ParentStore parents;
 			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -248,9 +265,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("w");
@@ -354,6 +373,16 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			uprocsPointer->addUsesProc("factorial", "x");
 			uprocsPointer->addUsesProc("factorial", "y");
 			uprocsPointer->addUsesProc("beta", "z");
+
+			// Mock calls relationship in SIMPLE program
+			callsPointer->addCalls("factorial", "main");
+			callsPointer->addCalls("beta", "main");
+			callsPointer->addCalls("beta", "factorial");
+
+			// Mock callsSt relationship in SIMPLE program
+			cStarsPointer->addCallsStar("main", "factorial");
+			cStarsPointer->addCallsStar("main", "beta");
+			cStarsPointer->addCallsStar("factorial", "beta");
 
 			THEN("When QpsEvaluator evaluates a followsSt clause, it returns the right result") {
 				list<string> expected = { "1", "3" };
@@ -485,6 +514,32 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				REQUIRE(res == expected);
 			}
 
+			THEN("When QpsEvaluator evaluates a calls clause, it returns the right result") {
+				list<string> expected = { "beta", "factorial" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::CALLS,
+					Synonym::create(Constants::PROCEDURE, "v2"), Value::create("main")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a calls* clause, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::CALLSST,
+					Synonym::create(Constants::PROCEDURE, "v2"), Value::create("beta")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
 			THEN("When QpsEvaluator evaluates a pattern clause, it returns the right result") {
 				list<string> expected = { "3", "7", "9" };
 				ParserResponse response;
@@ -538,6 +593,8 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ParentStore parents;
 			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -554,9 +611,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -780,6 +839,8 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ParentStore parents;
 			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -796,9 +857,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->addConst(123);
