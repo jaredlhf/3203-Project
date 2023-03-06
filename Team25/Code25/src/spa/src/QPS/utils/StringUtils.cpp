@@ -67,7 +67,77 @@ std::vector<std::string> StringUtils:: splitString(const std::string& s) {
 */
 bool StringUtils::tokenInOp(const std::string& opStr, const std::string& token) {
 	std::vector<std::string> opTokens = StringUtils::splitString(StringUtils::spaceifyString(opStr));
-
 	return std::find(opTokens.begin(), opTokens.end(), token) != opTokens.end();
+}
+
+/*
+	Creates postfix notation expression string when given an prefix notation expression string
+*/
+std::string StringUtils::createPostFixNotation(const std::string& infix) {
+	std::string result;
+	std::stack<char> opStack;
+
+	for (const char c : infix) {
+		// if its an expression 
+		if (std::isalnum(c)) {
+			result.push_back(c);
+		}
+		// if its a spacing
+		else if (c == ' ' || c == '\t') {
+			// ignore white space and tab spacing
+		}
+		else if (c == '(') {
+			opStack.push(c);
+		}
+		else if (c == ')') {
+			while (!opStack.empty() && opStack.top() != '(') {
+				result.push_back(opStack.top());
+				opStack.pop();
+			}
+			opStack.pop();
+		}
+		// if its an operator or brackets
+		else {
+			// add all operators on opStack to string
+			while (!opStack.empty() && opStack.top() != '(' && StringUtils::opPrecedence(c) <= StringUtils::opPrecedence(opStack.top())) {
+				result.push_back(opStack.top());
+				opStack.pop();
+			}
+			opStack.push(c);
+		}
+	}
+	
+	while (!opStack.empty()) {
+		result.push_back(opStack.top());
+		opStack.pop();
+	}	
+	return result;
+}
+
+/*
+	Returns an integer to represent the precedence of operations, higher integer has higher precedence
+*/
+
+int StringUtils::opPrecedence(char op) {
+	if (op == '+' || op == '-') {
+		return 1;
+	}
+	else if (op == '*' || op == '/') {
+		return 2;
+	}
+	else {
+		return 0;
+	}
+}
+
+/*
+	Returns true if postFix(arg1) exists in fullPostFix(arg2)
+*/
+
+bool StringUtils::postFixInFullpostFix(const std::string& postFix, const std::string& fullPostFix) {
+	if (fullPostFix.find(postFix) != std::string::npos) {
+		return true;
+	}
+	return false;
 }
 

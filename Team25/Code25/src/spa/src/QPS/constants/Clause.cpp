@@ -152,13 +152,9 @@ bool Clause::isPatternClause() {
 
 // UsesClause overriden clause functions
 /*
-    For uses clauses, args is wrong if arg1 is not int, or arg2 is int
+    For uses clauses, args is wrong if arg2 is int
 */
 bool UsesClause::isWrongArgs() {
-    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
-        return true;
-    }
-
     if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
         return true;
     }
@@ -203,13 +199,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
 
 // Modifies overriden clause functions
 /*
-    For modifies clauses, args is wrong if arg1 is not int, or arg2 is int
+    For modifies clauses, args is wrong if arg2 is int
 */
 bool ModifiesClause::isWrongArgs() {
-    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
-        return true;
-    }
-
     if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
         return true;
     }

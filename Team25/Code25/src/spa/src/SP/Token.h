@@ -51,6 +51,11 @@ public:
     bool isEqual(std::string tokenString) override;
 };
 
+class Call: public Token {
+public:
+    bool isEqual(std::string tokenString) override;
+};
+
 class Print: public Token {
 public:
     bool isEqual(std::string tokenString) override;

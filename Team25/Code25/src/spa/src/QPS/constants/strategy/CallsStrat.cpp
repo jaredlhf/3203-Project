@@ -28,16 +28,16 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::create
 
 // Case: Calls(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardWildcard() {
-    return pkbRet->getAllFollowees().size() > 0
+    return pkbRet->getAllLeftCall().size() > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
 
 // Case: Calls(_, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardConst() {
-    std::unordered_set<int> stmts = pkbRet->getAllFollowers();
+    std::unordered_set<std::string> procs = pkbRet->getAllRightCall();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    return stmts.count(std::stoi(arg2Val)) > 0
+    return procs.count(arg2Val) > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -45,13 +45,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildca
 // Case: Calls(_, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardSyn() {
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
+    std::unordered_set<std::string> s2Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-    for (int stNum : s2Stmts) {
-        if (pkbRet->getFollowee(stNum) != -1) {
-            resTable->addRow({ std::to_string(stNum) });
+    for (std::string proc : s2Procs) {
+        if (pkbRet->getLeftCall(proc).size() > 0) {
+            resTable->addRow({ proc });
         }
     }
 
@@ -62,9 +60,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildca
 
 // Case: Calls(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constWildcard() {
-    std::unordered_set<int> stmts = pkbRet->getAllFollowees();
+    std::unordered_set<std::string> procs = pkbRet->getAllLeftCall();
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    return stmts.count(std::stoi(arg1Val)) > 0
+    return procs.count(arg1Val) > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -74,7 +72,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constC
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
-    if (pkbRet->getFollower(std::stoi(arg1Val)) == std::stoi(arg2Val)) {
+    if (pkbRet->getRightCall(arg1Val).count(arg2Val) > 0) {
         return QpsTable::getDefaultOk();
     }
     return QpsTable::getDefaultNoMatch();
@@ -84,14 +82,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constC
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constSyn() {
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
+    std::unordered_set<std::string> s2Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
 
-    for (int stNum : s2Stmts) {
-        if (pkbRet->getFollower(std::stoi(arg1Val)) == stNum) {
-            resTable->addRow({ std::to_string(stNum) });
+    for (std::string proc : s2Procs) {
+        if (pkbRet->getRightCall(arg1Val).count(proc) > 0) {
+            resTable->addRow({ proc });
         }
     }
     return resTable->getData().size() > 0
@@ -102,13 +98,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constS
 // Case: Calls(s1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synWildcard() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
+    std::unordered_set<std::string> s1Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-    for (int stNum : s1Stmts) {
-        if (pkbRet->getFollower(stNum) != -1) {
-            resTable->addRow({ std::to_string(stNum) });
+    for (std::string proc : s1Procs) {
+        if (pkbRet->getRightCall(proc).size() > 0) {
+            resTable->addRow({ proc });
         }
     }
 
@@ -121,14 +115,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synWil
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synConst() {
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
+    std::unordered_set<std::string> s1Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
 
-    for (int stNum : s1Stmts) {
-        if (pkbRet->getFollowee(std::stoi(arg2Val)) == stNum) {
-            resTable->addRow({ std::to_string(stNum) });
+    for (std::string proc : s1Procs) {
+        if (pkbRet->getLeftCall(arg2Val).count(proc) > 0) {
+            resTable->addRow({ proc });
         }
     }
     return resTable->getData().size() > 0
@@ -139,14 +131,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synCon
 // Case: Calls(s1, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synSyn() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
+    std::unordered_set<std::string> s1Procs = pkbRet->getAllProc();
 
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
+    std::unordered_set<std::string> s2Procs = pkbRet->getAllProc();
 
     // Edge case: if s1 and s2 are the same var name, return no match
     if (s1Syn->getName() == s2Syn->getName()) {
@@ -155,13 +143,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synSyn
 
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
 
-    for (int arg1StNum : s1Stmts) {
-        for (int arg2StNum : s2Stmts) {
-            if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
-                resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
+    for (std::string arg1Proc : s1Procs) {
+        for (std::string arg2Proc : s2Procs) {
+            if (pkbRet->getRightCall(arg1Proc).count(arg2Proc) > 0) {
+                resTable->addRow({ arg1Proc, arg2Proc });
             }
         }
-
     }
 
     return resTable->getData().size() > 0

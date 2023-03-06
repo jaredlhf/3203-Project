@@ -9,11 +9,27 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->suchThatClauses = response.getSuchThatClauses();
 }
 
+// Returns the vector of Synonym names in order
+std::vector<std::string> QueryEvaluator::getResultNames() {
+	std::vector<std::string> res;
+
+	for (std::shared_ptr<Synonym> syn : this->resultSynonyms) {
+		res.push_back(syn->getName());
+	}
+
+	return res;
+}
+
 
 // Public functions
-std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveSelectSynonym(
-	std::shared_ptr<Synonym> resultSynonym, std::shared_ptr<PkbRetriever> pkbRet) {
-	return resultSynonym->resolveSelectResult(pkbRet);
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveSelectSynonyms(
+	std::vector<std::shared_ptr<Synonym>> resultSynonyms, std::shared_ptr<PkbRetriever> pkbRet) {
+	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> selectResults;
+	for (std::shared_ptr<Synonym> resSyn : resultSynonyms) {
+		selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
+	}
+
+	return resolveClauses(selectResults);
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveClauses(
@@ -45,18 +61,24 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	std::list<std::string> result;
 	handleParserResponse(response);
 
-	// Edge case: If resultSynonym is a syntax or semantic error, return immediately
+	// Edge case: If resultSynonym is a syntax error, return immediately
 	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
-		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR) || resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
+		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR)) {
 			return std::list<std::string>({ resSyn->getKeyword() });
 		}
 	}
-	
+
+	// Edge case: If resultSynonym is a semantic error, return immediately
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
+			return std::list<std::string>({ resSyn->getKeyword() });
+		}
+	}
 
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
-		resolveSelectSynonym(this->resultSynonyms[0], pkbRetriever); /*TODO CHANGE TO RESOLVE ALL SELECTS*/
+		resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
 	clauseResults.push_back(selectRes);
 
 	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
@@ -88,7 +110,7 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 
 	// Retrieve answer of resultSyn col in table
 	/*TODO RESOLVE ANSWER FOR ALL SELECT SYNONYMS*/
-	std::set<std::string> ansSet = finalResTable->getColResults(this->resultSynonyms[0]->getName());
+	std::set<std::string> ansSet = ResultFormatter(getResultNames(), finalResTable).getResults();
 	for (const std::string& answer : ansSet) {
 		result.push_back(answer);
 	}

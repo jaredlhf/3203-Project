@@ -23,7 +23,10 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -38,10 +41,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -203,6 +209,28 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates multiple, it should return the right results") {
+				list<string> expected = { "11 x", "11 y", "11 z", "12 x", "12 y", "12 z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::READ, "x"), Synonym::create(Constants::VARIABLE, "v") });
+				response.setSelectSynonyms({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates multiple with repeating, it should return the right results") {
+				list<string> expected = { "11 11 x", "11 11 y", "11 11 z", "12 12 x", "12 12 y", "12 12 z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+				response.setSelectSynonyms({ Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::READ, "rd"), Synonym::create(Constants::VARIABLE, "v") });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 
 		WHEN("ParserResponse and PkbRetriever are populated with suchthat and/or pattern") {
@@ -217,7 +245,10 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -232,10 +263,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("w");
@@ -307,6 +341,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			msPointer->addModifies(7, "x");
 			msPointer->addModifies(9, "x");
 
+			// Mock Uses relationship in SIMPLE program
+			usesPointer->addUses(1, "y");
+			usesPointer->addUses(3, "x");
+			usesPointer->addUses(5, "z");
+			usesPointer->addUses(7, "x");
+			usesPointer->addUses(9, "y");
+
 			// Mock Patterns in SIMPLE program
 			pattsPointer->addAssignLhs("x", 1);
 			pattsPointer->addAssignRhs(1, "y+1");
@@ -316,6 +357,32 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			pattsPointer->addAssignRhs(7, "x+1");
 			pattsPointer->addAssignLhs("x", 9);
 			pattsPointer->addAssignRhs(9, "x+1");
+
+			// Mock Modifies Relationship for Procedures in SIMPLE program
+			mprocsPointer->addModifiesProc("main", "x");
+			mprocsPointer->addModifiesProc("main", "y");
+			mprocsPointer->addModifiesProc("main", "z");
+			mprocsPointer->addModifiesProc("factorial", "x");
+			mprocsPointer->addModifiesProc("factorial", "y");
+			mprocsPointer->addModifiesProc("beta", "z");
+
+			// Mock UsesRelationship for Procedures in SIMPLE program
+			uprocsPointer->addUsesProc("main", "x");
+			uprocsPointer->addUsesProc("main", "y");
+			uprocsPointer->addUsesProc("main", "z");
+			uprocsPointer->addUsesProc("factorial", "x");
+			uprocsPointer->addUsesProc("factorial", "y");
+			uprocsPointer->addUsesProc("beta", "z");
+
+			// Mock calls relationship in SIMPLE program
+			callsPointer->addCalls("factorial", "main");
+			callsPointer->addCalls("beta", "main");
+			callsPointer->addCalls("beta", "factorial");
+
+			// Mock callsSt relationship in SIMPLE program
+			cStarsPointer->addCallsStar("main", "factorial");
+			cStarsPointer->addCallsStar("main", "beta");
+			cStarsPointer->addCallsStar("factorial", "beta");
 
 			THEN("When QpsEvaluator evaluates a followsSt clause, it returns the right result") {
 				list<string> expected = { "1", "3" };
@@ -382,6 +449,97 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				REQUIRE(res == expected);
 			}
 
+			THEN("When QpsEvaluator evaluates a modifies clause with procedure, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Synonym::create(Constants::PROCEDURE, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a modifies clause with procedure constant, it returns the right result") {
+				list<string> expected = { "x", "y" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Value::create("factorial"), Synonym::create(Constants::VARIABLE, "v2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause, it returns the right result") {
+				list<string> expected = { "3", "7" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Synonym::create(Constants::STMT, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause with procedure, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Synonym::create(Constants::PROCEDURE, "s1"), Value::create("x")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a uses clause with procedure constant, it returns the right result") {
+				list<string> expected = { "z" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::VARIABLE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Value::create("beta"), Synonym::create(Constants::VARIABLE, "v2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a calls clause, it returns the right result") {
+				list<string> expected = { "beta", "factorial" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::CALLS,
+					Synonym::create(Constants::PROCEDURE, "v2"), Value::create("main")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a calls* clause, it returns the right result") {
+				list<string> expected = { "factorial", "main" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::PROCEDURE, "v2") });
+				response.setSuchThatClauses({ Clause::create(Constants::CALLSST,
+					Synonym::create(Constants::PROCEDURE, "v2"), Value::create("beta")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
 			THEN("When QpsEvaluator evaluates a pattern clause, it returns the right result") {
 				list<string> expected = { "3", "7", "9" };
 				ParserResponse response;
@@ -433,7 +591,10 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -448,10 +609,13 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -486,7 +650,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on SyntaxErrorSynonym returns SYN_ERR") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::SYNTAX_ERROR, "x");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res = 
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({});
 				std::set<std::vector<std::string>> expectedData({});
@@ -499,7 +663,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on SemanticErrorSynonym returns SEM_ERR") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::SEMANTIC_ERROR, "x");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({});
 				std::set<std::vector<std::string>> expectedData({});
@@ -512,7 +676,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on VariableSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::VARIABLE, "v");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "v" });
 				std::set<std::vector<std::string>> expectedData({ {"x"}, {"y"}, {"z"} });
@@ -525,7 +689,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ProcedureSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::PROCEDURE, "p");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "p" });
 				std::set<std::vector<std::string>> expectedData({ {"main"}, {"factorial"}, {"beta"} });
@@ -538,7 +702,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ConstantSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::CONSTANT, "cs");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "cs" });
 				std::set<std::vector<std::string>> expectedData({ {"123"}, {"456"}, {"789"} });
@@ -551,7 +715,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on StmtSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::STMT, "s");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "s" });
 				std::set<std::vector<std::string>> expectedData({ {"1"}, {"2"}, {"3"}, 
@@ -565,7 +729,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on AssignSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::ASSIGN, "a");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "a" });
 				std::set<std::vector<std::string>> expectedData({ {"1"}, {"2"} });
@@ -578,7 +742,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on CallSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::CALL, "cl");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "cl" });
 				std::set<std::vector<std::string>> expectedData({ {"3"}, {"4"} });
@@ -591,7 +755,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on WhileSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::WHILE, "wl");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "wl" });
 				std::set<std::vector<std::string>> expectedData({ {"5"}, {"6"} });
@@ -604,7 +768,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on IfSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::IF, "ifs");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "ifs" });
 				std::set<std::vector<std::string>> expectedData({ {"7"}, {"8"} });
@@ -617,7 +781,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on PrintSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::PRINT, "pr");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "pr" });
 				std::set<std::vector<std::string>> expectedData({ {"9"}, {"10"} });
@@ -630,10 +794,30 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ReadSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::READ, "rd");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "rd" });
 				std::set<std::vector<std::string>> expectedData({ {"11"}, {"12"} });
+
+				REQUIRE(res.first == Constants::ClauseResult::OK);
+				REQUIRE(res.second->getHeaders() == expectedHeaders);
+				REQUIRE(res.second->getData() == expectedData);
+			}
+
+			THEN("QpsEvaluator calling resolveSelectSynonym on multiple Synonyms returns the right results") {
+				std::shared_ptr<Synonym> s1 = Synonym::create(Constants::READ, "rd");
+				std::shared_ptr<Synonym> s2 = Synonym::create(Constants::CONSTANT, "cs");
+				std::shared_ptr<Synonym> s3 = Synonym::create(Constants::PRINT, "pr");
+
+				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
+					qe.resolveSelectSynonyms({ s1, s2, s3 }, std::make_shared<PkbRetriever>(pkbRet));
+
+				std::vector<std::string> expectedHeaders({ "rd", "cs", "pr" });
+				std::set<std::vector<std::string>> expectedData({ 
+					{"11", "123", "9"}, {"11", "456", "9"}, {"11", "789", "9"},
+					{"11", "123", "10"}, {"11", "456", "10"}, {"11", "789", "10"},
+					{"12", "123", "9"}, {"12", "456", "9"}, {"12", "789", "9"},
+					{"12", "123", "10"}, {"12", "456", "10"}, {"12", "789", "10"} });
 
 				REQUIRE(res.first == Constants::ClauseResult::OK);
 				REQUIRE(res.second->getHeaders() == expectedHeaders);
@@ -653,7 +837,10 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ModifiesStore ms;
 			ParentStarStore pStars;
 			ParentStore parents;
+			UsesProcStore uprocs;
 			UsesStore uses;
+			CallsStore calls;
+			CallsStarStore cStars;
 
 			ParserResponse response;
 
@@ -668,10 +855,13 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
 			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->addConst(123);
@@ -698,7 +888,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ReadSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::READ, "rd");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "rd" });
 				std::set<std::vector<std::string>> expectedData({ {"11"}, {"12"} });
@@ -711,9 +901,9 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on AssignSynonym returns no match") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::ASSIGN, "a");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
-				std::vector<std::string> expectedHeaders({ "a" });
+				std::vector<std::string> expectedHeaders({ });
 				std::set<std::vector<std::string>> expectedData({});
 
 				REQUIRE(res.first == Constants::ClauseResult::NO_MATCH);
@@ -724,7 +914,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ProcedureSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::PROCEDURE, "p");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "p" });
 				std::set<std::vector<std::string>> expectedData({ {"main"}, {"factorial"}, {"beta"} });
@@ -737,7 +927,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on ConstantSynonym returns the right results") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::CONSTANT, "cs");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
 				std::vector<std::string> expectedHeaders({ "cs" });
 				std::set<std::vector<std::string>> expectedData({ {"123"}, {"456"}, {"789"} });
@@ -750,9 +940,9 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			THEN("QpsEvaluator calling resolveSelectSynonym on VariableSynonym returns no match") {
 				std::shared_ptr<Synonym> s = Synonym::create(Constants::VARIABLE, "v");
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res =
-					qe.resolveSelectSynonym(s, std::make_shared<PkbRetriever>(pkbRet));
+					qe.resolveSelectSynonyms({ s }, std::make_shared<PkbRetriever>(pkbRet));
 
-				std::vector<std::string> expectedHeaders({ "v" });
+				std::vector<std::string> expectedHeaders({ });
 				std::set<std::vector<std::string>> expectedData({});
 
 				REQUIRE(res.first == Constants::ClauseResult::NO_MATCH);
