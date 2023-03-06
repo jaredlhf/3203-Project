@@ -124,14 +124,14 @@ void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     } else if (lineNo == SPConstants::PROCEDURE) {
         lineNo = SPConstants::PROCEDURE;
     }
-
+//    pkbPopulator->addVar(c->getVar());
     if (lineNo == SPConstants::PROCEDURE) {
 //        std::cout << "populate procedure modifies: " << c->getProc() + " " + c->getVar() << " " << endl;
-        pkbPopulator->addModifiesProc(c -> getProc(), c ->getVar());
+//        pkbPopulator->addModifiesProc(c -> getProc(), c ->getVar());
     } else {
-        pkbPopulator->addVar(c->getVar());
+//        pkbPopulator->addVar(c->getVar());
 //        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-        pkbPopulator->addModifies(lineNo,   c->getVar());
+//        pkbPopulator->addModifies(lineNo,   c->getVar());
     }
 }
 
@@ -233,13 +233,13 @@ void UsesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     } else if (lineNo == SPConstants::PROCEDURE) {
         lineNo = SPConstants::PROCEDURE;
     }
-    pkbPopulator->addVar(c->getVar());
+//    pkbPopulator->addVar(c->getVar());
     if (lineNo == SPConstants::PROCEDURE) {
 //        std::cout << "Populating procedure use: " << c->getProc() + " " + c->getVar() << std::endl;
-        pkbPopulator->addUsesProc(c->getProc(), c->getVar());
+//        pkbPopulator->addUsesProc(c->getProc(), c->getVar());
     } else {
 //        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-        pkbPopulator->addUses(lineNo, c->getVar());
+//        pkbPopulator->addUses(lineNo, c->getVar());
     }
 }
 
