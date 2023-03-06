@@ -6,6 +6,11 @@
 #include "ParentStStrat.h"
 #include "FollowsStStrat.h"
 #include "PatternStrat.h"
+#include "CallsStrat.h"
+#include "CallsStStrat.h"
+#include "NextStrat.h"
+#include "NextStStrat.h"
+
 
 // Constructor function for ClauseStrat
 
@@ -37,6 +42,18 @@ std::shared_ptr<ClauseStrat> ClauseStrat::create(std::string clauseKeyword, std:
 	}
 	if (clauseKeyword == Constants::FOLLOWSST) {
 		return std::make_shared<FollowsStStrat>(FollowsStStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::CALLS) {
+		return std::make_shared<CallsStrat>(CallsStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::CALLSST) {
+		return std::make_shared<CallsStStrat>(CallsStStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::NEXT) {
+		return std::make_shared<NextStrat>(NextStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::NEXTST) {
+		return std::make_shared<NextStStrat>(NextStStrat(clauseKeyword, arg1, arg2, pkbRet));
 	}
 
 	return std::make_shared<ClauseStrat>(ClauseStrat(clauseKeyword, arg1, arg2, pkbRet));

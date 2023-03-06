@@ -4,7 +4,8 @@
 //std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
 //             Constants::WHILE, Constants::IF, Constants::ASSIGN, Constants::VARIABLE, Constants::CONSTANT, Constants::PROCEDURE};
 std::unordered_set<std::string> DESIGN_ENTITIES = {"stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
-std::unordered_set<std::string> RELREF = {"Follows", "Follows*", "Parent", "Parent*", "Uses", "Modifies"};
+std::unordered_set<std::string> RELREF = {"Follows", "Follows*", "Parent", "Parent*", "Uses", "Modifies", "Calls", "Calls*", "Next", "Next*"};
+std::unordered_set<std::string> PROC_DESIGN_ENTITIES = {"assign", "call", "if", "while", "read", "print", "stmt", "procedure"};
 
 bool ParserUtils::isValidIntegerString(const std::string& s) {
     // checks if string exists
@@ -68,12 +69,39 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
         }
         return Synonym::create(Constants::SEMANTIC_ERROR, "");
     }
+    return Synonym::create(Constants::SYNTAX_ERROR, "");
+}
 
-return Synonym::create(Constants::SYNTAX_ERROR, "");
+std::shared_ptr<Entity> ParserUtils::getValidProcRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
 
+    if (s == Constants::WILDCARD) {
+        return Wildcard::create();
+    }
+
+    if (isValidIntegerString(s)) {
+        return Value::create(s);
+    }
+
+    if (s.find('"') != std::string::npos) {
+        std::string cleanString = removeQuotations(s);
+        if (isValidNaming(cleanString)) {
+            return Value::create(cleanString);
+        }
+    }
+
+    if (isValidNaming(s)) {
+        for (auto& d : declarations) {
+            if (d->getName() == s && PROC_DESIGN_ENTITIES.find(d->getKeyword()) != PROC_DESIGN_ENTITIES.end()) {
+                return d;
+            }
+        }
+        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+    }
+    return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
 
 std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+
     if (s == Constants::WILDCARD) {
         return Wildcard::create();
     }
@@ -90,9 +118,7 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
         }
         return Synonym::create(Constants::SEMANTIC_ERROR, "");
     }
-
     return Synonym::create(Constants::SYNTAX_ERROR, "");
-
 }
 
 // check for valid expression pattern for milestone 1
@@ -147,3 +173,30 @@ std::string ParserUtils::removeQuotations(const std::string& s) {
     return newStr;
 }
 
+bool ParserUtils::isSyntaxError(std::shared_ptr<Entity> e) {
+    
+    if (e->isSynonym()) {
+        std::string refKeyword = std::static_pointer_cast<Synonym>(e)->getKeyword();
+        return refKeyword == Constants::SYNTAX_ERROR;
+    }
+
+    return false;
+}
+
+bool ParserUtils::isSemanticError(std::shared_ptr<Entity> e) {
+    
+    if (e->isSynonym()) {
+        std::string refKeyword = std::static_pointer_cast<Synonym>(e)->getKeyword();
+        return refKeyword == Constants::SEMANTIC_ERROR;
+    }
+
+    return false;
+}
+
+bool ParserUtils::isExpectedSynonym(std::shared_ptr<Entity> e, const std::string& s) {
+    if (e->isSynonym()) {
+        return std::static_pointer_cast<Synonym>(e)->getKeyword() == s;
+    }
+
+    return false;
+}

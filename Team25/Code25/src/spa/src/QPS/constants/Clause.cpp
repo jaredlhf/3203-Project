@@ -70,6 +70,10 @@ std::shared_ptr<Clause> Clause::create(const std::string clauseType, std::shared
     if (clauseType == Constants::FOLLOWS) res = std::make_shared<FollowsClause>(FollowsClause(arg1, arg2));
     if (clauseType == Constants::FOLLOWSST) res = std::make_shared<FollowsStClause>(FollowsStClause(arg1, arg2));
     if (clauseType == Constants::PATTERN) res = std::make_shared<PatternClause>(PatternClause(arg1, arg2));
+    if (clauseType == Constants::CALLS) res = std::make_shared<CallsClause>(CallsClause(arg1, arg2));
+    if (clauseType == Constants::CALLSST) res = std::make_shared<CallsStClause>(CallsStClause(arg1, arg2));
+    if (clauseType == Constants::NEXT) res = std::make_shared<NextClause>(NextClause(arg1, arg2));
+    if (clauseType == Constants::NEXTST) res = std::make_shared<NextStClause>(NextStClause(arg1, arg2));
     if (clauseType == Constants::WITH) res = std::make_shared<WithClause>(WithClause(arg1, arg2));
 
     return res;
@@ -98,6 +102,22 @@ FollowsClause::FollowsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entit
 
 FollowsStClause::FollowsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
     this->keyword = Constants::FOLLOWSST;
+}
+
+CallsClause::CallsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::CALLS;
+}
+
+CallsStClause::CallsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::CALLSST;
+}
+
+NextClause::NextClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::NEXT;
+}
+
+NextStClause::NextStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::NEXTST;
 }
 
 PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
@@ -132,13 +152,9 @@ bool Clause::isPatternClause() {
 
 // UsesClause overriden clause functions
 /*
-    For uses clauses, args is wrong if arg1 is not int, or arg2 is int
+    For uses clauses, args is wrong if arg2 is int
 */
 bool UsesClause::isWrongArgs() {
-    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
-        return true;
-    }
-
     if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
         return true;
     }
@@ -146,10 +162,12 @@ bool UsesClause::isWrongArgs() {
 }
 
 /*
-    For uses clauses, args is sem invalid if arg1 is not stmtsyn, or arg2 is not varsyn
+    For uses clauses, args is sem invalid if arg1 is not stmtsyn or procedure, or arg2 is not varsyn
 */
 bool UsesClause::isSemInvalid() {
-    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+    if (this->arg1->isSynonym() && 
+        !(std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()
+            || std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE))) {
         return true;
     }
 
@@ -181,13 +199,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesClause::resolv
 
 // Modifies overriden clause functions
 /*
-    For modifies clauses, args is wrong if arg1 is not int, or arg2 is int
+    For modifies clauses, args is wrong if arg2 is int
 */
 bool ModifiesClause::isWrongArgs() {
-    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
-        return true;
-    }
-
     if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
         return true;
     }
@@ -199,7 +213,8 @@ bool ModifiesClause::isWrongArgs() {
     For modifies clauses, args is sem invalid if arg1 is not stmtsyn, or arg2 is not varsyn
 */
 bool ModifiesClause::isSemInvalid() {
-    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+    if (this->arg1->isSynonym() && !(std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()
+        || std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE))) {
         return true;
     }
 
@@ -392,6 +407,182 @@ bool FollowsStClause::isSemInvalid() {
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// Calls overriden clause functions
+/*
+    For calls clauses, args is wrong if either args are int
+*/
+bool CallsClause::isWrongArgs() {
+    if (this->arg1->isConstant() && std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For calls clauses, args is sem invalid if either syns is not proc syn
+*/
+bool CallsClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE)) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->matchesKeyword(Constants::PROCEDURE)) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// Next overriden clause functions
+/*
+    For next clauses, args is wrong both args are not int
+*/
+bool NextClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For Next clauses, args is sem invalid if either syns is not stmtsyn
+*/
+bool NextClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// CallsSt overriden clause functions
+/*
+    For CallsSt clauses, args is wrong if either args are int
+*/
+bool CallsStClause::isWrongArgs() {
+    if (this->arg1->isConstant() && std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For callsst clauses, args is sem invalid if either syns is not proc syn
+*/
+bool CallsStClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::PROCEDURE)) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->matchesKeyword(Constants::PROCEDURE)) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// NextSt overriden clause functions
+/*
+    For NextSt clauses, args is wrong both args are not int
+*/
+bool NextStClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For nextst clauses, args is sem invalid if either syns is not stmtsyn
+*/
+bool NextStClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
     // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
     if (this->isWrongArgs()) {
         return QpsTable::getDefaultSynErr();
