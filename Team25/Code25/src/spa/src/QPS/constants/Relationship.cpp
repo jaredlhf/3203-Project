@@ -85,7 +85,7 @@ std::vector<std::shared_ptr<Entity>> UsesRelationship::verifyRelationship(std::v
     std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
 
-    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::READ)) {
+    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::READ) || arg1Value->isWildcard()) {
         return { Synonym::create(Constants::SEMANTIC_ERROR, ""), arg2Value };
     }
     return { arg1Value, arg2Value };
@@ -100,7 +100,7 @@ std::vector<std::shared_ptr<Entity>> ModifiesRelationship::verifyRelationship(st
     std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
 
-    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::PRINT)) {
+    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::PRINT) || arg1Value->isWildcard()) {
         return { Synonym::create(Constants::SEMANTIC_ERROR, ""), arg2Value };
     }
     return { arg1Value, arg2Value };
