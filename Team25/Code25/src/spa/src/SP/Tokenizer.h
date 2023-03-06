@@ -15,4 +15,5 @@ public:
     string expect(const string &spa, const string &str);
     string getNextToken();
     string peek();
+    string peekTwice();
 };
