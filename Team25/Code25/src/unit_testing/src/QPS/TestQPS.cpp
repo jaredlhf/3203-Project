@@ -520,11 +520,31 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For combined query with 1 overlapping synonym multiselect, the right result is returned") {
+				list<string> expected = { "1 y", "2 y", "3 y", "4 y", "5 y", "6 y", "7 y", "8 y", "9 y" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; stmt s1; Select <s1, v1> such that Uses(a1,v1) pattern a1 (_,_\"y\"_) ";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For combined query with such that and pattern reversed with 1 overlapping synonym, the right result is returned") {
 				list<string> expected = { "y" };
 				list<string> res;
 
 				string query = "assign a1; variable v1; stmt s1; Select v1 pattern a1 (_,_\"y\"_) such that Uses(a1,v1)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For combined query with such that and pattern reversed with 1 overlapping synonym multiselect, the right result is returned") {
+				list<string> expected = { "y 1" };
+				list<string> res;
+
+				string query = "assign a1; variable v1; stmt s1; Select <v1, a1> pattern a1 (_,_\"y\"_) such that Uses(a1,v1)";
 
 				qps.query(query, res);
 				REQUIRE(res == expected);
