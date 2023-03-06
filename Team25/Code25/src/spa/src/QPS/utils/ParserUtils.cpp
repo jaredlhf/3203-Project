@@ -1,4 +1,5 @@
 #include "ParserUtils.h"
+#include "../../SP/ExpressionParser.h"
 
 // BUG: does not work with unordered_set.find()
 //std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
@@ -121,8 +122,6 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
 
-// check for valid expression pattern for milestone 1
-// TODO: modify for pattern extensions with operators
 bool ParserUtils::isValidExpression(const std::string& s) {
     int length = s.size();
     if (length == 1) {
@@ -131,20 +130,23 @@ bool ParserUtils::isValidExpression(const std::string& s) {
     if (s[0] != s[length - 1]) {
         return false;
     }
-    if (s[0] != '_') {
-        return false;
-    }
+    std::string cleanedString;
+    if (s[0] == '_') {
+        if (s[1] != s[length - 2]) {
+            return false;
+        }
 
-    if (s[1] != s[length - 2]) {
-        return false;
+        if (s[1] != '\"') {
+            return false;
+        }
+        cleanedString = s.substr(2, length - 4);
+    } else {
+        if (s[0] != '\"') {
+            return false;
+        }
+        cleanedString = s.substr(1, length - 2);
     }
-
-    if (s[1] != '\"') {
-        return false;
-    }
-
-    std::string cleanedString = s.substr(2, length - 4);
-    return isValidNaming(cleanedString) || isValidIntegerString((cleanedString));
+    return ExpressionParser::isExpr(cleanedString);
 }
 
 bool ParserUtils::isDesignEntityToken(const std::string& s) {
