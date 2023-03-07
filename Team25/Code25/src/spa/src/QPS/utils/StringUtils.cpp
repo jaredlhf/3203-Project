@@ -45,7 +45,7 @@ std::vector<std::string> StringUtils:: splitString(const std::string& s) {
 	std::vector<std::string> res;
 	
 	// Split words based on whitespaces and newlines
-	std::regex words_regex("[^\\s\\n]+");
+	std::regex words_regex("[^\\s\\n\\t]+");
 
 	auto words_begin = std::sregex_iterator(s.begin(), s.end(), words_regex);
 	auto words_end = std::sregex_iterator();
@@ -62,6 +62,13 @@ std::vector<std::string> StringUtils:: splitString(const std::string& s) {
 	return res;
 }
 
+std::string StringUtils::addBrackets(const std::string& s) {
+	std::string res;
+	res += '(' + s + ')';
+
+	return res;
+}
+
 /*
 	Returns true if the particular IDENT token is found in an operation string
 */
@@ -71,27 +78,43 @@ bool StringUtils::tokenInOp(const std::string& opStr, const std::string& token) 
 }
 
 /*
+	Returns true if the particular string is made up of decimal digits or letters
+*/
+
+bool StringUtils::isDigitLetters(std::string& s) {
+	for (const char c : s) {
+		if (!std::isalnum(c)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
 	Creates postfix notation expression string when given an prefix notation expression string
 */
 std::string StringUtils::createPostFixNotation(const std::string& infix) {
 	std::string result;
-	std::stack<char> opStack;
+	std::stack<std::string> opStack;
+	// string is split and placed in order into a vector
+	std::vector<std::string> spacifiedInfix = StringUtils::splitString(StringUtils::spaceifyString(infix));
 
-	for (const char c : infix) {
+	for (std::string str : spacifiedInfix) {
 		// if its an expression 
-		if (std::isalnum(c)) {
-			result.push_back(c);
+		if (StringUtils::isDigitLetters(str)) {
+			// add brackets around it and append to result
+			result.append(StringUtils::addBrackets(str));
 		}
 		// if its a spacing
-		else if (c == ' ' || c == '\t') {
-			// ignore white space and tab spacing
+		else if (str == " " || str == "\t") {
+			// ignore spacing
 		}
-		else if (c == '(') {
-			opStack.push(c);
+		else if (str == "(") {
+			opStack.push(str);
 		}
-		else if (c == ')') {
-			while (!opStack.empty() && opStack.top() != '(') {
-				result.push_back(opStack.top());
+		else if (str == ")") {
+			while (!opStack.empty() && opStack.top() != "(") {
+				result.append(opStack.top());
 				opStack.pop();
 			}
 			opStack.pop();
@@ -99,16 +122,16 @@ std::string StringUtils::createPostFixNotation(const std::string& infix) {
 		// if its an operator or brackets
 		else {
 			// add all operators on opStack to string
-			while (!opStack.empty() && opStack.top() != '(' && StringUtils::opPrecedence(c) <= StringUtils::opPrecedence(opStack.top())) {
-				result.push_back(opStack.top());
+			while (!opStack.empty() && opStack.top() != "(" && StringUtils::opPrecedence(str) <= StringUtils::opPrecedence(opStack.top())) {
+				result.append(opStack.top());
 				opStack.pop();
 			}
-			opStack.push(c);
+			opStack.push(str);
 		}
 	}
 	
 	while (!opStack.empty()) {
-		result.push_back(opStack.top());
+		result.append(opStack.top());
 		opStack.pop();
 	}	
 	return result;
@@ -118,11 +141,11 @@ std::string StringUtils::createPostFixNotation(const std::string& infix) {
 	Returns an integer to represent the precedence of operations, higher integer has higher precedence
 */
 
-int StringUtils::opPrecedence(char op) {
-	if (op == '+' || op == '-') {
+int StringUtils::opPrecedence(std::string& op) {
+	if (op == "+" || op == "-") {
 		return 1;
 	}
-	else if (op == '*' || op == '/') {
+	else if (op == "*" || op == "/") {
 		return 2;
 	}
 	else {

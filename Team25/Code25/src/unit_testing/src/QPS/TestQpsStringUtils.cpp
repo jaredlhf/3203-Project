@@ -177,89 +177,115 @@ TEST_CASE("tokenInOp String with a substr of str token in complex expression ret
 
 TEST_CASE("createPostFixNotation String infix expression with '+' arithmetic operations") {
 	std::string infix = "a+b+c+d";
-	std::string postfix = "ab+c+d+";
+	std::string postfix = "(a)(b)+(c)+(d)+";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
 }
+
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '-' arithmetic operations") {
 	std::string infix = "a+b-c";
-	std::string postfix = "ab+c-";
+	std::string postfix = "(a)(b)+(c)-";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '-' and brackets arithmetic operations") {
 	std::string infix = "a-(b+c)";
-	std::string postfix = "abc+-";
+	std::string postfix = "(a)(b)(c)+-";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+' and brackets arithmetic operations") {
 	std::string infix = "(a+b)+c";
-	std::string postfix = "ab+c+";
+	std::string postfix = "(a)(b)+(c)+";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '*' arithmetic operations") {
 	std::string infix = "a+b*c";
-	std::string postfix = "abc*+";
+	std::string postfix = "(a)(b)(c)*+";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' arithmetic operations") {
 	std::string infix1 = "a+b*c-d";
-	std::string postfix1 = "abc*+d-";
+	std::string postfix1 = "(a)(b)(c)*+(d)-";
 	std::string result1 = StringUtils::createPostFixNotation(infix1);
-	REQUIRE(result1.compare(postfix1) == 0);
+	REQUIRE(result1 == postfix1);
 
 
 	std::string infix2 = "v+x*y+z*t";
-	std::string postfix2 = "vxy*+zt*+";
+	std::string postfix2 = "(v)(x)(y)*+(z)(t)*+";
 	std::string result2 = StringUtils::createPostFixNotation(infix2);
-	REQUIRE(result2.compare(postfix2) == 0);
+	REQUIRE(result2 == postfix2);
 }
 
 TEST_CASE("createPostFixNotation String infix expression with '+', '-', '*' and brackets arithmetic operations") {
-	std::string infix = "(a+b)*c-d";
-	std::string postfix = "ab+c*d-";
+	std::string infix1 = "(a+b)*c-d";
+	std::string postfix1 = "(a)(b)+(c)*(d)-";
+	std::string result1 = StringUtils::createPostFixNotation(infix1);
+	REQUIRE(result1 == postfix1);
+
+	std::string infix2 = "zee*(abc+bed)*cun-dile";
+	std::string postfix2 = "(zee)(abc)(bed)+*(cun)*(dile)-";
+	std::string result2 = StringUtils::createPostFixNotation(infix2);
+	REQUIRE(result2 == postfix2);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with '+' and tab spacing arithmetic operations") {
+	std::string infix = "x	";
+	std::string postfix = "(x)";
 	std::string result = StringUtils::createPostFixNotation(infix);
-	REQUIRE(result.compare(postfix) == 0);
+	REQUIRE(result == postfix);
+}
+
+TEST_CASE("createPostFixNotation String infix expression with multi-char variables, '+' arithmetic operations") {
+	std::string infix = "abc + def + ghi";
+	std::string postfix = "(abc)(def)+(ghi)+";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result == postfix);
 }
 
 // Unit Tests for postFixInFullpostFix function
 
 TEST_CASE("postFixInFullpostFix String full same variables and same ops postfix successful expression match") {
-	std::string postfix = "ab+";
-	std::string fullPostFix = "ab+";
+	std::string postfix = "(a)(b)+";
+	std::string fullPostFix = "(a)(b)+";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == true);
 }
 
 TEST_CASE("postFixInFullpostFix String full same variable different ops '+', '-' postfix fail expression match") {
-	std::string postfix = "ab+";
-	std::string fullPostFix = "ab-";
+	std::string postfix = "(a)(b)+";
+	std::string fullPostFix = "(a)(b)-";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == false);
 }
 
 TEST_CASE("postFixInFullpostFix String full postfix same variable, same ops, different ordering fail expression match") {
-	std::string postfix = "ab+";
-	std::string fullPostFix = "ba+";
+	std::string postfix = "(a)(b)+";
+	std::string fullPostFix = "(b)(a)+";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == false);
 }
 
+TEST_CASE("postFixInFullpostFix String full postfix same multi-char variable, same ops postfix successful expression match") {
+	std::string postfix = "(abc)(def)+";
+	std::string fullPostFix = "(abc)(def)+(ghi)+";
+	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == true);
+}
+
 TEST_CASE("postFixInFullpostFix String partial postfix same variable and same ops successful expression match") {
-	std::string postfix1 = "x";
-	std::string postfix2 = "y";
-	std::string postfix3 = "z";
-	std::string postfix4 = "t";
-	std::string postfix5 = "v";
-	std::string postfix6 = "xy*";
-	std::string postfix7 = "zt*";
-	std::string postfix8 = "vxy*+";
-	std::string fullPostFix = "vxy*+zt*+";
+	std::string postfix1 = "(x)";
+	std::string postfix2 = "(y)";
+	std::string postfix3 = "(z)";
+	std::string postfix4 = "(t)";
+	std::string postfix5 = "(v)";
+	std::string postfix6 = "(x)(y)*";
+	std::string postfix7 = "(z)(t)*";
+	std::string postfix8 = "(v)(x)(y)*+";
+	std::string fullPostFix = "(v)(x)(y)*+(z)(t)*+";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix1, fullPostFix) == true);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix2, fullPostFix) == true);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix3, fullPostFix) == true);
@@ -271,11 +297,11 @@ TEST_CASE("postFixInFullpostFix String partial postfix same variable and same op
 }
 
 TEST_CASE("postFixInFullpostFix String partial postfix same variable and same ops fail expression match") {
-	std::string postfix1 = "vx+";
-	std::string postfix2 = "yz+";
-	std::string postfix3 = "xy*z+";
-	std::string fullPostFix = "vxy*+zt*+";
+	std::string postfix1 = "(v)(x)+";
+	std::string postfix2 = "(y)(z)+";
+	std::string postfix3 = "(x)(y)*(z)+";
+	std::string fullPostFix = "(v)(x)(y)*+(z)(t)*+";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix1, fullPostFix) == false);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix2, fullPostFix) == false);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix3, fullPostFix) == false);
-}
+} 

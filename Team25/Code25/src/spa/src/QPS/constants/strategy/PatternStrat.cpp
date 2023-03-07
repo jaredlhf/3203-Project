@@ -103,7 +103,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
 
     for (const std::string& stNum : synMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(stNum));
-        if (pkbPattern.compare(arg2Val) == 0) { // check with Yu Hang, but if the right hand side assign and the const value matches, you add to resTable
+        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
             resTable->addRow({ stNum });
         }
     }
@@ -157,7 +157,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
 
     for (int intVal : pkbStmtMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(intVal);
-        if (pkbPattern.compare(arg2Val) == 0) {
+        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
             resTable->addRow({ std::to_string(intVal) });
         }
     }
@@ -205,7 +205,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synS
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: pattern a1 (v1, "x + y") TODO
+// Case: pattern a1 (v1, "x + y")
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synConst() { 
     std::shared_ptr<Synonym> synArg1 = std::static_pointer_cast<Synonym>(this->arg1);
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();    
@@ -213,7 +213,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synC
 
     for (const std::string& a1SynMatch : synMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(a1SynMatch));
-        if (pkbPattern.compare(arg2Val) == 0) {
+        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
             std::unordered_set<std::string> v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
             for (const std::string& res : v1Match) {
                 resTable->addRow({ a1SynMatch, res });
