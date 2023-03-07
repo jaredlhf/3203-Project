@@ -87,6 +87,9 @@ TEST_CASE("create function creates the right classes based on the keywords passe
 	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->matchesKeyword(Constants::VARIABLE));
 	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->matchesKeyword(Constants::CONSTANT));
 	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->matchesKeyword(Constants::PROCEDURE));
+	REQUIRE(Synonym::create(Constants::BOOLEAN, "x")->matchesKeyword(Constants::BOOLEAN));
+	REQUIRE(Synonym::create(Constants::SYNTAX_ERROR, "x")->matchesKeyword(Constants::SYNTAX_ERROR));
+	REQUIRE(Synonym::create(Constants::SEMANTIC_ERROR, "x")->matchesKeyword(Constants::SEMANTIC_ERROR));
 }
 
 TEST_CASE("create function with attrName creates the right classes based on the keywords passed in") {
@@ -221,4 +224,20 @@ TEST_CASE("All concrete synonym classes returns the right results for isVariable
 	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->isVariableSyn() == true);
 	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->isVariableSyn() == false);
 	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->isVariableSyn() == false);
+}
+
+TEST_CASE("isBooleanSyn function returns the right result for the type of Synonym") {
+	REQUIRE(Synonym::create(Constants::STMT, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::READ, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::PRINT, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::CALL, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::WHILE, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::IF, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::ASSIGN, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::VARIABLE, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::CONSTANT, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::PROCEDURE, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::BOOLEAN, "x")->isBooleanSyn() == true);
+	REQUIRE(Synonym::create(Constants::SYNTAX_ERROR, "x")->isBooleanSyn() == false);
+	REQUIRE(Synonym::create(Constants::SEMANTIC_ERROR, "x")->isBooleanSyn() == false);
 }
