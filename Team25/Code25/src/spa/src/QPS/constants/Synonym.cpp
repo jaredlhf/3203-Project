@@ -66,6 +66,10 @@ std::string Synonym::getAttrName() {
     return this->attrName;
 }
 
+bool Synonym::isBooleanSyn() {
+    return false;
+}
+
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveSelectResult(
     std::shared_ptr<PkbRetriever> pkbRet) {
     std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
@@ -100,6 +104,7 @@ std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::str
     if (type == Constants::VARIABLE) return std::make_shared<VariableSynonym>(VariableSynonym(name, attrName));
     if (type == Constants::CONSTANT) return std::make_shared<ConstantSynonym>(ConstantSynonym(name, attrName));
     if (type == Constants::PROCEDURE) return std::make_shared<ProcedureSynonym>(ProcedureSynonym(name, attrName));
+    if (type == Constants::BOOLEAN) return std::make_shared<BooleanSynonym>(BooleanSynonym(name));
     if (type == Constants::SYNTAX_ERROR) return std::make_shared<SyntaxErrorSynonym>(SyntaxErrorSynonym(name, attrName));
     if (type == Constants::SEMANTIC_ERROR) return std::make_shared<SemanticErrorSynonym>(SemanticErrorSynonym(name, attrName));
 
@@ -323,6 +328,19 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ProcedureSynonym::
         : Constants::ClauseResult::OK;
 
     return res;
+}
+
+BooleanSynonym::BooleanSynonym(const std::string& name) : Synonym(name) {
+    keyword = Constants::BOOLEAN;
+}
+
+bool BooleanSynonym::isBooleanSyn() {
+    return true;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> BooleanSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    return QpsTable::getDefaultOk();
 }
 
 SyntaxErrorSynonym::SyntaxErrorSynonym(const std::string& name) : Synonym(name) {
