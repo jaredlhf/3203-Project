@@ -14,7 +14,10 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		ModifiesStore ms;
 		ParentStarStore pStars;
 		ParentStore parents;
+        UsesProcStore uprocs;
 		UsesStore uses;
+        CallsStore calls;
+        CallsStarStore cstars;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -28,22 +31,27 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
 		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+        std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
+        std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+        std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
 
-		// Populating variables appearing in the SIMPLE program
-		vsPointer->add("w");
-		vsPointer->add("x");
-		vsPointer->add("y");
-		vsPointer->add("z");
+
+
+        // Populating variables appearing in the SIMPLE program
+		vsPointer->addVar("w");
+		vsPointer->addVar("x");
+		vsPointer->addVar("y");
+		vsPointer->addVar("z");
 
 		// Populating constants appearing in the SIMPLE program
-		csPointer->add(123);
-		csPointer->add(456);
-		csPointer->add(789);
+		csPointer->addConst(123);
+		csPointer->addConst(456);
+		csPointer->addConst(789);
 
 		// Populating procedures appearing in the SIMPLE program
-		psPointer->add("main");
-		psPointer->add("factorial");
-		psPointer->add("beta");
+		psPointer->addProc("main");
+		psPointer->addProc("factorial");
+		psPointer->addProc("beta");
 
 		// Populating statements appearing in the SIMPLE program
 		ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -93,18 +101,18 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		parentsPointer->addParent(8, 9);
 
 		// Populating Modifies relationship in SIMPLE program
-		msPointer->add(1, "x");
-		msPointer->add(3, "w");
-		msPointer->add(5, "y");
-		msPointer->add(7, "x");
-		msPointer->add(9, "x");
+		msPointer->addModifies(1, "x");
+		msPointer->addModifies(3, "w");
+		msPointer->addModifies(5, "y");
+		msPointer->addModifies(7, "x");
+		msPointer->addModifies(9, "x");
 
 		// Populating Uses relationship in SIMPLE program
-		usesPointer->add(1, "y");
-		usesPointer->add(3, "x");
-		usesPointer->add(6, "x");
-		usesPointer->add(7, "x");
-		usesPointer->add(9, "x");
+		usesPointer->addUses(1, "y");
+		usesPointer->addUses(3, "x");
+		usesPointer->addUses(6, "x");
+		usesPointer->addUses(7, "x");
+		usesPointer->addUses(9, "x");
 
 		// Populating Patterns in SIMPLE program
 		pattsPointer->addAssignLhs("x", 1);
@@ -117,7 +125,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		pattsPointer->addAssignRhs(9, "x+1");
 
 		// PKB class that interacts with the QPS class
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, usesPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
 
 		WHEN("The QPS object is instantiated and interacts with the PKB	") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));

@@ -14,12 +14,22 @@ vector<string> Tokenizer::getTokens() {
 }
 
 string Tokenizer::peek() {
+    if (this->tokens.empty()) {
+        throw std::out_of_range("Error: Insufficient tokens.");
+    }
     return this->tokens.front();
+}
+
+string Tokenizer::peekTwice() {
+    if (this->tokens.size() >= 2) {
+        return this->tokens[1];
+    }
+    throw std::out_of_range("Error: Insufficient tokens.");
 }
 
 string Tokenizer::getNextToken() {
     if(tokens.empty()) {
-        throw std::invalid_argument("Invalid SIMPLE program");
+        throw std::out_of_range("Error: Insufficient tokens.");
     }
     string next = this->tokens.front();
     tokens.erase(tokens.begin());

@@ -15,11 +15,15 @@ bool Relationship::compare(std::shared_ptr<Relationship> other) {
 
 std::shared_ptr<Relationship> Relationship::create(const std::string& keyword, const std::string& arg1, const std::string& arg2) {
     if (keyword == Constants::FOLLOWS) return std::make_shared<FollowsRelationship>(FollowsRelationship(arg1, arg2));
-    if (keyword == Constants::FOLLOWSST) return std::make_shared<FollowsTRelationship>(FollowsTRelationship(arg1, arg2));
+    if (keyword == Constants::FOLLOWSST) return std::make_shared<FollowsSTRelationship>(FollowsSTRelationship(arg1, arg2));
     if (keyword == Constants::PARENT) return std::make_shared<ParentRelationship>(ParentRelationship(arg1, arg2));
-    if (keyword == Constants::PARENTST) return std::make_shared<ParentTRelationship>(ParentTRelationship(arg1, arg2));
-    if (keyword == Constants::USES) return std::make_shared<UsesSRelationship>(UsesSRelationship(arg1, arg2));
-    if (keyword == Constants::MODIFIES) return std::make_shared<ModifiesSSRelationship>(ModifiesSSRelationship(arg1, arg2));
+    if (keyword == Constants::PARENTST) return std::make_shared<ParentSTRelationship>(ParentSTRelationship(arg1, arg2));
+    if (keyword == Constants::USES) return std::make_shared<UsesRelationship>(UsesRelationship(arg1, arg2));
+    if (keyword == Constants::MODIFIES) return std::make_shared<ModifiesRelationship>(ModifiesRelationship(arg1, arg2));
+    if (keyword == Constants::CALLS) return std::make_shared<CallsRelationship>(CallsRelationship(arg1, arg2));
+    if (keyword == Constants::CALLSST) return std::make_shared<CallsSTRelationship>(CallsSTRelationship(arg1, arg2));
+    if (keyword == Constants::NEXT) return std::make_shared<NextRelationship>(NextRelationship(arg1, arg2));
+    if (keyword == Constants::NEXTST) return std::make_shared<NextSTRelationship>(NextSTRelationship(arg1, arg2));
 
     return std::make_shared<Relationship>(arg1, arg2);
 }
@@ -39,11 +43,11 @@ std::vector<std::shared_ptr<Entity>> FollowsRelationship::verifyRelationship(std
     return { arg1Value, arg2Value };
 }
 
-FollowsTRelationship::FollowsTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+FollowsSTRelationship::FollowsSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
     keyword = Constants::FOLLOWSST;
 }
 
-std::vector<std::shared_ptr<Entity>> FollowsTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+std::vector<std::shared_ptr<Entity>> FollowsSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
     std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
 
@@ -61,35 +65,87 @@ std::vector<std::shared_ptr<Entity>> ParentRelationship::verifyRelationship(std:
     return { arg1Value, arg2Value };
 }
 
-ParentTRelationship::ParentTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+ParentSTRelationship::ParentSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
     keyword = Constants::PARENTST;
 }
 
-std::vector<std::shared_ptr<Entity>> ParentTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+std::vector<std::shared_ptr<Entity>> ParentSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
     std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
 
     return { arg1Value, arg2Value };
 }
 
-UsesSRelationship::UsesSRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+UsesRelationship::UsesRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
     keyword = Constants::USES;
 }
 
-std::vector<std::shared_ptr<Entity>> UsesSRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
-    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+std::vector<std::shared_ptr<Entity>> UsesRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    // checks if this is procedure call
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
+
+    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::READ) || arg1Value->isWildcard()) {
+        return { Synonym::create(Constants::SEMANTIC_ERROR, ""), arg2Value };
+    }
+    return { arg1Value, arg2Value };
+}
+
+ModifiesRelationship::ModifiesRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::MODIFIES;
+}
+
+std::vector<std::shared_ptr<Entity>> ModifiesRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    // checks if this is procedure call
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidProcRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
+
+    if (ParserUtils::isExpectedSynonym(arg1Value, Constants::PRINT) || arg1Value->isWildcard()) {
+        return { Synonym::create(Constants::SEMANTIC_ERROR, ""), arg2Value };
+    }
+    return { arg1Value, arg2Value };
+}
+
+CallsRelationship::CallsRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::CALLS;
+}
+
+std::vector<std::shared_ptr<Entity>> CallsRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidEntRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
 
     return { arg1Value, arg2Value };
 }
 
-ModifiesSSRelationship::ModifiesSSRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
-    keyword = Constants::MODIFIES;
+CallsSTRelationship::CallsSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::CALLSST;
 }
 
-std::vector<std::shared_ptr<Entity>> ModifiesSSRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
-    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+std::vector<std::shared_ptr<Entity>> CallsSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidEntRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidEntRef(arg2, declarations);
+
+    return { arg1Value, arg2Value };
+}
+
+NextRelationship::NextRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::NEXT;
+}
+
+std::vector<std::shared_ptr<Entity>> NextRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
+
+    return { arg1Value, arg2Value };
+}
+
+NextSTRelationship::NextSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::NEXTST;
+}
+
+std::vector<std::shared_ptr<Entity>> NextSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
 
     return { arg1Value, arg2Value };
 }

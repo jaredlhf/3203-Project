@@ -4,80 +4,32 @@
 // Adds the data from the parser into the class attributes
 void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->declarations = response.getDeclarations();
-	this->resultSynonym = response.getSynonym();
-	this->patternSynonym = response.getAssignSynonym();
-	this->patternClause = response.getPatternClause();
-	this->suchThatClause = response.getSuchThatClause();
+	this->resultSynonyms = response.getSelectSynonyms();
+	this->patternClauses = response.getPatternClauses();
+	this->suchThatClauses = response.getSuchThatClauses();
+}
+
+// Returns the vector of Synonym names in order
+std::vector<std::string> QueryEvaluator::getResultNames() {
+	std::vector<std::string> res;
+
+	for (std::shared_ptr<Synonym> syn : this->resultSynonyms) {
+		res.push_back(syn->getName());
+	}
+
+	return res;
 }
 
 
 // Public functions
-std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveSelectSynonym(
-	std::shared_ptr<Synonym> resultSynonym, std::shared_ptr<PkbRetriever> pkbRet) {
-
-	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
-	if (resultSynonym->matchesKeyword(Constants::SYNTAX_ERROR)) {
-		res.first = Constants::ClauseResult::SYN_ERR;
-		res.second = QpsTable::create();
-		return res;
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveSelectSynonyms(
+	std::vector<std::shared_ptr<Synonym>> resultSynonyms, std::shared_ptr<PkbRetriever> pkbRet) {
+	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> selectResults;
+	for (std::shared_ptr<Synonym> resSyn : resultSynonyms) {
+		selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
 	}
 
-	if (resultSynonym->matchesKeyword(Constants::SEMANTIC_ERROR)) {
-		res.first = Constants::ClauseResult::SEM_ERR;
-		res.second = QpsTable::create();
-		return res;
-	}
-
-	const std::string& synName = resultSynonym->getName();
-	std::set<std::vector<std::string>> resData;
-
-	if (resultSynonym->matchesKeyword(Constants::CONSTANT)) {
-		std::unordered_set<int> results = pkbRet->getAllConst();
-		for (int ans : results) {
-			resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::VARIABLE)) {
-		std::unordered_set<std::string> results = pkbRet->getAllVar();
-		for (const std::string& ans : results) {
-			resData.insert(std::vector<std::string>({ ans }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::PROCEDURE)) {
-		std::unordered_set<std::string> results = pkbRet->getAllProc();
-		for (const std::string& ans : results) {
-			resData.insert(std::vector<std::string>({ ans }));
-		}
-	}
-
-	if (resultSynonym->matchesKeyword(Constants::STMT)) {
-		std::vector<std::string> stmtTypes({ Constants::ASSIGN, Constants::CALL, Constants::IF,
-			Constants::WHILE, Constants::PRINT, Constants::READ });
-
-		for (const std::string& stmtType : stmtTypes) {
-			std::unordered_set<int> results = pkbRet->getAllStmt(stmtType);
-			for (int ans : results) {
-				resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-			}
-		}
-	}
-
-	if (resultSynonym->isStmtRef() && !resultSynonym->matchesKeyword(Constants::STMT)) {
-		std::unordered_set<int> results = pkbRet->getAllStmt(resultSynonym->getKeyword());
-		for (int ans : results) {
-			resData.insert(std::vector<std::string>({ std::to_string(ans) }));
-		}
-	}
-
-	std::shared_ptr<QpsTable> resTable = QpsTable::create(std::vector<std::string>({ synName }), resData);
-	res.second = resTable;
-	res.first = resTable->getData().size() == 0 
-		? Constants::ClauseResult::NO_MATCH 
-		: Constants::ClauseResult::OK;
-
-	return res;
+	return resolveClauses(selectResults);
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveClauses(
@@ -109,29 +61,35 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	std::list<std::string> result;
 	handleParserResponse(response);
 
-	// Edge case: If resultSynonym is a syntax or semantic error, return immediately
-	if (this->resultSynonym->matchesKeyword(Constants::SYNTAX_ERROR) || this->resultSynonym->matchesKeyword(Constants::SEMANTIC_ERROR)) {
-		return std::list<std::string>({ this->resultSynonym->getKeyword() });
+	// Edge case: If resultSynonym is a syntax error, return immediately
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR)) {
+			return std::list<std::string>({ resSyn->getKeyword() });
+		}
+	}
+
+	// Edge case: If resultSynonym is a semantic error, return immediately
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
+			return std::list<std::string>({ resSyn->getKeyword() });
+		}
 	}
 
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
-		resolveSelectSynonym(this->resultSynonym, pkbRetriever);
+		resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
 	clauseResults.push_back(selectRes);
 
-	if (this->suchThatClause) {
-		// TODO write implementation for suchThat clause retrieval
-		clauseResults.push_back(this->suchThatClause->resolve(pkbRetriever));
+	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
+		clauseResults.push_back(stClause->resolve(pkbRetriever));
 	}
 
-	if (this->patternClause) {
-		// TODO write implementation for pattern clause retrieval
-		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(this->patternClause);
-		clauseResults.push_back(ptnClause->resolve(pkbRetriever, this->patternSynonym));
+	for (PatternClausePair ptClausePair : this->patternClauses) {
+		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
+		clauseResults.push_back(ptnClause->resolve(pkbRetriever, ptClausePair.first));
 	}
 
-	// TODO update implementation for join all logic
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =
 		resolveClauses(clauseResults);
 
@@ -151,7 +109,8 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	}
 
 	// Retrieve answer of resultSyn col in table
-	std::set<std::string> ansSet = finalResTable->getColResults(resultSynonym->getName());
+	/*TODO RESOLVE ANSWER FOR ALL SELECT SYNONYMS*/
+	std::set<std::string> ansSet = ResultFormatter(getResultNames(), finalResTable).getResults();
 	for (const std::string& answer : ansSet) {
 		result.push_back(answer);
 	}

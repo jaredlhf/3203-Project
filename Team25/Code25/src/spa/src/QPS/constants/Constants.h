@@ -26,8 +26,21 @@ public:
 	static const std::string FOLLOWS;
 	static const std::string PARENTST;
 	static const std::string FOLLOWSST;
+	static const std::string CALLS;
+	static const std::string CALLSST;
+	static const std::string NEXT;
+	static const std::string NEXTST;
 	static const std::string PATTERN;
 	static const std::string WILDCARD;
+	static const std::string BOOLEAN;
+
+
+	// Constant declaration for attrName
+	static const std::string PROCNAME;
+	static const std::string VARNAME;
+	static const std::string VALUE;
+	static const std::string STMTNUM;
+	static const std::string WITH;
 
 	enum class ClauseResult{
 		SYN_ERR = 0,
@@ -35,6 +48,9 @@ public:
 		NO_MATCH = 2,
 		OK = 3
 	};
+
+	// Functions for attrName
+	static bool isAttrNameInt(const std::string& attrName);
 
 	// ClauseResult related functions
 	static Constants::ClauseResult getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2);
