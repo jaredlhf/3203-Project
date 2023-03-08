@@ -15,8 +15,8 @@ std::string QueryTokenizer::preprocess(const std::string& word) {
             res += c;
         } else if (inQuotes && std::isspace(c)) {
             continue;
-        // Handle the case where * is part of the clause name
-        } else if (c == '*') {
+        // Handle the case where * is part of the clause name or # is part of attrname
+        } else if (c == '*' || c == '#') {
             res += c;
             res += ' ';
         }
