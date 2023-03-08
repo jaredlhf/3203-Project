@@ -570,6 +570,43 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates BOOLEAN for a modifies clause with results, it should return TRUE") {
+				list<string> expected = { "TRUE" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2"), Synonym::create(Constants::BOOLEAN, "") });
+				response.setSelectSynonyms({ Synonym::create(Constants::BOOLEAN, "") });
+				response.setSuchThatClauses({ Clause::create(Constants::MODIFIES,
+					Value::create("factorial"), Synonym::create(Constants::VARIABLE, "v2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates BOOLEAN for a uses clause without matches, it returns the false") {
+				list<string> expected = { "FALSE" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::BOOLEAN, "") });
+				response.setSelectSynonyms({ Synonym::create(Constants::BOOLEAN, "") });
+				response.setSuchThatClauses({ Clause::create(Constants::USES,
+					Synonym::create(Constants::STMT, "s1"), Value::create("p")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates BOOLEAN without any clauses, it should return true") {
+				list<string> expected = { "TRUE" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::BOOLEAN, "") });
+				response.setSelectSynonyms({ Synonym::create(Constants::BOOLEAN, "") });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 	}
 }
