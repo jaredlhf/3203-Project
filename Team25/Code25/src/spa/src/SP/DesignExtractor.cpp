@@ -75,9 +75,6 @@ void ModifiesExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         ModifiesExtractor::visit(wh, lineNo);
-    } else if (isCallNode(n)) {
-        std::shared_ptr<CallNode> c = std::dynamic_pointer_cast<CallNode>(n);
-        ModifiesExtractor::visit(c, lineNo);
     } else if (isProcedureNode(n)) {
         std::shared_ptr<ProcedureNode> p = std::dynamic_pointer_cast<ProcedureNode>(n);
         ModifiesExtractor::visit(p, SPConstants::PROCEDURE);
@@ -115,24 +112,6 @@ void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
         pkbPopulator->addVar(r->getVar());
     }
 }
-
-void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
-    if (lineNo == SPConstants::INVALID_LINE_NO) {
-        lineNo = c->getLine();
-    } else if (lineNo == SPConstants::PROCEDURE) {
-        lineNo = SPConstants::PROCEDURE;
-    }
-//    pkbPopulator->addVar(c->getVar());
-    if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "populate procedure modifies: " << c->getProc() + " " + c->getVar() << " " << endl;
-//        pkbPopulator->addModifiesProc(c -> getProc(), c ->getVar());
-    } else {
-//        pkbPopulator->addVar(c->getVar());
-//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-//        pkbPopulator->addModifies(lineNo,   c->getVar());
-    }
-}
-
 
 void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
@@ -179,9 +158,6 @@ void UsesExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         UsesExtractor::visit(wh, lineNo);
-    } else if (isCallNode(n)) {
-        std::shared_ptr<CallNode> c = std::dynamic_pointer_cast<CallNode>(n);
-        UsesExtractor::visit(c, SPConstants::PROCEDURE);
     } else if (isProcedureNode(n)) {
         std::shared_ptr<ProcedureNode> p = std::dynamic_pointer_cast<ProcedureNode>(n);
         UsesExtractor::visit(p, SPConstants::PROCEDURE);
@@ -222,22 +198,6 @@ void UsesExtractor::visit(std::shared_ptr<PrintNode> r, int lineNo) {
     } else {
         pkbPopulator->addUses(lineNo, r->getVar());
         pkbPopulator->addVar(r->getVar());
-    }
-}
-
-void UsesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
-    if (lineNo == SPConstants::INVALID_LINE_NO) {
-        lineNo = c->getLine();
-    } else if (lineNo == SPConstants::PROCEDURE) {
-        lineNo = SPConstants::PROCEDURE;
-    }
-//    pkbPopulator->addVar(c->getVar());
-    if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "Populating procedure use: " << c->getProc() + " " + c->getVar() << std::endl;
-//        pkbPopulator->addUsesProc(c->getProc(), c->getVar());
-    } else {
-//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-//        pkbPopulator->addUses(lineNo, c->getVar());
     }
 }
 
