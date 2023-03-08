@@ -81,6 +81,8 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/strategy/NextStrat.cpp" 
 "src/QPS/constants/strategy/NextStStrat.h" 
 "src/QPS/constants/strategy/NextStStrat.cpp"
+"src/QPS/utils/AttrUtils.cpp" 
+"src/QPS/utils/AttrUtils.h"
 "src/QPS/utils/ParserUtils.cpp"
 "src/QPS/utils/ParserUtils.h"
 "src/QPS/utils/StringUtils.cpp"

@@ -27,6 +27,7 @@ add_executable(unit_testing ${srcs}
 "src/QPS/Constants/ClauseResolve/TestQpsCallsStClause.cpp"  
 "src/QPS/Constants/ClauseResolve/TestQpsCallsClause.cpp"
 "src/QPS/TestQpsStringUtils.cpp"
+"src/QPS/TestAttrUtils.cpp"
 "src/QPS/Constants/TestQpsSynonyms.cpp"
 "src/QPS/Evaluator/TestResultFormatter.cpp"
 "src/QPS/Evaluator/TestQpsTable.cpp"
