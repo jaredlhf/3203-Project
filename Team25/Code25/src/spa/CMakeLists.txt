@@ -2,6 +2,8 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers} 
 "src/PKB/AbstractionStore.h"
+"src/PKB/AttributeStore.h"
+"src/PKB/AttributeStore.cpp"
 "src/PKB/CallsStore.h"
 "src/PKB/CallsStore.cpp"
 "src/PKB/CallsStarStore.h" 

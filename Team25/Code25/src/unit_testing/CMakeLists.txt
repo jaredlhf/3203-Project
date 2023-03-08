@@ -42,7 +42,7 @@ add_executable(unit_testing ${srcs}
 "src/SP/TestSourceProcessor.cpp"
 "src/SP/TestStmtParser.cpp"
 "src/SP/TestTNode.cpp"
-"src/SP/TestTokenizer.cpp")
+"src/SP/TestTokenizer.cpp" "src/PKB/TestAttributeStore.cpp")
 
 target_link_libraries(unit_testing spa)
 
