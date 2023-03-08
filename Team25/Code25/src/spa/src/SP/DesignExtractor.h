@@ -108,6 +108,15 @@ private:
     std::unordered_map<std::string, std::vector<std::string>> callsStorage;
 };
 
+class PatternExtractor: public DesignExtractor {
+public:
+    using DesignExtractor::DesignExtractor;
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<AssignNode> n, int lineNo);
+//    void visit(std::shared_ptr<IfNode> n, int lineNo);
+//    void visit(std::shared_ptr<WhileNode> n, int lineNo);
+};
+
 
 class StatementExtractor: public DesignExtractor {
 public:

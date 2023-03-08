@@ -97,8 +97,6 @@ void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     } else {
         pkbPopulator->addModifies(lineNo, a->getVar());
         pkbPopulator->addVar(a->getVar());
-        pkbPopulator->addAssignLhs(a->getVar(), lineNo);
-        pkbPopulator->addAssignRhs(lineNo, a->getExpr());
     }
 }
 
@@ -580,6 +578,29 @@ void CallsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     }
 }
 
+
+void PatternExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isAssignNode(n)) {
+        std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
+        PatternExtractor::visit(a, lineNo);
+    }
+//    } else if (isIfNode(n)) {
+//        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+//        CallsExtractor::visit(ifs, lineNo);
+//    } else if (isWhileNode(n)) {
+//        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+//        CallsExtractor::visit(wh, lineNo);
+//    }
+}
+
+void PatternExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
+    std::cout<<"here"<<endl;
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = a->getLine();
+    }
+    pkbPopulator->addAssignLhs(a->getVar(), lineNo);
+    pkbPopulator->addAssignRhs(lineNo, a->getExpr());
+}
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());
