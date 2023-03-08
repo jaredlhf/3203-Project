@@ -1,6 +1,5 @@
 #include "QPS/utils/StringUtils.h"
 #include "catch.hpp"
-#include <iostream>
 
 // Unit Tests for isValidInt function
 TEST_CASE("isValidInt Valid int with no negative signs should return true") {
