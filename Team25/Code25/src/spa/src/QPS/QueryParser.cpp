@@ -3,19 +3,17 @@
 
 int MIN_DECLARATION_LENGTH = 2;
 int SUCH_THAT_LENGTH = 6;
+int WHILE_LENGTH = 7;
+int IF_LENGTH = 9;
 const std::string SELECT_MARKER = "Select";
 const std::string PATTERN_MARKER = "pattern";
 const std::string AND_MARKER = "and";
-const std::string OPEN_BRACKET = "(";
-const std::string CLOSE_BRACKET = ")";
 const std::string DECLARATION_END_TOKEN = ";";
-const std::string SEPARATOR = ",";
 const std::string OPEN_SELECT_BRACKET = "<";
 const std::string CLOSE_SELECT_BRACKET = ">";
 std::vector<std::string> SUCHTHAT_MARKER = {"such", "that"};
 
-bool QueryParser::isValidDeclaration(std::vector<std::string> s,
-        std::unordered_set<std::string>& declared_synonyms, std::unordered_set<std::string>& assignment_synonyms) {
+bool QueryParser::isValidDeclaration(std::vector<std::string> s) {
 
     if (s.size() < MIN_DECLARATION_LENGTH) {
         return false;
@@ -29,7 +27,7 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
     for (int i = 1; i < s.size(); i++) {
 
         // checking that variables are separated by commas
-        if (i % 2 == 0 && s[i] != SEPARATOR) {
+        if (i % 2 == 0 && s[i] != Constants::SEPARATOR) {
             return false;
         }
 
@@ -38,98 +36,10 @@ bool QueryParser::isValidDeclaration(std::vector<std::string> s,
             if (!ParserUtils::isValidNaming(s[i])) {
                 return false;
             }
-
-            if (s[0] == Constants::ASSIGN) {
-                assignment_synonyms.insert(s[i]);
-            }
         }
 
     }
     return true;
-}
-
-// might need to redo
-ValidatePatternResponse QueryParser::validatePatternClause(std::vector<std::string> s, 
-        std::unordered_set<std::string> assignment_synonyms, std::vector<std::shared_ptr<Synonym>> declarations) {
-    std::unordered_set<std::string> APPROVED_SYN_KEYWORDS = {"assign", "while", "if"};
-    std::string keyword;
-    std::string entRef;
-    std::string expression;
-    ValidatePatternResponse response;
-
-    int ptr = 0;
-    while (ptr < s.size()) {
-        if (ptr == 0) {
-            keyword = s[ptr];
-        }
-
-        // check if synonym is declared
-        if (ptr == 1) {
-            std::string synonymToken = s[ptr];
-            std::shared_ptr<Synonym> synonym;
-            for (auto& d : declarations) {
-                if (d->getName() == synonymToken && APPROVED_SYN_KEYWORDS.find(d->getKeyword()) !=  APPROVED_SYN_KEYWORDS.end()) {
-                    synonym = d;
-                    break;
-                }
-            }
-
-            if (synonym == nullptr) {
-                response.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, ""));
-            } else {
-                response.setSynonym(synonym);
-            }
-        }
-        
-        // check if pattern is enclosed by brackets
-        if (ptr == 2) {
-            if (s[ptr] != OPEN_BRACKET || s[s.size() - 1] != CLOSE_BRACKET) {
-                return response;
-            }
-        }
-
-        // check if entRef is valid
-        if (ptr == 3) {
-            std::shared_ptr<Entity> entRef = ParserUtils::getValidEntRef(s[ptr], declarations);
-            if (ParserUtils::isSyntaxError(entRef)) {
-                response.setSynonym(Synonym::create(Constants::SYNTAX_ERROR, ""));
-            }
-            if (ParserUtils::isSemanticError(entRef)) {
-                response.setSynonym(Synonym::create(Constants::SEMANTIC_ERROR, ""));
-            }
-            response.setEntRef(entRef);
-        }
-
-        if (ptr == 4 && s[ptr] != SEPARATOR) {
-            return response;
-        }
-        
-        // retrieve pattern
-        if (ptr == 5) {
-            expression = s[ptr];
-            break;
-        }
-        ptr++;
-    }
-
-    if (!ParserUtils::isValidExpression(expression)) {
-        return response;
-    }
-
-    std::string cleanedString;
-    if (expression == Constants::WILDCARD) {
-        response.setPattern(Wildcard::create());
-    } else if (expression[0] == '_') {
-        // only for partial matching
-        // TODO: adapt to other possible patterns in future milestones
-        cleanedString = expression.substr(2, expression.size() - 4);
-        response.setPattern(Wildcard::create(cleanedString));
-    } else {
-        cleanedString = expression.substr(1, expression.size() - 2);
-        response.setPattern(Value::create(cleanedString));
-    }
-
-    return response;
 }
 
 std::vector<std::string> QueryParser::validateSuchThatClause(std::vector<std::string> s) {
@@ -141,11 +51,11 @@ std::vector<std::string> QueryParser::validateSuchThatClause(std::vector<std::st
         return {};
     }
 
-    if (s[1] != OPEN_BRACKET || s[s.size() - 1] != CLOSE_BRACKET) {
+    if (s[1] != Constants::OPEN_BRACKET || s[s.size() - 1] != Constants::CLOSE_BRACKET) {
         return {};
     }
 
-    if (s[3] != SEPARATOR) {
+    if (s[3] != Constants::SEPARATOR) {
         return {};
     }
 
@@ -157,7 +67,7 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::v
     int tokenLength = tokens.size();
     int synCount = 0;
     std::vector<std::shared_ptr<Synonym>> result = {};
-    if (tokens[0] != OPEN_SELECT_BRACKET && tokens[tokenLength - 1] != CLOSE_BRACKET) {
+    if (tokens[0] != OPEN_SELECT_BRACKET && tokens[tokenLength - 1] != Constants::CLOSE_BRACKET) {
         return result;
     }
     // delete the open and close brackets
@@ -166,17 +76,18 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::v
 
     for (int i = 0; i < tokens.size(); i++) {
         if (i % 2 != 0) {
-            if (tokens[i] != SEPARATOR) {
+            if (tokens[i] != Constants::SEPARATOR) {
                 return {};
             }
             continue;
         }
         synCount++;
-        for (auto& element: declarations) {
-            if (element->matchesName(tokens[i])) {
-                result.push_back(element);
-                break;
-            }
+        std::shared_ptr<Synonym> syn = ParserUtils::getValidDeclaration(tokens[i], declarations);
+        if (ParserUtils::isSyntaxError(syn)) {
+            return {};
+        }
+        if (!ParserUtils::isSemanticError(syn)) {
+            result.push_back(syn);
         }
     }
     // mismatch in parsed synonyms vs approved synonyms
@@ -230,7 +141,6 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     int tokenLength = tokens.size();
     std::unordered_set<std::string> declared_synonyms = {};
-    std::unordered_set<std::string> assignment_synonyms = {};
     bool hasSemanticError = false;
 
     std::vector<std::shared_ptr<Synonym>> declarations = {};
@@ -252,7 +162,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             declaration.push_back(tokens[ptr]);
             ptr++;
         }
-        if (!isValidDeclaration(declaration, declared_synonyms, assignment_synonyms)) {
+        if (!isValidDeclaration(declaration)) {
             return generateSyntaxErrorResponse();
         }
         std::vector<std::shared_ptr<Synonym>> temp = processDeclaration(declaration, declared_synonyms);
@@ -286,34 +196,39 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             continue;
         }
         if (hasSeenSelectToken) {
-            if (tokens[ptr] == Constants::BOOLEAN) {
-                selectSynonyms.push_back(Synonym::create(Constants::BOOLEAN, ""));
-                afterSynonym = true;
-                ptr++;
-                break;
-            }
+            std::shared_ptr<Synonym> syn = ParserUtils::getValidDeclaration(tokens[ptr], declarations);
+            bool isSemError = ParserUtils::isSemanticError(syn);
+            bool isSynError = ParserUtils::isSyntaxError(syn);
 
-            std::shared_ptr<Synonym> syn;
-            for (auto& element: declarations) {
-                if (element->matchesName(tokens[ptr])) {
-                    syn = element;
-                    continue;
+            if (isSynError) {
+                if (tokens[ptr] != OPEN_SELECT_BRACKET) {
+                    return generateSyntaxErrorResponse();
                 }
             }
-            // confirms its a semantic error and not an open bracket token
-            if (syn == nullptr && tokens[ptr] != OPEN_SELECT_BRACKET) {
+
+
+            // if no synonym found, check if is BOOLEAN query
+            if (isSemError && tokens[ptr] == Constants::BOOLEAN) {
+                syn = Synonym::create(Constants::BOOLEAN, "");
+                isSemError = false;
+            }
+            
+            // confirms its a semantic error, not a boolean query and not an open bracket token
+            if (isSemError && tokens[ptr] != OPEN_SELECT_BRACKET) {
                 hasSemanticError = true;
                 afterSynonym = true;
                 ptr++;
                 continue;
             }
-            // if theres a match, means its a valid select synonym
-            if (syn != nullptr) {
+
+            // if theres a match, means there is a valid select synonym or boolean query
+            if (!isSemError && !isSynError) {
                 selectSynonyms.push_back(syn);
                 afterSynonym = true;
                 ptr++;
                 continue;
             }
+
             // if not semantic error and synonym is empty, means its some other token
             if (tokens[ptr] != OPEN_SELECT_BRACKET) {
                 return generateSyntaxErrorResponse();
@@ -369,7 +284,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         if (tokens[ptr] == PATTERN_MARKER) {
             std::vector<std::string> patternTokens = {};
             while (ptr < tokenLength) {
-                if (tokens[ptr] == CLOSE_BRACKET) {
+                if (tokens[ptr] == Constants::CLOSE_BRACKET) {
                     patternTokens.push_back(tokens[ptr]);
                     break;
                 }
@@ -377,18 +292,25 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 ptr++;
             }
 
-            ValidatePatternResponse response = validatePatternClause(patternTokens, assignment_synonyms, declarations);
-
-            if (response.getSynonym()->getKeyword() == Constants::SEMANTIC_ERROR) {
-                hasSemanticError = true;
-            }
-
-            if (response.isIncomplete() || response.getSynonym()->getKeyword() == Constants::SYNTAX_ERROR) {
+            int tokenSize = patternTokens.size();
+            if (tokenSize != WHILE_LENGTH && tokenSize != IF_LENGTH) {
                 return generateSyntaxErrorResponse();
             }
-            std::shared_ptr<Clause> patternClause = Clause::create(Constants::PATTERN, response.getEntRef(), response.getPattern());
-            std::shared_ptr<Synonym> patternSynonym = response.getSynonym();
-            patternClauses.push_back(make_pair(patternSynonym, patternClause));
+            std::shared_ptr<Synonym> patternSynonym = ParserUtils::getValidDeclaration(patternTokens[1], declarations);
+            if (ParserUtils::isSyntaxError(patternSynonym)) {
+                return generateSyntaxErrorResponse();
+            }
+            std::vector<std::string> patternCond = {patternTokens.begin() + 2, patternTokens.end()};
+            std::shared_ptr<PatternValidator> patternValidator = PatternValidator::create(patternSynonym, patternCond);
+            PatternClausePair patternPair = patternValidator->verifyPattern(declarations);
+            if (ParserUtils::isSyntaxError(patternPair.first)) {
+                return generateSyntaxErrorResponse();
+            }
+
+            if (ParserUtils::isSemanticError(patternPair.first)) {
+                hasSemanticError = true;
+            }
+            patternClauses.push_back(patternPair);
             isSuchThat = false;
         }
 
@@ -412,7 +334,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             }
             std::vector<std::string> suchThatTokens;
             while (ptr < tokenLength) {
-                if (tokens[ptr] == CLOSE_BRACKET) {
+                if (tokens[ptr] == Constants::CLOSE_BRACKET) {
                     suchThatTokens.push_back(tokens[ptr]);
                     break;
                 }

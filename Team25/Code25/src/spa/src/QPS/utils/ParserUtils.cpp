@@ -63,12 +63,7 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s) {
-                return d;
-            }
-        }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return getValidDeclaration(s, declarations);
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
@@ -91,12 +86,11 @@ std::shared_ptr<Entity> ParserUtils::getValidProcRef(const std::string& s, const
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s && PROC_DESIGN_ENTITIES.find(d->getKeyword()) != PROC_DESIGN_ENTITIES.end()) {
-                return d;
-            }
+        std::shared_ptr<Synonym> syn = getValidDeclaration(s, declarations);
+        if (PROC_DESIGN_ENTITIES.find(syn->getKeyword()) == PROC_DESIGN_ENTITIES.end()) {
+            return Synonym::create(Constants::SEMANTIC_ERROR, "");
         }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return syn;
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
@@ -112,14 +106,21 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s) {
-                return d;
-            }
-        }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return getValidDeclaration(s, declarations);
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
+}
+
+std::shared_ptr<Synonym> ParserUtils::getValidDeclaration(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    if (!isValidNaming(s)) {
+        return Synonym::create(Constants::SYNTAX_ERROR, "");
+    }
+    for (auto& d: declarations) {
+        if (d->matchesName(s)) {
+            return d;
+        }
+    }
+    return Synonym::create(Constants::SEMANTIC_ERROR, "");
 }
 
 bool ParserUtils::isValidExpression(const std::string& s) {
