@@ -10,6 +10,7 @@
 #include "Value.h"
 #include "PKB/PkbRetriever.h"
 #include "QPS/QpsTable.h"
+#include "QPS/utils/AttrUtils.h"
 #include "QPS/utils/StringUtils.h"
 #include "QPS/constants/strategy/ClauseStrat.h"
 

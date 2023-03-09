@@ -27,6 +27,7 @@ public:
     bool matchesAttrName(const std::string& inputAttrName);
     void addMatchingResult(const std::string& result);
     std::string getName();
+    std::string getNameWithAttr();
     std::string getKeyword();
     bool compare(std::shared_ptr<Synonym> other);
     virtual std::unordered_set<std::string> getMatches();
@@ -36,6 +37,8 @@ public:
     std::string getAttrName();
     virtual bool isBooleanSyn();
     virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet);
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveAttrResult(
         std::shared_ptr<PkbRetriever> pkbRet);
 
     // Static functions
