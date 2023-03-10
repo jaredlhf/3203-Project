@@ -103,7 +103,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
 
     for (const std::string& stNum : synMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(stNum));
-        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
+        if (StringUtils::createPostFixNotation(arg2Val) == StringUtils::createPostFixNotation(pkbPattern)) { //check if postfix notation for both expressions are the same
             resTable->addRow({ stNum });
         }
     }
@@ -148,7 +148,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: pattern a1 ("x", "y + x") TODO
+// Case: pattern a1 ("x", "y + x")
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::constConst() {  
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
@@ -157,7 +157,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
 
     for (int intVal : pkbStmtMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(intVal);
-        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
+        if (StringUtils::createPostFixNotation(arg2Val) == StringUtils::createPostFixNotation(pkbPattern)) {
             resTable->addRow({ std::to_string(intVal) });
         }
     }
@@ -213,7 +213,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synC
 
     for (const std::string& a1SynMatch : synMatches) {
         const std::string& pkbPattern = pkbRet->getAssignRhs(std::stoi(a1SynMatch));
-        if (StringUtils::postFixInFullpostFix(StringUtils::createPostFixNotation(arg2Val), StringUtils::createPostFixNotation(pkbPattern))) {
+        if (StringUtils::createPostFixNotation(arg2Val) == StringUtils::createPostFixNotation(pkbPattern)) {
             std::unordered_set<std::string> v1Match = pkbRet->getModVar(std::stoi(a1SynMatch));
             for (const std::string& res : v1Match) {
                 resTable->addRow({ a1SynMatch, res });
