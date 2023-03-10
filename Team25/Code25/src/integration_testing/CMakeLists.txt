@@ -3,7 +3,7 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_
 add_executable(integration_testing ${srcs}
 "src/TestSpPkbIntegration.cpp"
 "src/TestPkbQpsIntegration.cpp"
-"src/TestFullSpaSystem.cpp")
+"src/TestFullSpaSystem.cpp" src/SingleSynonymWithoutClauseSystemTest.cpp)
 
 
 target_link_libraries(integration_testing spa)
