@@ -14,7 +14,7 @@ class AttributeStore {
 	virtual bool hasStmt(int lineNum) = 0;
 };
 
-class PrintAttribute : AttributeStore {
+class PrintAttribute : public AttributeStore {
 private:
 	std::unordered_map<int, std::string> attrStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
@@ -29,7 +29,7 @@ public:
 	bool hasStmt(int lineNum) override;
 };
 
-class ReadAttribute : AttributeStore {
+class ReadAttribute : public AttributeStore {
 private:
 	std::unordered_map<int, std::string> attrStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
@@ -44,7 +44,7 @@ public:
 	bool hasStmt(int lineNum) override;
 };
 
-class CallAttribute : AttributeStore {
+class CallAttribute : public AttributeStore {
 private:
 	std::unordered_map<int, std::string> attrStore;
 	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;

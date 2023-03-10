@@ -17,6 +17,7 @@
 #include "UsesStore.h"
 #include "CallsStore.h"
 #include "CallsStarStore.h"
+#include "AttributeStore.h"
 
 class PkbRetriever{
 private:
@@ -35,12 +36,16 @@ private:
 	shared_ptr<UsesStore> usesStorage;
 	shared_ptr<CallsStore> callsStorage;
 	shared_ptr<CallsStarStore> callsStarStorage;
+	shared_ptr<PrintAttribute> printAttrStorage;
+	shared_ptr<ReadAttribute> readAttrStorage;
+	shared_ptr<CallAttribute> callAttrStorage;
 
 public:
 	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
 		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
-		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, 
-		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore);
+		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
+		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
+		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore);
 	/*Var Store*/
 	std::unordered_set<std::string> getAllVar(); 
 	/*Const Store*/
@@ -102,4 +107,11 @@ public:
 	std::unordered_set<std::string> getRightCallStar(std::string leftProc);
 	std::unordered_set<std::string> getAllLeftCallStar();
 	std::unordered_set<std::string> getAllRightCallStar();
+	/*Attribute Store*/
+	std::string getPrintAttr(int lineNum);
+	std::unordered_set<int> getPrintStmt(std::string varName);
+	std::string getReadAttr(int lineNum);
+	std::unordered_set<int> getReadStmt(std::string varName);
+	std::string getCallAttr(int lineNum);
+	std::unordered_set<int> getCallStmt(std::string procName);
 };
