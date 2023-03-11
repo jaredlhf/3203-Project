@@ -107,11 +107,19 @@ public:
 	std::unordered_set<std::string> getRightCallStar(std::string leftProc);
 	std::unordered_set<std::string> getAllLeftCallStar();
 	std::unordered_set<std::string> getAllRightCallStar();
-	/*Attribute Store*/
+	/*Print Attribute Store*/
 	std::string getPrintAttr(int lineNum);
 	std::unordered_set<int> getPrintStmt(std::string varName);
+	std::unordered_set<std::string> getAllPrintAttr();
+	std::unordered_set<int> getAllPrintStmt();
+	/*Read Attribute Store*/
 	std::string getReadAttr(int lineNum);
 	std::unordered_set<int> getReadStmt(std::string varName);
+	std::unordered_set<std::string> getAllReadAttr();
+	std::unordered_set<int> getAllReadStmt();
+	/*Call Attribute Store*/
 	std::string getCallAttr(int lineNum);
 	std::unordered_set<int> getCallStmt(std::string procName);
+	std::unordered_set<std::string> getAllCallAttr();
+	std::unordered_set<int> getAllCallStmt();
 };

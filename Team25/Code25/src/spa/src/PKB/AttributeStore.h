@@ -12,6 +12,8 @@ class AttributeStore {
 	virtual std::unordered_set<int> getStmt(std::string attribute) = 0;
 	virtual bool hasAttr(std::string attribute) = 0;
 	virtual bool hasStmt(int lineNum) = 0;
+	virtual std::unordered_set<std::string> getAllAttr() = 0;
+	virtual std::unordered_set<int> getAllStmt() = 0;
 };
 
 class PrintAttribute : public AttributeStore {
@@ -27,6 +29,8 @@ public:
 	std::unordered_set<int> getStmt(std::string attribute) override;
 	bool hasAttr(std::string attribute) override;
 	bool hasStmt(int lineNum) override;
+	std::unordered_set<std::string> getAllAttr() override;
+	std::unordered_set<int> getAllStmt() override;
 };
 
 class ReadAttribute : public AttributeStore {
@@ -42,6 +46,8 @@ public:
 	std::unordered_set<int> getStmt(std::string attribute) override;
 	bool hasAttr(std::string attribute) override;
 	bool hasStmt(int lineNum) override;
+	std::unordered_set<std::string> getAllAttr() override;
+	std::unordered_set<int> getAllStmt() override;
 };
 
 class CallAttribute : public AttributeStore {
@@ -57,4 +63,6 @@ public:
 	std::unordered_set<int> getStmt(std::string attribute) override;
 	bool hasAttr(std::string attribute) override;
 	bool hasStmt(int lineNum) override;
+	std::unordered_set<std::string> getAllAttr() override;
+	std::unordered_set<int> getAllStmt() override;
 };

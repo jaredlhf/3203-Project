@@ -49,6 +49,22 @@ bool PrintAttribute::hasStmt(int lineNum) {
 	}
 }
 
+std::unordered_set<std::string> PrintAttribute::getAllAttr() {
+	std::unordered_set<std::string> attrList;
+	for (const auto& [key, value] : attrStore) {
+		attrList.insert(value);
+	}
+	return attrList;
+}
+
+std::unordered_set<int> PrintAttribute::getAllStmt() {
+	std::unordered_set<int> stmtList;
+	for (const auto& [key, value] : stmtStore) {
+		stmtList.insert(value.begin(), value.end());
+	}
+	return stmtList;
+}
+
 /* Read Attribute*/
 /*---------------------------------------------------------------------------------------------*/
 ReadAttribute::ReadAttribute() : attrStore{}, stmtStore{} {}
@@ -96,6 +112,22 @@ bool ReadAttribute::hasStmt(int lineNum) {
 	}
 }
 
+std::unordered_set<std::string> ReadAttribute::getAllAttr() {
+	std::unordered_set<std::string> attrList;
+	for (const auto& [key, value] : attrStore) {
+		attrList.insert(value);
+	}
+	return attrList;
+}
+
+std::unordered_set<int> ReadAttribute::getAllStmt() {
+	std::unordered_set<int> stmtList;
+	for (const auto& [key, value] : stmtStore) {
+		stmtList.insert(value.begin(), value.end());
+	}
+	return stmtList;
+}
+
 /* Call Attribute*/
 /*---------------------------------------------------------------------------------------------*/
 CallAttribute::CallAttribute() : attrStore{}, stmtStore{} {}
@@ -141,4 +173,20 @@ bool CallAttribute::hasStmt(int lineNum) {
 	else {
 		return false;
 	}
+}
+
+std::unordered_set<std::string> CallAttribute::getAllAttr() {
+	std::unordered_set<std::string> attrList;
+	for (const auto& [key, value] : attrStore) {
+		attrList.insert(value);
+	}
+	return attrList;
+}
+
+std::unordered_set<int> CallAttribute::getAllStmt() {
+	std::unordered_set<int> stmtList;
+	for (const auto& [key, value] : stmtStore) {
+		stmtList.insert(value.begin(), value.end());
+	}
+	return stmtList;
 }
