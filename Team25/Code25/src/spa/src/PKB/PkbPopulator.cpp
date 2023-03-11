@@ -12,7 +12,8 @@
 PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
 	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
-	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore) {
+	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
+	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -28,6 +29,9 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	this->usesStorage = usesStore;
 	this->callsStorage = callsStore;
 	this->callsStarStorage = callsStarStore;
+	this->printAttrStorage = printAttrStore;
+	this->readAttrStorage = readAttrStore;
+	this->callAttrStorage = callAttrStore;
 }
 
 
@@ -95,5 +99,14 @@ void PkbPopulator::addCalls(std::string leftProc, std::string rightProc) {
 	this->callsStorage->addCalls(leftProc, rightProc);
 }
 
+void PkbPopulator::addPrintAttr(std::string varName, int lineNum) {
+	this->printAttrStorage->addAttr(varName, lineNum);
+}
 
- 
+void PkbPopulator::addReadAttr(std::string varName, int lineNum) {
+	this->readAttrStorage->addAttr(varName, lineNum);
+}
+
+void PkbPopulator::addCallAttr(std::string procName, int lineNum) {
+	this->callAttrStorage->addAttr(procName, lineNum);
+}
