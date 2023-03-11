@@ -24,6 +24,9 @@ SCENARIO("Working version of PkbRetriever") {
 		UsesStore uses;
 		CallsStore calls;
 		CallsStarStore cStars;
+		PrintAttribute printA;
+		ReadAttribute readA;
+		CallAttribute callA;
 
 		WHEN("The PkbRetriever references empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -41,8 +44,11 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
 			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
+			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
+			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -128,6 +134,18 @@ SCENARIO("Working version of PkbRetriever") {
 			THEN("Getting all right calls star should return an empty set") {
 				REQUIRE(pkbRet.getAllRightCallStar().size() == 0);
 			}
+			THEN("Getting all print attributes and print statements should return an empty set") {
+				REQUIRE(pkbRet.getAllPrintAttr().size() == 0);
+				REQUIRE(pkbRet.getAllPrintStmt().size() == 0);
+			}
+			THEN("Getting all read attributes and read statements should return an empty set") {
+				REQUIRE(pkbRet.getAllReadAttr().size() == 0);
+				REQUIRE(pkbRet.getAllReadStmt().size() == 0);
+			}
+			THEN("Getting all call attributes and call statements should return an empty set") {
+				REQUIRE(pkbRet.getAllCallAttr().size() == 0);
+				REQUIRE(pkbRet.getAllCallStmt().size() == 0);
+			}
 
 		}
 		WHEN("The PkbRetriever references non-empty stores") {
@@ -146,8 +164,11 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
 			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
+			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
+			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
@@ -172,6 +193,9 @@ SCENARIO("Working version of PkbRetriever") {
 			cStarsPointer->addCallsStar("proc1", "proc2");
 			cStarsPointer->addCallsStar("proc2", "proc3");
 			cStarsPointer->addCallsStar("proc1", "proc3");
+			printAPointer->addAttr("x", 1);
+			readAPointer->addAttr("y", 2);
+			callAPointer->addAttr("sampleProc", 3);
 
 			THEN("Getting a variables hsould return a non empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);
@@ -290,6 +314,24 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getRightCallStar("proc1").size() == 2);
 				REQUIRE(pkbRet.getAllLeftCallStar().size() == 2);
 				REQUIRE(pkbRet.getAllRightCallStar().size() == 2);
+			}
+			THEN("Getting print attribute should return a non empty set") {
+				REQUIRE(pkbRet.getPrintAttr(1).size() == 1);
+				REQUIRE(pkbRet.getPrintStmt("x").size() == 1);
+				REQUIRE(pkbRet.getAllPrintAttr().size() == 1);
+				REQUIRE(pkbRet.getAllPrintStmt().size() == 1);
+			}
+			THEN("Getting read attribute should return a non empty set") {
+				REQUIRE(pkbRet.getReadAttr(2).size() == 1);
+				REQUIRE(pkbRet.getReadStmt("y").size() == 1);
+				REQUIRE(pkbRet.getAllReadAttr().size() == 1);
+				REQUIRE(pkbRet.getAllReadStmt().size() == 1);
+			}
+			THEN("Getting call attribute should return a non empty set") {
+				REQUIRE(pkbRet.getCallAttr(3).size() == 1);
+				REQUIRE(pkbRet.getCallStmt("sampleProc").size() == 1);
+				REQUIRE(pkbRet.getAllCallAttr().size() == 1);
+				REQUIRE(pkbRet.getAllCallStmt().size() == 1);
 			}
 		}
 	}

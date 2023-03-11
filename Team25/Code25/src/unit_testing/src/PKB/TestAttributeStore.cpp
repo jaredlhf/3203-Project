@@ -9,6 +9,15 @@ SCENARIO("Populating attribute stores") {
 		ReadAttribute readA;
 		CallAttribute callA;
 
+		THEN("They should start empty") {
+			REQUIRE(printA.getAllAttr().size() == 0);
+			REQUIRE(readA.getAllAttr().size() == 0);
+			REQUIRE(callA.getAllAttr().size() == 0);
+			REQUIRE(printA.getAllStmt().size() == 0);
+			REQUIRE(readA.getAllStmt().size() == 0);
+			REQUIRE(callA.getAllStmt().size() == 0);
+		}
+
 		WHEN("One value is added to them") {
 			printA.addAttr("x", 1);
 			readA.addAttr("y", 2);

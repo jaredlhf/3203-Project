@@ -21,7 +21,9 @@ SCENARIO("Working version of PkbPopulator") {
 		UsesStore uses;
 		CallsStore calls;
 		CallsStarStore cStars;
-
+		PrintAttribute printA;
+		ReadAttribute readA;
+		CallAttribute callA;
 	
 
 		WHEN("The PkbPopulator references empty stores") {
@@ -40,9 +42,11 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 			std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
 			std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
-		
+			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
+			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
+			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
@@ -142,6 +146,27 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addCallsStar("sampleProc1", "sampleProc2");
 				REQUIRE(cStarsPointer->getAllLeft().size() == 1);
 				REQUIRE(cStarsPointer->getAllRight().size() == 1);
+			}
+			THEN("Adding one print attribute should increase print attribute store size by 1") {
+				REQUIRE(printAPointer->getAllAttr().size() == 0);
+				REQUIRE(printAPointer->getAllStmt().size() == 0);
+				pkbPop.addPrintAttr("x", 1);
+				REQUIRE(printAPointer->getAllAttr().size() == 1);
+				REQUIRE(printAPointer->getAllStmt().size() == 1);
+			}
+			THEN("Adding one read attribute should increase print attribute store size by 1") {
+				REQUIRE(readAPointer->getAllAttr().size() == 0);
+				REQUIRE(readAPointer->getAllStmt().size() == 0);
+				pkbPop.addReadAttr("y", 2);
+				REQUIRE(readAPointer->getAllAttr().size() == 1);
+				REQUIRE(readAPointer->getAllStmt().size() == 1);
+			}
+			THEN("Adding one print attribute should increase print attribute store size by 1") {
+				REQUIRE(callAPointer->getAllAttr().size() == 0);
+				REQUIRE(callAPointer->getAllStmt().size() == 0);
+				pkbPop.addCallAttr("sampleProc", 3);
+				REQUIRE(callAPointer->getAllAttr().size() == 1);
+				REQUIRE(callAPointer->getAllStmt().size() == 1);
 			}
 		}
 	}
