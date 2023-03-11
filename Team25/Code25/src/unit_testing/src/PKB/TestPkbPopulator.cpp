@@ -46,7 +46,9 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");

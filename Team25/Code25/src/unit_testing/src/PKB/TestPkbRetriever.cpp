@@ -48,7 +48,9 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -168,7 +170,9 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
+				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
@@ -328,8 +332,8 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllReadStmt().size() == 1);
 			}
 			THEN("Getting call attribute should return a non empty set") {
-				REQUIRE(pkbRet.getCallAttr(3).size() == 1);
-				REQUIRE(pkbRet.getCallStmt("sampleProc").size() == 1);
+				REQUIRE(pkbRet.getCallAttr(3) == "sampleProc");
+				REQUIRE(pkbRet.getCallStmt("sampleProc") == std::unordered_set<int>({ 3 }));
 				REQUIRE(pkbRet.getAllCallAttr().size() == 1);
 				REQUIRE(pkbRet.getAllCallStmt().size() == 1);
 			}
