@@ -15,6 +15,7 @@ add_executable(unit_testing ${srcs}
 "src/PKB/TestUsesProcStore.cpp" 
 "src/PKB/TestCallsStore.cpp" 
 "src/PKB/TestCallsStarStore.cpp"
+"src/PKB/TestAttributeStore.cpp"
 "src/QPS/TestQPS.cpp"
 "src/QPS/Constants/TestQpsClause.cpp"
 "src/QPS/Constants/TestQpsConstants.cpp"
@@ -44,7 +45,7 @@ add_executable(unit_testing ${srcs}
 "src/SP/TestSourceProcessor.cpp"
 "src/SP/TestStmtParser.cpp"
 "src/SP/TestTNode.cpp"
-"src/SP/TestTokenizer.cpp")
+"src/SP/TestTokenizer.cpp" "src/PKB/TestAttributeStore.cpp")
 
 target_link_libraries(unit_testing spa)
 
