@@ -250,6 +250,13 @@ TEST_CASE("createPostFixNotation String infix expression with multi-char variabl
 	REQUIRE(result == postfix);
 }
 
+TEST_CASE("createPostFixNotation String infix expression with multi-char variables, nested brackets and multiple operators") {
+	std::string infix = "def * (ghi + jkl + (mnop - 64))";
+	std::string postfix = "(def)(ghi)(jkl)+(mnop)(64)-+*";
+	std::string result = StringUtils::createPostFixNotation(infix);
+	REQUIRE(result == postfix);
+}
+
 // Unit Tests for postFixInFullpostFix function
 
 TEST_CASE("postFixInFullpostFix String full same variables and same ops postfix successful expression match") {
@@ -271,8 +278,8 @@ TEST_CASE("postFixInFullpostFix String full postfix same variable, same ops, dif
 }
 
 TEST_CASE("postFixInFullpostFix String full postfix same multi-char variable, same ops postfix successful expression match") {
-	std::string postfix = "(abc)(def)+";
-	std::string fullPostFix = "(abc)(def)+(ghi)+";
+	std::string postfix = "(ghi)(jkl)+";
+	std::string fullPostFix = "(def)(ghi)(jkl)+(mnop)(64)-+*";
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix, fullPostFix) == true);
 }
 
@@ -304,4 +311,4 @@ TEST_CASE("postFixInFullpostFix String partial postfix same variable and same op
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix1, fullPostFix) == false);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix2, fullPostFix) == false);
 	REQUIRE(StringUtils::postFixInFullpostFix(postfix3, fullPostFix) == false);
-} 
+}
