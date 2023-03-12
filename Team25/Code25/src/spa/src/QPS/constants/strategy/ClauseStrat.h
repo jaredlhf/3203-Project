@@ -13,6 +13,7 @@ class CallsStStrat;
 class NextStrat;
 class NextStStrat;
 class PatternStrat;
+class WithStrat;
 
 class ClauseStrat {
 protected:
