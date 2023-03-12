@@ -82,7 +82,13 @@ std::vector<std::shared_ptr<Synonym>> QueryParser::validateSelectSynonyms(std::v
             continue;
         }
         synCount++;
-        std::shared_ptr<Synonym> syn = ParserUtils::getValidDeclaration(tokens[i], declarations);
+        std::shared_ptr<Synonym> syn;
+        if (tokens[i].find(".") != std::string::npos) {
+            syn = ParserUtils::getValidAttrRef(tokens[i], declarations);
+        } else {
+            syn = ParserUtils::getValidDeclaration(tokens[i], declarations);
+        }
+        
         if (ParserUtils::isSyntaxError(syn)) {
             return {};
         }
@@ -196,7 +202,13 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             continue;
         }
         if (hasSeenSelectToken) {
-            std::shared_ptr<Synonym> syn = ParserUtils::getValidDeclaration(tokens[ptr], declarations);
+            std::shared_ptr<Synonym> syn;
+            if (tokens[ptr].find(".") != std::string::npos) {
+                syn = ParserUtils::getValidAttrRef(tokens[ptr], declarations);
+            } else {
+                syn = ParserUtils::getValidDeclaration(tokens[ptr], declarations);
+            }
+             
             bool isSemError = ParserUtils::isSemanticError(syn);
             bool isSynError = ParserUtils::isSyntaxError(syn);
 
@@ -259,8 +271,8 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
 
     bool hasSuch = false;
     bool isSuchThat = false;
-    int andCount = 0;
-    int relCondCount = 0;
+    bool isPattern = false;
+
     while (ptr < tokenLength) {
         // invalid semicolon token after declarations
         if (tokens[ptr] == DECLARATION_END_TOKEN) {
@@ -272,16 +284,29 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         }
 
         if (tokens[ptr] == AND_MARKER) {
-            if (isSuchThat) {
-                andCount++;
-                ptr++;
-                continue;
-            }
-            return generateSyntaxErrorResponse();
+            ptr++;
+            continue;
         }
 
-        // get pattern clause after declarations and select synonym
-        if (tokens[ptr] == PATTERN_MARKER) {
+        if (tokens[ptr] == PATTERN_MARKER && !isPattern) {
+            isPattern = true;
+            continue;
+        }
+
+        if (tokens[ptr] == SUCHTHAT_MARKER[0] && !hasSuch && !isSuchThat) {
+            hasSuch = true;
+            ptr++;
+            continue;
+        }
+
+        if (hasSuch && tokens[ptr] == SUCHTHAT_MARKER[1] && !isSuchThat) {
+            isSuchThat = true;
+            ptr++;
+            hasSuch = false;
+            continue;
+        }
+
+        if (isPattern && !isSuchThat) {
             std::vector<std::string> patternTokens = {};
             while (ptr < tokenLength) {
                 if (tokens[ptr] == Constants::CLOSE_BRACKET) {
@@ -290,6 +315,10 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 }
                 patternTokens.push_back(tokens[ptr]);
                 ptr++;
+            }
+
+            if (ptr + 1 >= tokenLength || tokens[ptr + 1] != AND_MARKER) {
+                isPattern = false;
             }
 
             int tokenSize = patternTokens.size();
@@ -311,27 +340,9 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 hasSemanticError = true;
             }
             patternClauses.push_back(patternPair);
-            isSuchThat = false;
         }
 
-        if (tokens[ptr] == SUCHTHAT_MARKER[0]) {
-            hasSuch = true;
-            ptr++;
-            continue;
-        }
-
-        if (hasSuch && tokens[ptr] == SUCHTHAT_MARKER[1]) {
-            isSuchThat = true;
-            ptr++;
-            hasSuch = false;
-            continue;
-        }
-
-        if (isSuchThat || andCount > 0) {
-            relCondCount++;
-            if (relCondCount <= andCount) {
-                return generateSyntaxErrorResponse();
-            }
+        if (isSuchThat && !isPattern) {
             std::vector<std::string> suchThatTokens;
             while (ptr < tokenLength) {
                 if (tokens[ptr] == Constants::CLOSE_BRACKET) {
@@ -340,6 +351,10 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
                 }
                 suchThatTokens.push_back(tokens[ptr]);
                 ptr++;
+            }
+
+            if (ptr + 1 >= tokenLength || tokens[ptr + 1] != AND_MARKER) {
+                isSuchThat = false;
             }
 
             std::vector<std::string> suchThatArgs = validateSuchThatClause(suchThatTokens);
@@ -370,21 +385,14 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
             suchThatClauses.push_back(Clause::create(relationshipValidator->getKeyword(), firstRef, secondRef));
         }
 
-
         ptr++;    
     }
     if (hasSemanticError) {
         return generateSemanticErrorResponse();
     }
 
-    if (isSuchThat && suchThatClauses.empty()) {
+    if (isSuchThat || isPattern) {
         return generateSyntaxErrorResponse();
-    }
-
-    if (andCount >= relCondCount) {
-        if (andCount != 0 && relCondCount != 0) {
-            return generateSyntaxErrorResponse();
-        }
     }
     
     responseObject.setDeclarations(declarations);

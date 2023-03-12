@@ -43,7 +43,7 @@ std::string Synonym::getKeyword() {
 }
 
 bool Synonym::compare(std::shared_ptr<Synonym> other) {
-    return this->name == other->name && this->keyword == other->keyword;
+    return this->name == other->name && this->keyword == other->keyword && this->attrName == other->attrName;
 }
 
 std::unordered_set<std::string> Synonym::getMatches() {

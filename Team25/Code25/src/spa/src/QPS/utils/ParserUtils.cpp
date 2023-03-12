@@ -1,5 +1,4 @@
 #include "ParserUtils.h"
-#include "../../SP/ExpressionParser.h"
 
 // BUG: does not work with unordered_set.find()
 //std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
@@ -123,6 +122,36 @@ std::shared_ptr<Synonym> ParserUtils::getValidDeclaration(const std::string& s, 
     return Synonym::create(Constants::SEMANTIC_ERROR, "");
 }
 
+std::shared_ptr<Synonym> ParserUtils::getValidAttrRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    // split string by fullstop
+    std::vector<std::string> tokens = {};
+    int start = 0;
+    int end = s.find(".");
+    std::string token = "";
+    while (end != std::string::npos) {
+        token = s.substr(start, end - start);
+        tokens.push_back(token);
+        start = end + 1;
+        end = s.find(".", start);
+    }
+    tokens.push_back(s.substr(start, end));
+
+    if (tokens.size() != 2) {
+        return Synonym::create(Constants::SYNTAX_ERROR, "");
+    }
+
+    std::shared_ptr<Synonym> synonym = getValidDeclaration(tokens[0], declarations);
+    if (isSyntaxError(synonym) || isSemanticError(synonym)) {
+        return synonym;
+    }
+    std::string attrName = tokens[1];
+    if (!AttrUtils::hasValidAttr(synonym, attrName)) {
+        return Synonym::create(Constants::SYNTAX_ERROR, "");
+    }
+    return Synonym::create(synonym->getKeyword(), synonym->getName(), attrName);
+}
+
+
 bool ParserUtils::isValidExpression(const std::string& s) {
     int length = s.size();
     if (length == 1) {
@@ -203,3 +232,4 @@ bool ParserUtils::isExpectedSynonym(std::shared_ptr<Entity> e, const std::string
 
     return false;
 }
+
