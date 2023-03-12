@@ -26,14 +26,14 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::createR
     return QpsTable::getDefaultSynErr();
 }
 
-// Case: Next(_, _)
+// Case: not done Next(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::wildcardWildcard() {
     return pkbRet->getAllFollowees().size() > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
 
-// Case: Next(_, 2)
+// Case: not done Next(_, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::wildcardConst() {
     std::unordered_set<int> stmts = pkbRet->getAllFollowers();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
@@ -42,7 +42,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::wildcar
         : QpsTable::getDefaultNoMatch();
 }
 
-// Case: Next(_, s2)
+// Case: not done Next(_, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::wildcardSyn() {
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
     std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
@@ -60,7 +60,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::wildcar
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: Next(1, _)
+// Case: not done Next(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constWildcard() {
     std::unordered_set<int> stmts = pkbRet->getAllFollowees();
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
@@ -69,7 +69,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constWi
         : QpsTable::getDefaultNoMatch();
 }
 
-// Case: Next(1, 2)
+// Case: not done Next(1, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constConst() {
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
@@ -80,7 +80,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constCo
     return QpsTable::getDefaultNoMatch();
 }
 
-// Case: Next(1, s2)
+// Case: not done Next(1, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constSyn() {
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
@@ -99,7 +99,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::constSy
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: Next(s1, _)
+// Case: not done Next(s1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::synWildcard() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
     std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
@@ -117,7 +117,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::synWild
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: Next(s1, 2)
+// Case: not done Next(s1, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::synConst() {
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
@@ -136,7 +136,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::synCons
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: Next(s1, s2)
+// Case: not done Next(s1, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStrat::synSyn() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
     std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)

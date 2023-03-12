@@ -14,7 +14,9 @@ std::vector<std::string> QueryEvaluator::getResultNames() {
 	std::vector<std::string> res;
 
 	for (std::shared_ptr<Synonym> syn : this->resultSynonyms) {
-		res.push_back(syn->getName());
+		res.push_back(syn->hasAttrName()
+			? syn->getNameWithAttr()
+			:syn->getName());
 	}
 
 	return res;
@@ -26,7 +28,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::re
 	std::vector<std::shared_ptr<Synonym>> resultSynonyms, std::shared_ptr<PkbRetriever> pkbRet) {
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> selectResults;
 	for (std::shared_ptr<Synonym> resSyn : resultSynonyms) {
-		selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
+		if (resSyn->hasAttrName()) {
+			selectResults.push_back(resSyn->resolveAttrResult(pkbRet));
+		}
+		else {
+			selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
+		}
 	}
 
 	return resolveClauses(selectResults);

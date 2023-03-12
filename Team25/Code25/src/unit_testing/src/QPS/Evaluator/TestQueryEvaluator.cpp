@@ -607,6 +607,32 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates a parentSt clause with attrname in select, it returns the right result") {
+				list<string> expected = { "2", "4" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1", Constants::STMTNUM) });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a parentSt clause with attrname and matching syn in select, it returns the right result") {
+				list<string> expected = { "2 2", "4 4" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1", Constants::STMTNUM), Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 	}
 }
