@@ -49,6 +49,21 @@ bool ParserUtils::isValidNaming(const std::string& s) {
     return true;
 }
 
+std::shared_ptr<Entity> ParserUtils::getValidWithRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    if (s.find('"') != std::string::npos) {
+        std::string cleanedString = removeQuotations(s);
+        if (isValidNaming(cleanedString)) {
+            return Value::create(cleanedString);
+        }
+    }
+
+    if (isValidIntegerString(s)) {
+        return Value::create(s);
+    }
+
+    return getValidAttrRef(s, declarations);
+}
+
 std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
     if (s == Constants::WILDCARD) {
         return Wildcard::create();
@@ -146,7 +161,7 @@ std::shared_ptr<Synonym> ParserUtils::getValidAttrRef(const std::string& s, cons
     }
     std::string attrName = tokens[1];
     if (!AttrUtils::hasValidAttr(synonym, attrName)) {
-        return Synonym::create(Constants::SYNTAX_ERROR, "");
+        return Synonym::create(Constants::SEMANTIC_ERROR, "");
     }
     return Synonym::create(synonym->getKeyword(), synonym->getName(), attrName);
 }

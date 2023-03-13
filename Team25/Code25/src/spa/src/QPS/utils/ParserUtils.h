@@ -27,5 +27,6 @@ class ParserUtils {
         static std::shared_ptr<Entity> getValidProcRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
         static std::shared_ptr<Entity> getValidStmtRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
         static std::shared_ptr<Synonym> getValidAttrRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
+        static std::shared_ptr<Entity> getValidWithRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
         static std::shared_ptr<Synonym> getValidDeclaration(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations);
 };

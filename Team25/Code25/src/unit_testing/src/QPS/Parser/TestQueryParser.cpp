@@ -68,6 +68,30 @@ TEST_CASE("Parse correct query with two synonyms in one declaration and select s
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse correct query with two synonyms in one declaration and select statement with two variables with attributes") {
+
+    std::vector<std::string> queryTokens = {"procedure", "v", ";", "variable", "x", ";", "Select", "<", "v.procName", ",", "x.varName", ">"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::PROCEDURE, "v"), Synonym::create(Constants::VARIABLE, "x")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::PROCEDURE, "v", Constants::PROCNAME), Synonym::create(Constants::VARIABLE, "x", Constants::VARNAME)});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with two synonyms in one declaration and select statement with two variables, one with no attribute") {
+
+    std::vector<std::string> queryTokens = {"procedure", "v", ";", "variable", "x", ";", "Select", "<", "v.procName", ",", "x", ">"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::PROCEDURE, "v"), Synonym::create(Constants::VARIABLE, "x")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::PROCEDURE, "v", Constants::PROCNAME), Synonym::create(Constants::VARIABLE, "x")});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse correct query with two synonyms in one declaration and select statement with boolean") {
 
     std::vector<std::string> queryTokens = {"variable", "v", ",", "x", ";", "Select", "BOOLEAN"};
@@ -83,6 +107,17 @@ TEST_CASE("Parse correct query with two synonyms in one declaration and select s
 TEST_CASE("Parse query with two synonyms in one declaration and select statement with one undeclared variable and one valid variable") {
 
     std::vector<std::string> queryTokens = {"variable", "v", ",", "x", ";", "Select", "<", "z", ",", "x", ">"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SEMANTIC_ERROR, "")});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse query with one synonym and one incorrectly assigned attribute name") {
+
+    std::vector<std::string> queryTokens = {"variable", "v", ";", "Select", "v.procName"};
     ParserResponse expectedResObject;
     expectedResObject.setSelectSynonyms({Synonym::create(Constants::SEMANTIC_ERROR, "")});
 
@@ -199,7 +234,7 @@ TEST_CASE("Parse correct query with while pattern and valid entref") {
 }
 
 TEST_CASE("Parse correct query with multiple while patterns") {
-    std::vector<std::string> queryTokens = {"while", "w", ";", "Select", "w", "pattern", "w", "(", "\"count\"", ",", "_", ")", "and", "pattern", "w", "(", "\"count\"", ",", "_", ")"};
+    std::vector<std::string> queryTokens = {"while", "w", ";", "Select", "w", "pattern", "w", "(", "\"count\"", ",", "_", ")", "and", "w", "(", "\"count\"", ",", "_", ")"};
     ParserResponse expectedResObject;
     expectedResObject.setDeclarations({Synonym::create(Constants::WHILE, "w")});
     expectedResObject.setSelectSynonyms({Synonym::create(Constants::WHILE, "w")});
@@ -707,6 +742,60 @@ TEST_CASE("Parse correct complex query with keywords as variables") {
             {Clause::create(Constants::MODIFIES, Value::create("1"), Synonym::create(Constants::VARIABLE, "Select"))});
     PatternClausePair pair = make_pair(Synonym::create(Constants::ASSIGN, "pattern"), Clause::create(Constants::PATTERN, Value::create("x"), Wildcard::create("count")));
     expectedResObject.setPatternClauses({pair});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with two such that queries and two pattern queries") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "such", "that", "Follows", "(", "a1", ",", "s2", ")", "and",
+                                            "Modifies", "(", "a1", ",", "_", ")", "pattern", "a1", "(", "_", ",", "_", ")", "and", "a1", "(", "_", ",", "_", ")"};
+    ParserResponse expectedResObject;
+    std::shared_ptr<Synonym> a1 = Synonym::create(Constants::ASSIGN, "a1");
+    expectedResObject.setDeclarations({a1, Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({a1});
+    expectedResObject.setSuchThatClauses({
+        Clause::create(Constants::FOLLOWS, a1, Synonym::create(Constants::STMT, "s2")),
+        Clause::create(Constants::MODIFIES, a1, Wildcard::create())});
+    expectedResObject.setPatternClauses({
+        make_pair(a1, Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create())),
+        make_pair(a1, Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create()))
+    });
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse correct query with two such that queries and two pattern queries and two with queries") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", 
+                                            "such", "that", "Follows", "(", "a1", ",", "s2", ")", "and", "Modifies", "(", "a1", ",", "_", ")", 
+                                            "with", "a1.stmt#", "=", "s2.stmt#", "and", "\"s2\"", "=", "a1.stmt#",
+                                            "pattern", "a1", "(", "_", ",", "_", ")", "and", "a1", "(", "_", ",", "_", ")"};
+    ParserResponse expectedResObject;
+    std::shared_ptr<Synonym> a1 = Synonym::create(Constants::ASSIGN, "a1");
+    expectedResObject.setDeclarations({a1, Synonym::create(Constants::STMT, "s2")});
+    expectedResObject.setSelectSynonyms({a1});
+    expectedResObject.setSuchThatClauses({
+        Clause::create(Constants::FOLLOWS, a1, Synonym::create(Constants::STMT, "s2")),
+        Clause::create(Constants::MODIFIES, a1, Wildcard::create())});
+    expectedResObject.setPatternClauses({
+        make_pair(a1, Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create())),
+        make_pair(a1, Clause::create(Constants::PATTERN, Wildcard::create(), Wildcard::create()))
+    });
+    expectedResObject.setWithClauses({
+        Clause::create(Constants::WITH, Synonym::create(Constants::ASSIGN, "a1", Constants::STMTNUM), Synonym::create(Constants::STMT, "s2", Constants::STMTNUM)),
+        Clause::create(Constants::WITH, Value::create("s2"), Synonym::create(Constants::ASSIGN, "a1", Constants::STMTNUM))
+    });
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("Parse invalid query with one such that query and two pattern queries") {
+    std::vector<std::string> queryTokens = {"assign", "a1", ";", "stmt", "s2", ";", "Select", "a1", "such", "that", "Follows", "(", "a1", ",", "s2", ")", "and",
+                                            "pattern", "a1", "(", "_", ",", "_", ")", "and", "a1", "(", "_", ",", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SYNTAX_ERROR, "")});
     ParserResponse resObj = qp.parseQueryTokens(queryTokens);
 
     REQUIRE(expectedResObject.compare(resObj) == true);

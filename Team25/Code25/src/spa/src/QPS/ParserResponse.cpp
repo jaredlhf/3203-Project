@@ -20,6 +20,11 @@ void ParserResponse::setSuchThatClauses(std::vector<std::shared_ptr<Clause>> suc
     return;
 }
 
+void ParserResponse::setWithClauses(std::vector<std::shared_ptr<Clause>> withClauses) {
+    this->withClauses = withClauses;
+    return;
+}
+
 std::vector<std::shared_ptr<Synonym>> ParserResponse::getDeclarations() {
     return this->declarations;
 }
@@ -30,6 +35,10 @@ std::vector<std::shared_ptr<Synonym>> ParserResponse::getSelectSynonyms() {
 
 std::vector<std::shared_ptr<Clause>> ParserResponse::getSuchThatClauses() {
     return this->suchThatClauses;
+}
+
+std::vector<std::shared_ptr<Clause>> ParserResponse::getWithClauses() {
+    return this->withClauses;
 }
 
 std::vector<PatternClausePair> ParserResponse::getPatternClauses() {
@@ -87,6 +96,7 @@ bool ParserResponse::compare(ParserResponse other) {
         }
     }
 
+    // compare such thats
     if (!other.getSuchThatClauses().empty() && !this->suchThatClauses.empty()) {
         std::vector<std::shared_ptr<Clause>> otherSuchThatClauses = other.getSuchThatClauses();
 
@@ -97,6 +107,22 @@ bool ParserResponse::compare(ParserResponse other) {
         for (int i = 0; i < otherSuchThatClauses.size(); i++) {
             std::shared_ptr<Clause> c = this->suchThatClauses[i];
             if (!otherSuchThatClauses[i]->compare(c)) {
+                return false;
+            }
+        }
+    }
+
+    // compare with clauses
+    if (!other.getWithClauses().empty() && !this->getWithClauses().empty()) {
+        std::vector<std::shared_ptr<Clause>> otherWithClauses = other.getWithClauses();
+
+        if (otherWithClauses.size() != this->withClauses.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < otherWithClauses.size(); i++) {
+            std::shared_ptr<Clause> c = this->withClauses[i];
+            if (!otherWithClauses[i]->compare(c)) {
                 return false;
             }
         }
