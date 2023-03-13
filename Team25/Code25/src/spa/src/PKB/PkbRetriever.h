@@ -52,6 +52,8 @@ public:
 	/*Pattern Store*/
 	std::unordered_set<int> getAssignLhs(std::string leftVar); 
 	std::string getAssignRhs(int stmtNo);
+	std::unordered_set<std::string> getIfVars(int stmtNo);
+	std::unordered_set<int> getIfStatements(std::string var);
 	/*FollowsStar Store*/
 	std::unordered_set<int> getFolloweeStar(int rightLineNum);
 	std::unordered_set<int> getFollowerStar(int leftLineNum);

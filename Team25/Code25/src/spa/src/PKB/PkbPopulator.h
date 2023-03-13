@@ -56,5 +56,7 @@ public:
 	void addUses(int lineNum, std::string varName);
 	void addCallsStar(std::string leftProc, std::string rightProc);
 	void addCalls(std::string leftProc, std::string rightProc);
+	void addIfStatement(std::string var, int stmtNo);
+	void addIfStatementVar(int stmtNo, std::string varName);
 	
 };

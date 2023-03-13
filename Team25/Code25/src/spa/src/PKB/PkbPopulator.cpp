@@ -95,5 +95,13 @@ void PkbPopulator::addCalls(std::string leftProc, std::string rightProc) {
 	this->callsStorage->addCalls(leftProc, rightProc);
 }
 
+void PkbPopulator::addIfStatement(std::string var, int stmtNo) {
+	this->patternStorage->addIfStatement(var, stmtNo);
+}
+
+void PkbPopulator::addIfStatementVar(int stmtNo, std::string varName) {
+	this->patternStorage->addIfStatementVar(stmtNo, varName);
+}
+
 
  
