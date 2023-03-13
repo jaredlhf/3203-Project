@@ -4,6 +4,14 @@ CFGNode::CFGNode() : lineNo_(std::vector<int>()){}
 
 CFGNode::CFGNode(std::vector<int> lineNo) : lineNo_(lineNo){}
 
+void CFGNode::setNextNodeRecursive(std::shared_ptr<CFGNode> next) {
+    if (next_ == nullptr || next_->getLineNo().size() == 0) {
+        next_ = next;
+    } else {
+        next_->setNextNodeRecursive(next);
+    }
+}
+
 void CFGNode::setNextNode(std::shared_ptr<CFGNode> next) {
     next_ = next;
 }
@@ -39,6 +47,10 @@ void CFGIfNode::setNextNode(std::shared_ptr<CFGNode> next) {
     nextElse_->setNextNode(next);
 }
 
+void CFGIfNode::setNextNodeRecursive(std::shared_ptr<CFGNode> next) {
+    nextThen_->setNextNodeRecursive(next);
+    nextElse_->setNextNodeRecursive(next);
+}
 void CFGIfNode::setThenNode(std::shared_ptr<CFGNode> next) {
     nextThen_ = next;
 };
@@ -55,6 +67,18 @@ CFGWhileNode::CFGWhileNode(int lineNo) {
 void CFGWhileNode::setLoopNode(std::shared_ptr<CFGNode> next) {
     nextLoop_ = next;
 }
+void CFGWhileNode::setNextNode(std::shared_ptr<CFGNode> next) {
+    next_ = next;
+}
+
+void CFGWhileNode::setNextNodeRecursive(std::shared_ptr<CFGNode> next) {
+    if (next_ == nullptr || next_->getLineNo().size() == 0) {
+        next_ = next;
+    } else {
+        next_->setNextNodeRecursive(next);
+    }
+}
+
 
 std::vector<std::shared_ptr<CFGNode>> CFGWhileNode::getAllNextNodes() {
     std::vector<std::shared_ptr<CFGNode>> nextNodes = std::vector<std::shared_ptr<CFGNode>>();

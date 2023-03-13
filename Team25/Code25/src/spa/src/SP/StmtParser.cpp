@@ -1,19 +1,20 @@
 #include "StmtParser.h"
+#include "SPConstants.h"
 
 std::regex value("(\\w+)");
 
 std::shared_ptr<StmtParser> StmtParser::createStmtParser(std::string firstToken, std::string secondToken) {
-    if (Token::isValidName(firstToken) && secondToken == "=") {
+    if (Token::isValidName(firstToken) && secondToken == SPConstants::EQUAL_TOKEN) {
         return std::make_shared<AssignParser>();
-    } else if (firstToken == "read") {
+    } else if (firstToken == SPConstants::READ_TYPE) {
         return std::make_shared<ReadParser>();
-    } else if (firstToken == "print") {
+    } else if (firstToken == SPConstants::PRINT_TYPE) {
         return std::make_shared<PrintParser>();
-    } else if (firstToken == "call") {
+    } else if (firstToken == SPConstants::CALL_TYPE) {
         return std::make_shared<CallParser>();
-    } else if (firstToken == "while") {
+    } else if (firstToken == SPConstants::WHILE_TYPE) {
         return std::make_shared<WhileParser>();
-    } else if (firstToken == "if") {
+    } else if (firstToken == SPConstants::IF_TYPE) {
         return std::make_shared<IfParser>();
     } else {
         throw std::invalid_argument("Not a statement keyword or valid name");
@@ -27,46 +28,41 @@ std::shared_ptr<ParserDTO> StmtParser::parseStmt(std::string firstToken, std::st
     return resultDTO;
 }
 
+
 std::shared_ptr<ParserDTO> StmtParser::parseStmtLst(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
     std::vector<std::shared_ptr<StmtNode>> StmtLsts;
-    std::shared_ptr<CFGNode> head = std::make_shared<CFGNode>();
-    std::shared_ptr<CFGNode> cfgNode = head;
-    //std::shared_ptr<CFGNode> prevCfgNode = nullptr;
+    std::shared_ptr<CFGNode> cfgNode = std::make_shared<CFGNode>();
+    std::shared_ptr<CFGNode> head = cfgNode;
+    std::shared_ptr<CFGNode> prevCfgNode = nullptr;
+
 
     do {
         std::shared_ptr<ParserDTO> stmtDTO = parseStmt(tokenizer->peek(), tokenizer->peekTwice(), utils, tokenizer, proc);
         StmtLsts.push_back(std::dynamic_pointer_cast<StmtNode>(stmtDTO->getNode()));
 
-        // if/while statements
-//        if (stmtDTO->getCFGNode() != nullptr) {
-//            std::shared_ptr<CFGNode> nextCfgNode = stmtDTO->getCFGNode();
-//            if (cfgNode->getLineNo().empty()) {
-//                prevCfgNode->setNextNode(nextCfgNode);
-//            } else {
-//                cfgNode->setNextNode(nextCfgNode);
-//            }
-//            std::shared_ptr<CFGNode> newCfgNode = std::make_shared<CFGNode>();
-//            nextCfgNode->setNextNode(newCfgNode);
-//
-//            cfgNode = newCfgNode;
-//            prevCfgNode = nextCfgNode;
-//        } else { //other statement types
-//            int nextLineNo = stmtDTO->getLine();
-//            cfgNode->addLineNo(nextLineNo);
-//        }
+        //if/while statements
         if (stmtDTO->getCFGNode() != nullptr) {
-            std::shared_ptr<CFGNode> nextCfgNode = stmtDTO->getCFGNode();
-            cfgNode->setNextNode(nextCfgNode);
-
+            auto nextCfgNode = stmtDTO->getCFGNode();
+            if (cfgNode->getLineNo().size() == 0) {
+                if (prevCfgNode == nullptr) {
+                    head = nextCfgNode;
+                } else {
+                    prevCfgNode->setNextNodeRecursive(nextCfgNode);
+                }
+            } else {
+                cfgNode->setNextNodeRecursive(nextCfgNode);
+            }
             std::shared_ptr<CFGNode> newCfgNode = std::make_shared<CFGNode>();
-            nextCfgNode->setNextNode(newCfgNode);
+            nextCfgNode->setNextNodeRecursive(newCfgNode);
 
             cfgNode = newCfgNode;
-            //prevCfgNode = nextCfgNode;
+            prevCfgNode = nextCfgNode;
         } else { //other statement types
             int nextLineNo = stmtDTO->getLine();
             cfgNode->addLineNo(nextLineNo);
         }
+
+
     } while(!RightBrace().isEqual(tokenizer->peek()));
     StmtLstNode node = StmtLstNode(StmtLsts, proc);
 
@@ -136,8 +132,8 @@ std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> uti
 
     std::shared_ptr<CFGWhileNode> cfgNode = std::make_shared<CFGWhileNode>(lineNo);
     std::shared_ptr<CFGNode> loopCfgNode = stmtLstDTO->getCFGNode();
+    loopCfgNode->setNextNodeRecursive(cfgNode);
     cfgNode->setLoopNode(loopCfgNode);
-    loopCfgNode->setNextNode(cfgNode);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<WhileNode>(node), cfgNode);
     return std::make_shared<ParserDTO>(resultDTO);
