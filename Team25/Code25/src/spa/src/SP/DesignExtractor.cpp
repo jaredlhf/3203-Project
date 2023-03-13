@@ -539,6 +539,7 @@ void CallsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 }
 
 
+
 void PatternExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     if (isAssignNode(n)) {
         std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
@@ -561,6 +562,7 @@ void PatternExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     pkbPopulator->addAssignLhs(a->getVar(), lineNo);
     pkbPopulator->addAssignRhs(lineNo, a->getExpr());
 }
+
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());

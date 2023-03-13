@@ -19,6 +19,9 @@ SCENARIO("Integration testing between SP and PKB") {
         UsesStore uses;
         CallsStore calls;
         CallsStarStore cstars;
+        PrintAttribute prAtt;
+        ReadAttribute readAtt;
+        CallAttribute callAtt;
 
         std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
         std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -35,9 +38,12 @@ SCENARIO("Integration testing between SP and PKB") {
         std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
         std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
         std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
+        std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
+        std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
+        std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 
 
-        PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
+        PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage);
 		WHEN("Given a SIMPLE program") {
 			std::string fileLocation = "sample_source.txt";
 
