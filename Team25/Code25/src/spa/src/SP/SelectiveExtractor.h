@@ -33,7 +33,7 @@ private:
     std::shared_ptr<CallsExtractor> callsExtractor;
     std::shared_ptr<CallsStarExtractor> callsStarExtractor;
     std::shared_ptr<PatternExtractor> patternExtractor;
+    std::shared_ptr<AttributeExtractor> attrExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
-
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H
