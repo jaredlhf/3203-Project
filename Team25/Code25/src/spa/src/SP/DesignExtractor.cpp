@@ -448,7 +448,7 @@ void CallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 
 void CallsStarExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     if (isCallNode(n)) {
-        std::shared_ptr<AssignNode> v = std::dynamic_pointer_cast<AssignNode>(n);
+        std::shared_ptr<CallNode> v = std::dynamic_pointer_cast<CallNode>(n);
         CallsStarExtractor::visit(v, lineNo);
     } else if (isIfNode(n)) {
         std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
@@ -561,6 +561,44 @@ void PatternExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     }
     pkbPopulator->addAssignLhs(a->getVar(), lineNo);
     pkbPopulator->addAssignRhs(lineNo, a->getExpr());
+}
+
+void AttributeExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isCallNode(n)) {
+        std::shared_ptr<CallNode> v = std::dynamic_pointer_cast<CallNode>(n);
+        AttributeExtractor::visit(v, lineNo);
+    } else if (isReadNode(n)) {
+        std::shared_ptr<ReadNode> r = std::dynamic_pointer_cast<ReadNode>(n);
+        AttributeExtractor::visit(r, lineNo);
+    } else if (isPrintNode(n)) {
+        std::shared_ptr<PrintNode> p = std::dynamic_pointer_cast<PrintNode>(n);
+        AttributeExtractor::visit(p, lineNo);
+    }
+}
+
+void AttributeExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = c->getLine();
+    }
+    pkbPopulator->addCallAttr(c->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<PrintNode> p, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = p->getLine();
+    }
+    pkbPopulator->addPrintAttr(p->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = r->getLine();
+    }
+    pkbPopulator->addReadAttr(r->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<ProcedureNode> p, int lineNo) {
+    pkbPopulator->addProc(p->getProc());
 }
 
 
