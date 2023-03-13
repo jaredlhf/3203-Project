@@ -241,3 +241,234 @@ TEST_CASE("isBooleanSyn function returns the right result for the type of Synony
 	REQUIRE(Synonym::create(Constants::SYNTAX_ERROR, "x")->isBooleanSyn() == false);
 	REQUIRE(Synonym::create(Constants::SEMANTIC_ERROR, "x")->isBooleanSyn() == false);
 }
+
+
+// Test case for resolveAttrResult
+SCENARIO("Mocking behavior of QPS for resolveAttrResult") {
+	GIVEN("An instance of the PKB retriever class") {
+		VariableStore vs;
+		ConstantStore cs;
+		FollowsStore fs;
+		ProcedureStore ps;
+		StatementStore ss;
+		PatternStore patts;
+		FollowsStarStore fstars;
+		ModifiesProcStore mprocs;
+		ModifiesStore ms;
+		ParentStarStore pStars;
+		ParentStore parents;
+		UsesProcStore uprocs;
+		UsesStore uses;
+		CallsStore calls;
+		CallsStarStore cStars;
+        PrintAttribute prAtt;
+        ReadAttribute readAtt;
+        CallAttribute callAtt;
+
+		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
+		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
+		std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);
+		std::shared_ptr<ProcedureStore> psPointer = std::make_shared<ProcedureStore>(ps);
+		std::shared_ptr<StatementStore> ssPointer = std::make_shared<StatementStore>(ss);
+		std::shared_ptr<PatternStore> pattsPointer = std::make_shared<PatternStore>(patts);
+		std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
+		std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
+		std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
+		std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+		std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
+		std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
+		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
+		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
+		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+        std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
+        std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
+        std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
+
+		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
+			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer,
+                                  printAttrStorage, readAttrStorage, callAttrStorage);
+		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
+
+		WHEN("Populated with the attrname information") {
+			// Mock variables appearing in the SIMPLE program
+			vsPointer->addVar("w");
+			vsPointer->addVar("x");
+			vsPointer->addVar("y");
+			vsPointer->addVar("z");
+
+			// Mock constants appearing in the SIMPLE program
+			csPointer->addConst(123);
+			csPointer->addConst(456);
+			csPointer->addConst(789);
+
+			// Mock procedures appearing in the SIMPLE program
+			psPointer->addProc("main");
+			psPointer->addProc("factorial");
+			psPointer->addProc("beta");
+
+			// Mock statements appearing in the SIMPLE program
+			ssPointer->addStmt(Constants::ASSIGN, 1);
+			ssPointer->addStmt(Constants::WHILE, 2);
+			ssPointer->addStmt(Constants::ASSIGN, 3);
+			ssPointer->addStmt(Constants::IF, 4);
+			ssPointer->addStmt(Constants::READ, 5);
+			ssPointer->addStmt(Constants::PRINT, 6);
+			ssPointer->addStmt(Constants::ASSIGN, 7);
+			ssPointer->addStmt(Constants::WHILE, 8);
+			ssPointer->addStmt(Constants::ASSIGN, 9);
+			ssPointer->addStmt(Constants::CALL, 10);
+			ssPointer->addStmt(Constants::IF, 11);
+			ssPointer->addStmt(Constants::READ, 12);
+			ssPointer->addStmt(Constants::PRINT, 13);
+			ssPointer->addStmt(Constants::CALL, 14);
+
+			THEN("When evaluating stmt.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "1", "1" });
+				expectedTable->addRow({ "2", "2" });
+				expectedTable->addRow({ "3", "3" });
+				expectedTable->addRow({ "4", "4" });
+				expectedTable->addRow({ "5", "5" });
+				expectedTable->addRow({ "6", "6" });
+				expectedTable->addRow({ "7", "7" });
+				expectedTable->addRow({ "8", "8" });
+				expectedTable->addRow({ "9", "9" });
+				expectedTable->addRow({ "10", "10" });
+				expectedTable->addRow({ "11", "11" });
+				expectedTable->addRow({ "12", "12" });
+				expectedTable->addRow({ "13", "13" });
+				expectedTable->addRow({ "14", "14" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::STMT, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating asg.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#"} );
+				expectedTable->addRow({ "1", "1" });
+				expectedTable->addRow({ "3", "3" });
+				expectedTable->addRow({ "7", "7" });
+				expectedTable->addRow({ "9", "9" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::ASSIGN, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating if.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "11", "11" });
+				expectedTable->addRow({ "4", "4" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::IF, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating while.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "2", "2" });
+				expectedTable->addRow({ "8", "8" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::WHILE, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating read.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "12", "12" });
+				expectedTable->addRow({ "5", "5" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::READ, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating print.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "13", "13" });
+				expectedTable->addRow({ "6", "6" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::PRINT, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating call.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "14", "14" });
+				expectedTable->addRow({ "10", "10" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::CALL, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating proc.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "main", "main" });
+				expectedTable->addRow({ "factorial", "factorial" });
+				expectedTable->addRow({ "beta", "beta" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::PROCEDURE, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating var.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "w", "w" });
+				expectedTable->addRow({ "x", "x" });
+				expectedTable->addRow({ "y", "y" });
+				expectedTable->addRow({ "z", "z" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::VARIABLE, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When evaluating const.stmt#") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "s1", "s1.stmt#" });
+				expectedTable->addRow({ "123", "123" });
+				expectedTable->addRow({ "456", "456" });
+				expectedTable->addRow({ "789", "789" });
+
+				std::shared_ptr<Synonym> syn = Synonym::create(Constants::CONSTANT, "s1", Constants::STMTNUM);
+
+				REQUIRE(syn->resolveAttrResult(pkbRet).first == expectedStatus);
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(syn->resolveAttrResult(pkbRet).second->getData() == expectedTable->getData());
+			}
+		}
+	}
+}
