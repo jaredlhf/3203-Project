@@ -581,6 +581,7 @@ void CallsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 }
 
 
+
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());
 }

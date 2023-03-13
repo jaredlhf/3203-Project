@@ -261,6 +261,9 @@ SCENARIO("Mocking behavior of QPS for resolveAttrResult") {
 		UsesStore uses;
 		CallsStore calls;
 		CallsStarStore cStars;
+        PrintAttribute prAtt;
+        ReadAttribute readAtt;
+        CallAttribute callAtt;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -277,9 +280,13 @@ SCENARIO("Mocking behavior of QPS for resolveAttrResult") {
 		std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
 		std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
 		std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+        std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
+        std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
+        std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
-			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer,
+                                  printAttrStorage, readAttrStorage, callAttrStorage);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("Populated with the attrname information") {
