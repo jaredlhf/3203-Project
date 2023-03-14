@@ -2,6 +2,7 @@
 #define SPA_SELECTIVEEXTRACTOR_H
 
 #include <stack>
+#include <memory>
 
 #include "DesignExtractor.h"
 #include "TNode.h"

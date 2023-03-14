@@ -1,3 +1,4 @@
+#include <memory>
 #include "CFGNode.h"
 
 CFGNode::CFGNode() : lineNo_(std::vector<int>()){}
