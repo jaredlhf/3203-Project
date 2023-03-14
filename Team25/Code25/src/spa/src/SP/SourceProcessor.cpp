@@ -25,9 +25,12 @@ void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPo
 
     for (auto programDTO : programDTOs) {
         std::shared_ptr<ProcedureNode> root = std::dynamic_pointer_cast<ProcedureNode>(programDTO->getNode());
-        pkbPopulator->addProc(root->getProc());
+
+        std::shared_ptr<CFGNode> cfgRoot = programDTO->getCFGNode();
+//        pkbPopulator->addProc(root->getProc());
 
         selectiveExtractor->visitProgramTree(root);
+        selectiveExtractor->visitCFG(cfgRoot);
     }
 
 }

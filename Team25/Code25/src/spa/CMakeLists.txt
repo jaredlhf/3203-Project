@@ -2,6 +2,8 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers} 
 "src/PKB/AbstractionStore.h"
+"src/PKB/AttributeStore.h"
+"src/PKB/AttributeStore.cpp"
 "src/PKB/CallsStore.h"
 "src/PKB/CallsStore.cpp"
 "src/PKB/CallsStarStore.h" 
@@ -83,6 +85,8 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/strategy/NextStrat.cpp" 
 "src/QPS/constants/strategy/NextStStrat.h" 
 "src/QPS/constants/strategy/NextStStrat.cpp"
+"src/QPS/constants/strategy/WithStrat.cpp" 
+"src/QPS/constants/strategy/WithStrat.h"
 "src/QPS/utils/AttrUtils.cpp" 
 "src/QPS/utils/AttrUtils.h"
 "src/QPS/utils/ParserUtils.cpp"

@@ -3,21 +3,24 @@
 
 SCENARIO("Integration testing between PKB and QPS components") {
 	GIVEN("The initialization and population of the PKB related classes") {
-		VariableStore vs;
-		ConstantStore cs;
-		FollowsStore fs;
-		ProcedureStore ps;
-		StatementStore ss;
-		PatternStore patts;
-		FollowsStarStore fstars;
-		ModifiesProcStore mprocs;
-		ModifiesStore ms;
-		ParentStarStore pStars;
-		ParentStore parents;
+        VariableStore vs;
+        ConstantStore cs;
+        FollowsStore fs;
+        ProcedureStore ps;
+        StatementStore ss;
+        PatternStore patts;
+        FollowsStarStore fstars;
+        ModifiesProcStore mprocs;
+        ModifiesStore ms;
+        ParentStarStore pStars;
+        ParentStore parents;
         UsesProcStore uprocs;
-		UsesStore uses;
+        UsesStore uses;
         CallsStore calls;
         CallsStarStore cstars;
+        PrintAttribute prAtt;
+        ReadAttribute readAtt;
+        CallAttribute callAtt;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -34,8 +37,9 @@ SCENARIO("Integration testing between PKB and QPS components") {
         std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
         std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
         std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
-
-
+        std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
+        std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
+        std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 
         // Populating variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -125,7 +129,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		pattsPointer->addAssignRhs(9, "x+1");
 
 		// PKB class that interacts with the QPS class
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage);
 
 		WHEN("The QPS object is instantiated and interacts with the PKB	") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));

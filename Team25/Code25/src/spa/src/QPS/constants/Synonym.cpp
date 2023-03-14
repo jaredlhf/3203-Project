@@ -38,6 +38,10 @@ std::string Synonym::getName() {
     return this->name;
 }
 
+std::string Synonym::getNameWithAttr() {
+    return this->name + '.' + this->attrName;
+}
+
 std::string Synonym::getKeyword() {
     return this->keyword;
 }
@@ -86,6 +90,30 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveSe
         : Constants::ClauseResult::OK;
 
     return res;
+}
+
+/*
+Makes a table of headers [s1, s1.attrName] for when s1 and s1.attrName refers to the same attribute.
+If s1 and s1.attrName do not refer to the same attribute, create a overriden function in the concrete
+class instead.
+E.g.
+
+|s1  |s1.attrName |
+|1   | "main      |
+|2   | "factorial"|
+|3   | "beta"     |
+
+Note: As of Milestone 2, only call, read, print syns require overriden functions.
+*/
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveAttrResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synRes = this->resolveSelectResult(pkbRet);
+    std::shared_ptr<QpsTable> resTable = QpsTable::create({ this->getName(), this->getNameWithAttr() });
+    for (std::vector<std::string> row : synRes.second->getData()) {
+        resTable->addRow({ row[0], row[0] });
+    }
+
+    return std::make_pair(synRes.first, resTable);
 }
 
 // Factory class for Synonyms

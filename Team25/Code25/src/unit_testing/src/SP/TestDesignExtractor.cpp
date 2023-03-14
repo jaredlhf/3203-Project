@@ -21,6 +21,9 @@ SCENARIO("ExtractingNode") {
     UsesStore uses;
     CallsStore calls;
     CallsStarStore cStars;
+    PrintAttribute printA;
+    ReadAttribute readA;
+    CallAttribute callA;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -37,9 +40,13 @@ SCENARIO("ExtractingNode") {
     std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
     std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
     std::shared_ptr<CallsStarStore> cStarsPointer = std::make_shared<CallsStarStore>(cStars);
+    std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
+    std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
+    std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 
-    PkbPopulator pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer,
-                              mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer);
+    PkbPopulator pkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
+        fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
+        usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
     std::shared_ptr<PkbPopulator> pkbPop = std::make_shared<PkbPopulator>(pkbPopulator);
     GIVEN("ModifiesExtractor") {
         ModifiesExtractor m(pkbPop);

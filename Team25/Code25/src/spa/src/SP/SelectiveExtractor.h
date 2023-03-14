@@ -2,9 +2,11 @@
 #define SPA_SELECTIVEEXTRACTOR_H
 
 #include <stack>
+#include <set>
 
 #include "DesignExtractor.h"
 #include "TNode.h"
+#include "CFGNode.h"
 #include "PKB/PkbPopulator.h"
 
 class SelectiveExtractor: public std::enable_shared_from_this<SelectiveExtractor> {
@@ -19,6 +21,7 @@ public:
     void visit(std::shared_ptr<StmtLstNode> n);
     void visit(std::shared_ptr<ProcedureNode> n);
     void visitProgramTree(std::shared_ptr<TNode> root);
+    void visitCFG(std::shared_ptr<CFGNode> root);
 
 private:
     std::shared_ptr<ModifiesExtractor> modifiesExtractor;
@@ -29,7 +32,8 @@ private:
     std::shared_ptr<ParentsStarExtractor> parentsStarExtractor;
     std::shared_ptr<CallsExtractor> callsExtractor;
     std::shared_ptr<CallsStarExtractor> callsStarExtractor;
+    std::shared_ptr<PatternExtractor> patternExtractor;
+    std::shared_ptr<AttributeExtractor> attrExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
-
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H
