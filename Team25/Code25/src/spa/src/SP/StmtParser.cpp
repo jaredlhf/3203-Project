@@ -47,13 +47,13 @@ std::shared_ptr<ParserDTO> StmtParser::parseStmtLst(std::shared_ptr<SPParserUtil
                 if (prevCfgNode == nullptr) {
                     head = nextCfgNode;
                 } else {
-                    prevCfgNode->setNextNodeRecursive(nextCfgNode);
+                    prevCfgNode->setNextNodes(nextCfgNode);
                 }
             } else {
-                cfgNode->setNextNodeRecursive(nextCfgNode);
+                cfgNode->setNextNodes(nextCfgNode);
             }
             std::shared_ptr<CFGNode> newCfgNode = std::make_shared<CFGNode>();
-            nextCfgNode->setNextNodeRecursive(newCfgNode);
+            nextCfgNode->setNextNodes(newCfgNode);
 
             cfgNode = newCfgNode;
             prevCfgNode = nextCfgNode;
@@ -132,7 +132,7 @@ std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> uti
 
     std::shared_ptr<CFGWhileNode> cfgNode = std::make_shared<CFGWhileNode>(lineNo);
     std::shared_ptr<CFGNode> loopCfgNode = stmtLstDTO->getCFGNode();
-    loopCfgNode->setNextNodeRecursive(cfgNode);
+    loopCfgNode->setNextNodes(cfgNode);
     cfgNode->setLoopNode(loopCfgNode);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<WhileNode>(node), cfgNode);
