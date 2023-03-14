@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <algorithm>
 #include "EntityStore.h"
 
 /* Constant Store*/

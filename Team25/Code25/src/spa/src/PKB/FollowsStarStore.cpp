@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include <iostream>
-
+#include <algorithm>
 #include "FollowsStarStore.h"
 
 FollowsStarStore::FollowsStarStore() : leftStmtStar{}, rightStmtStar{} {}
