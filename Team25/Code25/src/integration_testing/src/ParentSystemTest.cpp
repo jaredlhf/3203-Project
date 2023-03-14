@@ -22,6 +22,7 @@ SCENARIO("System testing between all components for Parent") {
         PrintAttribute printAttr;
         ReadAttribute readAttr;
         CallAttribute callAttr;
+        NextStore next;
 
         std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
         std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -38,12 +39,16 @@ SCENARIO("System testing between all components for Parent") {
         std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
         std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
         std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
-        std::shared_ptr<PrintAttribute> printPointer = std::make_shared<PrintAttribute>(printAttr);
-        std::shared_ptr<ReadAttribute> readPointer = std::make_shared<ReadAttribute>(readAttr);
-        std::shared_ptr<CallAttribute> callPointer = std::make_shared<CallAttribute>(callAttr);
+        std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printAttr);
+        std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readAttr);
+        std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callAttr);
+        std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
-        PkbRetriever pkbRet = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
-        PkbPopulator pkbPop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
+        
+        // PKB classes instantiation
+        PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+        PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+
         WHEN("The SP and QPS objects are instantiated and a SIMPLE program is defined") {
             // Simulating SIMPLE program in temp file
             std::string fileLocation = "sample_source.txt";

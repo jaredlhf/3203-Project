@@ -32,6 +32,8 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/AbstractionStore.h" 
 "src/PKB/UsesProcStore.h" 
 "src/PKB/UsesProcStore.cpp" 
+"src/PKB/NextStore.h"
+"src/PKB/NextStore.cpp"
 "src/QPS/ResultFormatter.h" 
 "src/QPS/ResultFormatter.cpp"
 "src/QPS/ParserResponse.cpp"
@@ -116,7 +118,7 @@ src/SP/ParserDTO.h
 src/SP/CFGNode.h
 "src/PKB/CallsStarStore.h"
 "src/PKB/CallsStarStore.cpp"
-src/SP/CFGNode.cpp)
+src/SP/CFGNode.cpp )
 
 
 # this makes the headers accessible for other projects which uses spa lib

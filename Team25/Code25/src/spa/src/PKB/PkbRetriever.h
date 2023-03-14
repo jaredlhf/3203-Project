@@ -18,6 +18,7 @@
 #include "CallsStore.h"
 #include "CallsStarStore.h"
 #include "AttributeStore.h"
+#include "NextStore.h"
 
 class PkbRetriever{
 private:
@@ -39,13 +40,14 @@ private:
 	shared_ptr<PrintAttribute> printAttrStorage;
 	shared_ptr<ReadAttribute> readAttrStorage;
 	shared_ptr<CallAttribute> callAttrStorage;
+	shared_ptr<NextStore> nextStorage;
 
 public:
 	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
 		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
 		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
-		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore);
+		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore);
 	/*Var Store*/
 	std::unordered_set<std::string> getAllVar(); 
 	/*Const Store*/
@@ -126,4 +128,11 @@ public:
 	std::unordered_set<int> getCallStmt(std::string procName);
 	std::unordered_set<std::string> getAllCallAttr();
 	std::unordered_set<int> getAllCallStmt();
+	/*Next Store*/
+	std::unordered_set<int> getLeftNext(int rightStmt);
+	std::unordered_set<int> getRightNext(int leftStmt);
+	std::unordered_set<int> getAllLeftNext();
+	std::unordered_set<int> getAllRightNext();
+	std::unordered_set<int> getRightNextStar(int leftStmt);
+	std::unordered_set<int> getLeftNextStar(int rightStmt);
 };
