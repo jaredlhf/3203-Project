@@ -51,6 +51,8 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/Constants.cpp"
 "src/QPS/constants/Constants.h"
 "src/QPS/constants/Entity.h"
+"src/QPS/constants/PatternValidator.cpp"
+"src/QPS/constants/PatternValidator.h"
 "src/QPS/constants/Relationship.cpp"
 "src/QPS/constants/Relationship.h"
 "src/QPS/constants/Synonym.cpp"
