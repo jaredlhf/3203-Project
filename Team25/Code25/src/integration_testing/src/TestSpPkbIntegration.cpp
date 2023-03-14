@@ -42,8 +42,8 @@ SCENARIO("Integration testing between SP and PKB") {
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 
-
         PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage);
+
 		WHEN("Given a SIMPLE program") {
 			std::string fileLocation = "sample_source.txt";
 

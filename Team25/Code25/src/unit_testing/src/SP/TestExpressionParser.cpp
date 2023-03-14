@@ -182,7 +182,7 @@ SCENARIO("Parsing conditonal expressions") {
             std::string and_test = "(x + 1)&&(x>y)";
             std::string or_test = "(x - 1)||(x>y)";
             std::string not_test = "!(x * 1)";
-            THEN("isCo dExpr should return false") {
+            THEN("isCondExpr should return false") {
                 REQUIRE(e.isCondExpr(and_test) == false);
                 REQUIRE(e.isCondExpr(or_test) == false);
                 REQUIRE(e.isCondExpr(not_test) == false);
