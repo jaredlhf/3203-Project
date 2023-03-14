@@ -42,8 +42,8 @@ SCENARIO("Integration testing between SP and PKB") {
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 
-
         PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage);
+
 		WHEN("Given a SIMPLE program") {
 			std::string fileLocation = "sample_source.txt";
 
@@ -105,7 +105,7 @@ SCENARIO("Integration testing between SP and PKB") {
 			}
 			THEN("PKB pattern store should contain the correct pattern statements") {
 				REQUIRE(pattsPointer->LhsAssignStoreSize() == 7);
-				REQUIRE(pattsPointer->RhsAssignStoreSize() == 9);
+				REQUIRE(pattsPointer->RhsAssignStoreSize() == 7);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
 				REQUIRE(fstarsPointer->getAllRight().size() == 6);
