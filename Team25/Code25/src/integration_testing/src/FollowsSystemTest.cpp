@@ -44,6 +44,7 @@ SCENARIO("System testing between all components for Follows") {
 
         PkbRetriever pkbRet = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
         PkbPopulator pkbPop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
+
         WHEN("The SP and QPS objects are instantiated and a SIMPLE program is defined") {
             // Simulating SIMPLE program in temp file
             std::string fileLocation = "sample_source.txt";
