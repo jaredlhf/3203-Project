@@ -3,19 +3,19 @@
 
 SCENARIO("Integration testing between PKB and QPS components") {
 	GIVEN("The initialization and population of the PKB related classes") {
-		VariableStore vs;
-		ConstantStore cs;
-		FollowsStore fs;
-		ProcedureStore ps;
-		StatementStore ss;
-		PatternStore patts;
-		FollowsStarStore fstars;
-		ModifiesProcStore mprocs;
-		ModifiesStore ms;
-		ParentStarStore pStars;
-		ParentStore parents;
+        VariableStore vs;
+        ConstantStore cs;
+        FollowsStore fs;
+        ProcedureStore ps;
+        StatementStore ss;
+        PatternStore patts;
+        FollowsStarStore fstars;
+        ModifiesProcStore mprocs;
+        ModifiesStore ms;
+        ParentStarStore pStars;
+        ParentStore parents;
         UsesProcStore uprocs;
-		UsesStore uses;
+        UsesStore uses;
         CallsStore calls;
         CallsStarStore cstars;
         PrintAttribute prAtt;
@@ -42,8 +42,6 @@ SCENARIO("Integration testing between PKB and QPS components") {
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
-
-
 
         // Populating variables appearing in the SIMPLE program
 		vsPointer->addVar("w");

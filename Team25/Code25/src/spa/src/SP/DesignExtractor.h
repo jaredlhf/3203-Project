@@ -115,6 +115,18 @@ public:
 //    void visit(std::shared_ptr<WhileNode> n, int lineNo);
 };
 
+class AttributeExtractor: public DesignExtractor {
+public:
+    using DesignExtractor::DesignExtractor;
+    void visit(std::shared_ptr<TNode> n, int lineNo);
+    void visit(std::shared_ptr<ProcedureNode> n, int lineNo);
+    void visit(std::shared_ptr<CallNode> n, int lineNo);
+    void visit(std::shared_ptr<ReadNode> n, int lineNo);
+    void visit(std::shared_ptr<PrintNode> n, int lineNo);
+//    void visit(std::shared_ptr<IfNode> n, int lineNo);
+//    void visit(std::shared_ptr<WhileNode> n, int lineNo);
+};
+
 
 class StatementExtractor: public DesignExtractor {
 public:
