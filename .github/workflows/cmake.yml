@@ -26,7 +26,8 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build /home/runner/work/22s2-cp-spa-team-25/22s2-cp-spa-team-25/Team25/Code25/build --config ${{env.BUILD_TYPE}}
+      working-directory: ./Team25/Code25
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
