@@ -67,8 +67,16 @@ std::unordered_set<std::string> PkbRetriever::getIfVars(int stmtNo) {
 	return this->patternStorage->getIfVars(stmtNo);
 }
 
-std::unordered_set<int> PkbRetriever::getIfStatements(std::string var) {
-	return this->patternStorage->getIfStatements(var);
+std::unordered_set<int> PkbRetriever::getIfStatements(std::string varName) {
+	return this->patternStorage->getIfStatements(varName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getWhileVars(int stmtNo) {
+	return this->patternStorage->getWhileVars(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getWhileStatements(std::string varName) {
+	return this->patternStorage->getWhileStatements(varName);
 }
 
 /*FollowsStar Store*/

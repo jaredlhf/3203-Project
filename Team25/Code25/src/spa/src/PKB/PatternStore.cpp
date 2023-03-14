@@ -25,7 +25,15 @@ void PatternStore::addIfStatement(int stmtNo, std::string varName) {
 }
 
 void PatternStore::addIfStatementVar(std::string varName, int stmtNo) {
-	ifStatementStore[varName].emplace(stmtNo);
+	ifStatementVarStore[varName].emplace(stmtNo);
+}
+
+void PatternStore::addWhileStatement(int stmtNo, std::string varName) {
+	whileStatementStore[stmtNo].emplace(varName);
+}
+
+void PatternStore::addWhileStatementVar(std::string varName, int stmtNo) {
+	whileStatementVarStore[varName].emplace(stmtNo);
 }
 
 std::unordered_set<int> PatternStore::getAssignLhs(std::string leftVar) {
@@ -81,7 +89,6 @@ std::unordered_set<std::string> PatternStore::getWhileVars(int stmtNo) {
 		return std::unordered_set<std::string>{};
 	}
 }
-
 
 bool PatternStore::hasAssignLhs(std::string leftVar) {
 	return LhsAssignStore.find(leftVar) != LhsAssignStore.end();

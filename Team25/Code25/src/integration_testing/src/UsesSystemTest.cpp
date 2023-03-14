@@ -19,6 +19,9 @@ SCENARIO("System testing between all components for Uses") {
         UsesStore uses;
         CallsStore calls;
         CallsStarStore cstars;
+        PrintAttribute printAttrStorage;
+        ReadAttribute readAttrStorage;
+        CallAttribute callAttrStorage;
 
         std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
         std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -35,11 +38,14 @@ SCENARIO("System testing between all components for Uses") {
         std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
         std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
         std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
+        std::shared_ptr<PrintAttribute> printsPointer = std::make_shared<PrintAttribute>(printAttrStorage);
+        std::shared_ptr<ReadAttribute> readsPointer = std::make_shared<ReadAttribute>(readAttrStorage);
+        std::shared_ptr<CallAttribute> callAttrPointer = std::make_shared<CallAttribute>(callAttrStorage);
 
 
         // PKB classes instantiation
-        PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
-        PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer);
+        PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printsPointer, readsPointer, callAttrPointer);
+        PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printsPointer, readsPointer, callAttrPointer);
 
         WHEN("The SP and QPS objects are instantiated and a SIMPLE program is defined") {
             // Simulating SIMPLE program in temp file
