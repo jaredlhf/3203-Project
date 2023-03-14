@@ -27,6 +27,7 @@ SCENARIO("Working version of PkbRetriever") {
 		PrintAttribute printA;
 		ReadAttribute readA;
 		CallAttribute callA;
+		NextStore next;
 
 		WHEN("The PkbRetriever references empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -47,10 +48,11 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -148,6 +150,10 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllCallAttr().size() == 0);
 				REQUIRE(pkbRet.getAllCallStmt().size() == 0);
 			}
+			THEN("Getting all next statements should return an empty set") {
+				REQUIRE(pkbRet.getAllLeftNext().size() == 0);
+				REQUIRE(pkbRet.getAllRightNext().size() == 0);
+			}
 
 		}
 		WHEN("The PkbRetriever references non-empty stores") {
@@ -169,10 +175,11 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
@@ -200,6 +207,8 @@ SCENARIO("Working version of PkbRetriever") {
 			printAPointer->addAttr("x", 1);
 			readAPointer->addAttr("y", 2);
 			callAPointer->addAttr("sampleProc", 3);
+			nextPointer->addNext(1, 2);
+			nextPointer->addNext(2, 3);
 
 			THEN("Getting a variables hsould return a non empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);
@@ -336,6 +345,14 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getCallStmt("sampleProc") == std::unordered_set<int>({ 3 }));
 				REQUIRE(pkbRet.getAllCallAttr().size() == 1);
 				REQUIRE(pkbRet.getAllCallStmt().size() == 1);
+			}
+			THEN("Getting next statement should return a non empty set") {
+				REQUIRE(pkbRet.getLeftNext(2).size() == 1);
+				REQUIRE(pkbRet.getRightNext(1).size() == 1);
+				REQUIRE(pkbRet.getAllLeftNext().size() == 2);
+				REQUIRE(pkbRet.getAllRightNext().size() == 2);
+				REQUIRE(pkbRet.getLeftNextStar(3).size() == 2);
+				REQUIRE(pkbRet.getRightNextStar(1).size() == 2);
 			}
 		}
 	}

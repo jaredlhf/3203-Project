@@ -23,6 +23,7 @@ SCENARIO("Mocking behavior of QPS") {
 		PrintAttribute printA;
 		ReadAttribute readA;
 		CallAttribute callA;
+		NextStore next;
 
 
 		ParserResponse response;
@@ -45,10 +46,11 @@ SCENARIO("Mocking behavior of QPS") {
 		std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -128,6 +130,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		PrintAttribute printA;
 		ReadAttribute readA;
 		CallAttribute callA;
+		NextStore next;
 
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -148,6 +151,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		// Mock variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -264,7 +268,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 

@@ -24,6 +24,7 @@ SCENARIO("Working version of PkbPopulator") {
 		PrintAttribute printA;
 		ReadAttribute readA;
 		CallAttribute callA;
+		NextStore next;
 	
 
 		WHEN("The PkbPopulator references empty stores") {
@@ -45,10 +46,11 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
@@ -169,6 +171,13 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addCallAttr("sampleProc", 3);
 				REQUIRE(callAPointer->getAllAttr().size() == 1);
 				REQUIRE(callAPointer->getAllStmt().size() == 1);
+			}
+			THEN("Adding one next statement should increase next store size by 1") {
+				REQUIRE(nextPointer->getAllLeft().size() == 0);
+				REQUIRE(nextPointer->getAllRight().size() == 0);
+				pkbPop.addNext(1, 2);
+				REQUIRE(nextPointer->getAllLeft().size() == 1);
+				REQUIRE(nextPointer->getAllRight().size() == 1);
 			}
 		}
 	}

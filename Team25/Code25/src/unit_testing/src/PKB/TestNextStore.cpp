@@ -80,7 +80,6 @@ SCENARIO("Retrieving Next* relation") {
 			REQUIRE(nextStore.getLeftStmtStar(1) == std::unordered_set<int>({ }));
 			REQUIRE(nextStore.getLeftStmtStar(7) == std::unordered_set<int>({ 1, 3, 5 }));
 			REQUIRE(nextStore.getLeftStmtStar(10) == std::unordered_set<int>({ 8 }));
-
 		}
 
 
