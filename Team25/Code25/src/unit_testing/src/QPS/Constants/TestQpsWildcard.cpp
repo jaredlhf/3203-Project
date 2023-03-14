@@ -1,4 +1,4 @@
-#include "QPS/Constants/Wildcard.h"
+#include "QPS/constants/Wildcard.h"
 #include "catch.hpp"
 
 // TEST CASES FOR VALUE FACTORY FUNCTION
