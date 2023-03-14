@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ParserUtils.h"
 #include "../../SP/ExpressionParser.h"
 
