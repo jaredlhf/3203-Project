@@ -15,22 +15,30 @@ private:
 	unordered_map<int, std::string> RhsAssignStore;
 	unordered_map<std::string, unordered_set<int>> ifStatementVarStore;
 	unordered_map<int, unordered_set<std::string>> ifStatementStore;
+	unordered_map<std::string, unordered_set<int>> whileStatementVarStore;
+	unordered_map<int, unordered_set<std::string>> whileStatementStore;
 
 public:
 	PatternStore();
 
 	void addAssignLhs(std::string leftVar, int stmtNo);
 	void addAssignRhs(int stmtNo, std::string rightStmt);
-	void addIfStatement(std::string var, int stmtNo);
-	void addIfStatementVar(int stmtNo, std::string varName);
+	void addIfStatement(int stmtNo, std::string varName);
+	void addIfStatementVar(std::string varName, int stmtNo);
+	void addWhileStatement(int stmtNo, std::string varName);
+	void addWhileStatementVar(std::string varName, int stmtNo);
 	std::unordered_set<int> getAssignLhs(std::string leftVar);
 	std::string getAssignRhs(int stmtNo);
 	std::unordered_set<std::string> getIfVars(int stmtNo);
-	std::unordered_set<int> getIfStatements(std::string var);
+	std::unordered_set<int> getIfStatements(std::string varName);
+	std::unordered_set<std::string> getWhileVars(int stmtNo);
+	std::unordered_set<int> getWhileStatements(std::string varName);
 	bool hasAssignLhs(std::string leftVar);
 	bool hasAssignRhs(int stmtNo);
 	bool hasIfVars(int stmtNo);
-	bool hasIfStatements(std::string var);
+	bool hasIfStatements(std::string varName);
+	bool hasWhileVars(int stmtNo);
+	bool hasWhileStatements(std::string varName);
 	int LhsAssignStoreSize();
 	int RhsAssignStoreSize();
 };
