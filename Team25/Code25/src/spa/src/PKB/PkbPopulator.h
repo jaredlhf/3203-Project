@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "FollowsStore.h"
 #include "EntityStore.h"
