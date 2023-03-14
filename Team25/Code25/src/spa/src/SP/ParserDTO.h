@@ -1,6 +1,6 @@
 #ifndef SPA_PARSERDTO_H
 #define SPA_PARSERDTO_H
-
+#include <memory>
 #include <iostream>
 
 class TNode; //forward declaration
