@@ -47,8 +47,8 @@ class TestWrapper : public AbstractWrapper {
     std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
     std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
     std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
-    std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
     std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
+    std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
     std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
     std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
     std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);

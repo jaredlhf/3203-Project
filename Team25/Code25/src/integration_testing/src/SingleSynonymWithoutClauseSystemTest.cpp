@@ -24,6 +24,7 @@ SCENARIO("System testing between all components for single synonym select") {
         CallAttribute callAttr;
         NextStore next;
 
+
         std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
         std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
         std::shared_ptr<FollowsStore> fsPointer = std::make_shared<FollowsStore>(fs);

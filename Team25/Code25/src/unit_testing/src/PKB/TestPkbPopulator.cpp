@@ -78,15 +78,35 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(fsPointer->getAllRight().size() == 1);
 				REQUIRE(fsPointer->getAllLeft().size() == 1);
 			}
-			THEN("Adding one pattern should increase the LHS pattern store size by 1") {
+			THEN("Adding one assign pattern should increase the LHS assign pattern store size by 1") {
 				REQUIRE(pattsPointer->LhsAssignStoreSize() == 0);
 				pkbPop.addAssignLhs("x", 1);
 				REQUIRE(pattsPointer->LhsAssignStoreSize() == 1);
 			}
-			THEN("Adding one pattern should increase the RHS pattern store size by 1") {
+			THEN("Adding one assign pattern should increase the RHS assign pattern store size by 1") {
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 0);
 				pkbPop.addAssignRhs(1, "x + y");
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 1);
+			}
+			THEN("Adding one if pattern should increase the ifStatementStore size by 1") {
+				REQUIRE(pattsPointer->ifStatementStoreSize() == 0);
+				pkbPop.addIfStatement(1, "x");
+				REQUIRE(pattsPointer->ifStatementStoreSize() == 1);
+			}
+			THEN("Adding one if pattern variable should increase the ifStatementVarStore size by 1") {
+				REQUIRE(pattsPointer->ifStatementVarStoreSize() == 0);
+				pkbPop.addIfStatementVar("x", 1);
+				REQUIRE(pattsPointer->ifStatementVarStoreSize() == 1);
+			}
+			THEN("Adding one while pattern should increase the whileStatementStore size by 1") {
+				REQUIRE(pattsPointer->whileStatementStoreSize() == 0);
+				pkbPop.addWhileStatement(2, "y");
+				REQUIRE(pattsPointer->whileStatementStoreSize() == 1);
+			}
+			THEN("Adding one while pattern variable should increase the whileStatementVarStore size by 1") {
+				REQUIRE(pattsPointer->whileStatementVarStoreSize() == 0);
+				pkbPop.addWhileStatementVar("y", 2);
+				REQUIRE(pattsPointer->whileStatementVarStoreSize() == 1);
 			}
 			THEN("Adding one follows star should increase the follows star store size by 1") {
 				REQUIRE(fstarsPointer->getAllRight().size() == 0);

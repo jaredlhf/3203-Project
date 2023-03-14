@@ -100,6 +100,22 @@ void PkbPopulator::addCalls(std::string leftProc, std::string rightProc) {
 	this->callsStorage->addCalls(leftProc, rightProc);
 }
 
+void PkbPopulator::addIfStatement(int stmtNo, std::string varName) {
+	this->patternStorage->addIfStatement(stmtNo, varName);
+}
+
+void PkbPopulator::addIfStatementVar(std::string varName, int stmtNo) {
+	this->patternStorage->addIfStatementVar(varName, stmtNo);
+}
+
+void PkbPopulator::addWhileStatement(int stmtNo, std::string varName) {
+	this->patternStorage->addWhileStatement(stmtNo, varName);
+}
+
+void PkbPopulator::addWhileStatementVar(std::string varName, int stmtNo) {
+	this->patternStorage->addWhileStatementVar(varName, stmtNo);
+}
+
 void PkbPopulator::addPrintAttr(std::string varName, int lineNum) {
 	this->printAttrStorage->addAttr(varName, lineNum);
 }

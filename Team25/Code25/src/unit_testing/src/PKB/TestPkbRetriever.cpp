@@ -78,14 +78,34 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllStmt(Constants::IF).size() == 0);
 			}
 			THEN("Getting all Lhs patterns should return an empty set") {
-				REQUIRE(pkbRet.getAssignLhs("x").size() == 0);
-				REQUIRE(pkbRet.getAssignLhs("y").size() == 0);
-				REQUIRE(pkbRet.getAssignLhs("z").size() == 0);
+				REQUIRE(pkbRet.getAssignLhs("x") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getAssignLhs("y") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getAssignLhs("z") == std::unordered_set<int>{});
 			}
 			THEN("Getting all Rhs patterns should return an empty string") {
 				REQUIRE(pkbRet.getAssignRhs(1) == "");
 				REQUIRE(pkbRet.getAssignRhs(2) == "");
 				REQUIRE(pkbRet.getAssignRhs(3) == "");
+			}
+			THEN("Getting all ifStatment patterns should return an empty set") {
+				REQUIRE(pkbRet.getIfStatements("x") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getIfStatements("y") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getIfStatements("z") == std::unordered_set<int>{});
+			}
+			THEN("Getting all ifStatementVar patterns should return an empty set") {
+				REQUIRE(pkbRet.getIfVars(1) == std::unordered_set<std::string>{});
+				REQUIRE(pkbRet.getIfVars(2) == std::unordered_set<std::string>{});
+				REQUIRE(pkbRet.getIfVars(3) == std::unordered_set<std::string>{});
+			}
+			THEN("Getting all whileStatment patterns should return an empty set") {
+				REQUIRE(pkbRet.getWhileStatements("x") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getWhileStatements("y") == std::unordered_set<int>{});
+				REQUIRE(pkbRet.getWhileStatements("z") == std::unordered_set<int>{});
+			}
+			THEN("Getting all whileStatementVar patterns should return an empty set") {
+				REQUIRE(pkbRet.getWhileVars(1) == std::unordered_set<std::string>{});
+				REQUIRE(pkbRet.getWhileVars(2) == std::unordered_set<std::string>{});
+				REQUIRE(pkbRet.getWhileVars(3) == std::unordered_set<std::string>{});
 			}
 			THEN("Getting all follower star should return an empty set") {
 				REQUIRE(pkbRet.getAllFollowerStar().size() == 0);
@@ -191,6 +211,18 @@ SCENARIO("Working version of PkbRetriever") {
 			pattsPointer->addAssignRhs(1, "y + 1");
 			pattsPointer->addAssignRhs(2, "y + x");
 			pattsPointer->addAssignRhs(3, "z + 2");
+			pattsPointer->addIfStatement(1, "x");
+			pattsPointer->addIfStatement(1, "y");
+			pattsPointer->addIfStatement(2, "x");
+			pattsPointer->addIfStatementVar("x", 1);
+			pattsPointer->addIfStatementVar("y", 1);
+			pattsPointer->addIfStatementVar("x", 2);
+			pattsPointer->addWhileStatement(3, "a");
+			pattsPointer->addWhileStatement(3, "b");
+			pattsPointer->addWhileStatement(4, "a");
+			pattsPointer->addWhileStatementVar("a", 3);
+			pattsPointer->addWhileStatementVar("b", 3);
+			pattsPointer->addWhileStatementVar("a", 4);
 			fstarsPointer->addFollowsStar(1, std::unordered_set({ 2, 3 }));
 			fstarsPointer->addFollowsStar(2, std::unordered_set({ 3 }));
 			msPointer->addModifies(1, "x");
@@ -252,6 +284,35 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAssignRhs(3) == "z + 2");
 				REQUIRE(pkbRet.getAssignRhs(3) != "z+2");
 			}
+			THEN("Getting a ifStatement should return a non empty set") {
+				REQUIRE(pkbRet.getIfStatements("x").size() == 2);
+				REQUIRE(pkbRet.getIfStatements("y").size() == 1);
+				REQUIRE(pkbRet.getIfStatements("x").count(1) == 1);
+				REQUIRE(pkbRet.getIfStatements("x").count(2) == 1);
+				REQUIRE(pkbRet.getIfStatements("y").count(1) == 1);
+			}
+			THEN("Getting a ifStatementVar should return a non empty set") {
+				REQUIRE(pkbRet.getIfVars(1).size() == 2);
+				REQUIRE(pkbRet.getIfVars(2).size() == 1);
+				REQUIRE(pkbRet.getIfVars(1).count("x") == 1);
+				REQUIRE(pkbRet.getIfVars(1).count("y") == 1);
+				REQUIRE(pkbRet.getIfVars(2).count("x") == 1);
+			}
+			THEN("Getting a whileStatement should return a non empty set") {
+				REQUIRE(pkbRet.getWhileStatements("a").size() == 2);
+				REQUIRE(pkbRet.getWhileStatements("b").size() == 1);
+				REQUIRE(pkbRet.getWhileStatements("a").count(3) == 1);
+				REQUIRE(pkbRet.getWhileStatements("a").count(4) == 1);
+				REQUIRE(pkbRet.getWhileStatements("b").count(3) == 1);
+			}
+			THEN("Getting a whileStatementVar should return a non empty set") {
+				REQUIRE(pkbRet.getWhileVars(3).size() == 2);
+				REQUIRE(pkbRet.getWhileVars(4).size() == 1);
+				REQUIRE(pkbRet.getWhileVars(3).count("a") == 1);
+				REQUIRE(pkbRet.getWhileVars(3).count("b") == 1);
+				REQUIRE(pkbRet.getWhileVars(4).count("a") == 1);
+			}
+
 			THEN("Getting a follower star should return a non empty set") {
 				REQUIRE(pkbRet.getFollowerStar(1).size() == 2);
 				REQUIRE(pkbRet.getFollowerStar(2).size() == 1);

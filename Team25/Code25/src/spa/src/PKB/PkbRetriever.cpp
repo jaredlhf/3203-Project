@@ -65,6 +65,22 @@ std::unordered_set<int> PkbRetriever::getAssignLhs(std::string leftVar) {
 	return this->patternStorage->getAssignLhs(leftVar);
 }
 
+std::unordered_set<std::string> PkbRetriever::getIfVars(int stmtNo) {
+	return this->patternStorage->getIfVars(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getIfStatements(std::string varName) {
+	return this->patternStorage->getIfStatements(varName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getWhileVars(int stmtNo) {
+	return this->patternStorage->getWhileVars(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getWhileStatements(std::string varName) {
+	return this->patternStorage->getWhileStatements(varName);
+}
+
 /*FollowsStar Store*/
 std::unordered_set<int> PkbRetriever::getFolloweeStar(int follower) {
 	return this->followsStarStorage->getLeftStar(follower);

@@ -63,6 +63,10 @@ public:
 	void addUses(int lineNum, std::string varName);
 	void addCallsStar(std::string leftProc, std::string rightProc);
 	void addCalls(std::string leftProc, std::string rightProc);
+	void addIfStatement(int stmtNo, std::string varName);
+	void addIfStatementVar(std::string varName, int stmtNo);
+	void addWhileStatement(int stmtNo, std::string varName);
+	void addWhileStatementVar(std::string varName, int stmtNo);
 	void addPrintAttr(std::string varName, int lineNum);
 	void addReadAttr(std::string varName, int lineNum);
 	void addCallAttr(std::string procName, int lineNum);
