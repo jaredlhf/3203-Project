@@ -119,4 +119,20 @@ int PatternStore::RhsAssignStoreSize() {
 	return RhsAssignStore.size();
 }
 
+int PatternStore::ifStatementStoreSize() {
+	return ifStatementStore.size();
+}
+
+int PatternStore::ifStatementVarStoreSize() {
+	return ifStatementVarStore.size();
+}
+
+int PatternStore::whileStatementStoreSize() {
+	return whileStatementStore.size();
+}
+
+int PatternStore::whileStatementVarStoreSize() {
+	return whileStatementVarStore.size();
+}
+
 

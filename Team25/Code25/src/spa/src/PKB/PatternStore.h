@@ -41,4 +41,8 @@ public:
 	bool hasWhileStatements(std::string varName);
 	int LhsAssignStoreSize();
 	int RhsAssignStoreSize();
+	int ifStatementStoreSize();
+	int ifStatementVarStoreSize();
+	int whileStatementStoreSize();
+	int whileStatementVarStoreSize();
 };
