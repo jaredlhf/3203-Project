@@ -22,6 +22,17 @@ TEST_CASE("Parse correct query with one declaration and one select statement") {
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse correct query with one declaration and one with statement") {
+    std::vector<std::string> queryTokens = {"variable", "v", ";", "Select", "v", "with", "\"s1\"", "=", "v.varName"};
+    ParserResponse expectedResObject;
+    expectedResObject.setDeclarations({Synonym::create(Constants::VARIABLE, "v")});
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::VARIABLE, "v")});
+    expectedResObject.setWithClauses({Clause::create(Constants::WITH, Value::create("s1"), Synonym::create(Constants::VARIABLE, "v", Constants::VARNAME))});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 TEST_CASE("Parse correct query with one declaration and one select statement with attribute name") {
     std::vector<std::string> queryTokens = {"variable", "v", ";", "Select", "v.varName"};
     ParserResponse expectedResObject;
