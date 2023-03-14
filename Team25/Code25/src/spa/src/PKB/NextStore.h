@@ -24,4 +24,7 @@ public:
 	bool hasRightStmt(int lineNum) override;
 	std::unordered_set<int> getAllLeft() override;
 	std::unordered_set<int> getAllRight() override;
+
+	std::unordered_set<int> getRightStmtStar(int leftStmt);
+	std::unordered_set<int> getLeftStmtStar(int rightStmt);
 };

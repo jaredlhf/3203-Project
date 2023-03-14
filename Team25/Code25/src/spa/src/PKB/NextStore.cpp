@@ -64,3 +64,32 @@ std::unordered_set<int> NextStore::getAllRight() {
 	}
 	return rightStmtList;
 }
+
+
+std::unordered_set<int> NextStore::getRightStmtStar(int leftStmt) {
+	std::unordered_set<int> rightStmtList;
+	std::unordered_set<int> temp1 = getRightStmt(leftStmt);
+
+	for (const auto& value : temp1) {
+		rightStmtList.insert(value);
+		if (hasLeftStmt(value)) {
+			std::unordered_set<int> temp2 = getRightStmtStar(value);
+			rightStmtList.insert(temp2.begin(), temp2.end());
+		}
+	}
+	return rightStmtList;
+}
+
+std::unordered_set<int> NextStore::getLeftStmtStar(int rightStmt) {
+	std::unordered_set<int> leftStmtList;
+	std::unordered_set<int> temp1 = getLeftStmt(rightStmt);
+
+	for (const auto& value : temp1) {
+		leftStmtList.insert(value);
+		if (hasLeftStmt(value)) {
+			std::unordered_set<int> temp2 = getLeftStmtStar(value);
+			leftStmtList.insert(temp2.begin(), temp2.end());
+		}
+	}
+	return leftStmtList;
+}
