@@ -1,4 +1,5 @@
 #include "SP/StmtParser.h"
+#include <algorithm>
 #include "catch.hpp"
 
 

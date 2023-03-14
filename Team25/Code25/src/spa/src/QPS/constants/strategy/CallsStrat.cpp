@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "CallsStrat.h"
 
 // Constructor function for CallsStrat
