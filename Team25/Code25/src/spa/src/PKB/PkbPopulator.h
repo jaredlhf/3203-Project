@@ -15,6 +15,7 @@
 #include "UsesStore.h"
 #include "CallsStore.h"
 #include "CallsStarStore.h"
+#include "AttributeStore.h"
 
 class PkbPopulator {
 
@@ -34,12 +35,16 @@ private:
 	shared_ptr<UsesStore> usesStorage;
 	shared_ptr<CallsStore> callsStorage;
 	shared_ptr<CallsStarStore> callsStarStorage;
+	shared_ptr<PrintAttribute> printAttrStorage;
+	shared_ptr<ReadAttribute> readAttrStorage;
+	shared_ptr<CallAttribute> callAttrStorage;
 
 public:
 	PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
 		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStorage, 
-		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore);
+		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
+		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore);
 	void addVar(std::string varName);
 	void addConst(int constNum);
 	void addFollows(int leftLineNum, int rightLineNum);
@@ -58,5 +63,7 @@ public:
 	void addCalls(std::string leftProc, std::string rightProc);
 	void addIfStatement(std::string var, int stmtNo);
 	void addIfStatementVar(int stmtNo, std::string varName);
-	
+	void addPrintAttr(std::string varName, int lineNum);
+	void addReadAttr(std::string varName, int lineNum);
+	void addCallAttr(std::string procName, int lineNum);
 };

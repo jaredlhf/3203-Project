@@ -36,6 +36,10 @@ const std::string Constants::VARNAME = "varName";
 const std::string Constants::VALUE = "value";
 const std::string Constants::STMTNUM = "stmt#";
 
+// Misc declarations
+const std::string Constants::TRUE = "TRUE";
+const std::string Constants::FALSE = "FALSE";
+
 // AttrName related functions
 bool Constants::isAttrNameInt(const std::string& attrName) {
 	return attrName == Constants::VALUE || attrName == Constants::STMTNUM;

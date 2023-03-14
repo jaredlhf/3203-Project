@@ -12,6 +12,8 @@ namespace SPConstants {
     const std::string IF_TYPE = "if";
     const std::string CALL_TYPE = "call";
 
+    const std::string EQUAL_TOKEN = "=";
+
     const char TAB = '\t';
     const char NEWLINE = '\n';
     const char SPACE = ' ';

@@ -9,6 +9,7 @@ SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) 
     parentsStarExtractor = make_shared<ParentsStarExtractor>(populator);
     callsExtractor = make_shared<CallsExtractor>(populator);
     callsStarExtractor = make_shared<CallsStarExtractor>(populator);
+    patternExtractor = make_shared<PatternExtractor>(populator);
     stmtExtractor = make_shared<StatementExtractor>(populator);
 }
 
@@ -16,6 +17,7 @@ void SelectiveExtractor::visit(std::shared_ptr<AssignNode> n) {
     n->accept(modifiesExtractor);
     n->accept(usesExtractor);
     n->accept(stmtExtractor);
+    n->accept(patternExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<PrintNode> n) {
@@ -78,5 +80,42 @@ void SelectiveExtractor::visitProgramTree(std::shared_ptr<TNode> root) {
             stack.push(child);
         }
     }
+}
 
+void SelectiveExtractor::visitCFG(std::shared_ptr<CFGNode> root) {
+    std::set<std::shared_ptr<CFGNode>> visited;
+    std::stack<std::shared_ptr<CFGNode>> stack;
+    if (root != nullptr) {
+        stack.push(root);
+    }
+
+    while (!stack.empty()) {
+        auto curr = stack.top();
+        stack.pop();
+
+        if (curr == nullptr || curr->getLineNo().empty() || (visited.find(curr) != visited.end())) {
+            continue;
+        }
+
+        visited.insert(curr);
+
+        for (auto child : curr->getAllNextNodes()) {
+            if (child == nullptr) {
+                continue;
+            }
+
+            auto childLineNo = child->getLineNo();
+            if (!childLineNo.empty()) {
+                std::cout << "populating Next: (" << curr->getLineNo().back() << ", " <<  childLineNo.front() << ") " << std::endl;
+            }
+            stack.push(child);
+        }
+
+        auto lineNo = curr->getLineNo();
+        if (lineNo.size() >= 2) {
+            for (int i = 0; i < lineNo.size() - 1; i++) {
+                std::cout << "populating Next: (" << lineNo[i] << ", " <<  lineNo[i + 1] << ") " << std::endl;
+            }
+        }
+    }
 }

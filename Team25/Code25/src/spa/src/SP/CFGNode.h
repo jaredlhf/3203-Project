@@ -11,6 +11,7 @@ public:
 
     virtual std::vector<std::shared_ptr<CFGNode>> getAllNextNodes();
     virtual void setNextNode(std::shared_ptr<CFGNode> next);
+    virtual void setNextNodeRecursive(std::shared_ptr<CFGNode> next);
     std::vector<int> getLineNo() const;
     void addLineNo(int lineNo);
 
@@ -25,6 +26,7 @@ public:
 
     std::vector<std::shared_ptr<CFGNode>> getAllNextNodes() override;
     void setNextNode(std::shared_ptr<CFGNode> next) override;
+    void setNextNodeRecursive(std::shared_ptr<CFGNode> next) override;
     void setThenNode(std::shared_ptr<CFGNode> next);
     void setElseNode(std::shared_ptr<CFGNode> next);
 private:
@@ -39,6 +41,8 @@ public:
 
     std::vector<std::shared_ptr<CFGNode>> getAllNextNodes() override;
     void setLoopNode(std::shared_ptr<CFGNode> next);
+    void setNextNode(std::shared_ptr<CFGNode> next) override;
+    void setNextNodeRecursive(std::shared_ptr<CFGNode> next) override;
 private:
     std::shared_ptr<CFGNode> nextLoop_;
 };

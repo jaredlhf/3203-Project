@@ -34,6 +34,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::re
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::resolveClauses(
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults) {
+	// Edge case: If clauseResults are empty, return true
+	if (clauseResults.size() == 0) {
+		return QpsTable::getDefaultOk();
+	}
 
 	// If there is a syn_err, sem_err or no match in the header, short-circuit and return
 	std::vector<Constants::ClauseResult> clauseResList;
@@ -75,11 +79,22 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 		}
 	}
 
+	// Edge case:: If resultSynonym is a BOOLEAN synonym, mark it before clause resolution
+	bool hasBoolSyn = false;
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->isBooleanSyn()) {
+			hasBoolSyn = true;
+		}
+	}
+
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
 
-	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
-		resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
-	clauseResults.push_back(selectRes);
+	// Select Result is not evaluated if it is not a BOOLEAN synonym
+	if (!hasBoolSyn) {
+		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
+			resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
+		clauseResults.push_back(selectRes);
+	}
 
 	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
 		clauseResults.push_back(stClause->resolve(pkbRetriever));
@@ -102,6 +117,13 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 
 	if (finalClauseStatus == Constants::ClauseResult::SEM_ERR) {
 		return std::list<std::string>({ Constants::SEMANTIC_ERROR });
+	}
+
+	if (hasBoolSyn) { // If select is BOOLEAN, only consider the clause result status
+		const std::string boolRes = finalClauseStatus == Constants::ClauseResult::OK
+			? Constants::TRUE
+			: Constants::FALSE;
+		return std::list<std::string>({ boolRes });
 	}
 
 	if (finalClauseStatus == Constants::ClauseResult::NO_MATCH) {

@@ -42,6 +42,10 @@ public:
 	static const std::string STMTNUM;
 	static const std::string WITH;
 
+	// Misc declarations
+	static const std::string TRUE;
+	static const std::string FALSE;
+
 	enum class ClauseResult{
 		SYN_ERR = 0,
 		SEM_ERR = 1,
