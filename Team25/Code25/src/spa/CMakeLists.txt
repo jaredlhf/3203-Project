@@ -2,6 +2,8 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_library(spa ${srcs} ${headers} 
 "src/PKB/AbstractionStore.h"
+"src/PKB/AttributeStore.h"
+"src/PKB/AttributeStore.cpp"
 "src/PKB/CallsStore.h"
 "src/PKB/CallsStore.cpp"
 "src/PKB/CallsStarStore.h" 
@@ -30,6 +32,8 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/AbstractionStore.h" 
 "src/PKB/UsesProcStore.h" 
 "src/PKB/UsesProcStore.cpp" 
+"src/PKB/NextStore.h"
+"src/PKB/NextStore.cpp"
 "src/QPS/ResultFormatter.h" 
 "src/QPS/ResultFormatter.cpp"
 "src/QPS/ParserResponse.cpp"
@@ -49,6 +53,8 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/Constants.cpp"
 "src/QPS/constants/Constants.h"
 "src/QPS/constants/Entity.h"
+"src/QPS/constants/PatternValidator.cpp"
+"src/QPS/constants/PatternValidator.h"
 "src/QPS/constants/Relationship.cpp"
 "src/QPS/constants/Relationship.h"
 "src/QPS/constants/Synonym.cpp"
@@ -81,6 +87,10 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/strategy/NextStrat.cpp" 
 "src/QPS/constants/strategy/NextStStrat.h" 
 "src/QPS/constants/strategy/NextStStrat.cpp"
+"src/QPS/constants/strategy/WithStrat.cpp" 
+"src/QPS/constants/strategy/WithStrat.h"
+"src/QPS/utils/AttrUtils.cpp" 
+"src/QPS/utils/AttrUtils.h"
 "src/QPS/utils/ParserUtils.cpp"
 "src/QPS/utils/ParserUtils.h"
 "src/QPS/utils/StringUtils.cpp"
@@ -108,7 +118,7 @@ src/SP/ParserDTO.h
 src/SP/CFGNode.h
 "src/PKB/CallsStarStore.h"
 "src/PKB/CallsStarStore.cpp"
-src/SP/CFGNode.cpp)
+src/SP/CFGNode.cpp )
 
 
 # this makes the headers accessible for other projects which uses spa lib

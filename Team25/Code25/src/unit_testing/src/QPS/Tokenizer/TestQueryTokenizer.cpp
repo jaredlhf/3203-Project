@@ -89,3 +89,21 @@ TEST_CASE("Tokenize complex query with whitespace and parantheses in wildcards")
 	REQUIRE(res == expected);
 }
 
+TEST_CASE("Tokenize query with multiple select") {
+	string testStr = "variable v;\nSelect <v, v> such that Follows* (6, v)";
+	vector<string> expected{ "variable", "v", ";", "Select", "<", "v", ",", "v", ">",
+		"such", "that", "Follows*", "(", "6", ",", "v", ")" };
+	vector<string> res = qt.tokenize(testStr);
+
+	REQUIRE(res == expected);
+}
+
+TEST_CASE("Tokenize query with attrNames") {
+	string testStr = "stmt s1;\nSelect s1.stmt# with s1.stmt# = s1.stmt#";
+	vector<string> expected{ "stmt", "s1", ";", "Select", "s1", ".", "stmt#",
+		"with", "s1", ".", "stmt#", "=", "s1", ".", "stmt#" };
+	vector<string> res = qt.tokenize(testStr);
+
+	REQUIRE(res == expected);
+}
+

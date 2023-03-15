@@ -42,6 +42,15 @@ public:
 	static const std::string STMTNUM;
 	static const std::string WITH;
 
+	// Constant string declarations
+	static const std::string OPEN_BRACKET;
+	static const std::string CLOSE_BRACKET;
+	static const std::string SEPARATOR;
+	
+	// Misc declarations
+	static const std::string TRUE;
+	static const std::string FALSE;
+
 	enum class ClauseResult{
 		SYN_ERR = 0,
 		SEM_ERR = 1,

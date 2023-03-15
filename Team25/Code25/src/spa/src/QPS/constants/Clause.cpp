@@ -680,18 +680,33 @@ bool WithClause::isSemInvalid() {
     }
 
     if (this->arg1->isSynonym()) {
-        isArg1Int = Constants::isAttrNameInt(
-            std::static_pointer_cast<Synonym>(this->arg1)->getAttrName());
+        std::shared_ptr<Synonym> syn1 = std::static_pointer_cast<Synonym>(this->arg1);
+        if (!AttrUtils::hasValidAttr(syn1, syn1->getAttrName())) {
+            return true;
+        }
+        isArg1Int = Constants::isAttrNameInt(syn1->getAttrName());
     }
 
     if (this->arg2->isSynonym()) {
-        isArg2Int = Constants::isAttrNameInt(
-            std::static_pointer_cast<Synonym>(this->arg2)->getAttrName());
+        std::shared_ptr<Synonym> syn2 = std::static_pointer_cast<Synonym>(this->arg2);
+        if (!AttrUtils::hasValidAttr(syn2, syn2->getAttrName())) {
+            return true;
+        }
+        isArg2Int = Constants::isAttrNameInt(syn2->getAttrName());
     }
 
     return isArg1Int != isArg2Int;
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
-    return QpsTable::getDefaultNoMatch();
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
 }

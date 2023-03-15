@@ -11,10 +11,11 @@
  * param: VarStorage* varStore
  */
 
-PkbRetriever::PkbRetriever(std::shared_ptr<VariableStore> varStore, std::shared_ptr<ConstantStore> constStore, std::shared_ptr<FollowsStore> followsStore, std::shared_ptr<ProcedureStore> procedureStore,
-	std::shared_ptr<StatementStore> statementStore, std::shared_ptr<PatternStore> patternStore, std::shared_ptr<FollowsStarStore> followsStarStore, std::shared_ptr<ModifiesProcStore> modifiesProcStore,
-	std::shared_ptr<ModifiesStore> modifiesStore, std::shared_ptr<ParentStarStore> parentStarStore, std::shared_ptr<ParentStore> parentStore, std::shared_ptr<UsesProcStore> usesProcStore,
-	std::shared_ptr<UsesStore> usesStore, std::shared_ptr<CallsStore> callsStore, std::shared_ptr<CallsStarStore> callsStarStore) {
+PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
+	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
+	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
+	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
+	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -30,6 +31,10 @@ PkbRetriever::PkbRetriever(std::shared_ptr<VariableStore> varStore, std::shared_
 	this->usesStorage = usesStore;
 	this->callsStorage = callsStore;
 	this->callsStarStorage = callsStarStore;
+	this->printAttrStorage = printAttrStore;
+	this->readAttrStorage = readAttrStore;
+	this->callAttrStorage = callAttrStore;
+	this->nextStorage = nextStore;
 };
 
 /*Var Store*/
@@ -59,6 +64,22 @@ std::string PkbRetriever::getAssignRhs(int stmtNo) {
 
 std::unordered_set<int> PkbRetriever::getAssignLhs(std::string leftVar) {
 	return this->patternStorage->getAssignLhs(leftVar);
+}
+
+std::unordered_set<std::string> PkbRetriever::getIfVars(int stmtNo) {
+	return this->patternStorage->getIfVars(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getIfStatements(std::string varName) {
+	return this->patternStorage->getIfStatements(varName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getWhileVars(int stmtNo) {
+	return this->patternStorage->getWhileVars(stmtNo);
+}
+
+std::unordered_set<int> PkbRetriever::getWhileStatements(std::string varName) {
+	return this->patternStorage->getWhileStatements(varName);
 }
 
 /*FollowsStar Store*/
@@ -227,4 +248,80 @@ std::unordered_set<std::string> PkbRetriever::getAllLeftCallStar() {
 
 std::unordered_set<std::string> PkbRetriever::getAllRightCallStar() {
 	return this->callsStarStorage->getAllRight();
+}
+
+/*Print Attribute Store*/
+std::string PkbRetriever::getPrintAttr(int lineNum) {
+	return this->printAttrStorage->getAttr(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getPrintStmt(std::string varName) {
+	return this->printAttrStorage->getStmt(varName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllPrintAttr() {
+	return this->printAttrStorage->getAllAttr();
+}
+
+std::unordered_set<int> PkbRetriever::getAllPrintStmt() {
+	return this->printAttrStorage->getAllStmt();
+}
+
+/*Read Attribute Store*/
+std::string PkbRetriever::getReadAttr(int lineNum) {
+	return this->readAttrStorage->getAttr(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getReadStmt(std::string varName) {
+	return this->readAttrStorage->getStmt(varName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllReadAttr() {
+	return this->readAttrStorage->getAllAttr();
+}
+
+std::unordered_set<int> PkbRetriever::getAllReadStmt() {
+	return this->readAttrStorage->getAllStmt();
+}
+
+/*Call Attribute Store*/
+std::string PkbRetriever::getCallAttr(int lineNum) {
+	return this->callAttrStorage->getAttr(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getCallStmt(std::string procName) {
+	return this->callAttrStorage->getStmt(procName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllCallAttr() {
+	return this->callAttrStorage->getAllAttr();
+}
+
+std::unordered_set<int> PkbRetriever::getAllCallStmt() {
+	return this->callAttrStorage->getAllStmt();
+}
+
+/*Next Store*/
+std::unordered_set<int> PkbRetriever::getLeftNext(int rightStmt) {
+	return this->nextStorage->getLeftStmt(rightStmt);
+}
+
+std::unordered_set<int> PkbRetriever::getRightNext(int leftStmt) {
+	return this->nextStorage->getRightStmt(leftStmt);
+}
+
+std::unordered_set<int> PkbRetriever::getAllLeftNext() {
+	return this->nextStorage->getAllLeft();
+}
+
+std::unordered_set<int> PkbRetriever::getAllRightNext() {
+	return this->nextStorage->getAllRight();
+}
+
+std::unordered_set<int> PkbRetriever::getRightNextStar(int leftStmt) {
+	return this->nextStorage->getRightStmtStar(leftStmt);
+}
+
+std::unordered_set<int> PkbRetriever::getLeftNextStar(int rightStmt) {
+	return this->nextStorage->getLeftStmtStar(rightStmt);
 }

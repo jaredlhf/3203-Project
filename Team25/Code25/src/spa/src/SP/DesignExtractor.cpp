@@ -77,9 +77,6 @@ void ModifiesExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         ModifiesExtractor::visit(wh, lineNo);
-    } else if (isCallNode(n)) {
-        std::shared_ptr<CallNode> c = std::dynamic_pointer_cast<CallNode>(n);
-        ModifiesExtractor::visit(c, lineNo);
     } else if (isProcedureNode(n)) {
         std::shared_ptr<ProcedureNode> p = std::dynamic_pointer_cast<ProcedureNode>(n);
         ModifiesExtractor::visit(p, SPConstants::PROCEDURE);
@@ -94,13 +91,9 @@ void ModifiesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
     }
 
     if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "populate procedure modifies: " << a->getProc() + " " + a->getVar() << " " << endl;
         pkbPopulator->addModifiesProc(a -> getProc(), a ->getVar());
     } else {
         pkbPopulator->addModifies(lineNo, a->getVar());
-        pkbPopulator->addVar(a->getVar());
-        pkbPopulator->addAssignLhs(a->getVar(), lineNo);
-        pkbPopulator->addAssignRhs(lineNo, a->getExpr());
     }
 }
 
@@ -112,31 +105,11 @@ void ModifiesExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     }
 
     if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "populate procedure modifies: " << r->getProc() + " " + r->getVar() << " " << endl;
         pkbPopulator->addModifiesProc(r -> getProc(), r ->getVar());
     } else {
         pkbPopulator->addModifies(lineNo, r->getVar());
-        pkbPopulator->addVar(r->getVar());
     }
 }
-
-void ModifiesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
-    if (lineNo == SPConstants::INVALID_LINE_NO) {
-        lineNo = c->getLine();
-    } else if (lineNo == SPConstants::PROCEDURE) {
-        lineNo = SPConstants::PROCEDURE;
-    }
-//    pkbPopulator->addVar(c->getVar());
-    if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "populate procedure modifies: " << c->getProc() + " " + c->getVar() << " " << endl;
-//        pkbPopulator->addModifiesProc(c -> getProc(), c ->getVar());
-    } else {
-//        pkbPopulator->addVar(c->getVar());
-//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-//        pkbPopulator->addModifies(lineNo,   c->getVar());
-    }
-}
-
 
 void ModifiesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
@@ -183,9 +156,6 @@ void UsesExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         UsesExtractor::visit(wh, lineNo);
-    } else if (isCallNode(n)) {
-        std::shared_ptr<CallNode> c = std::dynamic_pointer_cast<CallNode>(n);
-        UsesExtractor::visit(c, SPConstants::PROCEDURE);
     } else if (isProcedureNode(n)) {
         std::shared_ptr<ProcedureNode> p = std::dynamic_pointer_cast<ProcedureNode>(n);
         UsesExtractor::visit(p, SPConstants::PROCEDURE);
@@ -199,13 +169,10 @@ void UsesExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
         lineNo = SPConstants::PROCEDURE;
     }
     vector<std::string> rhs = tok.tokenize(a->getExpr());
-    extractVar(rhs);
-    extractConst(rhs);
 
     for (auto const token: rhs) {
         if (Token::isValidName(token)) {
             if (lineNo == SPConstants::PROCEDURE) {
-//                std::cout << "populate procedure use: " << a->getProc() + " " + token << " " << endl;
                 pkbPopulator->addUsesProc(a->getProc(), token);
             } else {
                 pkbPopulator->addUses(lineNo, token);
@@ -221,27 +188,9 @@ void UsesExtractor::visit(std::shared_ptr<PrintNode> r, int lineNo) {
         lineNo = SPConstants::PROCEDURE;
     }
     if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "populate procedure use: " << r->getProc() + " " + r->getVar() << " " << endl;
         pkbPopulator->addUsesProc(r->getProc(), r->getVar());
     } else {
         pkbPopulator->addUses(lineNo, r->getVar());
-        pkbPopulator->addVar(r->getVar());
-    }
-}
-
-void UsesExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
-    if (lineNo == SPConstants::INVALID_LINE_NO) {
-        lineNo = c->getLine();
-    } else if (lineNo == SPConstants::PROCEDURE) {
-        lineNo = SPConstants::PROCEDURE;
-    }
-//    pkbPopulator->addVar(c->getVar());
-    if (lineNo == SPConstants::PROCEDURE) {
-//        std::cout << "Populating procedure use: " << c->getProc() + " " + c->getVar() << std::endl;
-//        pkbPopulator->addUsesProc(c->getProc(), c->getVar());
-    } else {
-//        std::cout << "Populating modifies for calls: " << c->getVar() << std::endl;
-//        pkbPopulator->addUses(lineNo, c->getVar());
     }
 }
 
@@ -257,13 +206,10 @@ void UsesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     std::string expr = ifs->getCondExpr();
     std::vector<std::string> tokens = t.tokenize(expr);
-    extractVar(tokens);
-    extractConst(tokens);
 
     for (const auto token: tokens) {
         if (Token::isValidName(token)) {
             if (lineNo == SPConstants::PROCEDURE) {
-//                std::cout << "populate procedure use: " << ifs->getProc() + " " + token << " " << endl;
                 pkbPopulator->addUsesProc(ifs->getProc(), token);
             } else {
                 pkbPopulator->addUses(lineNo, token);
@@ -289,13 +235,10 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
     std::string expr = wh->getCondExpr();
     std::vector<std::string> tokens = t.tokenize(expr);
-    extractVar(tokens);
-    extractConst(tokens);
 
     for (const auto token: tokens) {
         if (Token::isValidName(token)) {
             if (lineNo == SPConstants::PROCEDURE) {
-//            std::cout << "populate procedure use: " << wh->getProc() + " " + token << " " << endl;
                 pkbPopulator->addUsesProc(wh->getProc(), token);
             } else {
                 pkbPopulator->addUses(lineNo, token);
@@ -463,7 +406,6 @@ void CallsExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         lineNo = c->getLine();
     }
     pkbPopulator->addCalls(c->getProc(),c->getVar());
-//    std::cout << "Populating call: " << c->getProc() + " " + c->getVar() << std::endl;
 }
 
 void CallsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -492,7 +434,7 @@ void CallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 
 void CallsStarExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     if (isCallNode(n)) {
-        std::shared_ptr<AssignNode> v = std::dynamic_pointer_cast<AssignNode>(n);
+        std::shared_ptr<CallNode> v = std::dynamic_pointer_cast<CallNode>(n);
         CallsStarExtractor::visit(v, lineNo);
     } else if (isIfNode(n)) {
         std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
@@ -522,7 +464,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             throw std::invalid_argument("Cyclic Call in SPA Program");
         }
     }
-    //
+
     if (this->callsStorage.find(calledProc) == this->callsStorage.end()) {
         std::vector<std::string> procs;
         if (this->callsStorage.find(callingProc) != this->callsStorage.end()) {
@@ -531,7 +473,6 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         procs.push_back(callingProc);
         this->callsStorage.emplace(calledProc,procs);
         for (auto i: procs) {
-//            std::cout<<"Added to callsStar Storage1: " << i << " " <<  calledProc << endl;
             pkbPopulator->addCallsStar(i,calledProc);
         }
     } else {
@@ -539,23 +480,14 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
         calledValue.push_back(callingProc);
         this->callsStorage.emplace(calledProc, calledValue);
         if (this->callsStorage.find(callingProc) == this->callsStorage.end()) {
-//            std::cout << "Added to callsStar Storage2: " << callingProc << " " << calledProc << endl;
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }else {
             for (auto i: this->callsStorage.at(callingProc)) {
-//                std::cout << "Added to callsStar Storage3: " << i << " " << calledProc << endl;
                 pkbPopulator->addCallsStar(i,calledProc);
             }
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }
     }
-//    for(auto kv : this->getCallsStorage()) {
-//        keys.push_back(kv.first);
-//        std::cout<<"Keys: " << kv.first<<endl;
-//        for (auto i : kv.second) {
-//            std::cout<<"Values: " << i <<endl;
-//        }
-//    }
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -581,6 +513,125 @@ void CallsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
         visit(j, lineNo);
     }
 }
+
+
+
+void PatternExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isAssignNode(n)) {
+        std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
+        PatternExtractor::visit(a, lineNo);
+    } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        PatternExtractor::visit(ifs, lineNo);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        PatternExtractor::visit(wh, lineNo);
+    }
+}
+
+void PatternExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = a->getLine();
+    }
+    pkbPopulator->addAssignLhs(a->getVar(), lineNo);
+    pkbPopulator->addAssignRhs(lineNo, a->getExpr());
+}
+
+void PatternExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = ifs->getLine();
+    }
+    vector<std::string> condExpr = tok.tokenize(ifs->getCondExpr());
+    for (std::string i : condExpr) {
+        if (Token::isValidName((i))) {
+            pkbPopulator->addIfStatement(lineNo,i);
+            pkbPopulator->addIfStatementVar(i,lineNo);
+        }
+    }
+}
+
+void PatternExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = wh->getLine();
+    }
+    vector<std::string> condExpr = tok.tokenize(wh->getCondExpr());
+    for (std::string i : condExpr) {
+        if (Token::isValidName((i))) {
+            pkbPopulator->addIfStatement(lineNo,i);
+            pkbPopulator->addIfStatementVar(i,lineNo);
+        }
+    }
+}
+
+
+void AttributeExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isCallNode(n)) {
+        std::shared_ptr<CallNode> v = std::dynamic_pointer_cast<CallNode>(n);
+        AttributeExtractor::visit(v, lineNo);
+    } else if (isReadNode(n)) {
+        std::shared_ptr<ReadNode> r = std::dynamic_pointer_cast<ReadNode>(n);
+        AttributeExtractor::visit(r, lineNo);
+    } else if (isPrintNode(n)) {
+        std::shared_ptr<PrintNode> p = std::dynamic_pointer_cast<PrintNode>(n);
+        AttributeExtractor::visit(p, lineNo);
+    } else if (isAssignNode(n)) {
+        std::shared_ptr<AssignNode> a = std::dynamic_pointer_cast<AssignNode>(n);
+        AttributeExtractor::visit(a, lineNo);
+    } else if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        AttributeExtractor::visit(ifs, lineNo);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        AttributeExtractor::visit(wh, lineNo);
+    }
+}
+
+void AttributeExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = c->getLine();
+    }
+    pkbPopulator->addCallAttr(c->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<PrintNode> p, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = p->getLine();
+    }
+    pkbPopulator->addVar(p->getVar());
+    pkbPopulator->addPrintAttr(p->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = r->getLine();
+    }
+    pkbPopulator->addVar(r->getVar());
+    pkbPopulator->addReadAttr(r->getVar(), lineNo);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<ProcedureNode> p, int lineNo) {
+    pkbPopulator->addProc(p->getProc());
+}
+
+void AttributeExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
+    pkbPopulator->addVar(a->getVar());
+    vector<std::string> rhs = tok.tokenize(a->getExpr());
+    extractVar(rhs);
+    extractConst(rhs);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
+    vector<std::string> expr = tok.tokenize(wh->getCondExpr());
+    extractVar(expr);
+    extractConst(expr);
+}
+
+void AttributeExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
+    vector<std::string> expr = tok.tokenize(ifs->getCondExpr());
+    extractVar(expr);
+    extractConst(expr);
+}
+
 
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
