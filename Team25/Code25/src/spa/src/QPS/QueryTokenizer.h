@@ -1,15 +1,16 @@
 #pragma once
 
-#include "constants/Constants.h"
-#include <regex>
+#include <vector>
 #include <string>
 #include <unordered_set>
-#include <vector>
+#include <regex>
+#include "constants/Constants.h"
+
 
 class QueryTokenizer {
 private:
-  std::string preprocess(const std::string &word);
+	std::string preprocess(const std::string& word);
 
 public:
-  std::vector<std::string> tokenize(const std::string &query);
+	std::vector<std::string> tokenize(const std::string& query);
 };

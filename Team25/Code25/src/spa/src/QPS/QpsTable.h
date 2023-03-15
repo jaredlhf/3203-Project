@@ -1,57 +1,47 @@
 #pragma once
 
-#include "constants/Constants.h"
-#include <memory>
-#include <set>
 #include <string>
 #include <vector>
+#include <set>
+#include <memory>
+#include "constants/Constants.h"
+
 
 class QpsTable : public std::enable_shared_from_this<QpsTable> {
 private:
-  std::vector<std::string> headers;
-  std::set<std::vector<std::string>> data;
+	std::vector<std::string> headers;
+	std::set<std::vector<std::string>> data;
 
 public:
-  // Constructor functions
-  QpsTable();
-  QpsTable(std::vector<std::string> headers);
-  QpsTable(std::vector<std::string> headers,
-           std::set<std::vector<std::string>> data);
+	// Constructor functions
+	QpsTable();
+	QpsTable(std::vector<std::string> headers);
+	QpsTable(std::vector<std::string> headers, std::set<std::vector<std::string>> data);
 
-  // Static QpsTable functions
-  static std::shared_ptr<QpsTable> create();
-  static std::shared_ptr<QpsTable> create(std::vector<std::string> headers);
-  static std::shared_ptr<QpsTable>
-  create(std::vector<std::string> headers,
-         std::set<std::vector<std::string>> data);
-  static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>
-  getDefaultSynErr();
-  static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>
-  getDefaultSemErr();
-  static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>
-  getDefaultNoMatch();
-  static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>
-  getDefaultOk();
+	// Static QpsTable functions
+	static std::shared_ptr<QpsTable> create();
+	static std::shared_ptr<QpsTable> create(std::vector<std::string> headers);
+	static std::shared_ptr<QpsTable> create(std::vector<std::string> headers, std::set<std::vector<std::string>> data);
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultSynErr();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultSemErr();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultNoMatch();
+	static std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> getDefaultOk();
 
-  // QpsTable instance functions
-  std::vector<std::string> getHeaders();
-  std::set<std::vector<std::string>> getData();
-  bool canAdd(std::vector<std::string> row);
-  void addRow(std::vector<std::string> row);
-  std::set<std::string> getColResults(int headerIdx);
-  std::set<std::string> getColResults(const std::string &headerName);
-  bool hasOverlappingHeaders(std::shared_ptr<QpsTable> other);
-  std::vector<std::pair<int, int>>
-  getCommonHeaderIndices(std::shared_ptr<QpsTable> other);
-  std::vector<std::string> getUniqueHeaders(std::shared_ptr<QpsTable> other);
-  std::shared_ptr<QpsTable> crossProduct(std::shared_ptr<QpsTable> other);
-  bool canMergeInnerJoinRows(std::vector<std::string> row1,
-                             std::vector<std::string> row2,
-                             std::vector<std::pair<int, int>> cmnHeadIdx);
-  std::vector<std::string>
-  mergeInnerJoinRows(std::vector<std::string> row1,
-                     std::vector<std::string> row2,
-                     std::vector<std::pair<int, int>> cmnHeadIdx);
-  std::shared_ptr<QpsTable> innerJoin(std::shared_ptr<QpsTable> other);
-  std::shared_ptr<QpsTable> join(std::shared_ptr<QpsTable> other);
+	// QpsTable instance functions
+	std::vector<std::string> getHeaders();
+	std::set<std::vector<std::string>> getData();
+	bool canAdd(std::vector<std::string> row);
+	void addRow(std::vector<std::string> row);
+	std::set<std::string> getColResults(int headerIdx);
+	std::set<std::string> getColResults(const std::string& headerName);
+	bool hasOverlappingHeaders(std::shared_ptr<QpsTable> other);
+	std::vector<std::pair<int, int>> getCommonHeaderIndices(std::shared_ptr<QpsTable> other);
+	std::vector<std::string> getUniqueHeaders(std::shared_ptr<QpsTable> other);
+	std::shared_ptr<QpsTable> crossProduct(std::shared_ptr<QpsTable> other);
+	bool canMergeInnerJoinRows(std::vector<std::string> row1, 
+		std::vector<std::string> row2, std::vector<std::pair<int, int>> cmnHeadIdx);
+	std::vector<std::string> mergeInnerJoinRows(std::vector<std::string> row1, 
+		std::vector<std::string> row2, std::vector<std::pair<int, int>> cmnHeadIdx);
+	std::shared_ptr<QpsTable> innerJoin(std::shared_ptr<QpsTable> other);
+	std::shared_ptr<QpsTable> join(std::shared_ptr<QpsTable> other);
 };
