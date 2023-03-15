@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "QPS/Constants/Clause.h"
+#include "QPS/constants/Clause.h"
 #include "catch.hpp"
 
 
@@ -26,6 +26,7 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 		PrintAttribute printA;
 		ReadAttribute readA;
 		CallAttribute callA;
+		NextStore next;
 
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -46,10 +47,11 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 		std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		std::shared_ptr<Synonym> a1 = Synonym::create(Constants::ASSIGN, "a1");

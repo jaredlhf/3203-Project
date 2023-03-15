@@ -1,7 +1,9 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #include <regex>
+#include <algorithm>
 #include "TNode.h"
 #include "Token.h"
 #include "Tokenizer.h"

@@ -1,3 +1,4 @@
+#include<memory>
 #include "SPParserUtils.h"
 
 SPParserUtils::SPParserUtils(std::shared_ptr<Tokenizer> t) {

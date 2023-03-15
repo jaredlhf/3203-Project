@@ -53,6 +53,7 @@ TEST_CASE("Test processSimple()") {
     PrintAttribute printA;
     ReadAttribute readA;
     CallAttribute callA;
+    NextStore next;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -72,10 +73,11 @@ TEST_CASE("Test processSimple()") {
     std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
     std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
     std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+    std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
     PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
         fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-        usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+        usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                             "  x = 2+d;\n"

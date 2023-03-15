@@ -1,4 +1,4 @@
-#include "QPS/Constants/Clause.h"
+#include "QPS/constants/Clause.h"
 #include "catch.hpp"
 
 
@@ -23,6 +23,7 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
         PrintAttribute prAtt;
         ReadAttribute readAtt;
         CallAttribute callAtt;
+		NextStore next;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -42,10 +43,11 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
         std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer,
-                                  printAttrStorage, readAttrStorage, callAttrStorage);
+                                  printAttrStorage, readAttrStorage, callAttrStorage, nextPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {

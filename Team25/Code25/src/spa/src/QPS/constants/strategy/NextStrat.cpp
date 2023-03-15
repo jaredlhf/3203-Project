@@ -1,3 +1,4 @@
+#include <memory>
 #include "NextStrat.h"
 
 // Constructor function for NextStrat

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ParserUtils.h"
 
 // BUG: does not work with unordered_set.find()

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ParentStrat.h"
 
 // Constructor function for UsesStrat

@@ -186,18 +186,17 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     // get synonyms for select statement
     bool hasSeenSelectToken = false;
     bool afterSynonym = false;
+    std::unordered_set<std::string> afterSynTokens = {"such", "pattern", "with"};
     while (ptr < tokenLength) {
         // invalid semicolon token after declarations
         if (tokens[ptr] == DECLARATION_END_TOKEN) {
             return generateSyntaxErrorResponse();
         }
         if (hasSeenSelectToken && afterSynonym) {
-            if (tokens[ptr] != PATTERN_MARKER && tokens[ptr] != SUCHTHAT_MARKER[0]) {
+            if (afterSynTokens.find(tokens[ptr]) == afterSynTokens.end()) {
                 return generateSyntaxErrorResponse();
             }
-            if (tokens[ptr] == PATTERN_MARKER || tokens[ptr] == SUCHTHAT_MARKER[0]) {
-                break;
-            }
+            break;
         }
         if (tokens[ptr] == SELECT_MARKER && !hasSeenSelectToken) {
             ptr++;
