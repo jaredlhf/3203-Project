@@ -1,5 +1,6 @@
 #include "PKB/PkbRetriever.h"
 #include <iostream>
+#include <algorithm>
 #include "catch.hpp"
 
 #include "QPS/constants/Constants.h"

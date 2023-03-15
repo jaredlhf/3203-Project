@@ -1,5 +1,6 @@
 #include "SP/Tokenizer.h"
 #include "catch.hpp"
+#include <algorithm>
 #include <regex>
 
 using namespace std;

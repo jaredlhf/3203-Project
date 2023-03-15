@@ -1,7 +1,7 @@
 #include <string>
 #include <unordered_set>
-#include "QPS/Constants/Synonym.h"
-#include "QPS/Constants/Constants.h"
+#include "QPS/constants/Synonym.h"
+#include "QPS/constants/Constants.h"
 #include "catch.hpp"
 
 using namespace std;

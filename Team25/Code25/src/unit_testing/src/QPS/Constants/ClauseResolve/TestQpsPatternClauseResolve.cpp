@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "QPS/Constants/Clause.h"
+#include "QPS/constants/Clause.h"
 #include "catch.hpp"
 
 

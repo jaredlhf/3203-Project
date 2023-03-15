@@ -1,6 +1,7 @@
 #include <string>
 #include <regex>
 #include <stack>
+#include <algorithm>
 #include "Token.h"
 #include "ExpressionParser.h"
 

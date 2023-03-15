@@ -1,3 +1,4 @@
+#include <memory>
 #include "TNode.h"
 #include "DesignExtractor.h"
 #include "SelectiveExtractor.h"

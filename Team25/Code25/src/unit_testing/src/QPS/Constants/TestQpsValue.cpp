@@ -1,4 +1,4 @@
-#include "QPS/Constants/Value.h"
+#include "QPS/constants/Value.h"
 #include "catch.hpp"
 
 // TEST CASES FOR VALUE FACTORY FUNCTION

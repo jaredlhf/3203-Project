@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "StringUtils.h"
 
 bool StringUtils::isValidInt(const std::string& s) {

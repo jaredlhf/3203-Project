@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ParentStStrat.h"
 
 // Constructor function for Strat
