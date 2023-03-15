@@ -4,7 +4,8 @@ on:
   pull_request:
     branches: [ "master" ]
 jobs:
-  Code Standard Test:
+  name:Code Standard Test
+  cpp-linter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
