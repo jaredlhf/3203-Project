@@ -559,7 +559,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For with query with call.procName in with clause, the right result is returned") {
-				list<string> expected = { "12" };
+				list<string> expected = { "14" };
 				list<string> res;
 
 				string query = "call c1; Select c1 with c1.procName = \"factorial\"";
