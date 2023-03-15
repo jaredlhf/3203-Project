@@ -38,12 +38,16 @@ std::string Synonym::getName() {
     return this->name;
 }
 
+std::string Synonym::getNameWithAttr() {
+    return this->name + '.' + this->attrName;
+}
+
 std::string Synonym::getKeyword() {
     return this->keyword;
 }
 
 bool Synonym::compare(std::shared_ptr<Synonym> other) {
-    return this->name == other->name && this->keyword == other->keyword;
+    return this->name == other->name && this->keyword == other->keyword && this->attrName == other->attrName;
 }
 
 std::unordered_set<std::string> Synonym::getMatches() {
@@ -66,6 +70,10 @@ std::string Synonym::getAttrName() {
     return this->attrName;
 }
 
+bool Synonym::isBooleanSyn() {
+    return false;
+}
+
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveSelectResult(
     std::shared_ptr<PkbRetriever> pkbRet) {
     std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> res;
@@ -84,6 +92,30 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveSe
     return res;
 }
 
+/*
+Makes a table of headers [s1, s1.attrName] for when s1 and s1.attrName refers to the same attribute.
+If s1 and s1.attrName do not refer to the same attribute, create a overriden function in the concrete
+class instead.
+E.g.
+
+|s1  |s1.attrName |
+|1   | "main      |
+|2   | "factorial"|
+|3   | "beta"     |
+
+Note: As of Milestone 2, only call, read, print syns require overriden functions.
+*/
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> Synonym::resolveAttrResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synRes = this->resolveSelectResult(pkbRet);
+    std::shared_ptr<QpsTable> resTable = QpsTable::create({ this->getName(), this->getNameWithAttr() });
+    for (std::vector<std::string> row : synRes.second->getData()) {
+        resTable->addRow({ row[0], row[0] });
+    }
+
+    return std::make_pair(synRes.first, resTable);
+}
+
 // Factory class for Synonyms
 std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::string& name) {
     return Synonym::create(type, name, "");
@@ -100,6 +132,7 @@ std::shared_ptr<Synonym> Synonym::create(const std::string& type, const std::str
     if (type == Constants::VARIABLE) return std::make_shared<VariableSynonym>(VariableSynonym(name, attrName));
     if (type == Constants::CONSTANT) return std::make_shared<ConstantSynonym>(ConstantSynonym(name, attrName));
     if (type == Constants::PROCEDURE) return std::make_shared<ProcedureSynonym>(ProcedureSynonym(name, attrName));
+    if (type == Constants::BOOLEAN) return std::make_shared<BooleanSynonym>(BooleanSynonym(name));
     if (type == Constants::SYNTAX_ERROR) return std::make_shared<SyntaxErrorSynonym>(SyntaxErrorSynonym(name, attrName));
     if (type == Constants::SEMANTIC_ERROR) return std::make_shared<SemanticErrorSynonym>(SemanticErrorSynonym(name, attrName));
 
@@ -323,6 +356,19 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ProcedureSynonym::
         : Constants::ClauseResult::OK;
 
     return res;
+}
+
+BooleanSynonym::BooleanSynonym(const std::string& name) : Synonym(name) {
+    keyword = Constants::BOOLEAN;
+}
+
+bool BooleanSynonym::isBooleanSyn() {
+    return true;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> BooleanSynonym::resolveSelectResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    return QpsTable::getDefaultOk();
 }
 
 SyntaxErrorSynonym::SyntaxErrorSynonym(const std::string& name) : Synonym(name) {

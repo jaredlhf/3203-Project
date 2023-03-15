@@ -27,6 +27,7 @@ public:
     bool matchesAttrName(const std::string& inputAttrName);
     void addMatchingResult(const std::string& result);
     std::string getName();
+    std::string getNameWithAttr();
     std::string getKeyword();
     bool compare(std::shared_ptr<Synonym> other);
     virtual std::unordered_set<std::string> getMatches();
@@ -34,7 +35,10 @@ public:
     virtual bool isVariableSyn();
     virtual bool hasAttrName();
     std::string getAttrName();
+    virtual bool isBooleanSyn();
     virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet);
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveAttrResult(
         std::shared_ptr<PkbRetriever> pkbRet);
 
     // Static functions
@@ -122,6 +126,14 @@ public:
     ProcedureSynonym(const std::string& name);
     ProcedureSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
+class BooleanSynonym : public Synonym {
+public:
+    BooleanSynonym(const std::string& name);
+    virtual bool isBooleanSyn() override;
     virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveSelectResult(
         std::shared_ptr<PkbRetriever> pkbRet) override;
 };

@@ -709,11 +709,15 @@ SCENARIO("Testing StmtParser") {
                 REQUIRE(elseCfgNode->getLineNo().size() == 1);
                 REQUIRE(elseCfgNode->getLineNo()[0] == 3);
 
+
+                REQUIRE(thenCfgNode->getAllNextNodes()[0] == nullptr);
+
                 REQUIRE(elseCfgNode->getAllNextNodes().size() == 1);
                 std::shared_ptr<CFGNode> if2CfgNode = elseCfgNode->getAllNextNodes()[0];
                 REQUIRE(if2CfgNode->getLineNo().size() == 1);
                 REQUIRE(if2CfgNode->getLineNo()[0] == 4);
                 REQUIRE(if2CfgNode->getAllNextNodes().size() == 2);
+
 
                 std::shared_ptr<CFGNode> then2CfgNode = if2CfgNode->getAllNextNodes()[0];
                 std::shared_ptr<CFGNode> else2CfgNode = if2CfgNode->getAllNextNodes()[1];
@@ -774,6 +778,21 @@ SCENARIO("Testing StmtParser") {
                                           "if (x < 5) then { x = x * 10; } else { y = y *2; } \n"
                                           "}}";
 
+        std::string manyNestedWhileValidStatement = "while ((x != 0) && (y != 0)) { \n"
+                                                    "\tcount = count + 1;\n"
+                                                    "\tx = y + 2;\n"
+                                                    "\twhile (y > 2) {\n"
+                                                    "\t\twhile (c < 3) {\n"
+                                                    "\t\t\ta = b + c;\n"
+                                                    "\t\t}\n"
+                                                    "\t\ty = y - 3;\n"
+                                                    "\t\tx = x + z;\n"
+                                                    "\t}\n"
+                                                    "\twhile (o < 3) {\n"
+                                                    "\t\tj = k + l;\n"
+                                                    "\t}\n"
+                                                    "}";
+
         std::string missingStmtLst = "while (x>0) {  }";
         std::string missingCondExpr = "while () { y = y + 1; }";
 
@@ -801,73 +820,162 @@ SCENARIO("Testing StmtParser") {
             }
         }
 
-//        WHEN("tokenizer has long valid statement") {
-//            std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
-//            t->tokenize(longValidStatement);
-//
-//            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
-//            std::shared_ptr<ParserDTO> resultDTO = StmtParser::parseStmt(t->peek(), t->peekTwice(), util, t, "test");
-//            std::shared_ptr<WhileNode> node = dynamic_pointer_cast<WhileNode>(resultDTO->getNode());
-//            std::shared_ptr<CFGWhileNode> cfgNode = dynamic_pointer_cast<CFGWhileNode>(resultDTO->getCFGNode());
-//
-//            THEN ("it should generate correct AST") {
-//                std::shared_ptr<IfNode> ifs = dynamic_pointer_cast<IfNode>(node->getStmtLst()->getStatements()[0]);
-//                REQUIRE(node->getCondExpr() == "(x>0)&&(y<5)");
-//                REQUIRE(ifs->getCondExpr() == "(x>0)&&(y<5)");
-//                std::shared_ptr<AssignNode> a =dynamic_pointer_cast<AssignNode>(ifs->getIfLst()->getStatements()[0]);
-//                REQUIRE(a->getVar() == "x");
-//                REQUIRE(a->getExpr() == "x+1");
-//                std::shared_ptr<AssignNode> a2 =dynamic_pointer_cast<AssignNode>(ifs->getElseLst()->getStatements()[0]);
-//                REQUIRE(a2->getVar() == "y");
-//                REQUIRE(a2->getExpr() == "y+1");
-//                std::shared_ptr<IfNode> ifs2 = dynamic_pointer_cast<IfNode>(ifs->getElseLst()->getStatements()[1]);
-//                REQUIRE(ifs2->getCondExpr() == "x<5");
-//                std::shared_ptr<AssignNode> a3 =dynamic_pointer_cast<AssignNode>(ifs2->getIfLst()->getStatements()[0]);
-//                REQUIRE(a3->getVar() == "x");
-//                REQUIRE(a3->getExpr() == "x*10");
-//                std::shared_ptr<AssignNode> a4 =dynamic_pointer_cast<AssignNode>(ifs2->getElseLst()->getStatements()[0]);
-//                REQUIRE(a4->getVar() == "y");
-//                REQUIRE(a4->getExpr() == "y*2");
-//            }
-//            THEN ("it should generate correct CFG") {
-//                REQUIRE(cfgNode->getLineNo().size() == 1);
-//                REQUIRE(cfgNode->getLineNo()[0] == 1);
-//                std::shared_ptr<CFGNode> nextCfgNode = cfgNode->getAllNextNodes()[0];
-//                REQUIRE(nextCfgNode->getLineNo().size() == 0);
+        WHEN("tokenizer has long valid statement") {
+            std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
+            t->tokenize(longValidStatement);
 
-//                std::shared_ptr<CFGNode> loopCfgNode = cfgNode->getAllNextNodes()[1];
-//                REQUIRE(loopCfgNode->getLineNo().size() == 1);
-//                REQUIRE(loopCfgNode->getLineNo()[0] == 2);
-//                REQUIRE(loopCfgNode->getAllNextNodes().size() == 2);
-//                std::shared_ptr<CFGNode> thenCfgNode = loopCfgNode->getAllNextNodes()[0];
-//                std::shared_ptr<CFGNode> elseCfgNode = loopCfgNode->getAllNextNodes()[1];
-//                REQUIRE(thenCfgNode->getLineNo().size() == 1);
-//                REQUIRE(thenCfgNode->getLineNo()[0] == 3);
-//                REQUIRE(thenCfgNode->getAllNextNodes().size() == 1);
-//                std::shared_ptr<CFGNode> thenNextCfgNode = thenCfgNode->getAllNextNodes()[0];
-//                REQUIRE(thenNextCfgNode->getLineNo().size() == 1);
-//                REQUIRE(thenNextCfgNode->getLineNo()[0] == 1);
-//                REQUIRE(elseCfgNode->getLineNo().size() == 1);
-//                REQUIRE(elseCfgNode->getLineNo()[0] == 4);
-//
-//                std::shared_ptr<CFGNode> if2CfgNode = elseCfgNode->getAllNextNodes()[0];
-//                REQUIRE(if2CfgNode->getLineNo().size() == 1);
-//                REQUIRE(if2CfgNode->getLineNo()[0] == 5);
-//                REQUIRE(if2CfgNode->getAllNextNodes().size() == 2);
-//                std::shared_ptr<CFGNode> then2CfgNode = if2CfgNode->getAllNextNodes()[0];
-//                std::shared_ptr<CFGNode> else2CfgNode = if2CfgNode->getAllNextNodes()[1];
-//                REQUIRE(then2CfgNode->getLineNo().size() == 1);
-//                REQUIRE(then2CfgNode->getLineNo()[0] == 6);
-//                std::shared_ptr<CFGNode> thenNext2CfgNode = then2CfgNode->getAllNextNodes()[0];
-//                REQUIRE(thenNext2CfgNode->getLineNo().size() == 1);
-//                REQUIRE(thenNext2CfgNode->getLineNo()[0] == 1);
-//                REQUIRE(else2CfgNode->getLineNo().size() == 1);
-//                REQUIRE(else2CfgNode->getLineNo()[0] == 7);
-//                std::shared_ptr<CFGNode> elseNext2CfgNode = else2CfgNode->getAllNextNodes()[0];
-//                REQUIRE(elseNext2CfgNode->getLineNo().size() == 1);
-//                REQUIRE(elseNext2CfgNode->getLineNo()[0] == 1);
-//            }
-//        }
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
+            std::shared_ptr<ParserDTO> resultDTO = StmtParser::parseStmt(t->peek(), t->peekTwice(), util, t, "test");
+            std::shared_ptr<WhileNode> node = dynamic_pointer_cast<WhileNode>(resultDTO->getNode());
+            std::shared_ptr<CFGWhileNode> cfgNode = dynamic_pointer_cast<CFGWhileNode>(resultDTO->getCFGNode());
+
+            THEN ("it should generate correct AST") {
+                std::shared_ptr<IfNode> ifs = dynamic_pointer_cast<IfNode>(node->getStmtLst()->getStatements()[0]);
+                REQUIRE(node->getCondExpr() == "(x>0)&&(y<5)");
+                REQUIRE(ifs->getCondExpr() == "(x>0)&&(y<5)");
+                std::shared_ptr<AssignNode> a =dynamic_pointer_cast<AssignNode>(ifs->getIfLst()->getStatements()[0]);
+                REQUIRE(a->getVar() == "x");
+                REQUIRE(a->getExpr() == "x+1");
+                std::shared_ptr<AssignNode> a2 =dynamic_pointer_cast<AssignNode>(ifs->getElseLst()->getStatements()[0]);
+                REQUIRE(a2->getVar() == "y");
+                REQUIRE(a2->getExpr() == "y+1");
+                std::shared_ptr<IfNode> ifs2 = dynamic_pointer_cast<IfNode>(ifs->getElseLst()->getStatements()[1]);
+                REQUIRE(ifs2->getCondExpr() == "x<5");
+                std::shared_ptr<AssignNode> a3 =dynamic_pointer_cast<AssignNode>(ifs2->getIfLst()->getStatements()[0]);
+                REQUIRE(a3->getVar() == "x");
+                REQUIRE(a3->getExpr() == "x*10");
+                std::shared_ptr<AssignNode> a4 =dynamic_pointer_cast<AssignNode>(ifs2->getElseLst()->getStatements()[0]);
+                REQUIRE(a4->getVar() == "y");
+                REQUIRE(a4->getExpr() == "y*2");
+            }
+            THEN ("it should generate correct CFG") {
+                REQUIRE(cfgNode->getLineNo().size() == 1);
+                REQUIRE(cfgNode->getLineNo()[0] == 1);
+
+                std::shared_ptr<CFGNode> loopCfgNode = cfgNode->getAllNextNodes()[1];
+                REQUIRE(loopCfgNode->getLineNo().size() == 1);
+                REQUIRE(loopCfgNode->getLineNo()[0] == 2);
+                REQUIRE(loopCfgNode->getAllNextNodes().size() == 2);
+                std::shared_ptr<CFGNode> thenCfgNode = loopCfgNode->getAllNextNodes()[0];
+                std::shared_ptr<CFGNode> elseCfgNode = loopCfgNode->getAllNextNodes()[1];
+                REQUIRE(thenCfgNode->getLineNo().size() == 1);
+                REQUIRE(thenCfgNode->getLineNo()[0] == 3);
+                REQUIRE(thenCfgNode->getAllNextNodes().size() == 1);
+                std::shared_ptr<CFGNode> thenNextCfgNode = thenCfgNode->getAllNextNodes()[0];
+                REQUIRE(thenNextCfgNode->getLineNo().size() == 1);
+                REQUIRE(thenNextCfgNode->getLineNo()[0] == 1);
+                REQUIRE(elseCfgNode->getLineNo().size() == 1);
+                REQUIRE(elseCfgNode->getLineNo()[0] == 4);
+
+                std::shared_ptr<CFGNode> if2CfgNode = elseCfgNode->getAllNextNodes()[0];
+                REQUIRE(if2CfgNode->getLineNo().size() == 1);
+                REQUIRE(if2CfgNode->getLineNo()[0] == 5);
+                REQUIRE(if2CfgNode->getAllNextNodes().size() == 2);
+                std::shared_ptr<CFGNode> then2CfgNode = if2CfgNode->getAllNextNodes()[0];
+                std::shared_ptr<CFGNode> else2CfgNode = if2CfgNode->getAllNextNodes()[1];
+                REQUIRE(then2CfgNode->getLineNo().size() == 1);
+                REQUIRE(then2CfgNode->getLineNo()[0] == 6);
+                std::shared_ptr<CFGNode> thenNext2CfgNode = then2CfgNode->getAllNextNodes()[0];
+                REQUIRE(thenNext2CfgNode->getLineNo().size() == 1);
+                REQUIRE(thenNext2CfgNode->getLineNo()[0] == 1);
+                REQUIRE(else2CfgNode->getLineNo().size() == 1);
+                REQUIRE(else2CfgNode->getLineNo()[0] == 7);
+                std::shared_ptr<CFGNode> elseNext2CfgNode = else2CfgNode->getAllNextNodes()[0];
+                REQUIRE(elseNext2CfgNode->getLineNo().size() == 1);
+                REQUIRE(elseNext2CfgNode->getLineNo()[0] == 1);
+            }
+        }
+
+        WHEN("tokenizer has many nested whiles statement") {
+            std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
+            t->tokenize(manyNestedWhileValidStatement);
+
+            std::shared_ptr<SPParserUtils> util = std::make_shared<SPParserUtils>(t);
+            std::shared_ptr<ParserDTO> resultDTO = StmtParser::parseStmt(t->peek(), t->peekTwice(), util, t, "test");
+            std::shared_ptr<WhileNode> node = dynamic_pointer_cast<WhileNode>(resultDTO->getNode());
+            std::shared_ptr<CFGWhileNode> cfgNode = dynamic_pointer_cast<CFGWhileNode>(resultDTO->getCFGNode());
+
+            THEN ("it should generate correct AST") {
+                std::shared_ptr<AssignNode> a1 = dynamic_pointer_cast<AssignNode>(node->getStmtLst()->getStatements()[0]);
+                REQUIRE(node->getCondExpr() == "(x!=0)&&(y!=0)");
+                REQUIRE(a1->getVar() == "count");
+                REQUIRE(a1->getExpr() == "count+1");
+                std::shared_ptr<AssignNode> a2 =dynamic_pointer_cast<AssignNode>(node->getStmtLst()->getStatements()[1]);
+                REQUIRE(a2->getVar() == "x");
+                REQUIRE(a2->getExpr() == "y+2");
+                std::shared_ptr<WhileNode> w1 =dynamic_pointer_cast<WhileNode>(node->getStmtLst()->getStatements()[2]);
+                std::shared_ptr<WhileNode> w2 =dynamic_pointer_cast<WhileNode>(w1->getStmtLst()->getStatements()[0]);
+                std::shared_ptr<AssignNode> a3 = dynamic_pointer_cast<AssignNode>(w2->getStmtLst()->getStatements()[0]);
+                REQUIRE(w2->getCondExpr() == "c<3");
+                REQUIRE(a3->getVar() == "a");
+                REQUIRE(a3->getExpr() == "b+c");
+                std::shared_ptr<AssignNode> a4 = dynamic_pointer_cast<AssignNode>(w1->getStmtLst()->getStatements()[1]);
+                REQUIRE(a4->getVar() == "y");
+                REQUIRE(a4->getExpr() == "y-3");
+                std::shared_ptr<AssignNode> a5 = dynamic_pointer_cast<AssignNode>(w1->getStmtLst()->getStatements()[2]);
+                REQUIRE(a5->getVar() == "x");
+                REQUIRE(a5->getExpr() == "x+z");
+
+
+                std::shared_ptr<WhileNode> w3 =dynamic_pointer_cast<WhileNode>(node->getStmtLst()->getStatements()[3]);
+                std::shared_ptr<AssignNode> a6 = dynamic_pointer_cast<AssignNode>(w3->getStmtLst()->getStatements()[0]);
+                REQUIRE(w3->getCondExpr() == "o<3");
+                REQUIRE(a6->getVar() == "j");
+                REQUIRE(a6->getExpr() == "k+l");
+
+            }
+            THEN ("it should generate correct CFG") {
+                REQUIRE(cfgNode->getLineNo().size() == 1);
+                REQUIRE(cfgNode->getLineNo()[0] == 1);
+
+                std::shared_ptr<CFGNode> loop = cfgNode->getAllNextNodes()[1];
+                REQUIRE(loop->getLineNo().size() == 2);
+                REQUIRE(loop->getLineNo()[0] == 2);
+                REQUIRE(loop->getLineNo()[1] == 3);
+                REQUIRE(loop->getAllNextNodes().size() == 1);
+
+                std::shared_ptr<CFGNode> w1 = loop->getAllNextNodes()[0];
+                REQUIRE(w1->getLineNo().size() == 1);
+                REQUIRE(w1->getLineNo()[0] == 4);
+                REQUIRE(w1->getAllNextNodes().size() == 2);
+
+                std::shared_ptr<CFGNode> w2 = w1->getAllNextNodes()[1];
+                REQUIRE(w2->getLineNo().size() == 1);
+                REQUIRE(w2->getLineNo()[0] == 5);
+                REQUIRE(w2->getAllNextNodes().size() == 2);
+                std::shared_ptr<CFGNode> w2Next = w2->getAllNextNodes()[0];
+                REQUIRE(w2Next->getLineNo().size() == 2);
+                REQUIRE(w2Next->getLineNo()[0] == 7);
+                REQUIRE(w2Next->getLineNo()[1] == 8);
+                REQUIRE(w2Next->getAllNextNodes().size() == 1);
+                std::shared_ptr<CFGNode> w2NextNext = w2Next->getAllNextNodes()[0];
+                REQUIRE(w2NextNext->getLineNo().size() == 1);
+                REQUIRE(w2NextNext->getLineNo()[0] == 4);
+                std::shared_ptr<CFGNode> w2Loop = w2->getAllNextNodes()[1];
+                REQUIRE(w2Loop->getLineNo().size() == 1);
+                REQUIRE(w2Loop->getLineNo()[0] == 6);
+                REQUIRE(w2Loop->getAllNextNodes().size() == 1);
+                std::shared_ptr<CFGNode> w2LoopNext = w2Loop->getAllNextNodes()[0];
+                REQUIRE(w2LoopNext->getLineNo().size() == 1);
+                REQUIRE(w2LoopNext->getLineNo()[0] == 5);
+
+                std::shared_ptr<CFGNode> w3 = w1->getAllNextNodes()[0];
+                REQUIRE(w3->getLineNo().size() == 1);
+                REQUIRE(w3->getLineNo()[0] == 9);
+                REQUIRE(w3->getAllNextNodes().size() == 2);
+                std::shared_ptr<CFGNode> w3Next = w3->getAllNextNodes()[0];
+                REQUIRE(w3Next->getLineNo().size() == 1);
+                REQUIRE(w3Next->getLineNo()[0] == 1);
+                std::shared_ptr<CFGNode> w3Loop = w3->getAllNextNodes()[1];
+                REQUIRE(w3Loop->getLineNo().size() == 1);
+                REQUIRE(w3Loop->getLineNo()[0] == 10);
+                REQUIRE(w3Loop->getAllNextNodes().size() == 1);
+                std::shared_ptr<CFGNode> w3LoopNext = w3Loop->getAllNextNodes()[0];
+                REQUIRE(w3LoopNext->getLineNo().size() == 1);
+                REQUIRE(w3LoopNext->getLineNo()[0] == 9);
+
+            }
+        }
 
         WHEN("tokenizer has invalid if statement with missing stmtLst") {
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>() ;
@@ -892,5 +1000,6 @@ SCENARIO("Testing StmtParser") {
     }
 
 }
+
 
 
