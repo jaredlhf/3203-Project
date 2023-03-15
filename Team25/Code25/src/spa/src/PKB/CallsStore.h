@@ -1,31 +1,25 @@
 #pragma once
 
+#include<stdio.h>
 #include <iostream>
-#include <stdio.h>
-#include <unordered_map>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "AbstractionStore.h"
 
 class CallsStore : public ProcProcStore {
 private:
-  std::unordered_map<std::string, std::unordered_set<std::string>>
-      leftProcStore;
-  std::unordered_map<std::string, std::unordered_set<std::string>>
-      rightProcStore;
-
+	std::unordered_map<std::string, std::unordered_set<std::string>> leftProcStore;
+	std::unordered_map<std::string, std::unordered_set<std::string>> rightProcStore;
 public:
-  CallsStore();
-  CallsStore(std::unordered_map<std::string, std::unordered_set<std::string>>
-                 leftProcStore,
-             std::unordered_map<std::string, std::unordered_set<std::string>>
-                 rightProcStore);
+	CallsStore();
+	CallsStore(std::unordered_map<std::string, std::unordered_set<std::string>> leftProcStore, std::unordered_map<std::string, std::unordered_set<std::string>> rightProcStore);
 
-  void addCalls(std::string leftProc, std::string rightProc);
-  std::unordered_set<std::string> getLeftProc(std::string rightProc);
-  std::unordered_set<std::string> getRightProc(std::string leftProc);
-  bool hasLeftProc(std::string procName) override;
-  bool hasRightProc(std::string procName) override;
-  std::unordered_set<std::string> getAllLeft() override;
-  std::unordered_set<std::string> getAllRight() override;
+	void addCalls(std::string leftProc, std::string rightProc);
+	std::unordered_set<std::string> getLeftProc(std::string rightProc);
+	std::unordered_set<std::string> getRightProc(std::string leftProc);
+	bool hasLeftProc(std::string procName) override;
+	bool hasRightProc(std::string procName) override;
+	std::unordered_set<std::string> getAllLeft() override;
+	std::unordered_set<std::string> getAllRight() override;
 };
