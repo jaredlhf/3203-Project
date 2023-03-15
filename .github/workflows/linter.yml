@@ -1,10 +1,10 @@
-name: Code Style Check
+name: Coding Standard 
 
 on:
   pull_request:
     branches: [ "master" ]
 jobs:
-  cpp-linter:
+  Code Standard Test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,6 +16,7 @@ jobs:
           style: file
           tidy-checks: -boost, -bugprone, -performance, -portability, -modernize, -clang-anlayzer, -cppcoreguidelines
           files-changed-only: false
+          extra-args: -std=c++17 -stdlib=libc++
 
       - name: Failed check
         if: steps.linter.outputs.checks-failed > 0
