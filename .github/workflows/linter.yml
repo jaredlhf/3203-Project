@@ -1,10 +1,9 @@
-name: Coding Standard 
+name: Coding Standards 
 
 on:
   pull_request:
     branches: [ "master" ]
 jobs:
-  name:Code Standard Test
   cpp-linter:
     runs-on: ubuntu-latest
     steps:
