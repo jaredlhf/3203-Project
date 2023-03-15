@@ -1,37 +1,38 @@
-#include <memory>
 #include "SourceProcessor.h"
-
+#include <memory>
 
 // converts file specified by filename into string, with \n characters removed
 std::string SourceProcessor::processFile(std::string &filename) {
-    ifstream inputFile;
-    inputFile.open(filename);
-    stringstream strStream;
-    strStream << inputFile.rdbuf();
-    string res = strStream.str();
-    res.erase(std::remove(res.begin(), res.end(), '\n'), res.end());
-    return res;
+  ifstream inputFile;
+  inputFile.open(filename);
+  stringstream strStream;
+  strStream << inputFile.rdbuf();
+  string res = strStream.str();
+  res.erase(std::remove(res.begin(), res.end(), '\n'), res.end());
+  return res;
 }
 
-void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator) {
-    std::string fileStr = processFile(filename);
+void SourceProcessor::processSimple(
+    std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator) {
+  std::string fileStr = processFile(filename);
 
-    Tokenizer t;
-    t.tokenize(fileStr);
+  Tokenizer t;
+  t.tokenize(fileStr);
 
-    Parser p(std::make_shared<Tokenizer>(t));
-    std::vector<std::shared_ptr<ParserDTO>> programDTOs = p.parseProgram();
+  Parser p(std::make_shared<Tokenizer>(t));
+  std::vector<std::shared_ptr<ParserDTO>> programDTOs = p.parseProgram();
 
-    std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator);
+  std::shared_ptr<SelectiveExtractor> selectiveExtractor =
+      std::make_shared<SelectiveExtractor>(pkbPopulator);
 
-    for (auto programDTO : programDTOs) {
-        std::shared_ptr<ProcedureNode> root = std::dynamic_pointer_cast<ProcedureNode>(programDTO->getNode());
+  for (auto programDTO : programDTOs) {
+    std::shared_ptr<ProcedureNode> root =
+        std::dynamic_pointer_cast<ProcedureNode>(programDTO->getNode());
 
-        std::shared_ptr<CFGNode> cfgRoot = programDTO->getCFGNode();
-//        pkbPopulator->addProc(root->getProc());
+    std::shared_ptr<CFGNode> cfgRoot = programDTO->getCFGNode();
+    //        pkbPopulator->addProc(root->getProc());
 
-        selectiveExtractor->visitProgramTree(root);
-        selectiveExtractor->visitCFG(cfgRoot);
-    }
-
+    selectiveExtractor->visitProgramTree(root);
+    selectiveExtractor->visitCFG(cfgRoot);
+  }
 }

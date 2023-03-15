@@ -46,24 +46,26 @@ const std::string Constants::CLOSE_BRACKET = ")";
 const std::string Constants::SEPARATOR = ",";
 
 // AttrName related functions
-bool Constants::isAttrNameInt(const std::string& attrName) {
-	return attrName == Constants::VALUE || attrName == Constants::STMTNUM;
+bool Constants::isAttrNameInt(const std::string &attrName) {
+  return attrName == Constants::VALUE || attrName == Constants::STMTNUM;
 }
 
 // ClauseResult related functions
-Constants::ClauseResult Constants::getLowerBound(Constants::ClauseResult c1, Constants::ClauseResult c2) {
-	return std::min(c1, c2);
+Constants::ClauseResult Constants::getLowerBound(Constants::ClauseResult c1,
+                                                 Constants::ClauseResult c2) {
+  return std::min(c1, c2);
 }
 
-Constants::ClauseResult Constants::getLowerBound(std::vector<Constants::ClauseResult> clauseList) {
-	if (clauseList.size() == 0) {
-		return Constants::ClauseResult::SYN_ERR;
-	}
+Constants::ClauseResult
+Constants::getLowerBound(std::vector<Constants::ClauseResult> clauseList) {
+  if (clauseList.size() == 0) {
+    return Constants::ClauseResult::SYN_ERR;
+  }
 
-	Constants::ClauseResult res = clauseList[0];
-	for (int i = 1; i < clauseList.size(); i++) {
-		res = getLowerBound(res, clauseList[i]);
-	}
+  Constants::ClauseResult res = clauseList[0];
+  for (int i = 1; i < clauseList.size(); i++) {
+    res = getLowerBound(res, clauseList[i]);
+  }
 
-	return res;
+  return res;
 }

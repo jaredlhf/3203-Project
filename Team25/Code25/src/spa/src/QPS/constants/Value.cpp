@@ -1,41 +1,27 @@
 #include "Value.h"
 
 // Private constructor functions
-Value::Value() {
+Value::Value() {}
 
-}
-
-Value::Value(const std::string& val) {
-	this->val = val;
-}
+Value::Value(const std::string &val) { this->val = val; }
 
 // Overriden functions from Entity class
-bool Value::isSynonym() {
-	return false;
-}
+bool Value::isSynonym() { return false; }
 
-bool Value::isConstant() {
-	return true;
-}
+bool Value::isConstant() { return true; }
 
-bool Value::isWildcard() {
-	return false;
-}
+bool Value::isWildcard() { return false; }
 
 // Factory function
-std::shared_ptr<Value> Value::create(const std::string& val) {
-	return std::make_shared<Value>(Value(val));
+std::shared_ptr<Value> Value::create(const std::string &val) {
+  return std::make_shared<Value>(Value(val));
 }
 
 // Value class functions
-const std::string& Value::getVal() {
-	return this->val;
-}
+const std::string &Value::getVal() { return this->val; }
 
-bool Value::isInt() {
-	return StringUtils::isValidInt(this->val);
-}
+bool Value::isInt() { return StringUtils::isValidInt(this->val); }
 
 bool Value::compare(std::shared_ptr<Value> other) {
-	return this->val == other->val;
+  return this->val == other->val;
 }
