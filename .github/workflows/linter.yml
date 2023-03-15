@@ -13,10 +13,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: file
           tidy-checks: -boost, -bugprone, -performance, -portability, -modernize, -clang-anlayzer, -cppcoreguidelines
           files-changed-only: false
-          extra-args: -std=c++17 -stdlib=libc++
+          extra-args: -std=c++17 
 
       - name: Failed check
         if: steps.linter.outputs.checks-failed > 0
