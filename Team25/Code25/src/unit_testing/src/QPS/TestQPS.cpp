@@ -175,6 +175,13 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		ssPointer->addStmt(Constants::ASSIGN, 7);
 		ssPointer->addStmt(Constants::WHILE, 8);
 		ssPointer->addStmt(Constants::ASSIGN, 9);
+		ssPointer->addStmt(Constants::READ, 10);
+		ssPointer->addStmt(Constants::READ, 11);
+		ssPointer->addStmt(Constants::PRINT, 12);
+		ssPointer->addStmt(Constants::PRINT, 13);
+		ssPointer->addStmt(Constants::CALL, 14);
+		ssPointer->addStmt(Constants::CALL, 15);
+
 
 		// Mock followsSt relationship in SIMPLE program
 		fstarsPointer->addFollowsStar(1, { 2 });
@@ -218,6 +225,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		msPointer->addModifies(5, "y");
 		msPointer->addModifies(7, "x");
 		msPointer->addModifies(9, "x");
+		msPointer->addModifies(10, "w");
+		msPointer->addModifies(11, "x");
 
 		// Mock Uses relationship in SIMPLE program
 		usesPointer->addUses(1, "y");
@@ -225,6 +234,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		usesPointer->addUses(6, "x");
 		usesPointer->addUses(7, "x");
 		usesPointer->addUses(9, "x");
+		usesPointer->addUses(12, "y");
+		usesPointer->addUses(13, "z");
 
 		// Mock Patterns in SIMPLE program
 		pattsPointer->addAssignLhs("x", 1);
@@ -261,6 +272,20 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		cStarsPointer->addCallsStar("main", "factorial");
 		cStarsPointer->addCallsStar("main", "beta");
 		cStarsPointer->addCallsStar("factorial", "beta");
+
+		// Mock Read varNames appearing in SIMPLE program
+		readAPointer->addAttr("w", 10);
+		readAPointer->addAttr("x", 11);
+		readAPointer->addAttr("y", 5);
+
+		// Mock Print varNames appearing in SIMPLE program
+		readAPointer->addAttr("x", 6);
+		printAPointer->addAttr("y", 12);
+		printAPointer->addAttr("z", 13);
+
+		// Mock Call varNames appearing in SIMPLE program
+		callAPointer->addAttr("factorial", 14);
+		callAPointer->addAttr("beta", 15);
 
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
@@ -309,7 +334,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For follows query, the right result is returned") {
-				list<string> expected = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+				list<string> expected = { "1", "10", "11", "12", "13", "14", "15", 
+					"2", "3", "4", "5", "6", "7", "8", "9" };
 				list<string> res;
 
 				string query = "stmt stmt; Select stmt such that Follows(_, _)";
@@ -389,7 +415,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For uses query in the form (1, 'y'), the right result is returned") {
-				list<string> expected = { "6" };
+				list<string> expected = { "12", "13", "6" };
 				list<string> res;
 
 				string query = "print pn; Select pn such that Uses(1, \"y\")";
@@ -508,6 +534,36 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For query with read.varName in select results, the right result is returned") {
+				list<string> expected = { "10 w", "11 x", "5 y" };
+				list<string> res;
+
+				string query = "read r1; Select <r1, r1.varName>";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For with query with print.varName in with clause, the right result is returned") {
+				list<string> expected = { "12" };
+				list<string> res;
+
+				string query = "print p1; Select p1 such that Uses(12, _) with p1.varName = \"y\"";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For with query with call.procName in with clause, the right result is returned") {
+				list<string> expected = { "12" };
+				list<string> res;
+
+				string query = "call c1; Select c1 with c1.procName = \"factorial\"";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For combined query, the right result is returned") {
 				list<string> expected = { "w", "x" };
 				list<string> res;
@@ -539,7 +595,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For combined query with 1 overlapping synonym multiselect, the right result is returned") {
-				list<string> expected = { "1 y", "2 y", "3 y", "4 y", "5 y", "6 y", "7 y", "8 y", "9 y" };
+				list<string> expected = { "1 y", "10 y", "11 y", "12 y", "13 y", "14 y", 
+					"15 y", "2 y", "3 y", "4 y", "5 y", "6 y", "7 y", "8 y", "9 y" };
 				list<string> res;
 
 				string query = "assign a1; variable v1; stmt s1; Select <s1, v1> such that Uses(a1,v1) pattern a1 (_,_\"y\"_) ";

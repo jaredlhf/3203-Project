@@ -7,6 +7,7 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->resultSynonyms = response.getSelectSynonyms();
 	this->patternClauses = response.getPatternClauses();
 	this->suchThatClauses = response.getSuchThatClauses();
+	this->withClauses = response.getWithClauses();
 }
 
 // Returns the vector of Synonym names in order
@@ -110,6 +111,10 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	for (PatternClausePair ptClausePair : this->patternClauses) {
 		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
 		clauseResults.push_back(ptnClause->resolve(pkbRetriever, ptClausePair.first));
+	}
+
+	for (std::shared_ptr<Clause> withClause : this->withClauses) {
+		clauseResults.push_back(withClause->resolve(pkbRetriever));
 	}
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =
