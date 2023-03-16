@@ -30,23 +30,13 @@ jobs:
       working-directory: ./Team25/Code25
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
     
-    - name: Test
+    - name: Unit Tests
       working-directory: ${{github.workspace}}/build/src
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ./unit_testing/unit_testing
 
-    - name: Check System Test
-      working-directory: ${{github.workspace}}
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ls
-
-  
-
-  
-      
-    - name: System Test
+    - name: System Tests
       working-directory: ${{github.workspace}}/build/
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
