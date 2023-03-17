@@ -65,6 +65,8 @@ public:
     ReadSynonym(const std::string& name);
     ReadSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveAttrResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class PrintSynonym : public Synonym {
@@ -72,6 +74,8 @@ public:
     PrintSynonym(const std::string& name);
     PrintSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveAttrResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class CallSynonym : public Synonym {
@@ -79,6 +83,8 @@ public:
     CallSynonym(const std::string& name);
     CallSynonym(const std::string& name, const std::string& attrName);
     virtual bool isStmtRef() override;
+    virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveAttrResult(
+        std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
 class WhileSynonym : public Synonym {
