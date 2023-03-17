@@ -633,7 +633,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternClause::res
         return QpsTable::getDefaultSynErr();
     }
 
-    if (this->isSemInvalid() || !patternSynonym->matchesKeyword(Constants::ASSIGN)) {
+    if (this->isSemInvalid() || 
+        !(patternSynonym->matchesKeyword(Constants::ASSIGN)
+            || patternSynonym->matchesKeyword(Constants::IF)
+            || patternSynonym->matchesKeyword(Constants::WHILE))) {
         return QpsTable::getDefaultSemErr();
     }
 
