@@ -1,6 +1,7 @@
 #include "SelectiveExtractor.h"
 
 SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) {
+    pkbPopulator = populator;
     modifiesExtractor = make_shared<ModifiesExtractor>(populator);
     usesExtractor = make_shared<UsesExtractor>(populator);
     followsExtractor = make_shared<FollowsExtractor>(populator);
@@ -116,7 +117,8 @@ void SelectiveExtractor::visitCFG(std::shared_ptr<CFGNode> root) {
 
             auto childLineNo = child->getLineNo();
             if (!childLineNo.empty()) {
-                std::cout << "populating Next: (" << curr->getLineNo().back() << ", " <<  childLineNo.front() << ") " << std::endl;
+                //std::cout << "populating Next: (" << curr->getLineNo().back() << ", " <<  childLineNo.front() << ") " << std::endl;
+                pkbPopulator->addNext(curr->getLineNo().back(), childLineNo.front());
             }
             stack.push(child);
         }
@@ -124,7 +126,8 @@ void SelectiveExtractor::visitCFG(std::shared_ptr<CFGNode> root) {
         auto lineNo = curr->getLineNo();
         if (lineNo.size() >= 2) {
             for (int i = 0; i < lineNo.size() - 1; i++) {
-                std::cout << "populating Next: (" << lineNo[i] << ", " <<  lineNo[i + 1] << ") " << std::endl;
+                //std::cout << "populating Next: (" << lineNo[i] << ", " <<  lineNo[i + 1] << ") " << std::endl;
+                pkbPopulator->addNext(lineNo[i], lineNo[i + 1]);
             }
         }
     }
