@@ -7,6 +7,7 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->resultSynonyms = response.getSelectSynonyms();
 	this->patternClauses = response.getPatternClauses();
 	this->suchThatClauses = response.getSuchThatClauses();
+	this->withClauses = response.getWithClauses();
 }
 
 // Returns the vector of Synonym names in order
@@ -14,7 +15,9 @@ std::vector<std::string> QueryEvaluator::getResultNames() {
 	std::vector<std::string> res;
 
 	for (std::shared_ptr<Synonym> syn : this->resultSynonyms) {
-		res.push_back(syn->getName());
+		res.push_back(syn->hasAttrName()
+			? syn->getNameWithAttr()
+			:syn->getName());
 	}
 
 	return res;
@@ -26,7 +29,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::re
 	std::vector<std::shared_ptr<Synonym>> resultSynonyms, std::shared_ptr<PkbRetriever> pkbRet) {
 	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> selectResults;
 	for (std::shared_ptr<Synonym> resSyn : resultSynonyms) {
-		selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
+		if (resSyn->hasAttrName()) {
+			selectResults.push_back(resSyn->resolveAttrResult(pkbRet));
+		}
+		else {
+			selectResults.push_back(resSyn->resolveSelectResult(pkbRet));
+		}
 	}
 
 	return resolveClauses(selectResults);
@@ -103,6 +111,10 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	for (PatternClausePair ptClausePair : this->patternClauses) {
 		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
 		clauseResults.push_back(ptnClause->resolve(pkbRetriever, ptClausePair.first));
+	}
+
+	for (std::shared_ptr<Clause> withClause : this->withClauses) {
+		clauseResults.push_back(withClause->resolve(pkbRetriever));
 	}
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =
