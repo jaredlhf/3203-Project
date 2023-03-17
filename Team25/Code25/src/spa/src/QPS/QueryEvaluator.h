@@ -21,6 +21,7 @@ private:
 	std::vector<std::shared_ptr<Synonym>> resultSynonyms;
 	std::vector<PatternClausePair> patternClauses;
 	std::vector<std::shared_ptr<Clause>> suchThatClauses;
+	std::vector<std::shared_ptr<Clause>> withClauses;
 	void handleParserResponse(ParserResponse& response);
 	std::vector<std::string> getResultNames();
 	
