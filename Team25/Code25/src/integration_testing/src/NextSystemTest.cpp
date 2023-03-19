@@ -2,6 +2,10 @@
 #include "SP/SourceProcessor.h"
 #include "QPS/Qps.h"
 
+bool compareString(const string& a, const string& b) {
+    return stoi(a) < stoi(b);
+}
+
 SCENARIO("System testing between all components for Next") {
     GIVEN("The initialization and population of the PKB related classes") {
         VariableStore vs;
@@ -136,25 +140,27 @@ SCENARIO("System testing between all components for Next") {
 
             }
 
-//            THEN("When selecting all statements that have a next statement, the right result is returned") {
-//                list<string> expected = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"};
-//                list<string> res;
-//
-//                string query = "stmt s; stmt s2; Select v such that Next(s,s2)";
-//
-//                qps.query(query, res);
-//                REQUIRE(res == expected);
-//            }
-//
-//            THEN("When selecting all statements that have are a next statement, the right result is returned") {
-//                list<string> expected = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
-//                list<string> res;
-//
-//                string query = "stmt s; stmt s2; Select v such that Next(s,s2)";
-//
-//                qps.query(query, res);
-//                REQUIRE(res == expected);
-//            }
+            THEN("When selecting all statements that have a next statement, the right result is returned") {
+                list<string> expected = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"};
+                list<string> res;
+
+                string query = "stmt s; stmt s2; Select s such that Next(s,s2)";
+
+                qps.query(query, res);
+                res.sort(compareString);
+                REQUIRE(res == expected);
+            }
+
+            THEN("When selecting all statements that have are a next statement, the right result is returned") {
+                list<string> expected = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+                list<string> res;
+
+                string query = "stmt s; stmt s2; Select s2 such that Next(s,s2)";
+
+                qps.query(query, res);
+                res.sort(compareString);
+                REQUIRE(res == expected);
+            }
 
         }
     }
