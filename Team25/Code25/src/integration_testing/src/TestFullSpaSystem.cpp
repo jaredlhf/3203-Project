@@ -235,6 +235,46 @@ SCENARIO("System testing between all components") {
 				REQUIRE(res == expected);
 			}
 
+			THEN("For pattern query in the form (_, 'z'), the right result is returned") {
+				list<string> expected = { "3" };
+				list<string> res;
+
+				string query = "assign Select; variable v1; Select Select pattern Select (_, \"z\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (_, 'o + p'), nothing is returned") {
+				list<string> expected = {  };
+				list<string> res;
+
+				string query = "assign Select; variable v1; Select Select pattern Select (_, \"o + p\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (_, 'o+p+d'), the right value is returned") {
+				list<string> expected = { "7" };
+				list<string> res;
+
+				string query = "assign Select; variable v1; Select Select pattern Select (_, \"o+p+d\")";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
+			THEN("For pattern query in the form (_, _'o+p'_), the right result is returned") {
+				list<string> expected = { "7" };
+				list<string> res;
+
+				string query = "assign Select; variable v1; Select Select pattern Select (_, _\"o+p\"_)";
+
+				qps.query(query, res);
+				REQUIRE(res == expected);
+			}
+
 			THEN("For pattern query with var syn in pattern clause, the right result is returned") {
 				list<string> expected = { "1", "7" };
 				list<string> res;
