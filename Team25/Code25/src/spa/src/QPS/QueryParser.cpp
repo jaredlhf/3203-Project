@@ -436,7 +436,7 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
         return generateSemanticErrorResponse();
     }
 
-    if (isSuchThat || isPattern) {
+    if (isSuchThat || isPattern || isWith) {
         return generateSyntaxErrorResponse();
     }
     
