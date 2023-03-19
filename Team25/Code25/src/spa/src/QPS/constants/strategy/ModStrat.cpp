@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ModStrat.h"
 
 // Constructor function for UsesStrat

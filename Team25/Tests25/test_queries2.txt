@@ -66,5 +66,65 @@ Select a pattern a (_, _"x * y"_)
 14 - comment
 assign a;
 Select a pattern a (_, "x	")
-15
+
+5000
+15 - comment
+procedure p, q;
+Select p.procName such that Calls (p, q)
+First, Second
+5000
+16 - comment
+procedure p, q;
+Select p such that Calls (p, q) with q.procName = "Third" such that Modifies (p, "i")
+Second
+5000
+17 - comment
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with c.procName = p.procName
+Third
+5000
+18 - comment
+if ifs;
+Select ifs pattern ifs(_, _, _)
+10
+5000
+19 - comment
+if ifs;
+Select ifs pattern ifs("x", _, _)
+10
+5000
+20 - comment
+if ifs; variable v;
+Select v pattern ifs(v, _, _)
+x
+5000
+21 - comment
+
+Select BOOLEAN such that Calls("First", "Second")
+TRUE
+5000
+22 - comment
+
+Select BOOLEAN such that Calls("First", "Third")
+FALSE
+5000
+23 - comment
+while w;
+Select w pattern w ("x", _)
+
+5000
+24 - comment
+while w;
+Select w pattern w ("i", _)
+6
+5000
+25 - comment
+while w;
+Select w pattern w (_, _)
+6
+5000
+26 - comment
+while w; variable v;
+Select v pattern w (v, _)
+i
 5000

@@ -19,6 +19,7 @@ void SelectiveExtractor::visit(std::shared_ptr<AssignNode> n) {
     n->accept(usesExtractor);
     n->accept(stmtExtractor);
     n->accept(patternExtractor);
+    n->accept(attrExtractor);
 }
 
 void SelectiveExtractor::visit(std::shared_ptr<PrintNode> n) {
@@ -49,6 +50,8 @@ void SelectiveExtractor::visit(std::shared_ptr<IfNode> n) {
     n->accept(parentsStarExtractor);
     n->accept(callsExtractor);
     n->accept(callsStarExtractor);
+    n->accept(attrExtractor);
+    n->accept(patternExtractor);
     n->accept(stmtExtractor);
 }
 
@@ -59,6 +62,8 @@ void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
     n->accept(parentsStarExtractor);
     n->accept(callsExtractor);
     n->accept(callsStarExtractor);
+    n->accept(attrExtractor);
+    n->accept(patternExtractor);
     n->accept(stmtExtractor);
 }
 

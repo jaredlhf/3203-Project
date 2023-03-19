@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "FollowsStrat.h"
 
 // Constructor function for UsesStrat

@@ -1,7 +1,7 @@
 #include <string>
 #include <unordered_set>
-#include "QPS/Constants/Synonym.h"
-#include "QPS/Constants/Constants.h"
+#include "QPS/constants/Synonym.h"
+#include "QPS/constants/Constants.h"
 #include "catch.hpp"
 
 using namespace std;
@@ -264,6 +264,7 @@ SCENARIO("Mocking behavior of QPS for resolveAttrResult") {
         PrintAttribute prAtt;
         ReadAttribute readAtt;
         CallAttribute callAtt;
+		NextStore next;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -283,10 +284,11 @@ SCENARIO("Mocking behavior of QPS for resolveAttrResult") {
         std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer,
-                                  printAttrStorage, readAttrStorage, callAttrStorage);
+                                  printAttrStorage, readAttrStorage, callAttrStorage, nextPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("Populated with the attrname information") {

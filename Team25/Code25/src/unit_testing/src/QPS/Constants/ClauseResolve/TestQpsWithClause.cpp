@@ -1,4 +1,4 @@
-#include "QPS/Constants/Clause.h"
+#include "QPS/constants/Clause.h"
 #include "catch.hpp"
 
 
@@ -23,6 +23,7 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
         PrintAttribute prAtt;
         ReadAttribute readAtt;
         CallAttribute callAtt;
+		NextStore next;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -42,10 +43,11 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
         std::shared_ptr<PrintAttribute> printAttrStorage = std::make_shared<PrintAttribute>(prAtt);
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
+		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cStarsPointer,
-                                  printAttrStorage, readAttrStorage, callAttrStorage);
+                                  printAttrStorage, readAttrStorage, callAttrStorage, nextPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {
@@ -85,6 +87,17 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
 			ssPointer->addStmt(Constants::CALL, 14);
 			ssPointer->addStmt(Constants::WHILE, 15);
 
+			// Mock Read varNames appearing in SIMPLE program
+			readAttrStorage->addAttr("w", 5);
+			readAttrStorage->addAttr("x", 12);
+
+			// Mock Print varNames appearing in SIMPLE program
+			printAttrStorage->addAttr("y", 6);
+			printAttrStorage->addAttr("z", 13);
+
+			// Mock Call varNames appearing in SIMPLE program
+			callAttrStorage->addAttr("factorial", 10);
+			callAttrStorage->addAttr("beta", 14);
 
 			THEN("When WithClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =
@@ -337,6 +350,93 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
 				std::shared_ptr<Synonym> synArg2 = Synonym::create(Constants::VARIABLE, "v", Constants::VARNAME);
 
 				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, synArg1, synArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case with 'x' = read.varName, it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "r.varName", "r" });
+				expectedTable->addRow({ "x", "12" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("x");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::READ, "r", Constants::VARNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case 'z' = read.varName, it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "r.varName", "r" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("z");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::READ, "r", Constants::VARNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case with 'y' = print.varName, it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "p.varName", "p" });
+				expectedTable->addRow({ "y", "6" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("y");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::PRINT, "p", Constants::VARNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case 'w' = print.varName, it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "p.varName", "p" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("w");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::PRINT, "p", Constants::VARNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case with 'factorial' = call.procName, it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "c.procName", "c" });
+				expectedTable->addRow({ "factorial", "10" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("factorial");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::CALL, "c", Constants::PROCNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
+
+				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
+				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClause->resolve(pkbRet).second->getData() == expectedTable->getData());
+			}
+
+			THEN("When WithClause resolves case 'main' = c.procName, it should return no matches") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ "c.procName", "c" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("main");
+				std::shared_ptr<Synonym> varSynArg2 = Synonym::create(Constants::CALL , "c", Constants::PROCNAME);
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::WITH, constArg1, varSynArg2);
 
 				REQUIRE(testClause->resolve(pkbRet).first == expectedStatus);
 				REQUIRE(testClause->resolve(pkbRet).second->getHeaders() == expectedTable->getHeaders());

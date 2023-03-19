@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 #include "SPConstants.h"
 
 class DesignExtractor; //forward declaration

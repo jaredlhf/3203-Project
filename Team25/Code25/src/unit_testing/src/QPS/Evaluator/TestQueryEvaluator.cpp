@@ -30,6 +30,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			PrintAttribute printA;
 			ReadAttribute readA;
 			CallAttribute callA;
+			NextStore next;
 
 			ParserResponse response;
 
@@ -51,10 +52,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -259,6 +261,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			PrintAttribute printA;
 			ReadAttribute readA;
 			CallAttribute callA;
+			NextStore next;
 
 			ParserResponse response;
 
@@ -280,10 +283,11 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("w");
@@ -621,6 +625,32 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
 				REQUIRE(res == expected);
 			}
+
+			THEN("When QpsEvaluator evaluates a parentSt clause with attrname in select, it returns the right result") {
+				list<string> expected = { "2", "4" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1", Constants::STMTNUM) });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
+
+			THEN("When QpsEvaluator evaluates a parentSt clause with attrname and matching syn in select, it returns the right result") {
+				list<string> expected = { "2 2", "4 4" };
+				ParserResponse response;
+
+				response.setDeclarations({ Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2") });
+				response.setSelectSynonyms({ Synonym::create(Constants::STMT, "s1", Constants::STMTNUM), Synonym::create(Constants::STMT, "s1") });
+				response.setSuchThatClauses({ Clause::create(Constants::PARENTST,
+					Synonym::create(Constants::STMT, "s1"), Synonym::create(Constants::READ, "rd2")) });
+
+				list<string> res = qe.evaluate(response, std::make_shared<PkbRetriever>(pkbRet));
+				REQUIRE(res == expected);
+			}
 		}
 	}
 }
@@ -649,6 +679,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			PrintAttribute printA;
 			ReadAttribute readA;
 			CallAttribute callA;
+			NextStore next;
 
 			ParserResponse response;
 
@@ -670,10 +701,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer,
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -902,6 +934,7 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			PrintAttribute printA;
 			ReadAttribute readA;
 			CallAttribute callA;
+			NextStore next;
 
 			ParserResponse response;
 
@@ -923,10 +956,11 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->addConst(123);

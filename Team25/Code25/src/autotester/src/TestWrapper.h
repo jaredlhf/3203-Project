@@ -31,9 +31,10 @@ class TestWrapper : public AbstractWrapper {
     UsesStore uses;
     CallsStore calls;
     CallsStarStore cstars;
-    PrintAttribute printAttr;
-    ReadAttribute readAttr;
-    CallAttribute callAttr;
+    PrintAttribute printA;
+    ReadAttribute readA;
+    CallAttribute callA;
+    NextStore next;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -50,12 +51,14 @@ class TestWrapper : public AbstractWrapper {
     std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
     std::shared_ptr<CallsStore> callsPointer = std::make_shared<CallsStore>(calls);
     std::shared_ptr<CallsStarStore> cstarsPointer = std::make_shared<CallsStarStore>(cstars);
-    std::shared_ptr<PrintAttribute> printPointer = std::make_shared<PrintAttribute>(printAttr);
-    std::shared_ptr<ReadAttribute> readPointer = std::make_shared<ReadAttribute>(readAttr);
-    std::shared_ptr<CallAttribute> callPointer = std::make_shared<CallAttribute>(callAttr);
+    std::shared_ptr<PrintAttribute> printAPointer = std::make_shared<PrintAttribute>(printA);
+    std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
+    std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
+    std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
 
-    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
-    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printPointer,readPointer,callPointer);
+    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer);
+    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer);
+    
     Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
  public:
   // default constructor

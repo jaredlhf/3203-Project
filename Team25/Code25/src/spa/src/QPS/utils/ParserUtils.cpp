@@ -1,5 +1,5 @@
+#include <algorithm>
 #include "ParserUtils.h"
-#include "../../SP/ExpressionParser.h"
 
 // BUG: does not work with unordered_set.find()
 //std::unordered_set<std::string> DESIGN_ENTITIES = {Constants::STMT, Constants::READ, Constants::PRINT, Constants::CALL,
@@ -50,6 +50,21 @@ bool ParserUtils::isValidNaming(const std::string& s) {
     return true;
 }
 
+std::shared_ptr<Entity> ParserUtils::getValidWithRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    if (s.find('"') != std::string::npos) {
+        std::string cleanedString = removeQuotations(s);
+        if (isValidNaming(cleanedString)) {
+            return Value::create(cleanedString);
+        }
+    }
+
+    if (isValidIntegerString(s)) {
+        return Value::create(s);
+    }
+
+    return getValidAttrRef(s, declarations);
+}
+
 std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
     if (s == Constants::WILDCARD) {
         return Wildcard::create();
@@ -63,12 +78,7 @@ std::shared_ptr<Entity> ParserUtils::getValidEntRef(const std::string& s, const 
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s) {
-                return d;
-            }
-        }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return getValidDeclaration(s, declarations);
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
@@ -91,12 +101,11 @@ std::shared_ptr<Entity> ParserUtils::getValidProcRef(const std::string& s, const
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s && PROC_DESIGN_ENTITIES.find(d->getKeyword()) != PROC_DESIGN_ENTITIES.end()) {
-                return d;
-            }
+        std::shared_ptr<Synonym> syn = getValidDeclaration(s, declarations);
+        if (PROC_DESIGN_ENTITIES.find(syn->getKeyword()) == PROC_DESIGN_ENTITIES.end()) {
+            return Synonym::create(Constants::SEMANTIC_ERROR, "");
         }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return syn;
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
@@ -112,15 +121,52 @@ std::shared_ptr<Entity> ParserUtils::getValidStmtRef(const std::string& s, const
     }
 
     if (isValidNaming(s)) {
-        for (auto& d : declarations) {
-            if (d->getName() == s) {
-                return d;
-            }
-        }
-        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+        return getValidDeclaration(s, declarations);
     }
     return Synonym::create(Constants::SYNTAX_ERROR, "");
 }
+
+std::shared_ptr<Synonym> ParserUtils::getValidDeclaration(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    if (!isValidNaming(s)) {
+        return Synonym::create(Constants::SYNTAX_ERROR, "");
+    }
+    for (auto& d: declarations) {
+        if (d->matchesName(s)) {
+            return d;
+        }
+    }
+    return Synonym::create(Constants::SEMANTIC_ERROR, "");
+}
+
+std::shared_ptr<Synonym> ParserUtils::getValidAttrRef(const std::string& s, const std::vector<std::shared_ptr<Synonym>>& declarations) {
+    // split string by fullstop
+    std::vector<std::string> tokens = {};
+    int start = 0;
+    int end = s.find(".");
+    std::string token = "";
+    while (end != std::string::npos) {
+        token = s.substr(start, end - start);
+        tokens.push_back(token);
+        start = end + 1;
+        end = s.find(".", start);
+    }
+    tokens.push_back(s.substr(start, end));
+
+    if (tokens.size() != 2) {
+        return Synonym::create(Constants::SYNTAX_ERROR, "");
+    }
+
+    std::shared_ptr<Synonym> synonym = getValidDeclaration(tokens[0], declarations);
+    if (isSyntaxError(synonym) || isSemanticError(synonym)) {
+        return synonym;
+    }
+    std::string attrName = tokens[1];
+    if (!AttrUtils::hasValidAttr(synonym, attrName)) {
+        return Synonym::create(Constants::SEMANTIC_ERROR, "");
+    }
+    return Synonym::create(synonym->getKeyword(), synonym->getName(), attrName);
+}
+
 
 bool ParserUtils::isValidExpression(const std::string& s) {
     int length = s.size();
@@ -202,3 +248,4 @@ bool ParserUtils::isExpectedSynonym(std::shared_ptr<Entity> e, const std::string
 
     return false;
 }
+

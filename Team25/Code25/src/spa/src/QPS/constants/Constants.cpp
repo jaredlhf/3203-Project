@@ -40,6 +40,11 @@ const std::string Constants::STMTNUM = "stmt#";
 const std::string Constants::TRUE = "TRUE";
 const std::string Constants::FALSE = "FALSE";
 
+// Constant string tokens
+const std::string Constants::OPEN_BRACKET = "(";
+const std::string Constants::CLOSE_BRACKET = ")";
+const std::string Constants::SEPARATOR = ",";
+
 // AttrName related functions
 bool Constants::isAttrNameInt(const std::string& attrName) {
 	return attrName == Constants::VALUE || attrName == Constants::STMTNUM;

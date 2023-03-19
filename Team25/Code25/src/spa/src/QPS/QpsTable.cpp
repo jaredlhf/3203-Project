@@ -1,4 +1,5 @@
 #include "QpsTable.h"
+#include <algorithm>
 #include <iostream>
 
 // QPSTABLE CONSTRUCTOR FUNCTIONS
