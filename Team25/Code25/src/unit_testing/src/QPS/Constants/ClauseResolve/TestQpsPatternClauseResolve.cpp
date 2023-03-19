@@ -1,5 +1,3 @@
-#pragma once
-
 #include <memory>
 #include "QPS/constants/Clause.h"
 #include "catch.hpp"
