@@ -529,6 +529,17 @@ TEST_CASE("Parse query with pattern with invalid expression token") {
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
 
+TEST_CASE("Parse query with pattern with incomplete expression") {
+    std::shared_ptr<Synonym> SYNTAX_ERROR_SYNONYM = Synonym::create(Constants::SYNTAX_ERROR, "");
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "pattern", "a", "(", "a", ",", "_\"s + \"_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({SYNTAX_ERROR_SYNONYM});
+
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
 /**
  * such that parsing with valid declarations
  * 
