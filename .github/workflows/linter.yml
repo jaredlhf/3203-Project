@@ -17,5 +17,5 @@ jobs:
           files-changed-only: false
           extra-args: -std=c++17 -I ./include
       - name: Failed coding standard check
-        if: steps.linter.outputs.check-failed > 0
+        if: steps.linter.outputs.checks-failed > 0
         run: exit 1   
