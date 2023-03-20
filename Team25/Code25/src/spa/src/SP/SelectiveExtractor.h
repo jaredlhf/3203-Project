@@ -35,5 +35,6 @@ private:
     std::shared_ptr<PatternExtractor> patternExtractor;
     std::shared_ptr<AttributeExtractor> attrExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
+    std::shared_ptr<PkbPopulator> pkbPopulator;
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H

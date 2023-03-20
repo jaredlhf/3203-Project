@@ -96,23 +96,10 @@ TEST_CASE("Test processSimple()") {
                             "}";
 
 
-//            "procedure Example {\n"
-//                                 "  x = 2;\n"
-//                                 "  z = 3;\n"
-//                                 "  read x;\n"
-//                            "  print x;\n"
-//                                 "  } "
-//                                ;
-
 
     std::ofstream file(fileLocation);
     file << fileInput;
     file.close();
-    //std::cout << vs.getAllVar().size() << std::endl;
-
     sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
-
-
-    //std::cout << vs.getAllVar().size() << std::endl;
 
 }

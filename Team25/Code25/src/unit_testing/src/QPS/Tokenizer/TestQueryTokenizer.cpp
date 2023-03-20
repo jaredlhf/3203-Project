@@ -100,8 +100,8 @@ TEST_CASE("Tokenize query with multiple select") {
 
 TEST_CASE("Tokenize query with attrNames") {
 	string testStr = "stmt s1;\nSelect s1.stmt# with s1.stmt# = s1.stmt#";
-	vector<string> expected{ "stmt", "s1", ";", "Select", "s1", ".", "stmt#",
-		"with", "s1", ".", "stmt#", "=", "s1", ".", "stmt#" };
+	vector<string> expected{ "stmt", "s1", ";", "Select", "s1.stmt#",
+		"with", "s1.stmt#", "=", "s1.stmt#" };
 	vector<string> res = qt.tokenize(testStr);
 
 	REQUIRE(res == expected);
