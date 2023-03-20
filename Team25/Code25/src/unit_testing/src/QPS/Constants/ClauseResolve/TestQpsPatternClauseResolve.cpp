@@ -1,5 +1,3 @@
-#pragma once
-
 #include <memory>
 #include "QPS/constants/Clause.h"
 #include "catch.hpp"
@@ -56,6 +54,8 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 
 		std::shared_ptr<Synonym> a1 = Synonym::create(Constants::ASSIGN, "a1");
 		std::shared_ptr<Synonym> wrongA1 = Synonym::create(Constants::VARIABLE, "x1");
+		std::shared_ptr<Synonym> ifs = Synonym::create(Constants::IF, "ifs");
+		std::shared_ptr<Synonym> whiles = Synonym::create(Constants::WHILE, "whiles");
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {
 			// Mock variables appearing in the SIMPLE program
@@ -81,6 +81,10 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 			ssPointer->addStmt(Constants::ASSIGN, 5);
 			ssPointer->addStmt(Constants::PRINT, 3);
 			ssPointer->addStmt(Constants::READ, 4);
+			ssPointer->addStmt(Constants::IF, 6);
+			ssPointer->addStmt(Constants::IF, 7);
+			ssPointer->addStmt(Constants::WHILE, 8);
+			ssPointer->addStmt(Constants::WHILE, 9);
 
 			// Mock variables modified in the SIMPLE program
 			msPointer->addModifies(1, "z");
@@ -92,12 +96,30 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 			// z = x + y + 1; (line 1)
 			// x = z + x; ( line 2)
 			// abc = def * (ghi + jkl + (mnop - 64)); ( line 5 ) 
+			// if ( x == y ) (line 6)
+			// if ( x == 2) (line 7)
+			// while ( abc != def) (line 8)
+			// while ( abc == jkl) (line 9)
 			pattsPointer->addAssignLhs("z", 1);
 			pattsPointer->addAssignLhs("x", 2);
 			pattsPointer->addAssignLhs("abc", 5);
 			pattsPointer->addAssignRhs(1, "x+y+1");
 			pattsPointer->addAssignRhs(2, "z+x");
 			pattsPointer->addAssignRhs(5, "def*(ghi+jkl+(mnop-64))");
+			pattsPointer->addIfStatement(6, "x");
+			pattsPointer->addIfStatement(6, "y");
+			pattsPointer->addIfStatementVar("x", 6);
+			pattsPointer->addIfStatementVar("y", 6);
+			pattsPointer->addIfStatement(7, "x");
+			pattsPointer->addIfStatementVar("x", 7);
+			pattsPointer->addWhileStatement(8, "abc");
+			pattsPointer->addWhileStatement(8, "def");
+			pattsPointer->addWhileStatement(9, "abc");
+			pattsPointer->addWhileStatement(9, "jkl");
+			pattsPointer->addWhileStatementVar("abc", 8);
+			pattsPointer->addWhileStatementVar("def", 8);
+			pattsPointer->addWhileStatementVar("abc", 9);
+			pattsPointer->addWhileStatementVar("jkl", 9);
 
 			THEN("When PatternClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =
@@ -449,6 +471,178 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 				REQUIRE(testClausePtn->resolve(pkbRet, a1).first == expectedStatus);
 				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getHeaders() == expectedTable->getHeaders());
 				REQUIRE(testClausePtn->resolve(pkbRet, a1).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern ifs (_, _, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ ifs->getName() });
+				expectedTable->addRow({ "6" });
+				expectedTable->addRow({ "7" });
+
+				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, wcArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern ifs ('x', _, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ ifs->getName() });
+				expectedTable->addRow({ "6" });
+				expectedTable->addRow({ "7" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("x");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern ifs ('y', _, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ ifs->getName() });
+				expectedTable->addRow({ "6" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("y");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern ifs ('z', _, _), it should return the right results - No match") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ ifs->getName() });
+
+				std::shared_ptr<Value> constArg1 = Value::create("z");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern ifs (v1, _, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ ifs->getName(), "v1"});
+				expectedTable->addRow({ "6", "x"});
+				expectedTable->addRow({ "6", "y" });
+				expectedTable->addRow({ "7", "x" });
+
+				std::shared_ptr<Synonym> varSynArg1 = Synonym::create(Constants::VARIABLE, "v1");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, varSynArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, ifs).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles (_, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName() });
+				expectedTable->addRow({ "8" });
+				expectedTable->addRow({ "9" });
+
+				std::shared_ptr<Wildcard> wcArg1 = Wildcard::create();
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, wcArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles ('abc', _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName() });
+				expectedTable->addRow({ "8" });
+				expectedTable->addRow({ "9" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("abc");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles ('def', _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName() });
+				expectedTable->addRow({ "8" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("def");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles ('jkl', _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName() });
+				expectedTable->addRow({ "9" });
+
+				std::shared_ptr<Value> constArg1 = Value::create("jkl");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles ('x', _), it should return the right results - No match") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::NO_MATCH;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName() });
+
+				std::shared_ptr<Value> constArg1 = Value::create("x");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, constArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
+			}
+			THEN("When PatternClause resolves case pattern whiles (v1, _), it should return the right results") {
+				Constants::ClauseResult expectedStatus = Constants::ClauseResult::OK;
+				std::shared_ptr<QpsTable> expectedTable = QpsTable::create({ whiles->getName(), "v1" });
+				expectedTable->addRow({ "8", "abc" });
+				expectedTable->addRow({ "8", "def" });
+				expectedTable->addRow({ "9", "abc" });
+				expectedTable->addRow({ "9", "jkl" });
+
+				std::shared_ptr<Synonym> varSynArg1 = Synonym::create(Constants::VARIABLE, "v1");
+				std::shared_ptr<Wildcard> wcArg2 = Wildcard::create();
+
+				std::shared_ptr<Clause> testClause = Clause::create(Constants::PATTERN, varSynArg1, wcArg2);
+				std::shared_ptr<PatternClause> testClausePtn = std::static_pointer_cast<PatternClause>(testClause);
+
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).first == expectedStatus);
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getHeaders() == expectedTable->getHeaders());
+				REQUIRE(testClausePtn->resolve(pkbRet, whiles).second->getData() == expectedTable->getData());
 			}
 		}
 	}

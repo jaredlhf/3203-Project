@@ -57,6 +57,9 @@ std::vector<std::shared_ptr<CFGNode>> CFGIfNode::getAllNextNodes() {
 
 
 void CFGIfNode::findLeafNodes(std::unordered_set<std::shared_ptr<CFGNode>>& leafNodes) {
+    if (nextThen_ == nullptr || nextElse_ == nullptr) {
+        throw std::invalid_argument("CFGIfNode does not have then or else child");
+    }
     nextThen_->findLeafNodes(leafNodes);
     nextElse_->findLeafNodes(leafNodes);
 }

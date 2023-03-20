@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
+#include <memory>
 
 class CFGNode : public std::enable_shared_from_this<CFGNode> {
 public:

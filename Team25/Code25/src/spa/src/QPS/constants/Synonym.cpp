@@ -201,6 +201,24 @@ bool ReadSynonym::isStmtRef() {
     return true;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ReadSynonym::resolveAttrResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    // If attrName is stmt#, use default Synonym function that handles that case
+    if (this->getAttrName() == Constants::STMTNUM) {
+        return Synonym::resolveAttrResult(pkbRet);
+    }
+
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synRes = this->resolveSelectResult(pkbRet);
+    std::unordered_set<int> stmtNums = pkbRet->getAllStmt(this->getKeyword());
+    std::shared_ptr<QpsTable> resTable = QpsTable::create({ this->getName(), this->getNameWithAttr() });
+    for (int stmt : stmtNums) {
+        const std::string& readVarName = pkbRet->getReadAttr(stmt);
+        resTable->addRow({ std::to_string(stmt), readVarName });
+    }
+
+    return std::make_pair(synRes.first, resTable);
+}
+
 PrintSynonym::PrintSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::PRINT;
 }
@@ -213,6 +231,24 @@ bool PrintSynonym::isStmtRef() {
     return true;
 }
 
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PrintSynonym::resolveAttrResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    // If attrName is stmt#, use default Synonym function that handles that case
+    if (this->getAttrName() == Constants::STMTNUM) {
+        return Synonym::resolveAttrResult(pkbRet);
+    }
+
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synRes = this->resolveSelectResult(pkbRet);
+    std::unordered_set<int> stmtNums = pkbRet->getAllStmt(this->getKeyword());
+    std::shared_ptr<QpsTable> resTable = QpsTable::create({ this->getName(), this->getNameWithAttr() });
+    for (int stmt : stmtNums) {
+        const std::string& printVarName = pkbRet->getPrintAttr(stmt);
+        resTable->addRow({ std::to_string(stmt), printVarName });
+    }
+
+    return std::make_pair(synRes.first, resTable);
+}
+
 CallSynonym::CallSynonym(const std::string& name) : Synonym(name) {
     keyword = Constants::CALL;
 }
@@ -223,6 +259,24 @@ CallSynonym::CallSynonym(const std::string& name, const std::string& attrName) :
 
 bool CallSynonym::isStmtRef() {
     return true;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallSynonym::resolveAttrResult(
+    std::shared_ptr<PkbRetriever> pkbRet) {
+    // If attrName is stmt#, use default Synonym function that handles that case
+    if (this->getAttrName() == Constants::STMTNUM) {
+        return Synonym::resolveAttrResult(pkbRet);
+    }
+
+    std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> synRes = this->resolveSelectResult(pkbRet);
+    std::unordered_set<int> stmtNums = pkbRet->getAllStmt(this->getKeyword());
+    std::shared_ptr<QpsTable> resTable = QpsTable::create({ this->getName(), this->getNameWithAttr() });
+    for (int stmt : stmtNums) {
+        const std::string& printVarName = pkbRet->getCallAttr(stmt);
+        resTable->addRow({ std::to_string(stmt), printVarName });
+    }
+
+    return std::make_pair(synRes.first, resTable);
 }
 
 WhileSynonym::WhileSynonym(const std::string& name) : Synonym(name) {
