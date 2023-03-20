@@ -284,7 +284,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::ifCo
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: pattern if (v1, _) TODO
+// Case: pattern if (v1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::ifSynWildcard() {
     std::shared_ptr<Synonym> synArg1 = std::static_pointer_cast<Synonym>(this->arg1);
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName, synArg1->getName() });
@@ -326,7 +326,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::whil
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: pattern while (v1, _) TODO
+// Case: pattern while (v1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::whileSynWildcard() {
     std::shared_ptr<Synonym> synArg1 = std::static_pointer_cast<Synonym>(this->arg1);
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ synName, synArg1->getName() });
