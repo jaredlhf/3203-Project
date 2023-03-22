@@ -24,13 +24,39 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::createR
     return QpsTable::getDefaultSynErr();
 }
 
+std::unordered_set<std::string> getAllVarUsesByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> res;
+    std::unordered_set<std::string> allProcs = pkbRet->getRightCallStar(proc);
+    // Add proc to the full list of procs that we need to check
+    allProcs.insert(proc);
+
+    for (const std::string& currProc : allProcs) {
+        std::unordered_set<std::string> currProcVars = pkbRet->getUsesPVar(currProc);
+        for (const std::string& var : currProcVars) {
+            res.insert(var);
+        }
+    }
+
+    return res;
+}
+
+bool isUsesIndirectly(const std::string& proc, const std::string& var, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> modVars = getAllVarUsesByProc(proc, pkbRet);
+    return find(modVars.begin(), modVars.end(), var) != modVars.end();
+}
+
+bool doesProcUsesAny(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> modVars = getAllVarUsesByProc(proc, pkbRet);
+    return modVars.size() > 0;
+}
+
 // Case: Uses(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constWildcard() {
     std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
     const std::string& arg1Val = v1->getVal();
     std::unordered_set<std::string> res = v1->isInt()
         ? pkbRet->getUsesVar(std::stoi(arg1Val))
-        : pkbRet->getUsesPVar(arg1Val);
+        : getAllVarUsesByProc(arg1Val, pkbRet);
     return !res.empty()
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
@@ -44,7 +70,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constCo
 
     std::unordered_set<std::string> pkbRes = v1->isInt() 
         ? pkbRet->getUsesVar(std::stoi(arg1Val))
-        : pkbRet->getUsesPVar(arg1Val);
+        : getAllVarUsesByProc(arg1Val, pkbRet);
     return pkbRes.count(arg2Val) > 0
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
@@ -58,7 +84,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constSy
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
     std::unordered_set<std::string> pkbRes = v1->isInt()
         ? pkbRet->getUsesVar(std::stoi(arg1Val))
-        : pkbRet->getUsesPVar(arg1Val);
+        : getAllVarUsesByProc(arg1Val, pkbRet);
     for (std::string val : pkbRes) {
         resTable->addRow({ val });
     }
@@ -76,9 +102,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synWild
 
     // Account for cases of procedure or stmtref
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllUsesPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            resTable->addRow({ proc });
+            if (doesProcUsesAny(proc, pkbRet)) {
+                resTable->addRow({ proc });
+            }
         }
     }
     else {
@@ -107,9 +135,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synCons
 
     // Account for procedures
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllUsesPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesPVar(proc);
+            std::unordered_set<std::string> pkbRes = getAllVarUsesByProc(proc, pkbRet);
             if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ proc });
             }
@@ -142,9 +170,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synSyn(
 
     // Account for procedures
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllUsesPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesPVar(proc);
+            std::unordered_set<std::string> pkbRes = getAllVarUsesByProc(proc, pkbRet);
             for (const std::string& arg2Match : pkbRes) {
                 resTable->addRow({ proc, arg2Match });
             }

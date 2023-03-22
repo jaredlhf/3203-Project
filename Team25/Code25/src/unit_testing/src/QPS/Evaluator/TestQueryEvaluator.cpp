@@ -481,7 +481,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			}
 
 			THEN("When QpsEvaluator evaluates a modifies clause with procedure constant, it returns the right result") {
-				list<string> expected = { "x", "y" };
+				list<string> expected = { "x", "y", "z" };
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });

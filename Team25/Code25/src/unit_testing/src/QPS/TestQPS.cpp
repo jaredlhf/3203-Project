@@ -369,7 +369,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For procedure constant uses query, the right result is returned") {
-				list<string> expected = { "x", "y" };
+				list<string> expected = { "x", "y", "z" };
 				list<string> res;
 
 				string query = "variable p1; Select p1 such that Uses(\"factorial\", p1)";
@@ -398,8 +398,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
-			THEN("For modifies query in the form (s1, 'y') with procedure, the right result is returned") {
-				list<string> expected = { "beta", "main" };
+			THEN("For modifies query in the form (s1, 'z') with procedure, the right result is returned") {
+				list<string> expected = { "beta", "factorial", "main" };
 				list<string> res;
 
 				string query = "procedure p1; Select p1 such that Modifies(p1, \"z\")";
@@ -408,7 +408,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
-			THEN("For procedure constant modifies query in the form (s1, 'y'), the right result is returned") {
+			THEN("For procedure constant modifies query in the form (s1, 'z'), the right result is returned") {
 				list<string> expected = { "w", "x", "y", "z" };
 				list<string> res;
 
