@@ -33,8 +33,8 @@ class StmtStmtStore {
 };
 
 class StmtStmtStarStore {
-	virtual std::unordered_set<int> getLeftStar(int leftStmt) = 0;
-	virtual std::unordered_set<int> getRightStar(int rightStmt) = 0;
+	virtual std::unordered_set<int> getLeftStar(int rightStmt) = 0;
+	virtual std::unordered_set<int> getRightStar(int leftStmt) = 0;
 	virtual bool hasLeftStmt(int lineNum) = 0;
 	virtual bool hasRightStmt(int lineNum) = 0;
 	virtual std::unordered_set<int> getAllLeft() = 0;
