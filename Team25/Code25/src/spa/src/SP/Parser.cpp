@@ -29,7 +29,6 @@ std::shared_ptr<ParserDTO> Parser::parseProcedure() {
     std::shared_ptr<ParserDTO> stmtLstDTO = StmtParser::parseStmtLst(this->utils, this->tokenizer, proc);
     shared_ptr<StmtLstNode> stmtLstNode = std::dynamic_pointer_cast<StmtLstNode>(stmtLstDTO->getNode());
     ProcedureNode node = ProcedureNode(stmtLstNode, proc);
-    std::cout<< "parser procedure name: " << node.getProc()<<endl;
 
     utils->expect(std::make_shared<RightBrace>());
 

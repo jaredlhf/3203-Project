@@ -24,13 +24,39 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::createRe
     return QpsTable::getDefaultSynErr();
 }
 
+std::unordered_set<std::string> getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> res;
+    std::unordered_set<std::string> allProcs = pkbRet->getRightCallStar(proc);
+    // Add proc to the full list of procs that we need to check
+    allProcs.insert(proc);
+
+    for (const std::string& currProc : allProcs) {
+        std::unordered_set<std::string> currProcVars = pkbRet->getModPVar(currProc);
+        for (const std::string& var : currProcVars) {
+            res.insert(var);
+        }
+    }
+
+    return res;
+}
+
+bool isModIndirectly(const std::string& proc, const std::string& var, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> modVars = getAllVarModByProc(proc, pkbRet);
+    return find(modVars.begin(), modVars.end(), var) != modVars.end();
+}
+
+bool doesProcModAny(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> modVars = getAllVarModByProc(proc, pkbRet);
+    return modVars.size() > 0;
+}
+
 // Case: Modifies(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constWildcard() {
     std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
     const std::string& arg1Val = v1->getVal();
     std::unordered_set<std::string> res = v1->isInt()
         ? pkbRet->getModVar(std::stoi(arg1Val))
-        : pkbRet->getModPVar(arg1Val);
+        : getAllVarModByProc(arg1Val, pkbRet);
     return !res.empty()
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
@@ -44,7 +70,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constCon
 
     std::unordered_set<std::string> pkbRes = v1->isInt()
         ? pkbRet->getModVar(std::stoi(arg1Val))
-        : pkbRet->getModPVar(arg1Val);
+        : getAllVarModByProc(arg1Val, pkbRet);
     return std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
@@ -59,7 +85,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constSyn
 
     std::unordered_set<std::string> pkbRes = v1->isInt()
         ? pkbRet->getModVar(std::stoi(arg1Val))
-        : pkbRet->getModPVar(arg1Val);
+        : getAllVarModByProc(arg1Val, pkbRet);
     for (const std::string& res : pkbRes) {
         resTable->addRow({ res });
     }
@@ -77,9 +103,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synWildc
 
     // Account for cases of procedure or stmtref
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            resTable->addRow({ proc });
+            if (doesProcModAny(proc, pkbRet)) {
+                resTable->addRow({ proc });
+            }
         }
     }
     else {
@@ -108,9 +136,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synConst
 
     // Account for procedures
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getModPVar(proc);
+            std::unordered_set<std::string> pkbRes = getAllVarModByProc(proc, pkbRet);
             if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ proc });
             }
@@ -143,9 +171,9 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synSyn()
 
     // Account for procedures
     if (arg1Syn->matchesKeyword(Constants::PROCEDURE)) {
-        std::unordered_set<std::string> arg1Procs = pkbRet->getAllModPProc();
+        std::unordered_set<std::string> arg1Procs = pkbRet->getAllProc();
         for (std::string proc : arg1Procs) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getModPVar(proc);
+            std::unordered_set<std::string> pkbRes = getAllVarModByProc(proc, pkbRet);
             for (const std::string& arg2Match : pkbRes) {
                 resTable->addRow({ proc, arg2Match });
             }

@@ -557,8 +557,8 @@ void PatternExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     vector<std::string> condExpr = tok.tokenize(wh->getCondExpr());
     for (std::string i : condExpr) {
         if (Token::isValidName((i))) {
-            pkbPopulator->addIfStatement(lineNo,i);
-            pkbPopulator->addIfStatementVar(i,lineNo);
+            pkbPopulator->addWhileStatement(lineNo,i);
+            pkbPopulator->addWhileStatementVar(i,lineNo);
         }
     }
 }
