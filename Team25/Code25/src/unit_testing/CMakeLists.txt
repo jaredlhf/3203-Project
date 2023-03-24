@@ -17,6 +17,7 @@ add_executable(unit_testing ${srcs}
 "src/PKB/TestCallsStarStore.cpp"
 "src/PKB/TestAttributeStore.cpp"
 "src/PKB/TestNextStore.cpp"
+"src/PKB/TestCFGStore.cpp"
 "src/QPS/TestQPS.cpp"
 "src/QPS/Constants/TestQpsClause.cpp"
 "src/QPS/Constants/TestQpsConstants.cpp"

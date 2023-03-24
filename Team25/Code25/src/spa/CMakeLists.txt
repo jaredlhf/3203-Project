@@ -34,6 +34,8 @@ add_library(spa ${srcs} ${headers}
 "src/PKB/UsesProcStore.cpp" 
 "src/PKB/NextStore.h"
 "src/PKB/NextStore.cpp"
+"src/PKB/CFGStore.h"
+"src/PKB/CFGStore.cpp"
 "src/QPS/ResultFormatter.h" 
 "src/QPS/ResultFormatter.cpp"
 "src/QPS/ParserResponse.cpp"
