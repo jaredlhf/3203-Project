@@ -29,6 +29,8 @@ SCENARIO("Working version of PkbRetriever") {
 		ReadAttribute readA;
 		CallAttribute callA;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 
 		WHEN("The PkbRetriever references empty stores") {
 			std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -50,10 +52,13 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
+				cfgPointer, concallPointer);
 			THEN("Getting all variables should return an empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 0);
 			}
@@ -175,6 +180,13 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllLeftNext().size() == 0);
 				REQUIRE(pkbRet.getAllRightNext().size() == 0);
 			}
+			THEN("Getting all cfg nodes should return an empty set") {
+				REQUIRE(pkbRet.getAllCFGNodes().size() == 0);
+			}
+			THEN("Getting all container calls should return an empty set") {
+				REQUIRE(pkbRet.getAllConProc().size() == 0);
+				REQUIRE(pkbRet.getAllConStmt().size() == 0);
+			}
 
 		}
 		WHEN("The PkbRetriever references non-empty stores") {
@@ -197,10 +209,13 @@ SCENARIO("Working version of PkbRetriever") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+				cfgPointer, concallPointer);
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
@@ -242,8 +257,12 @@ SCENARIO("Working version of PkbRetriever") {
 			callAPointer->addAttr("sampleProc", 3);
 			nextPointer->addNext(1, 2);
 			nextPointer->addNext(2, 3);
+			std::shared_ptr<CFGNode> c = std::make_shared<CFGNode>(std::vector({ 3 }));
+			cfgPointer->addCFGNode("sampleProc", c);
+			concallPointer->addContainCall(1, "proc1");
+			concallPointer->addContainCall(1, "proc2");
 
-			THEN("Getting a variables hsould return a non empty set") {
+			THEN("Getting a variables should return a non empty set") {
 				REQUIRE(pkbRet.getAllVar().size() == 1);
 				REQUIRE(pkbRet.getAllVar().count("x") == 1);
 			}
@@ -415,6 +434,14 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllRightNext().size() == 2);
 				REQUIRE(pkbRet.getLeftNextStar(3).size() == 2);
 				REQUIRE(pkbRet.getRightNextStar(1).size() == 2);
+			}
+			THEN("Getting cfg node should return a non empty set") {
+				REQUIRE(pkbRet.getAllCFGNodes().size() == 1);
+				REQUIRE(pkbRet.getCFGNode("sampleProc") == c);
+			}
+			THEN("Getting container call should return a non empty set") {
+				REQUIRE(pkbRet.getAllConProc().size() == 2);
+				REQUIRE(pkbRet.getAllConStmt().size() == 1);
 			}
 		}
 	}

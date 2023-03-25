@@ -25,6 +25,8 @@ SCENARIO("Working version of PkbPopulator") {
 		ReadAttribute readA;
 		CallAttribute callA;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 	
 
 		WHEN("The PkbPopulator references empty stores") {
@@ -47,10 +49,13 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
+				cfgPointer, concallPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
 				REQUIRE(vsPointer->size() == 0);
 				pkbPop.addVar("x");
@@ -198,6 +203,19 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addNext(1, 2);
 				REQUIRE(nextPointer->getAllLeft().size() == 1);
 				REQUIRE(nextPointer->getAllRight().size() == 1);
+			}
+			THEN("Adding one cfg node should increase store size by 1") {
+				REQUIRE(cfgPointer->getAllCFGNodes().size() == 0);
+				std::shared_ptr<CFGNode> c = std::make_shared<CFGNode>(std::vector({ 3 }));
+				pkbPop.addCFGNode("sampleProc", c);
+				REQUIRE(cfgPointer->getAllCFGNodes().size() == 1);
+			}
+			THEN("Adding one container call should increase store size by 1") {
+				REQUIRE(concallPointer->getAllProc().size() == 0);
+				REQUIRE(concallPointer->getAllStmt().size() == 0);
+				pkbPop.addContainCalls(1, "proc1");
+				REQUIRE(concallPointer->getAllProc().size() == 1);
+				REQUIRE(concallPointer->getAllStmt().size() == 1);
 			}
 		}
 	}

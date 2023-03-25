@@ -54,6 +54,8 @@ TEST_CASE("Test processSimple()") {
     ReadAttribute readA;
     CallAttribute callA;
     NextStore next;
+    CFGStore cfg;
+    ContainCallsStore concall;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -74,10 +76,14 @@ TEST_CASE("Test processSimple()") {
     std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
     std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
     std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+    std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+    std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
+
 
     PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
         fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-        usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+        usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+        cfgPointer, concallPointer);
     std::string fileLocation = "sample_source.txt";
     std::string fileInput = "procedure Example {\n"
                             "  x = 2+d;\n"
