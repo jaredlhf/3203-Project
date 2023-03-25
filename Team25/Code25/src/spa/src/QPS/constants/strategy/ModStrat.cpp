@@ -40,6 +40,23 @@ std::unordered_set<std::string> getAllVarModByProc(const std::string& proc, std:
     return res;
 }
 
+std::unordered_set<std::string> getAllVarModByStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> res;
+
+    // Insert all vars modified by stmt (without considering called procs within stmt yet)
+    std::unordered_set<std::string> stmtVars = pkbRet->getModVar(lineNum);
+    res.insert(stmtVars.begin(), stmtVars.end());
+
+    // Add vars for all procs called within stmt
+    std::unordered_set<std::string> calledProcs = pkbRet->getConProc(lineNum);
+    for (const std::string& proc : calledProcs) {
+        std::unordered_set<std::string> procVars = getAllVarModByProc(proc, pkbRet);
+        res.insert(procVars.begin(), procVars.end());
+    }
+
+    return res;
+}
+
 bool isModIndirectly(const std::string& proc, const std::string& var, std::shared_ptr<PkbRetriever> pkbRet) {
     std::unordered_set<std::string> modVars = getAllVarModByProc(proc, pkbRet);
     return find(modVars.begin(), modVars.end(), var) != modVars.end();
@@ -55,7 +72,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constWil
     std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
     const std::string& arg1Val = v1->getVal();
     std::unordered_set<std::string> res = v1->isInt()
-        ? pkbRet->getModVar(std::stoi(arg1Val))
+        ? getAllVarModByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarModByProc(arg1Val, pkbRet);
     return !res.empty()
         ? QpsTable::getDefaultOk()
@@ -69,7 +86,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constCon
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
     std::unordered_set<std::string> pkbRes = v1->isInt()
-        ? pkbRet->getModVar(std::stoi(arg1Val))
+        ? getAllVarModByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarModByProc(arg1Val, pkbRet);
     return std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()
         ? QpsTable::getDefaultOk()
@@ -84,7 +101,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constSyn
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
 
     std::unordered_set<std::string> pkbRes = v1->isInt()
-        ? pkbRet->getModVar(std::stoi(arg1Val))
+        ? getAllVarModByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarModByProc(arg1Val, pkbRet);
     for (const std::string& res : pkbRes) {
         resTable->addRow({ res });
@@ -115,7 +132,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synWildc
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarModByStmt(stmtNum, pkbRet);
             if (!pkbRes.empty()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -149,7 +166,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synConst
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarModByStmt(stmtNum, pkbRet);
             if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -184,7 +201,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synSyn()
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getModVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarModByStmt(stmtNum, pkbRet);
             for (const std::string& res : pkbRes) {
                 resTable->addRow({ std::to_string(stmtNum), res });
             }
