@@ -12,7 +12,7 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
 	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
-	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore) {
+	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore, shared_ptr<CFGStore> cfgStore, shared_ptr<ContainCallsStore> conCallStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -32,6 +32,8 @@ PkbPopulator::PkbPopulator(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	this->readAttrStorage = readAttrStore;
 	this->callAttrStorage = callAttrStore;
 	this->nextStorage = nextStore;
+	this->cfgStorage = cfgStore;
+	this->conCallStorage = conCallStore;
 }
 
 
@@ -129,4 +131,12 @@ void PkbPopulator::addCallAttr(std::string procName, int lineNum) {
 
 void PkbPopulator::addNext(int leftLineNum, int rightLineNum) {
 	this->nextStorage->addNext(leftLineNum, rightLineNum);
+}
+
+void PkbPopulator::addCFGNode(std::string procName, shared_ptr<CFGNode> node) {
+	this->cfgStorage->addCFGNode(procName, node);
+}
+
+void PkbPopulator::addContainCalls(int lineNum, std::string procName) {
+	this->conCallStorage->addContainCall(lineNum, procName);
 }
