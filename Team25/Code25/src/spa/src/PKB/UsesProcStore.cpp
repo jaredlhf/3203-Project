@@ -15,7 +15,7 @@ void UsesProcStore::addUsesProc(std::string procName, std::string varName) {
 }
 
 std::unordered_set<std::string> UsesProcStore::getVar(std::string procName) {
-	if (hasProc(procName)) {
+	if (varStore.find(procName) != varStore.end()) {
 		return varStore[procName];
 	}
 	else {
@@ -24,7 +24,7 @@ std::unordered_set<std::string> UsesProcStore::getVar(std::string procName) {
 }
 
 std::unordered_set<std::string> UsesProcStore::getProc(std::string varName) {
-	if (hasVar(varName)) {
+	if (procStore.find(varName) != procStore.end()) {
 		return procStore[varName];
 	}
 	else {
@@ -32,23 +32,6 @@ std::unordered_set<std::string> UsesProcStore::getProc(std::string varName) {
 	}
 }
 
-bool UsesProcStore::hasVar(std::string varName) {
-	if (procStore.find(varName) != procStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool UsesProcStore::hasProc(std::string procName) {
-	if (varStore.find(procName) != varStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> UsesProcStore::getAllVar()
 {

@@ -15,7 +15,7 @@ void UsesStore::addUses(int lineNum, std::string varName) {
 }
 
 std::unordered_set<std::string> UsesStore::getVar(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (varStore.find(lineNum) != varStore.end()) {
 		return varStore[lineNum];
 	}
 	else {
@@ -24,7 +24,7 @@ std::unordered_set<std::string> UsesStore::getVar(int lineNum) {
 }
 
 std::unordered_set<int> UsesStore::getStmt(std::string varName) {
-	if (hasVar(varName)) {
+	if (stmtStore.find(varName) != stmtStore.end()) {
 		return stmtStore[varName];
 	}
 	else {
@@ -32,23 +32,6 @@ std::unordered_set<int> UsesStore::getStmt(std::string varName) {
 	}
 }
 
-bool UsesStore::hasVar(std::string varName) {
-	if (stmtStore.find(varName) != stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool UsesStore::hasStmt(int lineNum) {
-	if (varStore.find(lineNum) != varStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> UsesStore::getAllVar() {
 	std::unordered_set<std::string> varList;
