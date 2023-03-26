@@ -20,8 +20,6 @@ public:
 	void addFollows(int leftStmt, int rightStmt);
 	int getLeftStmt(int rightStmt);
 	int getRightStmt(int leftStmt);
-	bool hasLeftStmt(int lineNum) override;
-	bool hasRightStmt(int lineNum) override;
 	std::unordered_set<int> getAllLeft() override;
 	std::unordered_set<int> getAllRight() override;
 };
