@@ -16,7 +16,7 @@ void ModifiesStore::addModifies(int lineNum, std::string varName) {
 }
 
 std::unordered_set<std::string> ModifiesStore::getVar(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (varStore.find(lineNum) != varStore.end()) {
 		return varStore[lineNum];
 	}
 	else {
@@ -25,29 +25,11 @@ std::unordered_set<std::string> ModifiesStore::getVar(int lineNum) {
 }
 
 std::unordered_set<int> ModifiesStore::getStmt(std::string varName) {
-	if (hasVar(varName)) {
+	if (stmtStore.find(varName) != stmtStore.end()) {
 		return stmtStore[varName];
 	}
 	else {
 		return std::unordered_set<int>{};
-	}
-}
-
-bool ModifiesStore::hasVar(std::string varName) {
-	if (stmtStore.find(varName) != stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ModifiesStore::hasStmt(int lineNum) {
-	if (varStore.find(lineNum) != varStore.end()) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }
 
