@@ -131,6 +131,22 @@ public:
 	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
 };
 
+class AffectsClause : public Clause {
+public:
+	AffectsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
+class AffectsStClause : public Clause {
+public:
+	AffectsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);
+	virtual bool isWrongArgs() override;
+	virtual bool isSemInvalid() override;
+	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve(std::shared_ptr<PkbRetriever> pkbRet) override;
+};
+
 class WithClause : public Clause {
 public:
 	WithClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2);

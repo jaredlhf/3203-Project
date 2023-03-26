@@ -174,6 +174,8 @@ TEST_CASE("clause create function creates the right classes based on the keyword
 	REQUIRE(Clause::create(Constants::CALLSST, arg1, arg2)->getKeyword() == Constants::CALLSST);
 	REQUIRE(Clause::create(Constants::NEXT, arg1, arg2)->getKeyword() == Constants::NEXT);
 	REQUIRE(Clause::create(Constants::NEXTST, arg1, arg2)->getKeyword() == Constants::NEXTST);
+	REQUIRE(Clause::create(Constants::AFFECTS, arg1, arg2)->getKeyword() == Constants::AFFECTS);
+	REQUIRE(Clause::create(Constants::AFFECTSST, arg1, arg2)->getKeyword() == Constants::AFFECTSST);
 	REQUIRE(Clause::create(Constants::WITH, arg1, arg2)->getKeyword() == Constants::WITH);
 }
 
@@ -641,6 +643,100 @@ TEST_CASE("isSemInvalid function in NextStClause class behaves as expected") {
 	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::NEXTST, stmtSyn, stmtSyn);
 	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::NEXTST, stmtSyn, intValue);
 	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::NEXTST, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
+}
+
+TEST_CASE("isWrongArgs function in AffectsClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::PRINT, "yy");
+
+	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::AFFECTS, nonIntValue, intValue);
+	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::AFFECTS, intValue, nonIntValue);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::AFFECTS, nonIntValue, nonIntValue);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::AFFECTS, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::AFFECTS, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::AFFECTS, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::AFFECTS, intValue, stmtSyn);
+
+	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
+	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
+	REQUIRE(validConstClause->isWrongArgs() == false);
+	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in AffectsClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::AFFECTS, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::AFFECTS, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::AFFECTS, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::AFFECTS, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::AFFECTS, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::AFFECTS, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::AFFECTS, intValue, stmtSyn);
+
+
+	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
+	REQUIRE(nonStmtArg2Clause->isSemInvalid() == true);
+	REQUIRE(bothInvalidClause->isSemInvalid() == true);
+	REQUIRE(validMixed1Clause->isSemInvalid() == false);
+	REQUIRE(validMixed2Clause->isSemInvalid() == false);
+	REQUIRE(validConstClause->isSemInvalid() == false);
+	REQUIRE(validSynClause->isSemInvalid() == false);
+}
+
+TEST_CASE("isWrongArgs function in AffectsStClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::PRINT, "yy");
+
+	std::shared_ptr<Clause> nonIntArg1Clause = Clause::create(Constants::AFFECTSST, nonIntValue, intValue);
+	std::shared_ptr<Clause> nonIntArg2Clause = Clause::create(Constants::AFFECTSST, intValue, nonIntValue);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::AFFECTSST, nonIntValue, nonIntValue);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::AFFECTSST, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::AFFECTSST, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::AFFECTSST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::AFFECTSST, intValue, stmtSyn);
+
+	REQUIRE(nonIntArg1Clause->isWrongArgs() == true);
+	REQUIRE(nonIntArg2Clause->isWrongArgs() == true);
+	REQUIRE(bothInvalidClause->isWrongArgs() == true);
+	REQUIRE(validMixed1Clause->isWrongArgs() == false);
+	REQUIRE(validMixed2Clause->isWrongArgs() == false);
+	REQUIRE(validConstClause->isWrongArgs() == false);
+	REQUIRE(validSynClause->isWrongArgs() == false);
+}
+
+TEST_CASE("isSemInvalid function in AffectsStClause class behaves as expected") {
+	std::shared_ptr<Value> intValue = Value::create("123");
+	std::shared_ptr<Value> nonIntValue = Value::create("12w");
+	std::shared_ptr<Synonym> constSyn = Synonym::create(Constants::CONSTANT, "xx");
+	std::shared_ptr<Synonym> stmtSyn = Synonym::create(Constants::CALL, "yy");
+
+	std::shared_ptr<Clause> nonStmtArg1Clause = Clause::create(Constants::AFFECTSST, constSyn, stmtSyn);
+	std::shared_ptr<Clause> nonStmtArg2Clause = Clause::create(Constants::AFFECTSST, stmtSyn, constSyn);
+	std::shared_ptr<Clause> bothInvalidClause = Clause::create(Constants::AFFECTSST, constSyn, constSyn);
+	std::shared_ptr<Clause> validConstClause = Clause::create(Constants::AFFECTSST, intValue, intValue);
+	std::shared_ptr<Clause> validSynClause = Clause::create(Constants::AFFECTSST, stmtSyn, stmtSyn);
+	std::shared_ptr<Clause> validMixed1Clause = Clause::create(Constants::AFFECTSST, stmtSyn, intValue);
+	std::shared_ptr<Clause> validMixed2Clause = Clause::create(Constants::AFFECTSST, intValue, stmtSyn);
 
 
 	REQUIRE(nonStmtArg1Clause->isSemInvalid() == true);
