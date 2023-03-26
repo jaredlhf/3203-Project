@@ -20,6 +20,8 @@
 #include "CallsStarStore.h"
 #include "AttributeStore.h"
 #include "NextStore.h"
+#include "CFGStore.h"
+#include "ContainCallsStore.h"
 
 class PkbRetriever{
 private:
@@ -42,13 +44,15 @@ private:
 	shared_ptr<ReadAttribute> readAttrStorage;
 	shared_ptr<CallAttribute> callAttrStorage;
 	shared_ptr<NextStore> nextStorage;
+	shared_ptr<CFGStore> cfgStorage;
+	shared_ptr<ContainCallsStore> conCallStorage;
 
 public:
 	PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<ConstantStore> constStore, shared_ptr<FollowsStore> followsStore, shared_ptr<ProcedureStore> procedureStore, 
 		shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 		shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
 		shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
-		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore);
+		shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore, shared_ptr<CFGStore> cfgStore, shared_ptr<ContainCallsStore> conCallStore);
 	/*Var Store*/
 	std::unordered_set<std::string> getAllVar(); 
 	/*Const Store*/
@@ -136,4 +140,14 @@ public:
 	std::unordered_set<int> getAllRightNext();
 	std::unordered_set<int> getRightNextStar(int leftStmt);
 	std::unordered_set<int> getLeftNextStar(int rightStmt);
+	/*CFG Store*/
+	std::shared_ptr<CFGNode> getCFGNode(std::string procName);
+	std::vector<std::shared_ptr<CFGNode>> getAllCFGNodes();
+	std::vector<std::shared_ptr<CFGNode>> getNextNodes(std::shared_ptr<CFGNode> currNode);
+	std::vector<int> getLineNo(std::shared_ptr<CFGNode> currNode);
+	/*Container Calls Store*/
+	std::unordered_set<std::string> getConProc(int lineNum);
+	std::unordered_set<int> getConStmt(std::string procName);
+	std::unordered_set<std::string> getAllConProc();
+	std::unordered_set<int> getAllConStmt();
 };

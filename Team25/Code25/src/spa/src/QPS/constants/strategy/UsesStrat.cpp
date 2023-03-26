@@ -40,6 +40,23 @@ std::unordered_set<std::string> getAllVarUsesByProc(const std::string& proc, std
     return res;
 }
 
+std::unordered_set<std::string> getAllVarUsesByStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet) {
+    std::unordered_set<std::string> res;
+
+    // Insert all vars used by stmt (without considering called procs within stmt yet)
+    std::unordered_set<std::string> stmtVars = pkbRet->getUsesVar(lineNum);
+    res.insert(stmtVars.begin(), stmtVars.end());
+
+    // Add vars for all procs called within stmt
+    std::unordered_set<std::string> calledProcs = pkbRet->getConProc(lineNum);
+    for (const std::string& proc : calledProcs) {
+        std::unordered_set<std::string> procVars = getAllVarUsesByProc(proc, pkbRet);
+        res.insert(procVars.begin(), procVars.end());
+    }
+
+    return res;
+}
+
 bool isUsesIndirectly(const std::string& proc, const std::string& var, std::shared_ptr<PkbRetriever> pkbRet) {
     std::unordered_set<std::string> modVars = getAllVarUsesByProc(proc, pkbRet);
     return find(modVars.begin(), modVars.end(), var) != modVars.end();
@@ -55,7 +72,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constWi
     std::shared_ptr<Value> v1 = std::static_pointer_cast<Value>(this->arg1);
     const std::string& arg1Val = v1->getVal();
     std::unordered_set<std::string> res = v1->isInt()
-        ? pkbRet->getUsesVar(std::stoi(arg1Val))
+        ? getAllVarUsesByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarUsesByProc(arg1Val, pkbRet);
     return !res.empty()
         ? QpsTable::getDefaultOk()
@@ -69,7 +86,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constCo
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
     std::unordered_set<std::string> pkbRes = v1->isInt() 
-        ? pkbRet->getUsesVar(std::stoi(arg1Val))
+        ? getAllVarUsesByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarUsesByProc(arg1Val, pkbRet);
     return pkbRes.count(arg2Val) > 0
         ? QpsTable::getDefaultOk()
@@ -83,7 +100,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constSy
     const std::string& arg2Name = std::static_pointer_cast<Synonym>(this->arg2)->getName();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ arg2Name });
     std::unordered_set<std::string> pkbRes = v1->isInt()
-        ? pkbRet->getUsesVar(std::stoi(arg1Val))
+        ? getAllVarUsesByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarUsesByProc(arg1Val, pkbRet);
     for (std::string val : pkbRes) {
         resTable->addRow({ val });
@@ -114,7 +131,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synWild
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarUsesByStmt(stmtNum, pkbRet);
             if (pkbRes.size() > 0) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -148,7 +165,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synCons
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarUsesByStmt(stmtNum, pkbRet);
             if (std::find(pkbRes.begin(), pkbRes.end(), arg2Val) != pkbRes.end()) {
                 resTable->addRow({ std::to_string(stmtNum) });
             }
@@ -183,7 +200,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synSyn(
             ? Clause::getEveryStmt(pkbRet)
             : pkbRet->getAllStmt(arg1Syn->getKeyword());
         for (int stmtNum : arg1Stmts) {
-            std::unordered_set<std::string> pkbRes = pkbRet->getUsesVar(stmtNum);
+            std::unordered_set<std::string> pkbRes = getAllVarUsesByStmt(stmtNum, pkbRet);
             for (const std::string& arg2Match : pkbRes) {
                 resTable->addRow({ std::to_string(stmtNum), arg2Match });
             }

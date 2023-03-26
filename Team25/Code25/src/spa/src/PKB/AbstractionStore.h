@@ -56,3 +56,13 @@ class ProcProcStarStore {
 	virtual std::unordered_set<std::string> getAllLeft() = 0;
 	virtual std::unordered_set<std::string> getAllRight() = 0;
 };
+
+class ProcStmtStore {
+	virtual std::unordered_set<std::string> getProc(int lineNum) = 0;
+	virtual std::unordered_set<int> getStmt(std::string varName) = 0;
+	virtual bool hasProc(std::string varName) = 0;
+	virtual bool hasStmt(int lineNum) = 0;
+	virtual std::unordered_set<std::string> getAllProc() = 0;
+	virtual std::unordered_set<int> getAllStmt() = 0;
+};
+

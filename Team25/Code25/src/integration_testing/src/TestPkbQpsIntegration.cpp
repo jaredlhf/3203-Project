@@ -22,6 +22,8 @@ SCENARIO("Integration testing between PKB and QPS components") {
         ReadAttribute readAtt;
         CallAttribute callAtt;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -42,6 +44,8 @@ SCENARIO("Integration testing between PKB and QPS components") {
         std::shared_ptr<ReadAttribute> readAttrStorage = std::make_shared<ReadAttribute>(readAtt);
         std::shared_ptr<CallAttribute> callAttrStorage = std::make_shared<CallAttribute>(callAtt);
 		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+		std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+		std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
         // Populating variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -131,7 +135,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		pattsPointer->addAssignRhs(9, "x+1");
 
 		// PKB class that interacts with the QPS class
-		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage, nextPointer);
+		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAttrStorage, readAttrStorage, callAttrStorage, nextPointer, cfgPointer, concallPointer);
 
 		WHEN("The QPS object is instantiated and interacts with the PKB	") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));

@@ -24,6 +24,8 @@ SCENARIO("Mocking behavior of ParentStClause::resolve") {
 		ReadAttribute readA;
 		CallAttribute callA;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -44,10 +46,13 @@ SCENARIO("Mocking behavior of ParentStClause::resolve") {
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+		std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+		std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 		PkbRetriever pkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
+			cfgPointer, concallPointer);
 		std::shared_ptr<PkbRetriever> pkbRet = std::make_shared<PkbRetriever>(pkbRetriever);
 
 		WHEN("PkbRetriever are populated queries that return a non-empty result") {

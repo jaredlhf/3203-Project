@@ -35,6 +35,8 @@ class TestWrapper : public AbstractWrapper {
     ReadAttribute readA;
     CallAttribute callA;
     NextStore next;
+    CFGStore cfg;
+    ContainCallsStore concall;
 
     std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
     std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -55,9 +57,11 @@ class TestWrapper : public AbstractWrapper {
     std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
     std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
     std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+    std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+    std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
-    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer);
-    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer);
+    PkbRetriever ret = PkbRetriever(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer, cfgPointer, concallPointer);
+    PkbPopulator pop = PkbPopulator(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer,printAPointer, readAPointer, callAPointer, nextPointer, cfgPointer, concallPointer);
     
     Qps qps = Qps(std::make_shared<PkbRetriever>(ret));
  public:
