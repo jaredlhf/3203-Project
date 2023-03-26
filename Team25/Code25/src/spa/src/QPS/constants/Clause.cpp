@@ -74,6 +74,9 @@ std::shared_ptr<Clause> Clause::create(const std::string clauseType, std::shared
     if (clauseType == Constants::CALLSST) res = std::make_shared<CallsStClause>(CallsStClause(arg1, arg2));
     if (clauseType == Constants::NEXT) res = std::make_shared<NextClause>(NextClause(arg1, arg2));
     if (clauseType == Constants::NEXTST) res = std::make_shared<NextStClause>(NextStClause(arg1, arg2));
+    if (clauseType == Constants::AFFECTS) res = std::make_shared<AffectsClause>(AffectsClause(arg1, arg2));
+    if (clauseType == Constants::AFFECTSST) res = std::make_shared<AffectsStClause>(AffectsStClause(arg1, arg2));
+    if (clauseType == Constants::NEXTST) res = std::make_shared<NextStClause>(NextStClause(arg1, arg2));
     if (clauseType == Constants::WITH) res = std::make_shared<WithClause>(WithClause(arg1, arg2));
 
     return res;
@@ -118,6 +121,14 @@ NextClause::NextClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg
 
 NextStClause::NextStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
     this->keyword = Constants::NEXTST;
+}
+
+AffectsClause::AffectsClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::AFFECTS;
+}
+
+AffectsStClause::AffectsStClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
+    this->keyword = Constants::AFFECTSST;
 }
 
 PatternClause::PatternClause(std::shared_ptr<Entity> arg1, std::shared_ptr<Entity> arg2) : Clause(arg1, arg2) {
@@ -583,6 +594,94 @@ bool NextStClause::isSemInvalid() {
 }
 
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> NextStClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// Affects overriden clause functions
+/*
+    For Affects clauses, args is wrong both args are not int
+*/
+bool AffectsClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For Affects clauses, args is sem invalid if either syns is not stmtsyn
+*/
+bool AffectsClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
+    // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
+    if (this->isWrongArgs()) {
+        return QpsTable::getDefaultSynErr();
+    }
+
+    if (this->isSemInvalid()) {
+        return QpsTable::getDefaultSemErr();
+    }
+
+    return ClauseStrat::create(this->getKeyword(), this->arg1, this->arg2, pkbRet)->resolve();
+}
+
+// AffectsSt overriden clause functions
+/*
+    For AffectsSt clauses, args is wrong both args are not int
+*/
+bool AffectsStClause::isWrongArgs() {
+    if (this->arg1->isConstant() && !std::static_pointer_cast<Value>(this->arg1)->isInt()) {
+        return true;
+    }
+
+    if (this->arg2->isConstant() && !std::static_pointer_cast<Value>(this->arg2)->isInt()) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+    For AffectsSt clauses, args is sem invalid if either syns is not stmtsyn
+*/
+bool AffectsStClause::isSemInvalid() {
+    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->isStmtRef()) {
+        return true;
+    }
+
+    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->isStmtRef()) {
+        return true;
+    }
+
+    return false;
+}
+
+std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStClause::resolve(std::shared_ptr<PkbRetriever> pkbRet) {
     // GUARD CLAUSES: Return if either wrongs args (syntax err) OR wrong type of args (semantic err)
     if (this->isWrongArgs()) {
         return QpsTable::getDefaultSynErr();

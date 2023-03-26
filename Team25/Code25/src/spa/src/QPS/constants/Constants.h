@@ -30,6 +30,8 @@ public:
 	static const std::string CALLSST;
 	static const std::string NEXT;
 	static const std::string NEXTST;
+	static const std::string AFFECTS;
+	static const std::string AFFECTSST;
 	static const std::string PATTERN;
 	static const std::string WILDCARD;
 	static const std::string BOOLEAN;
