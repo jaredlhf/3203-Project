@@ -13,7 +13,7 @@ void NextStore::addNext(int leftStmt, int rightStmt) {
 }
 
 std::unordered_set<int> NextStore::getLeftStmt(int rightStmt) {
-	if (hasRightStmt(rightStmt)) {
+	if (leftStmtStore.find(rightStmt) != leftStmtStore.end()) {
 		return leftStmtStore[rightStmt];
 	}
 	else {
@@ -22,7 +22,7 @@ std::unordered_set<int> NextStore::getLeftStmt(int rightStmt) {
 }
 
 std::unordered_set<int> NextStore::getRightStmt(int leftStmt) {
-	if (hasLeftStmt(leftStmt)) {
+	if (rightStmtStore.find(leftStmt) != rightStmtStore.end()) {
 		return rightStmtStore[leftStmt];
 	}
 	else {
@@ -30,23 +30,6 @@ std::unordered_set<int> NextStore::getRightStmt(int leftStmt) {
 	}
 }
 
-bool NextStore::hasLeftStmt(int lineNum) {
-	if (rightStmtStore.find(lineNum) != rightStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool NextStore::hasRightStmt(int lineNum) {
-	if (leftStmtStore.find(lineNum) != leftStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<int> NextStore::getAllLeft() {
 	std::unordered_set<int> leftStmtList;
