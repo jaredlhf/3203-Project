@@ -17,7 +17,7 @@ void FollowsStarStore::addFollowsStar(int leftStmt, std::unordered_set<int> righ
 
 
 std::unordered_set<int> FollowsStarStore::getLeftStar(int rightStmt) {
-	if (rightStmtStar.find(rightStmt) != rightStmtStar.end()) {
+	if (leftStmtStar.find(rightStmt) != leftStmtStar.end()) {
 		return leftStmtStar[rightStmt];
 	}
 	else {
@@ -26,7 +26,7 @@ std::unordered_set<int> FollowsStarStore::getLeftStar(int rightStmt) {
 }
 
 std::unordered_set<int> FollowsStarStore::getRightStar(int leftStmt) {
-	if (leftStmtStar.find(leftStmt) != leftStmtStar.end()) {
+	if (rightStmtStar.find(leftStmt) != rightStmtStar.end()) {
 		return rightStmtStar[leftStmt];
 	}
 	else {
