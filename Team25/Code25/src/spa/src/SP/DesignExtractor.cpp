@@ -632,7 +632,53 @@ void AttributeExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     extractConst(expr);
 }
 
+void ProcedureCallsExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
+    if (isIfNode(n)) {
+        std::shared_ptr<IfNode> ifs = std::dynamic_pointer_cast<IfNode>(n);
+        visit(ifs, lineNo);
+    } else if (isWhileNode(n)) {
+        std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
+        visit(wh, lineNo);
+    } else if (isCallNode(n)) {
+        std::shared_ptr<CallNode> c = std::dynamic_pointer_cast<CallNode>(n);
+        visit(c, lineNo);
+    }
+}
+void ProcedureCallsExtractor::visit(std::shared_ptr<CallNode> c,int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = c->getLine();
+    }
+    std::cout<<"calls contain: " << lineNo << " " << c->getVar() <<endl;
+    pkbPopulator->addContainCalls(lineNo,c->getVar());
+}
 
+void ProcedureCallsExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = ifs->getLine();
+    }
+    std::vector<std::shared_ptr<StmtNode>> ifStmts = ifs->getIfLst()->getStatements();
+    std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
+    int ifLineNo = ifs->getLine();
+
+    for (auto i: ifStmts) {
+        visit(i, lineNo);
+    }
+    for (auto i: elseStmts) {
+        visit(i, lineNo);
+    }
+}
+
+void ProcedureCallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
+    if (lineNo == SPConstants::INVALID_LINE_NO) {
+        lineNo = wh->getLine();
+    }
+    std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
+    int whLineNo = wh->getLine();
+
+    for (auto i: whStmts) {
+        visit(i, lineNo);
+    }
+}
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());
