@@ -72,7 +72,8 @@ std::unordered_set<int> NextStore::getRightStmtStar(int leftStmt) {
 
 	for (const auto& value : temp1) {
 		rightStmtList.insert(value);
-		if (hasLeftStmt(value)) {
+		if (hasLeftStmt(value) 
+			&& std::find(rightStmtList.begin(), rightStmtList.end(), value) == rightStmtList.end()) {
 			std::unordered_set<int> temp2 = getRightStmtStar(value);
 			rightStmtList.insert(temp2.begin(), temp2.end());
 		}
@@ -86,7 +87,8 @@ std::unordered_set<int> NextStore::getLeftStmtStar(int rightStmt) {
 
 	for (const auto& value : temp1) {
 		leftStmtList.insert(value);
-		if (hasLeftStmt(value)) {
+		if (hasLeftStmt(value)
+			&& std::find(leftStmtList.begin(), leftStmtList.end(), value) == leftStmtList.end()) {
 			std::unordered_set<int> temp2 = getLeftStmtStar(value);
 			leftStmtList.insert(temp2.begin(), temp2.end());
 		}
