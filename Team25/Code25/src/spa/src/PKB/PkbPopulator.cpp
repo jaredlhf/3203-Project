@@ -49,8 +49,8 @@ void PkbPopulator::addFollows(int leftLineNum, int rightLineNum) {
 	this->followsStorage->addFollows(leftLineNum, rightLineNum);
 }
 
-void PkbPopulator::addProc(std::string procName) {
-	this->procedureStorage->addProc(procName);
+void PkbPopulator::addProc(std::string procName, int lineNum) {
+	this->procedureStorage->addProc(procName, lineNum);
 }
 
 void PkbPopulator::addStmt(std::string stmtType, int lineNum) {

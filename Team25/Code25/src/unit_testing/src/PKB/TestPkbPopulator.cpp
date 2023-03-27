@@ -68,7 +68,7 @@ SCENARIO("Working version of PkbPopulator") {
 			}
 			THEN("Adding one procedure should increase the procedure store size by 1") {
 				REQUIRE(psPointer->getAllProc().size() == 0);
-				pkbPop.addProc("sampleProc");
+				pkbPop.addProc("sampleProc", 2);
 				REQUIRE(psPointer->getAllProc().size() == 1);
 			}
 			THEN("Adding one statement should increase the statement store size by 1") {
