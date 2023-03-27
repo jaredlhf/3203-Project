@@ -219,7 +219,7 @@ SCENARIO("Working version of PkbRetriever") {
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
-			psPointer -> addProc("testProc");
+			psPointer -> addProc("testProc", 2);
 			ssPointer -> addStmt(Constants::ASSIGN, 1);
 			pattsPointer->addAssignLhs("x", 1);
 			pattsPointer->addAssignLhs("y", 2);
@@ -277,6 +277,7 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllFollowers().count(2) == 1);
 			}
 			THEN("Getting a procedures should return a non empty set") {
+				REQUIRE(pkbRet.getProc(2) == "testProc");
 				REQUIRE(pkbRet.getAllProc().size() == 1);
 				REQUIRE(pkbRet.getAllProc().count("testProc") == 1);
 			}
