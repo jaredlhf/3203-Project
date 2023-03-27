@@ -175,10 +175,11 @@ SemanticError
 5000
 36 - NextStar
 stmt s;
-Select s such that Next*(s, “”)
+Select s such that Next*(s, "")
 SyntaxError
 5000
 37 - NextStar
+stmt s;
 Select s1 such that Next*(s1, 2)
 SyntaxError
 5000
@@ -197,4 +198,3 @@ stmt s1, s2;
 Select s1 such that Next* (s1, s2)
 SyntaxError
 5000
-
