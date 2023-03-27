@@ -583,6 +583,9 @@ void AttributeExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         AttributeExtractor::visit(wh, lineNo);
+    } else if (isProcedureNode(n)) {
+        std::shared_ptr<ProcedureNode> proc = std::dynamic_pointer_cast<ProcedureNode>(n);
+        AttributeExtractor::visit(proc, lineNo);
     }
 }
 
