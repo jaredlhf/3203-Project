@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QPS/constants/Clause.h"
+#include "QPS/utils/QueryUtils.h"
 
 class UsesStrat;
 class ModStrat;
@@ -12,6 +13,8 @@ class CallsStrat;
 class CallsStStrat;
 class NextStrat;
 class NextStStrat;
+class AffectsStrat;
+class AffectsStStrat;
 class PatternStrat;
 class WithStrat;
 
