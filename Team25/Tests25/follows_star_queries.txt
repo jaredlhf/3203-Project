@@ -21,6 +21,7 @@ Select s such that Follows* (1, s)
 5 - wildcard,synonym
 stmt s; 
 Select s such that Follows* (_,  s)
+2,4,7,10,12,14,16,18,19,20
 5000
 6- ident, ident
 stmt s; 
