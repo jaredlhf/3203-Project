@@ -1,0 +1,31 @@
+procedure NextStarTest {
+   a = 1+b;
+   if (c < d) then {
+       e = f;
+       if (ab < cd) then {
+           print c;
+       } else {
+           d = e+2;
+           if (ab < cd) then {
+               print c;
+           } else {
+               d = e+2;
+           }
+       }
+       print a;
+   } else {
+       g = h+2;
+   }
+   while (i > j) {
+       k = l;
+       while (n > r) {
+           o = p;
+           while (x > y) {
+               z = k;
+           }
+       }
+       print z;
+   }
+   print a;
+   print b;
+}
