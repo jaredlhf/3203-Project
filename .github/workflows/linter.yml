@@ -1,4 +1,4 @@
-name: Code Style Check
+name: Coding Standards 
 
 on:
   pull_request:
@@ -13,8 +13,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: file
-
-      - name: Failed check
+          tidy-checks: -boost, -bugprone, -performance, -portability, -modernize, -clang-anlayzer, -cppcoreguidelines
+          files-changed-only: false
+          extra-args: -std=c++17 -I ./include
+      - name: Failed coding standard check
         if: steps.linter.outputs.checks-failed > 0
-        run: echo "Some files failed the linting checks!"
+        run: exit 1   
