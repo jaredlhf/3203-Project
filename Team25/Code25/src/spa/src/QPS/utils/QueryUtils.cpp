@@ -21,5 +21,24 @@ bool QueryUtils::isAssignStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet)
 }
 
 bool QueryUtils::affects(int modLine, int usedLine, std::shared_ptr<PkbRetriever> pkbRet) {
+	// return false if neither is an assign stmt
+	if (!isAssignStmt(modLine, pkbRet) || !isAssignStmt(usedLine, pkbRet)) {
+		return false;
+	}
+
+	std::unordered_set<std::string> modSet = pkbRet->getModVar(modLine);
+	std::string modVar;
+	// Guaranteed to be 1 item in set since it is an assign stmt
+	for (std::string var : modSet) {
+		modVar = var;
+	}
+
+	std::unordered_set<std::string> usesSet = pkbRet->getUsesVar(modLine);
+	// Return false if modVar is not in usedSet
+	if (std::find(usesSet.begin(), usesSet.end(), modVar) == usesSet.end()) {
+		return false;
+	}
+
+
 	return false;
 }
