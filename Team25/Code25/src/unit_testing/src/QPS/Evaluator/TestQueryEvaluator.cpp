@@ -31,6 +31,8 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ReadAttribute readA;
 			CallAttribute callA;
 			NextStore next;
+			CFGStore cfg;
+			ContainCallsStore concall;
 
 			ParserResponse response;
 
@@ -53,10 +55,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+				cfgPointer, concallPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -262,6 +267,8 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			ReadAttribute readA;
 			CallAttribute callA;
 			NextStore next;
+			CFGStore cfg;
+			ContainCallsStore concall;
 
 			ParserResponse response;
 
@@ -284,10 +291,13 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+				cfgPointer, concallPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("w");
@@ -481,7 +491,7 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			}
 
 			THEN("When QpsEvaluator evaluates a modifies clause with procedure constant, it returns the right result") {
-				list<string> expected = { "x", "y" };
+				list<string> expected = { "x", "y", "z" };
 				ParserResponse response;
 
 				response.setDeclarations({ Synonym::create(Constants::VARIABLE, "v2") });
@@ -680,6 +690,8 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ReadAttribute readA;
 			CallAttribute callA;
 			NextStore next;
+			CFGStore cfg;
+			ContainCallsStore concall;
 
 			ParserResponse response;
 
@@ -702,10 +714,13 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer,
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+				cfgPointer, concallPointer);
 
 			// Mock variables appearing in the SIMPLE program
 			vsPointer->addVar("x");
@@ -935,6 +950,8 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			ReadAttribute readA;
 			CallAttribute callA;
 			NextStore next;
+			CFGStore cfg;
+			ContainCallsStore concall;
 
 			ParserResponse response;
 
@@ -957,10 +974,13 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 			std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 			std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+			std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer,
 				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+				cfgPointer, concallPointer);
 
 			// Mock constants appearing in the SIMPLE program
 			csPointer->addConst(123);

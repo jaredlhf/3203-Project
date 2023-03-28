@@ -1,0 +1,192 @@
+1 - Next
+stmt s;
+Select s such that Next(1, 2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+2 - Next
+assign a;
+Select a such that Next(5, 6)
+
+5000
+3 - Next
+print pr;
+Select pr such that Next(1, pr)
+
+5000
+4 - Next
+stmt s;
+Select s such that Next(1, s)
+2
+5000
+5 - Next
+procedure p;
+Select p such that Next(1, _)
+NextTest
+5000
+6 - Next
+stmt s;
+Select s such that Next(20, _)
+
+5000
+7 - Next
+stmt s;
+Select s such that Next(1000, _)
+
+5000
+8 - Next
+stmt s1, s2;
+Select s1 such that Next(s1, s2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+9 - Next
+stmt s;
+Select s such that Next(s, s)
+
+5000
+10 - Next
+stmt s1, s2;
+Select s2 such that Next(s1, s2)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+11 - Next
+stmt s; if ifs;
+Select s such that Next(s, ifs)
+1, 3, 6
+5000
+12 - Next
+stmt s;
+Select s such that Next(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+13 - Next
+print pr;
+Select pr such that Next(pr, _)
+5, 8, 10, 18, 19
+5000
+14 - Next
+call cl;
+Select cl such that Next(cl, _)
+
+5000
+15 - Next
+stmt s;
+Select s such that Next(s, 10)
+5, 8, 9
+5000
+16 - Next
+assign a;
+Select a such that Next(a, 12)
+11
+5000
+17 - Next
+stmt s;
+Select s such that Next(s, 1)
+
+5000
+18 - Next
+stmt s;
+Select s such that Next(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+19 - Next
+while w;
+Select w such that Next(_, w)
+12, 14, 16
+5000
+20 - Next
+procedure p;
+Select p such that Next(_, 2)
+NextTest
+5000
+21 - Next
+stmt s;
+Select s such that Next(_, 1)
+
+5000
+22 - Next
+stmt s;
+Select s such that Next(_, 100)
+
+5000
+23 - Next
+print pr;
+Select pr such that Next(_, _)
+5, 8, 10, 18, 19, 20
+5000
+24 - Next
+stmt s;
+Select s such that Next(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+25 - Next
+stmt Next, Select;
+Select Next such that Next(Next, Select)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+26 - Next
+stmt Next, Select;
+Select Select such that Next(Next, Select)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+27 - Next
+print such, Next;
+Select such such that Next(such, Next)
+5, 8, 19
+5000
+28 - Next
+while that, Next;
+Select that such that Next(Next, that)
+14
+5000
+29 - Next
+stmt s; if ifs;
+Select s      such that    Next(s, ifs)
+1, 3, 6
+5000
+30 - Next
+Invalid Next queries return SyntaxError or SemanticError
+stmt s;
+Select s such that Next( , )
+SyntaxError
+5000
+31 - Next
+stmt s;
+Select s such that Next(s, )
+SyntaxError
+5000
+32 - Next
+stmt s1, s2;
+Select s1 such that Next( , s2)
+SyntaxError
+5000
+33 - Next
+procedure p; stmt s;
+Select s such that Next(p, s)
+SemanticError
+5000
+34 - Next
+procedure p; stmt s;
+Select s such that Next(s, p)
+SemanticError
+5000
+35 - Next
+stmt s;
+Select s such that Next(s, “”)
+SyntaxError
+5000
+36 - Next
+Select s1 such that Next(s1, 2)
+SyntaxError
+5000
+37 - Next
+stmt s1, s2;
+Select s1 such that Nxt(s1, s2)
+SyntaxError
+5000
+38 - Next
+stmt s1, s2;
+Select s1 such that next(s1, s2)
+SyntaxError
+5000
+
+

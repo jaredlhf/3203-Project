@@ -24,9 +24,12 @@ SCENARIO("Mocking behavior of QPS") {
 		ReadAttribute readA;
 		CallAttribute callA;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 
 
 		ParserResponse response;
+
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
 		std::shared_ptr<ConstantStore> csPointer = std::make_shared<ConstantStore>(cs);
@@ -47,10 +50,13 @@ SCENARIO("Mocking behavior of QPS") {
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+		std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+		std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, 
+			cfgPointer, concallPointer);
 
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
@@ -131,6 +137,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		ReadAttribute readA;
 		CallAttribute callA;
 		NextStore next;
+		CFGStore cfg;
+		ContainCallsStore concall;
 
 
 		std::shared_ptr<VariableStore> vsPointer = std::make_shared<VariableStore>(vs);
@@ -152,6 +160,9 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 		std::shared_ptr<ReadAttribute> readAPointer = std::make_shared<ReadAttribute>(readA);
 		std::shared_ptr<CallAttribute> callAPointer = std::make_shared<CallAttribute>(callA);
 		std::shared_ptr<NextStore> nextPointer = std::make_shared<NextStore>(next);
+		std::shared_ptr<CFGStore> cfgPointer = std::make_shared<CFGStore>(cfg);
+		std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
+
 
 		// Mock variables appearing in the SIMPLE program
 		vsPointer->addVar("w");
@@ -293,7 +304,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 
 		PkbRetriever pkbRet(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
 			fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
-			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer);
+			usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
+			cfgPointer, concallPointer);
 		WHEN("The qps object is created") {
 			Qps qps(std::make_shared<PkbRetriever>(pkbRet));
 
@@ -369,7 +381,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 			}
 
 			THEN("For procedure constant uses query, the right result is returned") {
-				list<string> expected = { "x", "y" };
+				list<string> expected = { "x", "y", "z" };
 				list<string> res;
 
 				string query = "variable p1; Select p1 such that Uses(\"factorial\", p1)";
@@ -398,8 +410,8 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
-			THEN("For modifies query in the form (s1, 'y') with procedure, the right result is returned") {
-				list<string> expected = { "beta", "main" };
+			THEN("For modifies query in the form (s1, 'z') with procedure, the right result is returned") {
+				list<string> expected = { "beta", "factorial", "main" };
 				list<string> res;
 
 				string query = "procedure p1; Select p1 such that Modifies(p1, \"z\")";
@@ -408,7 +420,7 @@ SCENARIO("Mocking behavior of QPS with such that and pattern clauses") {
 				REQUIRE(res == expected);
 			}
 
-			THEN("For procedure constant modifies query in the form (s1, 'y'), the right result is returned") {
+			THEN("For procedure constant modifies query in the form (s1, 'z'), the right result is returned") {
 				list<string> expected = { "w", "x", "y", "z" };
 				list<string> res;
 

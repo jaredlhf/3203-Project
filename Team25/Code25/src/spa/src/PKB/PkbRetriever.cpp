@@ -15,7 +15,7 @@ PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	shared_ptr<StatementStore> statementStore, shared_ptr<PatternStore> patternStore, shared_ptr<FollowsStarStore> followsStarStore, shared_ptr<ModifiesProcStore> modifiesProcStore, 
 	shared_ptr<ModifiesStore> modifiesStore, shared_ptr<ParentStarStore> parentStarStore, shared_ptr<ParentStore> parentStore, shared_ptr<UsesProcStore> usesProcStore, 
 	shared_ptr<UsesStore> usesStore, shared_ptr<CallsStore> callsStore, shared_ptr<CallsStarStore> callsStarStore, shared_ptr<PrintAttribute> printAttrStore, 
-	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore) {
+	shared_ptr<ReadAttribute> readAttrStore, shared_ptr<CallAttribute> callAttrStore, shared_ptr<NextStore> nextStore, shared_ptr<CFGStore> cfgStore, shared_ptr<ContainCallsStore> conCallStore) {
 	this->varStorage = varStore;
 	this->constStorage = constStore;
 	this->followsStorage = followsStore;
@@ -35,6 +35,8 @@ PkbRetriever::PkbRetriever(shared_ptr<VariableStore> varStore, shared_ptr<Consta
 	this->readAttrStorage = readAttrStore;
 	this->callAttrStorage = callAttrStore;
 	this->nextStorage = nextStore;
+	this->cfgStorage = cfgStore;
+	this->conCallStorage = conCallStore;
 };
 
 /*Var Store*/
@@ -324,4 +326,38 @@ std::unordered_set<int> PkbRetriever::getRightNextStar(int leftStmt) {
 
 std::unordered_set<int> PkbRetriever::getLeftNextStar(int rightStmt) {
 	return this->nextStorage->getLeftStmtStar(rightStmt);
+}
+
+/*CFG Store*/
+std::shared_ptr<CFGNode> PkbRetriever::getCFGNode(std::string procName) {
+	return this->cfgStorage->getCFGNode(procName);
+}
+
+std::vector<std::shared_ptr<CFGNode>> PkbRetriever::getAllCFGNodes() {
+	return this->cfgStorage->getAllCFGNodes();
+}
+
+std::vector<std::shared_ptr<CFGNode>> PkbRetriever::getNextNodes(std::shared_ptr<CFGNode> currNode) {
+	return this->cfgStorage->getNextNodes(currNode);
+}
+
+std::vector<int> PkbRetriever::getLineNo(std::shared_ptr<CFGNode> currNode) {
+	return this->cfgStorage->getLineNo(currNode);
+}
+
+/*Container Calls Store*/
+std::unordered_set<std::string> PkbRetriever::getConProc(int lineNum) {
+	return this->conCallStorage->getProc(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getConStmt(std::string procName) {
+	return this->conCallStorage->getStmt(procName);
+}
+
+std::unordered_set<std::string> PkbRetriever::getAllConProc() {
+	return this->conCallStorage->getAllProc();
+}
+
+std::unordered_set<int> PkbRetriever::getAllConStmt() {
+	return this->conCallStorage->getAllStmt();
 }

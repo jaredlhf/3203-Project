@@ -1,0 +1,285 @@
+1 - comment
+assign a;
+Select a pattern a(_,_)
+1, 3, 6, 9, 11, 13, 15, 17
+5000
+2 - comment
+assign a;
+Select a pattern a(_,_"hello"_)
+3, 11
+5000
+3 - comment
+assign a;
+Select a pattern a(_,_"e + 2"_)
+9
+5000
+4 - comment
+assign a;
+Select a pattern a(_,_"a * e + 2"_)
+6
+5000
+5 - comment
+assign a;
+Select a pattern a(_,_"a * e"_)
+6
+5000
+6 - comment
+assign a;
+Select a pattern a(_,"hello")
+3
+5000
+7 - comment
+assign a;
+Select a pattern a(_,"hello + 2")
+11
+5000
+8 - comment
+assign a;
+Select a pattern a(_,"a * (e+2) / (5 * 6) + ((e * k) * (e))")
+9
+5000
+9 - comment
+assign a;
+Select a pattern a(_,"l")
+13, 15
+5000
+10 - comment
+assign a;
+Select a pattern a("ball",_)
+15, 17
+5000
+11 - comment
+assign a;
+Select a pattern a("a",_)
+1, 3
+5000
+12 - comment
+assign a;
+Select a pattern a("print",_)
+11
+5000
+13 - comment
+assign a;
+Select a pattern a("d",_"a"_)
+6, 9
+5000
+14 - comment
+assign a;
+Select a pattern a("d",_"a * e + 2"_)
+6
+5000
+15 - comment
+assign a;
+Select a pattern a("d",_"a * e"_)
+6
+5000
+16 - comment
+assign a;
+Select a pattern a("a",_"ball"_)
+1
+5000
+17 - comment
+assign a;
+Select a pattern a("ball",_"l"_)
+15
+5000
+18 - comment
+assign a;
+Select a pattern a("ball",_"ball"_)
+17
+5000
+19 - comment
+assign a;
+Select a pattern a("print","hello + 2")
+11
+5000
+20 - comment
+assign a;
+Select a pattern a("d","a*e+2")
+6
+5000
+21 - comment
+assign a;
+Select a pattern a("ball", "l")
+15
+5000
+22 - comment
+assign a;
+Select a pattern a("a", "hello")
+3
+5000
+23 - comment
+assign a; variable v;
+Select v pattern a(v, _)
+a, d, print, k, ball
+5000
+24 - comment
+assign a; variable v;
+Select a pattern a(v, _)
+1, 3, 6, 9, 11, 13, 15, 17
+5000
+25 - comment
+assign a; variable v;
+Select a pattern a(v, _"hello"_)
+3, 11
+5000
+26 - comment
+assign a; variable v;
+Select a pattern a(v, _"a * (e+2) / (5 * 6) + ((e * k) * (e))"_)
+9
+5000
+27 - comment
+assign a; variable v;
+Select v pattern a(v, _"hello"_)
+a, print
+5000
+28 - comment
+assign a; variable v;
+Select v pattern a(v, _"a * (e+2) / (5 * 6) + ((e * k) * (e))"_)
+d
+5000
+29 - comment
+assign a; variable v;
+Select a pattern a(v, "ball")
+1, 17
+5000
+30 - comment
+assign a; variable v;
+Select v pattern a(v, "a * e + 2")
+d
+5000
+31 - comment
+assign a;
+Select a pattern a1(_, _)
+SemanticError
+5000
+32 - comment
+assign a;
+Select a1 pattern a1(_, _)
+SemanticError
+5000
+33 - comment
+assign a;
+Select a patten a(_,_)
+SyntaxError
+5000
+34 - comment
+assign a;
+Select a pattern a(,)
+SyntaxError
+5000
+35 - comment
+assign a;
+Select a pattern a(_,)
+SyntaxError
+5000
+36 - comment
+assign a;
+Select a pattern a(,_)
+SyntaxError
+5000
+37 - comment
+assign a;
+Select a pattern a(__,_)
+SyntaxError
+5000
+38 - comment
+assign a;
+Select a pattern a(_,'f')
+SyntaxError
+5000
+39 - comment
+assign a;
+Select a pattern a(_,"f)
+SyntaxError
+5000
+40 - comment
+assign a; variable v;
+Select v1 pattern a(v1,_)
+SemanticError
+5000
+41 - comment
+assign a; variable v;
+Select a pattern a(v1,_)
+SemanticError
+5000
+42 - comment
+assign a;
+Select a pattern a(_	,_	)
+1, 3, 6, 9, 11, 13, 15, 17
+5000
+43 - comment
+assign a;
+Select a pattern a(		_	,_	)
+1, 3, 6, 9, 11, 13, 15, 17
+5000
+44 - comment
+assign a;
+Select a pattern a(_,_"	hello	"_)
+3, 11
+5000
+45 - comment
+assign a;
+Select a pattern a("	a ",_)
+1, 3
+5000
+46 - comment
+if ifs;
+Select ifs pattern ifs(_,_,_)
+2, 4, 7
+5000
+47 - comment
+if ifs;
+Select ifs pattern ifs("ab",_,_)
+4, 7
+5000
+48 - comment
+if ifs;
+Select ifs pattern ifs("d",_,_)
+2
+5000
+49 - comment
+if ifs;
+Select ifs pattern ifs("cd",_,_)
+4, 7
+5000
+50 - comment
+if ifs; variable v;
+Select ifs pattern ifs(v,_,_)
+2, 4, 7
+5000
+51 - comment
+if ifs; variable v;
+Select v pattern ifs(v,_,_)
+c, d, ab, cd 
+5000
+52 - comment
+while w;
+Select w pattern w(_,_,_)
+12, 14, 16
+5000
+53 - comment
+while w;
+Select w pattern w("i",_,_)
+12, 14
+5000
+54 - comment
+while w;
+Select w pattern w("ij",_,_)
+16
+5000
+55 - comment
+while w;
+Select w pattern w("ij",_,_)
+16
+5000
+55 - comment
+while w; variable v;
+Select w pattern w(v,_,_)
+12, 14, 16
+5000
+56 - comment
+while w; variable v;
+Select v pattern w(v,_,_)
+i, j, ij, n, in
+5000
