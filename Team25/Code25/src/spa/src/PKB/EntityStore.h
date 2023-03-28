@@ -36,6 +36,7 @@ public:
 	ProcedureStore(std::unordered_map<int, std::string> procStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore);
 	void addProc(std::string procName, int lineNum);
 	std::string getProc(int lineNum);
+	std::unordered_set<int> getStmt(std::string procName);
 	std::unordered_set<std::string> getAllProc();
 };
 

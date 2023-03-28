@@ -55,6 +55,15 @@ std::string ProcedureStore::getProc(int lineNum) {
 	}
 }
 
+std::unordered_set<int> ProcedureStore::getStmt(std::string procName) {
+	if (stmtStore.find(procName) != stmtStore.end()) {
+		return stmtStore[procName];
+	}
+	else {
+		return {};
+	}
+}
+
 std::unordered_set<std::string> ProcedureStore::getAllProc() {
 	std::unordered_set<std::string> procList;
 	for (const auto& [key, value] : stmtStore) {
@@ -62,7 +71,6 @@ std::unordered_set<std::string> ProcedureStore::getAllProc() {
 	}
 	return procList;
 }
-
 
 
 /* Statement Store*/
