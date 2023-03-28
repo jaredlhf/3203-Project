@@ -12,6 +12,7 @@ SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) 
     callsStarExtractor = make_shared<CallsStarExtractor>(populator);
     patternExtractor = make_shared<PatternExtractor>(populator);
     attrExtractor = make_shared<AttributeExtractor>(populator);
+    procCallsExtractor = make_shared<ProcedureCallsExtractor>(populator);
     stmtExtractor = make_shared<StatementExtractor>(populator);
 }
 
@@ -41,6 +42,7 @@ void SelectiveExtractor::visit(std::shared_ptr<CallNode> n) {
     n->accept(stmtExtractor);
     n->accept(callsExtractor);
     n->accept(callsStarExtractor);
+    n->accept(procCallsExtractor);
     n->accept(attrExtractor);
 }
 
@@ -53,6 +55,7 @@ void SelectiveExtractor::visit(std::shared_ptr<IfNode> n) {
     n->accept(callsStarExtractor);
     n->accept(attrExtractor);
     n->accept(patternExtractor);
+    n->accept(procCallsExtractor);
     n->accept(stmtExtractor);
 }
 
@@ -65,6 +68,7 @@ void SelectiveExtractor::visit(std::shared_ptr<WhileNode> n) {
     n->accept(callsStarExtractor);
     n->accept(attrExtractor);
     n->accept(patternExtractor);
+    n->accept(procCallsExtractor);
     n->accept(stmtExtractor);
 }
 

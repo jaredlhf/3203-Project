@@ -1,0 +1,110 @@
+1 - single select
+assign a; variable v;
+Select v such that Modifies(a, v)
+x, y, z, i
+5000
+2 - two tuple select
+assign a; variable v;
+Select <a, v> such that Modifies(a, v)
+1 x, 2 z, 3 i, 5 x, 7 z, 8 y, 9 z, 10 i
+5000
+3 - 5 tuple select
+assign a; variable v1, v2;
+Select <a, v1, v2, v2, v1> such that Modifies("Example", v1) pattern a(v2, "z + x")
+8 y y y y, 8 i y y i, 8 x y y x, 8 z y y z
+5000
+4 - tuple select with unused variable in clauses
+variable v1, v2; assign a;
+Select <v1, v2> such that Modifies("Example", _)
+i i, i x, i y, i z, x x, x i, x y, x z, y i, y x, y y, y z, z i, z z, z x, z y
+5000
+5 - 1 tuple select
+variable v; assign a;
+Select <v> such that Modifies("Example", _)
+i, x, y, z
+5000
+6 - empty tuple select
+variable x;
+Select <> such that Modifies("Example", _)
+SyntaxError
+5000
+6 - select synonym does not exist
+variable x;
+Select y such that Modifies("Example", _)
+SemanticError
+5000
+7 - select synonym does not exist in tuple
+variable x;
+Select <y> such that Modifies("Example", _)
+SemanticError
+5000
+8 - Improper select synonym
+variable x;
+Select 123 such that Modifies("Example", _)
+SyntaxError
+5000
+9 - Improper select synonym in tuple
+variable x;
+Select <123> such that Modifies("Example", _)
+SyntaxError
+5000
+10 - mix of improper and proper selects in tuple
+variable x;
+Select <123, x> such that Modifies("Example", _)
+SyntaxError
+5000
+11 - mix of declared and undeclared selects in tuple
+variable x;
+Select <y, x> such that Modifies("Example", _)
+SemanticError
+5000
+12 - unclosed bracket
+variable x, y;
+Select <x, y such that Modifies("Example", _)
+SyntaxError
+5000
+13 - no open bracket
+variable x, y;
+Select x, y> such that Modifies("Example", _)
+SyntaxError
+5000
+14 - use of keywords as query variables
+variable Select, such;
+Select <Select, such> such that Modifies("Example", _)
+i i, i x, i y, i z, x x, x i, x y, x z, y i, y x, y y, y z, z i, z z, z x, z y
+5000
+15 - no brackets, use of keywords
+variable Select, such;
+Select Select, such such that Modifies("Example", _)
+SyntaxError
+5000
+16 - no select keyword
+variable x;
+x such that Modifies("Example", _)
+SyntaxError
+5000
+17 - extra keyword token between clauses
+variable x, y;
+Select <x, y> such such that Modifies("Example", _)
+SyntaxError
+5000
+18 - tuple select with attribute values
+variable x; assign a;
+Select <a.stmt#, x> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"
+1 x
+5000
+19 - tuple select with variable attribute
+variable x; assign a;
+Select <a.stmt#, x.varName> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"
+1 x
+5000
+20 - tuple select with incorrect attributes
+variable x; assign a;
+Select <a.stmt#, x.stmt#> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"
+SemanticError
+5000
+21 - tuple select with attributes
+variable x, y; assign a;
+Select <a.stmt#, x, y> such that Modifies(a, _) with x.varName = "x" pattern a(y, _"z + x"_)
+8 x y, 9 x z
+5000

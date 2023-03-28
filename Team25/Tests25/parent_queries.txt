@@ -1,0 +1,50 @@
+1 - synonym,synonym
+stmt s; stmt s1;
+Select s such that Parent (s, s1)
+2,4,7,12,14,16
+5000
+2 - synonym,wildcard
+stmt s; 
+Select s such that Parent (s,  _)
+2,4,7,12,14,16
+5000
+3 - synonym,ident
+stmt s; 
+Select s such that Parent (s,  4)
+2
+5000
+4 - ident,synonym
+stmt s;
+Select s such that Parent (2, s)
+3,4,10,11
+5000
+5 - wildcard,synonym
+stmt s; 
+Select s such that Parent (_,  s)
+2,4,7,12,14,16
+5000
+6- ident, ident
+stmt s; 
+Select s such that Parent (2,  3)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+5000
+7- if container stmt
+stmt s; 
+Select s such that Parent (4,s)
+5,6,7
+5000
+8- wh container stmt
+stmt s; 
+Select s such that Parent (12,s)
+13,14
+5000
+9- nested if
+stmt s; 
+Select s such that Parent (7,s)
+8,9
+5000
+10- nested wh 
+stmt s; 
+Select s such that Parent (14,s)
+15,16
+5000
