@@ -50,6 +50,14 @@ std::unordered_set<int> PkbRetriever::getAllConst() {
 }
 
 /*Procedure Store*/
+std::string PkbRetriever::getProc(int lineNum) {
+	return this->procedureStorage->getProc(lineNum);
+}
+
+std::unordered_set<int> PkbRetriever::getStmt(std::string procName) {
+	return this->procedureStorage->getStmt(procName);
+}
+
 std::unordered_set<std::string> PkbRetriever::getAllProc() {
 	return this->procedureStorage->getAllProc();
 }

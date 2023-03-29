@@ -18,8 +18,6 @@ public:
 	void addCalls(std::string leftProc, std::string rightProc);
 	std::unordered_set<std::string> getLeftProc(std::string rightProc);
 	std::unordered_set<std::string> getRightProc(std::string leftProc);
-	bool hasLeftProc(std::string procName) override;
-	bool hasRightProc(std::string procName) override;
 	std::unordered_set<std::string> getAllLeft() override;
 	std::unordered_set<std::string> getAllRight() override;
 };

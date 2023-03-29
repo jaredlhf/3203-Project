@@ -18,8 +18,6 @@ public:
 	void addCallsStar(std::string leftProc, std::string rightProc);
 	std::unordered_set<std::string> getLeftStar(std::string rightProc) override;
 	std::unordered_set<std::string> getRightStar(std::string leftProc) override;
-	bool hasLeftProc(std::string procName) override;
-	bool hasRightProc(std::string procName) override;
 	std::unordered_set<std::string> getAllLeft() override;
 	std::unordered_set<std::string> getAllRight() override;
 };

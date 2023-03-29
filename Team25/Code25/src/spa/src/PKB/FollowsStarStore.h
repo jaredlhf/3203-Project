@@ -20,8 +20,6 @@ public:
 	void addFollowsStar(int leftStmt, std::unordered_set<int> rightStmtLst);
 	std::unordered_set<int> getLeftStar(int rightStmt) override;
 	std::unordered_set<int> getRightStar(int leftStmt) override;
-	bool hasLeftStmt(int lineNum) override;
-	bool hasRightStmt(int lineNum) override;
 	std::unordered_set<int> getAllLeft() override;
 	std::unordered_set<int> getAllRight() override;
 };

@@ -14,7 +14,7 @@ void PrintAttribute::addAttr(std::string attribute, int lineNum) {
 }
 
 std::string PrintAttribute::getAttr(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
 		return this->attrStore[lineNum];
 	}
 	else {
@@ -23,29 +23,11 @@ std::string PrintAttribute::getAttr(int lineNum) {
 }
 
 std::unordered_set<int> PrintAttribute::getStmt(std::string attribute) {
-	if (hasAttr(attribute)) {
+	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
 		return this->stmtStore[attribute];
 	}
 	else {
 		return {};
-	}
-}
-
-bool PrintAttribute::hasAttr(std::string attribute) {
-	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool PrintAttribute::hasStmt(int lineNum) {
-	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }
 
@@ -77,7 +59,7 @@ void ReadAttribute::addAttr(std::string attribute, int lineNum) {
 }
 
 std::string ReadAttribute::getAttr(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
 		return this->attrStore[lineNum];
 	}
 	else {
@@ -86,7 +68,7 @@ std::string ReadAttribute::getAttr(int lineNum) {
 }
 
 std::unordered_set<int> ReadAttribute::getStmt(std::string attribute) {
-	if (hasAttr(attribute)) {
+	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
 		return this->stmtStore[attribute];
 	}
 	else {
@@ -94,23 +76,6 @@ std::unordered_set<int> ReadAttribute::getStmt(std::string attribute) {
 	}
 }
 
-bool ReadAttribute::hasAttr(std::string attribute) {
-	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ReadAttribute::hasStmt(int lineNum) {
-	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> ReadAttribute::getAllAttr() {
 	std::unordered_set<std::string> attrList;
@@ -140,7 +105,7 @@ void CallAttribute::addAttr(std::string attribute, int lineNum) {
 }
 
 std::string CallAttribute::getAttr(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
 		return this->attrStore[lineNum];
 	}
 	else {
@@ -149,7 +114,7 @@ std::string CallAttribute::getAttr(int lineNum) {
 }
 
 std::unordered_set<int> CallAttribute::getStmt(std::string attribute) {
-	if (hasAttr(attribute)) {
+	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
 		return this->stmtStore[attribute];
 	}
 	else {
@@ -157,23 +122,6 @@ std::unordered_set<int> CallAttribute::getStmt(std::string attribute) {
 	}
 }
 
-bool CallAttribute::hasAttr(std::string attribute) {
-	if (this->stmtStore.find(attribute) != this->stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool CallAttribute::hasStmt(int lineNum) {
-	if (this->attrStore.find(lineNum) != this->attrStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> CallAttribute::getAllAttr() {
 	std::unordered_set<std::string> attrList;

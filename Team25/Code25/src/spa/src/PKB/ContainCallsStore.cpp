@@ -14,7 +14,7 @@ void ContainCallsStore::addContainCall(int lineNum, std::string procName) {
 }
 
 std::unordered_set<std::string> ContainCallsStore::getProc(int lineNum) {
-	if (hasStmt(lineNum)) {
+	if (procStore.find(lineNum) != procStore.end()) {
 		return procStore[lineNum];
 	}
 	else {
@@ -23,7 +23,7 @@ std::unordered_set<std::string> ContainCallsStore::getProc(int lineNum) {
 }
 
 std::unordered_set<int> ContainCallsStore::getStmt(std::string procName) {
-	if (hasProc(procName)) {
+	if (stmtStore.find(procName) != stmtStore.end()) {
 		return stmtStore[procName];
 	}
 	else {
@@ -31,23 +31,6 @@ std::unordered_set<int> ContainCallsStore::getStmt(std::string procName) {
 	}
 }
 
-bool ContainCallsStore::hasProc(std::string procName) {
-	if (stmtStore.find(procName) != stmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ContainCallsStore::hasStmt(int lineNum) {
-	if (procStore.find(lineNum) != procStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> ContainCallsStore::getAllProc() {
 	std::unordered_set<std::string> procList;

@@ -20,8 +20,6 @@ public:
 	void addUsesProc(std::string procName, std::string varName);
 	std::unordered_set<std::string> getVar(std::string procName) override;
 	std::unordered_set<std::string> getProc(std::string varName) override;
-	bool hasVar(std::string varName) override;
-	bool hasProc(std::string procName) override;
 	std::unordered_set<std::string> getAllVar() override;
 	std::unordered_set<std::string> getAllProc() override;
 };

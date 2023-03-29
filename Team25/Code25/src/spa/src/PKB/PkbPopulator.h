@@ -55,7 +55,7 @@ public:
 	void addVar(std::string varName);
 	void addConst(int constNum);
 	void addFollows(int leftLineNum, int rightLineNum);
-	void addProc(std::string procName);
+	void addProc(std::string procName, int lineNum);
 	void addStmt(std::string stmtType, int lineNum);
 	void addAssignLhs(std::string leftVar, int stmtNo);
 	void addAssignRhs(int stmtNo, std::string rightStmt);

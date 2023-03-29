@@ -58,7 +58,9 @@ public:
 	/*Const Store*/
 	std::unordered_set<int> getAllConst(); 
 	/*Procedure Store*/
-	std::unordered_set<string> getAllProc(); 
+	std::string getProc(int lineNum);
+	std::unordered_set<int> getStmt(std::string procName);
+	std::unordered_set<std::string> getAllProc(); 
 	/*Statement Store*/
 	std::unordered_set<int> getAllStmt(string stmtType); 
 	/*Pattern Store*/
