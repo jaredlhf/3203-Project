@@ -65,7 +65,7 @@ SCENARIO("Mocking behavior of ParentStClause::resolve") {
 			csPointer->addConst(1);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
+			psPointer->addProc("main", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);

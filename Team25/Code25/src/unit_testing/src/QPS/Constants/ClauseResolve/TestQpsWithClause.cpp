@@ -68,11 +68,11 @@ SCENARIO("Mocking behavior of WithClause::resolve") {
 			csPointer->addConst(8);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
-			psPointer->addProc("x");
-			psPointer->addProc("z");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
+			psPointer->addProc("x", 1);
+			psPointer->addProc("z", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
