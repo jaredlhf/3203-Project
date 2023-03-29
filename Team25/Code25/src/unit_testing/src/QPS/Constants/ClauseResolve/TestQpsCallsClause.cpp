@@ -65,11 +65,11 @@ SCENARIO("Mocking behavior of CallsClause::resolve") {
 			csPointer->addConst(1);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
-			psPointer->addProc("f3");
-			psPointer->addProc("f4");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
+			psPointer->addProc("f3", 1);
+			psPointer->addProc("f4", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);

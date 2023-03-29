@@ -613,7 +613,7 @@ void AttributeExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
 }
 
 void AttributeExtractor::visit(std::shared_ptr<ProcedureNode> p, int lineNo) {
-    pkbPopulator->addProc(p->getProc());
+    pkbPopulator->addProc(p->getProc(), lineNo);
 }
 
 void AttributeExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {

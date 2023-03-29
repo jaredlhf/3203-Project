@@ -24,7 +24,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::createRe
     return QpsTable::getDefaultSynErr();
 }
 
-std::unordered_set<std::string> getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+std::unordered_set<std::string> ModStrat::getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
     std::unordered_set<std::string> res;
     std::unordered_set<std::string> allProcs = pkbRet->getRightCallStar(proc);
     // Add proc to the full list of procs that we need to check
@@ -50,7 +50,7 @@ std::unordered_set<std::string> getAllVarModByStmt(int lineNum, std::shared_ptr<
     // Add vars for all procs called within stmt
     std::unordered_set<std::string> calledProcs = pkbRet->getConProc(lineNum);
     for (const std::string& proc : calledProcs) {
-        std::unordered_set<std::string> procVars = getAllVarModByProc(proc, pkbRet);
+        std::unordered_set<std::string> procVars = ModStrat::getAllVarModByProc(proc, pkbRet);
         res.insert(procVars.begin(), procVars.end());
     }
 
@@ -58,12 +58,12 @@ std::unordered_set<std::string> getAllVarModByStmt(int lineNum, std::shared_ptr<
 }
 
 bool isModIndirectly(const std::string& proc, const std::string& var, std::shared_ptr<PkbRetriever> pkbRet) {
-    std::unordered_set<std::string> modVars = getAllVarModByProc(proc, pkbRet);
+    std::unordered_set<std::string> modVars = ModStrat::getAllVarModByProc(proc, pkbRet);
     return find(modVars.begin(), modVars.end(), var) != modVars.end();
 }
 
 bool doesProcModAny(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
-    std::unordered_set<std::string> modVars = getAllVarModByProc(proc, pkbRet);
+    std::unordered_set<std::string> modVars = ModStrat::getAllVarModByProc(proc, pkbRet);
     return modVars.size() > 0;
 }
 
