@@ -24,6 +24,8 @@ std::shared_ptr<Relationship> Relationship::create(const std::string& keyword, c
     if (keyword == Constants::CALLSST) return std::make_shared<CallsSTRelationship>(CallsSTRelationship(arg1, arg2));
     if (keyword == Constants::NEXT) return std::make_shared<NextRelationship>(NextRelationship(arg1, arg2));
     if (keyword == Constants::NEXTST) return std::make_shared<NextSTRelationship>(NextSTRelationship(arg1, arg2));
+    if (keyword == Constants::AFFECTS) return std::make_shared<AffectsRelationship>(AffectsRelationship(arg1, arg2));
+    if (keyword == Constants::AFFECTSST) return std::make_shared<AffectsSTRelationship>(AffectsSTRelationship(arg1, arg2));
 
     return std::make_shared<Relationship>(arg1, arg2);
 }
@@ -144,6 +146,28 @@ NextSTRelationship::NextSTRelationship(const std::string& arg1, const std::strin
 }
 
 std::vector<std::shared_ptr<Entity>> NextSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
+
+    return { arg1Value, arg2Value };
+}
+
+AffectsRelationship::AffectsRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::AFFECTS;
+}
+
+std::vector<std::shared_ptr<Entity>> AffectsRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
+    std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
+    std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
+
+    return { arg1Value, arg2Value };
+}
+
+AffectsSTRelationship::AffectsSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
+    keyword = Constants::AFFECTS;
+}
+
+std::vector<std::shared_ptr<Entity>> AffectsSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
     std::shared_ptr<Entity> arg1Value = ParserUtils::getValidStmtRef(arg1, declarations);
     std::shared_ptr<Entity> arg2Value = ParserUtils::getValidStmtRef(arg2, declarations);
 

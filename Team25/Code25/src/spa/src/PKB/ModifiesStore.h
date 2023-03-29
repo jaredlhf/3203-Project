@@ -22,8 +22,6 @@ public:
 	void addModifies(int lineNum, std::string varName);
 	std::unordered_set<std::string> getVar(int lineNum) override;
 	std::unordered_set<int> getStmt(std::string varName) override;
-	bool hasVar(std::string varName) override;
-	bool hasStmt(int lineNum) override;
 	std::unordered_set<std::string> getAllVar() override;
 	std::unordered_set<int> getAllStmt() override;
 };

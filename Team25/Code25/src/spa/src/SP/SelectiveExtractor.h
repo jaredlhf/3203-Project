@@ -34,6 +34,7 @@ private:
     std::shared_ptr<CallsStarExtractor> callsStarExtractor;
     std::shared_ptr<PatternExtractor> patternExtractor;
     std::shared_ptr<AttributeExtractor> attrExtractor;
+    std::shared_ptr<ProcedureCallsExtractor> procCallsExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
     std::shared_ptr<PkbPopulator> pkbPopulator;
 };

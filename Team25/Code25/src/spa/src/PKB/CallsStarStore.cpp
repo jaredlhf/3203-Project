@@ -14,7 +14,7 @@ void CallsStarStore::addCallsStar(std::string leftProc, std::string rightProc) {
 }
 
 std::unordered_set<std::string> CallsStarStore::getLeftStar(std::string rightProc) {
-	if (hasRightProc(rightProc)) {
+	if (leftProcStar.find(rightProc) != leftProcStar.end()) {
 		return leftProcStar[rightProc];
 	}
 	else {
@@ -23,29 +23,11 @@ std::unordered_set<std::string> CallsStarStore::getLeftStar(std::string rightPro
 }
 
 std::unordered_set<std::string> CallsStarStore::getRightStar(std::string leftProc) {
-	if (hasLeftProc(leftProc)) {
+	if (rightProcStar.find(leftProc) != rightProcStar.end()) {
 		return rightProcStar[leftProc];
 	}
 	else {
 		return {};
-	}
-}
-
-bool CallsStarStore::hasLeftProc(std::string procName) {
-	if (rightProcStar.find(procName) != rightProcStar.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool CallsStarStore::hasRightProc(std::string procName) {
-	if (leftProcStar.find(procName) != leftProcStar.end()) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }
 

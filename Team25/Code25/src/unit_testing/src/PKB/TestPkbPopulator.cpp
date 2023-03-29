@@ -57,24 +57,24 @@ SCENARIO("Working version of PkbPopulator") {
 				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
 				cfgPointer, concallPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
-				REQUIRE(vsPointer->size() == 0);
+				REQUIRE(vsPointer->getAllVar().size() == 0);
 				pkbPop.addVar("x");
-				REQUIRE(vsPointer->size() == 1);
+				REQUIRE(vsPointer->getAllVar().size() == 1);
 			}
 			THEN("Adding one constant should increase the constant store size by 1") {
-				REQUIRE(csPointer->size() == 0);
+				REQUIRE(csPointer->getAllConst().size() == 0);
 				pkbPop.addConst(10000);
-				REQUIRE(csPointer->size() == 1);
+				REQUIRE(csPointer->getAllConst().size() == 1);
 			}
 			THEN("Adding one procedure should increase the procedure store size by 1") {
-				REQUIRE(psPointer->size() == 0);
-				pkbPop.addProc("sampleProc");
-				REQUIRE(psPointer->size() == 1);
+				REQUIRE(psPointer->getAllProc().size() == 0);
+				pkbPop.addProc("sampleProc", 2);
+				REQUIRE(psPointer->getAllProc().size() == 1);
 			}
 			THEN("Adding one statement should increase the statement store size by 1") {
-				REQUIRE(ssPointer->size() == 0);
+				REQUIRE(ssPointer->getAllStmt(Constants::ASSIGN).size() == 0);
 				pkbPop.addStmt(Constants::ASSIGN, 2);
-				REQUIRE(ssPointer->size() == 1);
+				REQUIRE(ssPointer->getAllStmt(Constants::ASSIGN).size() == 1);
 			}
 			THEN("Adding one follows relationship should increase the follows store size by 1") {
 				REQUIRE(fsPointer->getAllRight().size() == 0);

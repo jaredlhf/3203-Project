@@ -16,7 +16,7 @@ void ModifiesProcStore::addModifiesProc(std::string procName, std::string varNam
 }
 
 std::unordered_set<std::string> ModifiesProcStore::getVar(std::string procName) {
-	if (hasProc(procName)) {
+	if (varStore.find(procName) != varStore.end()) {
 		return varStore[procName];
 	}
 	else {
@@ -25,29 +25,11 @@ std::unordered_set<std::string> ModifiesProcStore::getVar(std::string procName) 
 }
 
 std::unordered_set<std::string> ModifiesProcStore::getProc(std::string varName) {
-	if (hasVar(varName)) {
+	if (procStore.find(varName) != procStore.end()) {
 		return procStore[varName];
 	}
 	else {
 		return {};
-	}
-}
-
-bool ModifiesProcStore::hasVar(std::string varName) {
-	if (procStore.find(varName) != procStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ModifiesProcStore::hasProc(std::string procName) {
-	if (varStore.find(procName) != varStore.end()) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }
 

@@ -20,8 +20,6 @@ public:
 	void addNext(int leftStmt, int rightStmt);
 	std::unordered_set<int> getLeftStmt(int rightStmt);
 	std::unordered_set<int> getRightStmt(int leftStmt);
-	bool hasLeftStmt(int lineNum) override;
-	bool hasRightStmt(int lineNum) override;
 	std::unordered_set<int> getAllLeft() override;
 	std::unordered_set<int> getAllRight() override;
 

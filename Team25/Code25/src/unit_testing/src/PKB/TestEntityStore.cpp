@@ -17,7 +17,7 @@ SCENARIO("Populating stores for constants, procedures, and variables") {
 
 		WHEN("One value is added to them") {
 			constStore.addConst(1);
-			procStore.addProc("proc");
+			procStore.addProc("proc", 2);
 			varStore.addVar("one");
 
 			THEN("Their size should increase by 1") {
@@ -31,6 +31,7 @@ SCENARIO("Populating stores for constants, procedures, and variables") {
 			}
 
 			THEN("Procedure store should contain 'proc'") {
+				REQUIRE(procStore.getProc(2) == "proc");
 				REQUIRE(procStore.getAllProc() == std::unordered_set<std::string>({ "proc" }));
 			}
 
@@ -41,10 +42,10 @@ SCENARIO("Populating stores for constants, procedures, and variables") {
 
 		WHEN("Duplicate value is added to them") {
 			constStore.addConst(1);
-			procStore.addProc("proc");
+			procStore.addProc("proc", 2);
 			varStore.addVar("one");
 			constStore.addConst(1);
-			procStore.addProc("proc");
+			procStore.addProc("proc", 2);
 			varStore.addVar("one");
 
 			THEN("Their size should still be 1") {
@@ -63,6 +64,18 @@ SCENARIO("Populating stores for constants, procedures, and variables") {
 
 			THEN("Variable store should still contain 'one'") {
 				REQUIRE(varStore.getAllVar() == std::unordered_set<std::string>({ "one" }));
+			}
+		}
+
+		WHEN("Non-existent value is requested") {
+			THEN("Getting all values should return empty set") {
+				REQUIRE(constStore.getAllConst() == std::unordered_set<int>({ }));
+				REQUIRE(procStore.getAllProc() == std::unordered_set<std::string>({ }));
+				REQUIRE(varStore.getAllVar() == std::unordered_set<std::string>({ }));
+			}
+
+			THEN("Getting single procedure should return empty string") {
+				REQUIRE(procStore.getProc(3) == std::string{});
 			}
 		}
 

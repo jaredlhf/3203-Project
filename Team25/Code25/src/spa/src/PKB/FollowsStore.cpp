@@ -14,7 +14,7 @@ void FollowsStore::addFollows(int leftStmt, int rightStmt) {
 }
 
 int FollowsStore::getLeftStmt(int rightStmt) {
-	if (hasRightStmt(rightStmt)) {
+	if (leftStmtStore.find(rightStmt) != leftStmtStore.end()) {
 		return leftStmtStore[rightStmt];
 	}
 	else {
@@ -23,7 +23,7 @@ int FollowsStore::getLeftStmt(int rightStmt) {
 }
 
 int FollowsStore::getRightStmt(int leftStmt) {
-	if (hasLeftStmt(leftStmt)) {
+	if (rightStmtStore.find(leftStmt) != rightStmtStore.end()) {
 		return rightStmtStore[leftStmt];
 	}
 	else {
@@ -31,23 +31,6 @@ int FollowsStore::getRightStmt(int leftStmt) {
 	}
 }
 
-bool FollowsStore::hasLeftStmt(int lineNum) {
-	if (rightStmtStore.find(lineNum) != rightStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool FollowsStore::hasRightStmt(int lineNum) {
-	if (leftStmtStore.find(lineNum) != leftStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<int> FollowsStore::getAllLeft() {
 	std::unordered_set<int> leftStmtList;

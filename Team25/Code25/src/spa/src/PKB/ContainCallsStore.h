@@ -20,8 +20,6 @@ public:
 	void addContainCall(int lineNum, std::string procName);
 	std::unordered_set<std::string> getProc(int lineNum) override;
 	std::unordered_set<int> getStmt(std::string procName) override;
-	bool hasProc(std::string procName) override;
-	bool hasStmt(int lineNum) override;
 	std::unordered_set<std::string> getAllProc() override;
 	std::unordered_set<int> getAllStmt() override;
 };

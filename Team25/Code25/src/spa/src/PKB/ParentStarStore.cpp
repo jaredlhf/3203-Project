@@ -14,7 +14,7 @@ void ParentStarStore::addParentStar(int leftStmt, int rightStmt) {
 }
 
 std::unordered_set<int> ParentStarStore::getLeftStar(int rightStmt) {
-	if (hasRightStmt(rightStmt)) {
+	if (leftStmtStar.find(rightStmt) != leftStmtStar.end()) {
 		return leftStmtStar[rightStmt];
 	}
 	else {
@@ -23,29 +23,11 @@ std::unordered_set<int> ParentStarStore::getLeftStar(int rightStmt) {
 }
 
 std::unordered_set<int> ParentStarStore::getRightStar(int leftStmt) {
-	if (hasLeftStmt(leftStmt)) {
+	if (rightStmtStar.find(leftStmt) != rightStmtStar.end()) {
 		return rightStmtStar[leftStmt];
 	}
 	else {
 		return {};
-	}
-}
-
-bool ParentStarStore::hasLeftStmt(int lineNum) {
-	if (rightStmtStar.find(lineNum) != rightStmtStar.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ParentStarStore::hasRightStmt(int lineNum) {
-	if (leftStmtStar.find(lineNum) != leftStmtStar.end()) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }
 

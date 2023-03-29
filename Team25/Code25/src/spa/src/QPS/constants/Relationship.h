@@ -88,3 +88,15 @@ class NextSTRelationship : public Relationship {
         NextSTRelationship(const std::string& arg1, const std::string& arg2);
         virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
 };
+
+class AffectsRelationship : public Relationship {
+public:
+    AffectsRelationship(const std::string& arg1, const std::string& arg2);
+    virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
+
+class AffectsSTRelationship : public Relationship {
+public:
+    AffectsSTRelationship(const std::string& arg1, const std::string& arg2);
+    virtual std::vector<std::shared_ptr<Entity>> verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) override;
+};
