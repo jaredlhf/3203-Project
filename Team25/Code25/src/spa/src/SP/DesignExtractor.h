@@ -119,7 +119,6 @@ class AttributeExtractor: public DesignExtractor {
 public:
     using DesignExtractor::DesignExtractor;
     void visit(std::shared_ptr<TNode> n, int lineNo);
-    void visit(std::shared_ptr<ProcedureNode> n, int lineNo);
     void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<ReadNode> n, int lineNo);
     void visit(std::shared_ptr<PrintNode> n, int lineNo);
