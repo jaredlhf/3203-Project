@@ -583,9 +583,6 @@ void AttributeExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         AttributeExtractor::visit(wh, lineNo);
-    } else if (isProcedureNode(n)) {
-        std::shared_ptr<ProcedureNode> proc = std::dynamic_pointer_cast<ProcedureNode>(n);
-        AttributeExtractor::visit(proc, lineNo);
     }
 }
 
@@ -610,10 +607,6 @@ void AttributeExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     }
     pkbPopulator->addVar(r->getVar());
     pkbPopulator->addReadAttr(r->getVar(), lineNo);
-}
-
-void AttributeExtractor::visit(std::shared_ptr<ProcedureNode> p, int lineNo) {
-    pkbPopulator->addProc(p->getProc());
 }
 
 void AttributeExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
@@ -685,24 +678,30 @@ void ProcedureCallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<ReadNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::READ_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<PrintNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::PRINT_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<IfNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::IF_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<WhileNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::WHILE_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<CallNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::CALL_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
