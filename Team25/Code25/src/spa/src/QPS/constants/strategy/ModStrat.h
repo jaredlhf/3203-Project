@@ -24,4 +24,6 @@ public:
 
 	// Factory function for strategy used
 	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> createReturnStrategy() override;
+
+	static std::unordered_set<std::string> getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet);
 };

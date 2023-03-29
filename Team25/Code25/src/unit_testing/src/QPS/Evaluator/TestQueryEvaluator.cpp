@@ -74,9 +74,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			csPointer->addConst(789);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -311,9 +311,9 @@ SCENARIO("Mocking behavior of ParserResponse and PkbRetriever for QpsEvaluator t
 			csPointer->addConst(789);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -733,9 +733,9 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			csPointer->addConst(789);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -988,9 +988,9 @@ SCENARIO("Mocking behavior of the resolveSelectSynonym function") {
 			csPointer->addConst(789);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
-			psPointer->addProc("factorial");
-			psPointer->addProc("beta");
+			psPointer->addProc("main", 1);
+			psPointer->addProc("factorial", 1);
+			psPointer->addProc("beta", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::CALL, 3);
