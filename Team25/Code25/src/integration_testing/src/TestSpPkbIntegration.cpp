@@ -74,7 +74,7 @@ SCENARIO("Integration testing between SP and PKB") {
 			file.close();
 			sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
 			THEN("PKB variable store should contain the correct variables") {
-				REQUIRE(vsPointer->size() == 18);
+				REQUIRE(vsPointer->getAllVar().size() == 18);
 				REQUIRE(vsPointer->getAllVar().count("x") == 1);
 				REQUIRE(vsPointer->getAllVar().count("d") == 1);
 				REQUIRE(vsPointer->getAllVar().count("a") == 1);
@@ -96,7 +96,7 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(vsPointer->getAllVar().count("h3") == 1);
 			}
 			THEN("PKB constants store should contain the correct constants") {
-				REQUIRE(csPointer->size() == 2);
+				REQUIRE(csPointer->getAllConst().size() == 2);
 				REQUIRE(csPointer->getAllConst().count(2) == 1);
 				REQUIRE(csPointer->getAllConst().count(232141) == 1);
 			}
