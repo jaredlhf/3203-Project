@@ -21,7 +21,7 @@ public:
     void visit(std::shared_ptr<StmtLstNode> n);
     void visit(std::shared_ptr<ProcedureNode> n);
     void visitProgramTree(std::shared_ptr<TNode> root);
-    void visitCFG(std::shared_ptr<CFGNode> root);
+    void visitCFG(std::shared_ptr<CFGNode> root, std::string procName);
 
 private:
     std::shared_ptr<ModifiesExtractor> modifiesExtractor;

@@ -1,6 +1,7 @@
 #include "PKB/CFGStore.h"
 
 #include "catch.hpp"
+#include <algorithm>
 
 
 SCENARIO("Populating CFG store") {
@@ -71,12 +72,13 @@ SCENARIO("Populating CFG store") {
 			}
 
 			THEN("Getting all nodes should return two CFG") {
-				std::vector<std::shared_ptr<CFGNode>> expectedNodes;
-				expectedNodes.push_back(c);
-				expectedNodes.push_back(ifs);
 				std::vector<std::shared_ptr<CFGNode>> actualNodes = cfgStore.getAllCFGNodes();
 
-				REQUIRE(expectedNodes == actualNodes);
+                auto it = std::find(actualNodes.begin(), actualNodes.end(), c);
+                auto it2 = std::find(actualNodes.begin(), actualNodes.end(), ifs);
+				REQUIRE(it != actualNodes.end());
+                REQUIRE(it2 != actualNodes.end());
+                REQUIRE(actualNodes.size() == 2);
 			}
 
 			THEN("The If Node should be correct") {
