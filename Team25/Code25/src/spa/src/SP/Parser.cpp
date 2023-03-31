@@ -33,7 +33,7 @@ std::shared_ptr<ParserDTO> Parser::parseProcedure() {
     utils->expect(std::make_shared<RightBrace>());
 
     std::shared_ptr<CFGNode> cfgNode = stmtLstDTO->getCFGNode();
-    std::shared_ptr<ParserDTO> resultDTO = std::make_shared<ParserDTO>(std::make_shared<ProcedureNode>(node), cfgNode);
+    std::shared_ptr<ParserDTO> resultDTO = std::make_shared<ParserDTO>(std::make_shared<ProcedureNode>(node), cfgNode, proc);
     return resultDTO;
 }
 
