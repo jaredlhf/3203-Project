@@ -135,5 +135,92 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(usesPointer->getAllStmt().size() == 8);
 			}
 		}
+
+        WHEN("The SP and QPS objects are instantiated and a SIMPLE program is defined") {
+            // Simulating SIMPLE program in temp file
+            std::string fileLocation = "sample_source.txt";
+            std::string fileInput = "procedure Alpha {\n"
+                                    "  a = 1+b;\n"
+                                    "  if (c < d) then {\n"
+                                    "  e = f;\n"
+                                    "  if (ab < cd) then {\n"
+                                    "  print c;\n"
+                                    "  } else {\n"
+                                    "  d = e+2;\n"
+                                    "  if (ab < cd) then {\n"
+                                    "  print c;\n"
+                                    "  } else {\n"
+                                    "    d = e+2;\n"
+                                    "  }\n"
+                                    "  }\n"
+                                    "print a;\n"
+                                    "  } else {\n"
+                                    "    g = h+2;\n"
+                                    "  }\n"
+                                    "  while (i > j) {\n"
+                                    "    k = l;\n"
+                                    "  while (n > m) {\n"
+                                    "    o = p;\n"
+                                    "  while (x > y) {\n"
+                                    "    z = k;\n"
+                                    "  }\n"
+                                    "  }\n"
+                                    "print z;\n"
+                                    "  }\n"
+                                    "print a;\n"
+                                    "print b;\n"
+                                    "}";
+            std::ofstream file(fileLocation);
+            file << fileInput;
+            file.close();
+
+            // SP and QPS components initialization
+            SourceProcessor sp;
+            sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
+            THEN("Check that all Next relationship pairs are populated") {
+                std::unordered_set<int> s1 = {2};
+                std::unordered_set<int> s2 = {3, 11};
+                std::unordered_set<int> s3 = {4};
+                std::unordered_set<int> s4 = {5, 6};
+                std::unordered_set<int> s5 = {10};
+                std::unordered_set<int> s6 = {7};
+                std::unordered_set<int> s7 = {8, 9};
+                std::unordered_set<int> s8 = {10};
+                std::unordered_set<int> s9 = {10};
+                std::unordered_set<int> s10 = {12};
+                std::unordered_set<int> s11 = {12};
+                std::unordered_set<int> s12 = {13, 19};
+                std::unordered_set<int> s13 = {14};
+                std::unordered_set<int> s14 = {15, 18};
+                std::unordered_set<int> s15 = {16};
+                std::unordered_set<int> s16 = {14, 17};
+                std::unordered_set<int> s17 = {16};
+                std::unordered_set<int> s18 = {12};
+                std::unordered_set<int> s19 = {20};
+                std::unordered_set<int> s20 = {};
+
+                REQUIRE(nextPointer->getRightStmt(1) == s1);
+                REQUIRE(nextPointer->getRightStmt(2) == s2);
+                REQUIRE(nextPointer->getRightStmt(3) == s3);
+                REQUIRE(nextPointer->getRightStmt(4) == s4);
+                REQUIRE(nextPointer->getRightStmt(5) == s5);
+                REQUIRE(nextPointer->getRightStmt(6) == s6);
+                REQUIRE(nextPointer->getRightStmt(7) == s7);
+                REQUIRE(nextPointer->getRightStmt(8) == s8);
+                REQUIRE(nextPointer->getRightStmt(9) == s9);
+                REQUIRE(nextPointer->getRightStmt(10) == s10);
+                REQUIRE(nextPointer->getRightStmt(11) == s11);
+                REQUIRE(nextPointer->getRightStmt(12) == s12);
+                REQUIRE(nextPointer->getRightStmt(13) == s13);
+                REQUIRE(nextPointer->getRightStmt(14) == s14);
+                REQUIRE(nextPointer->getRightStmt(15) == s15);
+                REQUIRE(nextPointer->getRightStmt(16) == s16);
+                REQUIRE(nextPointer->getRightStmt(17) == s17);
+                REQUIRE(nextPointer->getRightStmt(18) == s18);
+                REQUIRE(nextPointer->getRightStmt(19) == s19);
+                REQUIRE(nextPointer->getRightStmt(20) == s20);
+
+            }
+        }
 	}
 }
