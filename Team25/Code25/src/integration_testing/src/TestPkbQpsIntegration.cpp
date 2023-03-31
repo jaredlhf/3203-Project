@@ -59,7 +59,7 @@ SCENARIO("Integration testing between PKB and QPS components") {
 		csPointer->addConst(789);
 
 		// Populating procedures appearing in the SIMPLE program
-		psPointer->addProc("main");
+        psPointer->addProc("main");
 		psPointer->addProc("factorial");
 		psPointer->addProc("beta");
 
