@@ -1,14 +1,14 @@
 #pragma once
 
 #include <queue>
-#include <unordered_map>
+#include <map>
 #include "PKB/PkbRetriever.h"
 #include "QPS/constants/Constants.h"
 
 
 class QueryUtils {
 private:
-	static std::unordered_map<std::pair<int, int>, bool> cache;
+	static std::map<std::pair<int, int>, bool> cache;
 public:
 	typedef std::shared_ptr<std::unordered_set<std::shared_ptr<CFGNode>>> NodeVisitSet;
 

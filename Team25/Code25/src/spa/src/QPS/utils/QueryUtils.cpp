@@ -1,5 +1,7 @@
 #include "QueryUtils.h"
 
+std::map<std::pair<int, int>, bool> QueryUtils::cache = {};
+
 template<typename T>
 bool QueryUtils::isEmpty(std::unordered_set<T> set) {
 	return set.size() <= 0;
