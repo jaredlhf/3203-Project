@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "AffectsStrat.h"
 
-// Constructor function for UsesStrat
+// Constructor function for AffectsStrat
 AffectsStrat::AffectsStrat(std::string clauseKeyword, std::shared_ptr<Entity> arg1,
     std::shared_ptr<Entity> arg2, std::shared_ptr<PkbRetriever> pkbRet)
     : ClauseStrat(clauseKeyword, arg1, arg2, pkbRet) {
@@ -52,33 +52,55 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::crea
     return QpsTable::getDefaultSynErr();
 }
 
-// Case: not done Affects(_, _)
+// Case: Affects(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::wildcardWildcard() {
-    return pkbRet->getAllFollowees().size() > 0
-        ? QpsTable::getDefaultOk()
-        : QpsTable::getDefaultNoMatch();
+    std::unordered_set<std::string> procs = pkbRet->getAllProc();
+    for (std::string proc : procs) {
+        std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+        for (int stmt1 : stmts) {
+            for (int stmt2 : stmts) {
+                if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
+                    return QpsTable::getDefaultOk();
+                }
+            }
+        }
+    }
+    return QpsTable::getDefaultNoMatch();
 }
 
-// Case: not done Affects(_, 2)
+// Case: Affects(_, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::wildcardConst() {
-    std::unordered_set<int> stmts = pkbRet->getAllFollowers();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
+    int arg2Stmt = std::stoi(arg2Val);
+    std::string proc = pkbRet->getProc(arg2Stmt);
+    std::unordered_set<int> stmts = pkbRet->getStmt(proc);
 
-    return stmts.count(std::stoi(arg2Val)) > 0
-        ? QpsTable::getDefaultOk()
-        : QpsTable::getDefaultNoMatch();
+    for (int stmt1 : stmts) {
+        if (QueryUtils::affects(stmt1, std::stoi(arg2Val), pkbRet)) {
+            return QpsTable::getDefaultOk();
+        }
+    }
+    
+    return QpsTable::getDefaultNoMatch();
 }
 
-// Case: not done Affects(_, s2)
+// Case: Affects(_, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::wildcardSyn() {
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
-    for (int stNum : s2Stmts) {
-        if (pkbRet->getFollowee(stNum) != -1) {
-            resTable->addRow({ std::to_string(stNum) });
+
+    std::unordered_set<std::string> procs = pkbRet->getAllProc();
+    for (std::string proc : procs) {
+        std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+        for (int stmt2 : stmts) {
+            for (int stmt1 : stmts) {
+                if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
+                    resTable->addRow({ std::to_string(stmt2) });
+                    break;
+                }
+            }
         }
     }
 
@@ -87,38 +109,46 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::wild
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: not done Affects(1, _)
+// Case: Affects(1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::constWildcard() {
-    std::unordered_set<int> stmts = pkbRet->getAllFollowees();
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    return stmts.count(std::stoi(arg1Val)) > 0
-        ? QpsTable::getDefaultOk()
-        : QpsTable::getDefaultNoMatch();
+    int arg1Stmt = std::stoi(arg1Val);
+    std::string proc = pkbRet->getProc(arg1Stmt);
+
+    std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+    for (int stmt2 : stmts) {
+        if (QueryUtils::affects(std::stoi(arg1Val), stmt2, pkbRet)) {
+            return QpsTable::getDefaultOk();
+        }
+    }
+    return QpsTable::getDefaultNoMatch();
 }
 
-// Case: not done Affects(1, 2)
+// Case: Affects(1, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::constConst() {
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
-    if (pkbRet->getFollower(std::stoi(arg1Val)) == std::stoi(arg2Val)) {
+    if (QueryUtils::affects(std::stoi(arg1Val), std::stoi(arg2Val), pkbRet)) {
         return QpsTable::getDefaultOk();
     }
     return QpsTable::getDefaultNoMatch();
 }
 
-// Case: not done Affects(1, s2)
+// Case: Affects(1, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::constSyn() {
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
+    
+    int arg1Stmt = std::stoi(arg1Val);
+    std::string proc = pkbRet->getProc(arg1Stmt);
+    std::unordered_set<int> stmts = pkbRet->getStmt(proc);
 
-    for (int stNum : s2Stmts) {
-        if (pkbRet->getFollower(std::stoi(arg1Val)) == stNum) {
-            resTable->addRow({ std::to_string(stNum) });
+    for (int stmt2 : stmts) {
+        if (QueryUtils::affects(std::stoi(arg1Val), stmt2, pkbRet)) {
+            resTable->addRow({ std::to_string(stmt2) });
         }
     }
     return resTable->getData().size() > 0
@@ -126,16 +156,22 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::cons
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: not done Affects(s1, _)
+// Case: Affects(s1, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::synWildcard() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
-    for (int stNum : s1Stmts) {
-        if (pkbRet->getFollower(stNum) != -1) {
-            resTable->addRow({ std::to_string(stNum) });
+
+    std::unordered_set<std::string> procs = pkbRet->getAllProc();
+    for (std::string proc : procs) {
+        std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+        for (int stmt1 : stmts) {
+            for (int stmt2 : stmts) {
+                if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
+                    resTable->addRow({ std::to_string(stmt1) });
+                    break;
+                }
+            }
         }
     }
 
@@ -144,18 +180,19 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::synW
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: not done Affects(s1, 2)
+// Case: Affects(s1, 2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::synConst() {
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
 
-    for (int stNum : s1Stmts) {
-        if (pkbRet->getFollowee(std::stoi(arg2Val)) == stNum) {
-            resTable->addRow({ std::to_string(stNum) });
+    int arg2Stmt = std::stoi(arg2Val);
+    std::string proc = pkbRet->getProc(arg2Stmt);
+    std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+    for (int stmt1 : stmts) {
+        if (QueryUtils::affects(stmt1, std::stoi(arg2Val), pkbRet)) {
+            resTable->addRow({ std::to_string(stmt1) });
         }
     }
     return resTable->getData().size() > 0
@@ -163,32 +200,23 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::synC
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
 
-// Case: not done Affects(s1, s2)
+// Case: Affects(s1, s2)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStrat::synSyn() {
     std::shared_ptr<Synonym> s1Syn = std::static_pointer_cast<Synonym>(this->arg1);
-    std::unordered_set<int> s1Stmts = s1Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s1Syn->getKeyword());
-
     std::shared_ptr<Synonym> s2Syn = std::static_pointer_cast<Synonym>(this->arg2);
-    std::unordered_set<int> s2Stmts = s2Syn->matchesKeyword(Constants::STMT)
-        ? Clause::getEveryStmt(pkbRet)
-        : pkbRet->getAllStmt(s2Syn->getKeyword());
-
-    // Edge case: if s1 and s2 are the same var name, return no match
-    if (s1Syn->getName() == s2Syn->getName()) {
-        return QpsTable::getDefaultNoMatch();
-    }
-
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
 
-    for (int arg1StNum : s1Stmts) {
-        for (int arg2StNum : s2Stmts) {
-            if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
-                resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
+    std::unordered_set<std::string> procs = pkbRet->getAllProc();
+    for (std::string proc : procs) {
+        std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+
+        for (int stmt1 : stmts) {
+            for (int stmt2 : stmts) {
+                if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
+                    resTable->addRow({ std::to_string(stmt1), std::to_string(stmt2) });
+                }
             }
         }
-
     }
 
     return resTable->getData().size() > 0

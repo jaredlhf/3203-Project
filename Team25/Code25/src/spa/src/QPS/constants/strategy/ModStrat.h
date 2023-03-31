@@ -1,5 +1,6 @@
 #pragma once
 
+#include "QPS/utils/QueryUtils.h"
 #include "ClauseStrat.h"
 
 class ClauseStrat;
@@ -22,5 +23,4 @@ public:
 	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolve() override;
 	// Factory function for strategy used
 	virtual std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> createReturnStrategy() override;
-	static std::unordered_set<std::string> getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet);
 };

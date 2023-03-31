@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ClauseStrat.h"
+#include "QPS/utils/QueryUtils.h"
 
 class ClauseStrat;
 

@@ -26,6 +26,22 @@ bool QueryUtils::isContainerStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbR
 	return contains(whileSet, lineNum) || contains(ifSet, lineNum);
 }
 
+std::unordered_set<std::string> QueryUtils::getAllVarModByProc(const std::string& proc, std::shared_ptr<PkbRetriever> pkbRet) {
+	std::unordered_set<std::string> res;
+	std::unordered_set<std::string> allProcs = pkbRet->getRightCallStar(proc);
+	// Add proc to the full list of procs that we need to check
+	allProcs.insert(proc);
+
+	for (const std::string& currProc : allProcs) {
+		std::unordered_set<std::string> currProcVars = pkbRet->getModPVar(currProc);
+		for (const std::string& var : currProcVars) {
+			res.insert(var);
+		}
+	}
+
+	return res;
+}
+
 std::unordered_set<std::string> QueryUtils::getModifiesInNonContainStmt(int lineNum, 
 	std::shared_ptr<PkbRetriever> pkbRet) {
 	// handle call stmts vs normal stmts
@@ -33,7 +49,7 @@ std::unordered_set<std::string> QueryUtils::getModifiesInNonContainStmt(int line
 	std::unordered_set<std::string> lineMods =
 		std::find(callStmts.begin(), callStmts.end(), lineNum) == callStmts.end()
 		? pkbRet->getModVar(lineNum)
-		: ModStrat::getAllVarModByProc(pkbRet->getCallAttr(lineNum), pkbRet);
+		: getAllVarModByProc(pkbRet->getCallAttr(lineNum), pkbRet);
 
 	return lineMods;
 }
@@ -89,8 +105,47 @@ bool QueryUtils::affects(int modLine, int usesLine, std::shared_ptr<PkbRetriever
 	return recursivelyNoModifies(modVar, nextNode, visitedSet, pkbRet, usesLine);
 }
 
+bool QueryUtils::affectsStar(int modLine, int usesLine, std::shared_ptr<PkbRetriever> pkbRet) {
+	// Edge case: return false if neither is an assign stmt
+	if (!isAssignStmt(modLine, pkbRet) || !isAssignStmt(usesLine, pkbRet)) {
+		return false;
+	}
+
+	// Edge case: return false if modLine and usesLine are not in the same procedure
+	if (pkbRet->getProc(modLine) != pkbRet->getProc(usesLine)) {
+		return false;
+	}
+
+	if (cache.find({ modLine, usesLine }) == cache.end()) {
+		cache.insert({ { modLine, usesLine }, affects(modLine, usesLine, pkbRet) });
+	}
+
+	// trivial case: if s1 affects s2 directly, return true
+	if (cache.at({ modLine, usesLine })) {
+		return true;
+	}
+
+	std::string proc = pkbRet->getProc(modLine);
+	std::unordered_set<int> procStmts = pkbRet->getStmt(proc);
+	for (int middleStmt : procStmts) {
+		if (cache.find({ modLine, middleStmt }) == cache.end()) {
+			cache.insert({ { modLine, middleStmt }, affects(modLine, middleStmt, pkbRet) });
+		}
+
+		if (cache.find({ middleStmt, usesLine }) == cache.end()) {
+			cache.insert({ { middleStmt, usesLine }, affects(middleStmt, usesLine, pkbRet) });
+		}
+		if (cache.at({ modLine, middleStmt }) && cache.at({ middleStmt, usesLine })) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool QueryUtils::recursivelyNoModifies(std::string modVar, std::shared_ptr<CFGNode> rootNode,
 	NodeVisitSet visitedSet, std::shared_ptr<PkbRetriever> pkbRet, int usesLine) {
+	// If ptr is null, just skip
 	if (!rootNode) {
 		return true;
 	}
@@ -98,6 +153,8 @@ bool QueryUtils::recursivelyNoModifies(std::string modVar, std::shared_ptr<CFGNo
 	visitedSet->insert(rootNode);
 	std::vector<int> nodeLines = rootNode->getLineNo();
 	bool hasNoModifies = true;
+
+	// Skip checking for node if it is a if or while cfg node
 	bool skipCurrNode = nodeLines.size() == 1 && isContainerStmt(nodeLines[0], pkbRet);
 	if (!skipCurrNode) {
 		std::unordered_set<std::string> modVars;
@@ -108,6 +165,7 @@ bool QueryUtils::recursivelyNoModifies(std::string modVar, std::shared_ptr<CFGNo
 			modVars.insert(lineMods.begin(), lineMods.end());
 		}
 
+		// if modVar is changed again in curr node, return false directly
 		if (std::find(modVars.begin(), modVars.end(), modVar) != modVars.end()) {
 			return false;
 		}
@@ -151,4 +209,8 @@ std::shared_ptr<CFGNode> QueryUtils::getNodeOfLine(int lineNum, std::shared_ptr<
 	}
 	
 	return nullptr;
+}
+
+void QueryUtils::clearCache() {
+	cache.clear();
 }
