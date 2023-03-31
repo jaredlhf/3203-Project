@@ -16,7 +16,7 @@ Select s such that Modifies (s,  _)
 4 
 procedure p;
 Select p such that Modifies (p,  _)
-SemanticError
+Example,p,q
 5000
 5 - comment
 stmt s; 
@@ -41,7 +41,7 @@ i,x,y,z,a,b,c,f
 9- comment
 procedure p; variable v;
 Select v such that Modifies("Example",_)
-SemanticError
+a,b,c,f,i,x,y,z
 5000
 10 - comment
 stmt s;
@@ -50,7 +50,7 @@ Select s such that Modifies(1, "x")
 5000
 11 - comment
 procedure p;
-Select p such that Modifies("Example, "x")
+Select p such that Modifies("Example", "x")
 Example,p,q
 5000
 12 - comment
@@ -79,7 +79,7 @@ Select v such that Modifies (_,  v)
 SemanticError
 5000
 17
-procedure Modifies
+procedure Modifies;
 Select Modifies such that Modifies(Modifies,_)
 Example,p,q
 5000
