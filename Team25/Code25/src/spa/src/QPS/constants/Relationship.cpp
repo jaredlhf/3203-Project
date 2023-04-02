@@ -164,7 +164,7 @@ std::vector<std::shared_ptr<Entity>> AffectsRelationship::verifyRelationship(std
 }
 
 AffectsSTRelationship::AffectsSTRelationship(const std::string& arg1, const std::string& arg2) : Relationship(arg1, arg2) {
-    keyword = Constants::AFFECTS;
+    keyword = Constants::AFFECTSST;
 }
 
 std::vector<std::shared_ptr<Entity>> AffectsSTRelationship::verifyRelationship(std::vector<std::shared_ptr<Synonym>> declarations) {
