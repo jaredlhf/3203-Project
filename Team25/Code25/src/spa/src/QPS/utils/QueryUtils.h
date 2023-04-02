@@ -19,6 +19,12 @@ public:
 	static bool isNotEmpty(std::unordered_set<T> set);
 
 	template<typename T>
+	static bool isEmpty(std::vector<T> set);
+
+	template<typename T>
+	static bool isNotEmpty(std::vector<T> set);
+
+	template<typename T>
 	static bool contains(std::unordered_set<T> set, T item);
 
 	static bool isAssignStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet);
@@ -33,8 +39,8 @@ public:
 
 	static bool affectsStar(int modLine, int usedLine, std::shared_ptr<PkbRetriever> pkbRet);
 
-	static bool recursivelyNoModifies(std::string modVar, std::shared_ptr<CFGNode> rootNode,
-		NodeVisitSet visitedSet, std::shared_ptr<PkbRetriever> pkbRet, int lineNum);
+	static bool recursivelyModifies(std::string modVar, std::shared_ptr<CFGNode> rootNode,
+		NodeVisitSet visitedSet, std::shared_ptr<PkbRetriever> pkbRet, int usesLine, int modLine, bool seenUses);
 
 	static std::shared_ptr<CFGNode> getNodeOfLine(int lineNum, std::shared_ptr<CFGNode> rootNode);
 

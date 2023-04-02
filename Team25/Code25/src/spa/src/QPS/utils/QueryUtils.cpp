@@ -13,6 +13,16 @@ bool QueryUtils::isNotEmpty(std::unordered_set<T> set) {
 }
 
 template<typename T>
+bool QueryUtils::isEmpty(std::vector<T> set) {
+	return set.size() <= 0;
+}
+
+template<typename T>
+bool QueryUtils::isNotEmpty(std::vector<T> set) {
+	return !isEmpty(set);
+}
+
+template<typename T>
 bool QueryUtils::contains(std::unordered_set<T> set, T item) {
 	return set.count(item) > 0;
 }
@@ -95,16 +105,27 @@ bool QueryUtils::affects(int modLine, int usesLine, std::shared_ptr<PkbRetriever
 	// If modVar is found elsewhere in curr node, return false
 	if (std::find(otherModInNode.begin(), otherModInNode.end(), modVar) != otherModInNode.end()) {
 		return false;
+	// Special case: if mod and uses are in the same proc and mod comes before uses, return true
+	// if it isnt modified again else false
+	}
+	else if (modLine < usesLine && std::find(rootLines.begin(), rootLines.end(), usesLine) != rootLines.end()) {
+		return std::find(otherModInNode.begin(), otherModInNode.end(), modVar) == otherModInNode.end();
 	}
 
 	// Use dfs to determine if its modified again in path
 	std::unordered_set<std::shared_ptr<CFGNode>> baseSet;
 	NodeVisitSet visitedSet = std::make_shared<std::unordered_set<std::shared_ptr<CFGNode>>>(baseSet);
-	std::vector<std::shared_ptr<CFGNode>> nextNodes = rootNode->getAllNextNodes();
-	std::shared_ptr<CFGNode> nextNode = nextNodes.size() > 0
-		? nextNodes[0]
-		: nullptr;
-	return recursivelyNoModifies(modVar, nextNode, visitedSet, pkbRet, usesLine);
+	std::vector<std::shared_ptr<CFGNode>> nextNodes;
+	for (std::shared_ptr<CFGNode> node : rootNode->getAllNextNodes()) {
+		if (node && QueryUtils::isNotEmpty(node->getLineNo())) {
+			nextNodes.push_back(node);
+		}
+	}
+	if (nextNodes.size() <= 0) {
+		return false;
+	}
+	std::shared_ptr<CFGNode> nextNode = nextNodes[0];
+	return !recursivelyModifies(modVar, nextNode, visitedSet, pkbRet, usesLine, modLine, false);
 }
 
 bool QueryUtils::affectsStar(int modLine, int usesLine, std::shared_ptr<PkbRetriever> pkbRet) {
@@ -145,49 +166,76 @@ bool QueryUtils::affectsStar(int modLine, int usesLine, std::shared_ptr<PkbRetri
 	return false;
 }
 
-bool QueryUtils::recursivelyNoModifies(std::string modVar, std::shared_ptr<CFGNode> rootNode,
-	NodeVisitSet visitedSet, std::shared_ptr<PkbRetriever> pkbRet, int usesLine) {
+bool QueryUtils::recursivelyModifies(std::string modVar, std::shared_ptr<CFGNode> rootNode,
+	NodeVisitSet visitedSet, std::shared_ptr<PkbRetriever> pkbRet, int usesLine, int modLine, bool seenUses) {
 	// If ptr is null, just skip
 	if (!rootNode) {
-		return true;
+		return false;
 	}
 
-	visitedSet->insert(rootNode);
 	std::vector<int> nodeLines = rootNode->getLineNo();
-	bool hasNoModifies = true;
 
 	// Skip checking for node if it is a if or while cfg node
 	bool skipCurrNode = nodeLines.size() == 1 && isContainerStmt(nodeLines[0], pkbRet);
-	if (!skipCurrNode) {
+	bool isUsesNode = std::find(nodeLines.begin(), nodeLines.end(), usesLine) != nodeLines.end();
+	seenUses = isUsesNode;
+	bool hasModifies = skipCurrNode || !seenUses;
+	bool isModInSameNode = isUsesNode && std::find(nodeLines.begin(), nodeLines.end(), modLine) != nodeLines.end();
+	
+	// Special case: if modifies line is in same node as uses line, check if there is any other modifies before uses line
+	if (isModInSameNode) {
 		std::unordered_set<std::string> modVars;
-		// check for mods in curr node
-		bool isUsesNode = std::find(nodeLines.begin(), nodeLines.end(), usesLine) != nodeLines.end();
 		for (int line : nodeLines) {
+			if (line >= usesLine && line <= modLine) {
+				continue;
+			}
+			std::unordered_set<std::string> lineMods = getModifiesInNonContainStmt(line, pkbRet);
+			modVars.insert(lineMods.begin(), lineMods.end());
+		}
+
+		return std::find(modVars.begin(), modVars.end(), modVar) != modVars.end();
+	}
+
+	if (!skipCurrNode) {
+		visitedSet->insert(rootNode);
+		std::unordered_set<std::string> modVars;
+
+		// check for mods in curr node
+		for (int line : nodeLines) {
+			if (isUsesNode && line >= usesLine) {
+				continue;
+			}
 			std::unordered_set<std::string> lineMods = getModifiesInNonContainStmt(line, pkbRet);
 			modVars.insert(lineMods.begin(), lineMods.end());
 		}
 
 		// if modVar is changed again in curr node, return false directly
 		if (std::find(modVars.begin(), modVars.end(), modVar) != modVars.end()) {
-			return false;
+			visitedSet->erase(rootNode);
+			return true;
 		}
+	}
+
+	if (isUsesNode) {
+		visitedSet->erase(rootNode);
+		return hasModifies;
 	}
 
 	// Add next nodes to visit
 	std::vector<std::shared_ptr<CFGNode>> nextNodes = rootNode->getAllNextNodes();
 	for (std::shared_ptr<CFGNode> nextNode : nextNodes) {
-		if (std::find(visitedSet->begin(), visitedSet->end(), nextNode) == visitedSet->end()) {
-			hasNoModifies = hasNoModifies && 
-				recursivelyNoModifies(modVar, nextNode, visitedSet, pkbRet, usesLine);
+		if (!nextNode || isEmpty(nextNode->getLineNo())) {
+			continue;
 		}
-
-		if (!hasNoModifies) {
-			return hasNoModifies;
+		if (std::find(visitedSet->begin(), visitedSet->end(), nextNode) == visitedSet->end()) {
+			bool pathHasModifies = recursivelyModifies(modVar, nextNode, visitedSet, pkbRet, usesLine, modLine, seenUses);
+			hasModifies = hasModifies && pathHasModifies;
+				
 		}
 	}
 
 	visitedSet->erase(rootNode);
-	return hasNoModifies;
+	return hasModifies;
 }
 
 std::shared_ptr<CFGNode> QueryUtils::getNodeOfLine(int lineNum, std::shared_ptr<CFGNode> rootNode) {
