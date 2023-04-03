@@ -459,7 +459,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     std::vector<std::string> keys;
     std::string callingProc = c->getProc();
     std::string calledProc = c->getVar();
-    if (this->callingStorage.find(callingProc) == this->callsStorage.end()) {
+    if (this->callingStorage.find(callingProc) == this->callingStorage.end()) {
         std::vector<std::string> procs;
         procs.push_back(calledProc);
         this->callingStorage.emplace(callingProc,procs);
