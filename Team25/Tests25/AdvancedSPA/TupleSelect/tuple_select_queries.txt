@@ -10,82 +10,82 @@ Select <a, v> such that Modifies(a, v)
 5000
 3 - 5 tuple select
 assign a; variable v1, v2;
-Select <a, v1, v2, v2, v1> such that Modifies("Example", v1) pattern a(v2, "z + x")
+Select <a, v1, v2, v2, v1> such that Modifies("tupleSelect", v1) pattern a(v2, "z + x")
 8 y y y y, 8 i y y i, 8 x y y x, 8 z y y z
 5000
 4 - tuple select with unused variable in clauses
 variable v1, v2; assign a;
-Select <v1, v2> such that Modifies("Example", _)
+Select <v1, v2> such that Modifies("tupleSelect", _)
 i i, i x, i y, i z, x x, x i, x y, x z, y i, y x, y y, y z, z i, z z, z x, z y
 5000
 5 - 1 tuple select
 variable v; assign a;
-Select <v> such that Modifies("Example", _)
+Select <v> such that Modifies("tupleSelect", _)
 i, x, y, z
 5000
 6 - empty tuple select
 variable x;
-Select <> such that Modifies("Example", _)
+Select <> such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 6 - select synonym does not exist
 variable x;
-Select y such that Modifies("Example", _)
+Select y such that Modifies("tupleSelect", _)
 SemanticError
 5000
 7 - select synonym does not exist in tuple
 variable x;
-Select <y> such that Modifies("Example", _)
+Select <y> such that Modifies("tupleSelect", _)
 SemanticError
 5000
 8 - Improper select synonym
 variable x;
-Select 123 such that Modifies("Example", _)
+Select 123 such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 9 - Improper select synonym in tuple
 variable x;
-Select <123> such that Modifies("Example", _)
+Select <123> such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 10 - mix of improper and proper selects in tuple
 variable x;
-Select <123, x> such that Modifies("Example", _)
+Select <123, x> such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 11 - mix of declared and undeclared selects in tuple
 variable x;
-Select <y, x> such that Modifies("Example", _)
+Select <y, x> such that Modifies("tupleSelect", _)
 SemanticError
 5000
 12 - unclosed bracket
 variable x, y;
-Select <x, y such that Modifies("Example", _)
+Select <x, y such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 13 - no open bracket
 variable x, y;
-Select x, y> such that Modifies("Example", _)
+Select x, y> such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 14 - use of keywords as query variables
 variable Select, such;
-Select <Select, such> such that Modifies("Example", _)
+Select <Select, such> such that Modifies("tupleSelect", _)
 i i, i x, i y, i z, x x, x i, x y, x z, y i, y x, y y, y z, z i, z z, z x, z y
 5000
 15 - no brackets, use of keywords
 variable Select, such;
-Select Select, such such that Modifies("Example", _)
+Select Select, such such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 16 - no select keyword
 variable x;
-x such that Modifies("Example", _)
+x such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 17 - extra keyword token between clauses
 variable x, y;
-Select <x, y> such such that Modifies("Example", _)
+Select <x, y> such such that Modifies("tupleSelect", _)
 SyntaxError
 5000
 18 - tuple select with attribute values

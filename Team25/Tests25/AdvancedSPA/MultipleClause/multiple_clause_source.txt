@@ -1,0 +1,23 @@
+procedure multipleClauses {
+    read input;
+    read empty;
+    if (input == empty) then {
+        read target;
+        while (input < target) {
+            read one;
+            while (one != 1) {
+                one = one - 1;
+            }
+            input = input + one;
+        }
+    } else {
+        call NewProc;
+    }
+}
+
+procedure NewProc {
+    final = input;
+    while (final == 1) {
+        final = final + 1;
+    }
+}
