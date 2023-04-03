@@ -19,18 +19,6 @@ std::shared_ptr<CFGNode> CFGStore::getCFGNode(std::string procName) {
 	}
 }
 
-std::vector<std::shared_ptr<CFGNode>> CFGStore::getAllCFGNodes() {
-	std::vector<std::shared_ptr<CFGNode>> nodeLst;
-	for (const auto& [key, value] : procCfgStore) {
-		nodeLst.push_back(value);
-	}
-	return nodeLst;
-}
-
 std::vector<std::shared_ptr<CFGNode>> CFGStore::getNextNodes(std::shared_ptr<CFGNode> currNode) {
 	return currNode->getAllNextNodes();
-}
-
-std::vector<int> CFGStore::getLineNo(std::shared_ptr<CFGNode> currNode) const {
-	return currNode->getLineNo();
 }

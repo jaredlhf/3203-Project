@@ -101,13 +101,6 @@ std::unordered_set<int> PkbRetriever::getFollowerStar(int followee) {
 	return this->followsStarStorage->getRightStar(followee);
 }
 
-std::unordered_set<int> PkbRetriever::getAllFollowerStar() {
-	return this->followsStarStorage->getAllRight();
-}
-std::unordered_set<int> PkbRetriever::getAllFolloweeStar() {
-	return this->followsStarStorage->getAllLeft();
-}
-
 /*Follows Store*/
 int PkbRetriever::getFollowee(int rightLineNum) {
 	return this->followsStorage->getLeftStmt(rightLineNum);
@@ -133,14 +126,6 @@ std::unordered_set<int> PkbRetriever::getChildrenStar(int parent) {
 	return this->parentStarStorage->getRightStar(parent);
 }
 
-std::unordered_set<int> PkbRetriever::getAllParentStar() {
-	return this->parentStarStorage->getAllLeft();
-}
-
-std::unordered_set<int> PkbRetriever::getAllChildrenStar() {
-	return this->parentStarStorage->getAllRight();
-}
-
 /*Parent Store*/
 int PkbRetriever::getParent(int child) {
 	return this->parentStorage->getLeftStmt(child);
@@ -163,33 +148,9 @@ std::unordered_set<std::string> PkbRetriever::getModPVar(std::string procName) {
 	return this->modifiesProcStorage->getVar(procName);
 }
 
-std::unordered_set<std::string> PkbRetriever::getModPProc(std::string varName) {
-	return this->modifiesProcStorage->getProc(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllModPVar() {
-	return this->modifiesProcStorage->getAllVar();
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllModPProc() {
-	return this->modifiesProcStorage->getAllProc();
-}
-
 /*Modifies Store*/
 std::unordered_set<std::string> PkbRetriever::getModVar(int lineNum) {
 	return this->modifiesStorage->getVar(lineNum);
-}
-
-std::unordered_set<int> PkbRetriever::getModStmt(std::string varName) {
-	return this->modifiesStorage->getStmt(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllModVar() {
-	return this->modifiesStorage->getAllVar();
-}
-
-std::unordered_set<int> PkbRetriever::getAllModStmt() {
-	return this->modifiesStorage->getAllStmt();
 }
 
 /*UsesProc Store*/
@@ -197,33 +158,9 @@ std::unordered_set<std::string> PkbRetriever::getUsesPVar(std::string procName) 
 	return this->usesProcStorage->getVar(procName);
 }
 
-std::unordered_set<std::string> PkbRetriever::getUsesPProc(std::string varName) {
-	return this->usesProcStorage->getProc(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllUsesPVar() {
-	return this->usesProcStorage->getAllVar();
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllUsesPProc() {
-	return this->usesProcStorage->getAllProc();
-}
-
 /*Uses Store*/
 std::unordered_set<std::string> PkbRetriever::getUsesVar(int lineNum) {
 	return this->usesStorage->getVar(lineNum);
-}
-
-std::unordered_set<int> PkbRetriever::getUsesStmt(std::string varName) {
-	return this->usesStorage->getStmt(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllUsesVar() {
-	return this->usesStorage->getAllVar();
-}
-
-std::unordered_set<int> PkbRetriever::getAllUsesStmt() {
-	return this->usesStorage->getAllStmt();
 }
 
 /*Calls Store*/
@@ -265,50 +202,14 @@ std::string PkbRetriever::getPrintAttr(int lineNum) {
 	return this->printAttrStorage->getAttr(lineNum);
 }
 
-std::unordered_set<int> PkbRetriever::getPrintStmt(std::string varName) {
-	return this->printAttrStorage->getStmt(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllPrintAttr() {
-	return this->printAttrStorage->getAllAttr();
-}
-
-std::unordered_set<int> PkbRetriever::getAllPrintStmt() {
-	return this->printAttrStorage->getAllStmt();
-}
-
 /*Read Attribute Store*/
 std::string PkbRetriever::getReadAttr(int lineNum) {
 	return this->readAttrStorage->getAttr(lineNum);
 }
 
-std::unordered_set<int> PkbRetriever::getReadStmt(std::string varName) {
-	return this->readAttrStorage->getStmt(varName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllReadAttr() {
-	return this->readAttrStorage->getAllAttr();
-}
-
-std::unordered_set<int> PkbRetriever::getAllReadStmt() {
-	return this->readAttrStorage->getAllStmt();
-}
-
 /*Call Attribute Store*/
 std::string PkbRetriever::getCallAttr(int lineNum) {
 	return this->callAttrStorage->getAttr(lineNum);
-}
-
-std::unordered_set<int> PkbRetriever::getCallStmt(std::string procName) {
-	return this->callAttrStorage->getStmt(procName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllCallAttr() {
-	return this->callAttrStorage->getAllAttr();
-}
-
-std::unordered_set<int> PkbRetriever::getAllCallStmt() {
-	return this->callAttrStorage->getAllStmt();
 }
 
 /*Next Store*/
@@ -341,31 +242,11 @@ std::shared_ptr<CFGNode> PkbRetriever::getCFGNode(std::string procName) {
 	return this->cfgStorage->getCFGNode(procName);
 }
 
-std::vector<std::shared_ptr<CFGNode>> PkbRetriever::getAllCFGNodes() {
-	return this->cfgStorage->getAllCFGNodes();
-}
-
 std::vector<std::shared_ptr<CFGNode>> PkbRetriever::getNextNodes(std::shared_ptr<CFGNode> currNode) {
 	return this->cfgStorage->getNextNodes(currNode);
-}
-
-std::vector<int> PkbRetriever::getLineNo(std::shared_ptr<CFGNode> currNode) {
-	return this->cfgStorage->getLineNo(currNode);
 }
 
 /*Container Calls Store*/
 std::unordered_set<std::string> PkbRetriever::getConProc(int lineNum) {
 	return this->conCallStorage->getProc(lineNum);
-}
-
-std::unordered_set<int> PkbRetriever::getConStmt(std::string procName) {
-	return this->conCallStorage->getStmt(procName);
-}
-
-std::unordered_set<std::string> PkbRetriever::getAllConProc() {
-	return this->conCallStorage->getAllProc();
-}
-
-std::unordered_set<int> PkbRetriever::getAllConStmt() {
-	return this->conCallStorage->getAllStmt();
 }

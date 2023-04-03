@@ -115,24 +115,58 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 7);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
-				REQUIRE(fstarsPointer->getAllRight().size() == 6);
-				REQUIRE(fstarsPointer->getAllLeft().size() == 6);
+				REQUIRE(fstarsPointer->getRightStar(1).size() == 5);
+				REQUIRE(fstarsPointer->getLeftStar(10).size() == 5);
 			}
 			THEN("PKB modifies store should contain the modifies relationships") {
-				REQUIRE(msPointer->getAllVar().size() == 8);
-				REQUIRE(msPointer->getAllStmt().size() == 10);
+				REQUIRE(msPointer->getVar(1).size() == 1);
+				REQUIRE(msPointer->getVar(2).size() == 3);
+				REQUIRE(msPointer->getVar(3).size() == 1);
+				REQUIRE(msPointer->getVar(4).size() == 1);
+				REQUIRE(msPointer->getVar(5).size() == 1);
+				REQUIRE(msPointer->getVar(6).size() == 1);
+				REQUIRE(msPointer->getVar(7).size() == 1);
+				REQUIRE(msPointer->getVar(8).size() == 1);
+				REQUIRE(msPointer->getVar(9).size() == 1);
+				REQUIRE(msPointer->getVar(10).size() == 1);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(pStarsPointer->getAllLeft().size() == 2);
-				REQUIRE(pStarsPointer->getAllRight().size() == 4);
+				REQUIRE(pStarsPointer->getLeftStar(1).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(1).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(2).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(2).size() == 3);
+				REQUIRE(pStarsPointer->getLeftStar(3).size() == 1);
+				REQUIRE(pStarsPointer->getRightStar(3).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(4).size() == 1);
+				REQUIRE(pStarsPointer->getRightStar(4).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(5).size() == 1);
+				REQUIRE(pStarsPointer->getRightStar(5).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(6).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(6).size() == 1);
+				REQUIRE(pStarsPointer->getLeftStar(7).size() == 1);
+				REQUIRE(pStarsPointer->getRightStar(7).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(8).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(8).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(9).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(9).size() == 0);
+				REQUIRE(pStarsPointer->getLeftStar(10).size() == 0);
+				REQUIRE(pStarsPointer->getRightStar(10).size() == 0);
 			}
 			THEN("PKB parent star store should contain the parent star relationships") {
 				REQUIRE(parentsPointer->getAllLeft().size() == 2);
 				REQUIRE(parentsPointer->getAllRight().size() == 4);
 			}
 			THEN("PKB uses store should contain the uses relationships") {
-				REQUIRE(usesPointer->getAllVar().size() == 11);
-				REQUIRE(usesPointer->getAllStmt().size() == 8);
+				REQUIRE(usesPointer->getVar(1).size() == 1);
+				REQUIRE(usesPointer->getVar(2).size() == 6);
+				REQUIRE(usesPointer->getVar(3).size() == 1);
+				REQUIRE(usesPointer->getVar(4).size() == 2);
+				REQUIRE(usesPointer->getVar(5).size() == 1);
+				REQUIRE(usesPointer->getVar(6).size() == 4);
+				REQUIRE(usesPointer->getVar(7).size() == 3);
+				REQUIRE(usesPointer->getVar(8).size() == 0);
+				REQUIRE(usesPointer->getVar(9).size() == 0);
+				REQUIRE(usesPointer->getVar(10).size() == 1);
 			}
 		}
 

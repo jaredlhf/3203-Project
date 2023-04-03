@@ -73,8 +73,6 @@ public:
 	/*FollowsStar Store*/
 	std::unordered_set<int> getFolloweeStar(int rightLineNum);
 	std::unordered_set<int> getFollowerStar(int leftLineNum);
-	std::unordered_set<int> getAllFollowerStar();
-	std::unordered_set<int> getAllFolloweeStar();
 	/*Follows Store*/
 	int getFollowee(int rightLineNum);
 	int getFollower(int leftLineNum);
@@ -83,8 +81,6 @@ public:
 	/*ParentStar Store*/
 	std::unordered_set<int> getParentStar(int child);
 	std::unordered_set<int> getChildrenStar(int parent);
-	std::unordered_set<int> getAllParentStar();
-	std::unordered_set<int> getAllChildrenStar();
 	/*Parent Store*/
 	int getParent(int child);
 	std::unordered_set<int> getChildren(int parent);
@@ -92,24 +88,12 @@ public:
 	std::unordered_set<int> getAllChildren();
 	/*ModifiesProc Store*/
 	std::unordered_set<std::string> getModPVar(std::string procName);
-	std::unordered_set<std::string> getModPProc(std::string varName);
-	std::unordered_set<std::string> getAllModPVar();
-	std::unordered_set<std::string> getAllModPProc();
 	/*Modifies Store*/
-	std::unordered_set<std::string> getModVar(int lineNum); 
-	std::unordered_set<int> getModStmt(std::string varName);
-	std::unordered_set<std::string> getAllModVar();
-	std::unordered_set<int> getAllModStmt();
+	std::unordered_set<std::string> getModVar(int lineNum);
 	/*UsesProc Store*/
 	std::unordered_set<std::string> getUsesPVar(std::string procName);
-	std::unordered_set<std::string> getUsesPProc(std::string varName);
-	std::unordered_set<std::string> getAllUsesPVar();
-	std::unordered_set<std::string> getAllUsesPProc();
 	/*Uses Store*/
 	std::unordered_set<std::string> getUsesVar(int lineNum);
-	std::unordered_set<int> getUsesStmt(std::string varName);
-	std::unordered_set<std::string> getAllUsesVar();
-	std::unordered_set<int> getAllUsesStmt();
 	/*Calls Store*/
 	std::unordered_set<std::string> getLeftCall(std::string rightProc);
 	std::unordered_set<std::string> getRightCall(std::string leftProc);
@@ -122,19 +106,10 @@ public:
 	std::unordered_set<std::string> getAllRightCallStar();
 	/*Print Attribute Store*/
 	std::string getPrintAttr(int lineNum);
-	std::unordered_set<int> getPrintStmt(std::string varName);
-	std::unordered_set<std::string> getAllPrintAttr();
-	std::unordered_set<int> getAllPrintStmt();
 	/*Read Attribute Store*/
 	std::string getReadAttr(int lineNum);
-	std::unordered_set<int> getReadStmt(std::string varName);
-	std::unordered_set<std::string> getAllReadAttr();
-	std::unordered_set<int> getAllReadStmt();
 	/*Call Attribute Store*/
 	std::string getCallAttr(int lineNum);
-	std::unordered_set<int> getCallStmt(std::string procName);
-	std::unordered_set<std::string> getAllCallAttr();
-	std::unordered_set<int> getAllCallStmt();
 	/*Next Store*/
 	std::unordered_set<int> getLeftNext(int rightStmt);
 	std::unordered_set<int> getRightNext(int leftStmt);
@@ -144,12 +119,7 @@ public:
 	std::unordered_set<int> getLeftNextStar(int rightStmt);
 	/*CFG Store*/
 	std::shared_ptr<CFGNode> getCFGNode(std::string procName);
-	std::vector<std::shared_ptr<CFGNode>> getAllCFGNodes();
 	std::vector<std::shared_ptr<CFGNode>> getNextNodes(std::shared_ptr<CFGNode> currNode);
-	std::vector<int> getLineNo(std::shared_ptr<CFGNode> currNode);
 	/*Container Calls Store*/
 	std::unordered_set<std::string> getConProc(int lineNum);
-	std::unordered_set<int> getConStmt(std::string procName);
-	std::unordered_set<std::string> getAllConProc();
-	std::unordered_set<int> getAllConStmt();
 };
