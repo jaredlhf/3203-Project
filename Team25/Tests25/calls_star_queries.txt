@@ -159,22 +159,22 @@ Select p such that Calls*( , p)
 SyntaxError
 5000
 33 - Calls*
-procedure p, call cl;
+procedure p; call cl;
 Select p such that Calls*(cl, p)
 SemanticError
 5000
 34 - Calls*
-procedure p, call cl;
+procedure p; call cl;
 Select p such that Calls*(p, cl)
 SemanticError
 5000
 35 - Calls*
-procedure p, assign a;
+procedure p; assign a;
 Select p such that Calls*(p, a)
 SemanticError
 5000
 36 - Calls*
-procedure p, stmt s;
+procedure p; stmt s;
 Select p such that Calls*(p, s)
 SemanticError
 5000
