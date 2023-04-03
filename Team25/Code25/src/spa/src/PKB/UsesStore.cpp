@@ -6,12 +6,11 @@
 
 UsesStore::UsesStore() {}
 
-UsesStore::UsesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore)
-	: varStore{ varStore }, stmtStore{ stmtStore } {}
+UsesStore::UsesStore(std::unordered_map<int, std::unordered_set<std::string>> varStore)
+	: varStore{ varStore } {}
 
 void UsesStore::addUses(int lineNum, std::string varName) {
 	varStore[lineNum].emplace(varName);
-	stmtStore[varName].emplace(lineNum);
 }
 
 std::unordered_set<std::string> UsesStore::getVar(int lineNum) {
@@ -22,33 +21,3 @@ std::unordered_set<std::string> UsesStore::getVar(int lineNum) {
 		return {};
 	}
 }
-
-std::unordered_set<int> UsesStore::getStmt(std::string varName) {
-	if (stmtStore.find(varName) != stmtStore.end()) {
-		return stmtStore[varName];
-	}
-	else {
-		return {};
-	}
-}
-
-
-std::unordered_set<std::string> UsesStore::getAllVar() {
-	std::unordered_set<std::string> varList;
-
-	for (const auto& [key, value] : varStore) {
-		varList.insert(value.begin(), value.end());
-	}
-	return varList;
-}
-
-std::unordered_set<int> UsesStore::getAllStmt() {
-	std::unordered_set<int> stmtList;
-
-	for (const auto& [key, value] : stmtStore) {
-		stmtList.insert(value.begin(), value.end());
-	}
-	return stmtList;
-}
-
-

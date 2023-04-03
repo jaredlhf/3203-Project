@@ -8,17 +8,10 @@
 
 class StmtVarStore {
 	virtual std::unordered_set<std::string> getVar(int lineNum) = 0;
-	virtual std::unordered_set<int> getStmt(std::string varName) = 0;
-	virtual std::unordered_set<std::string> getAllVar() = 0;
-	virtual std::unordered_set<int> getAllStmt() = 0;
-	
 };
 
 class ProcVarStore {
 	virtual std::unordered_set<std::string> getVar(std::string procName) = 0;
-	virtual std::unordered_set<std::string> getProc(std::string varName) = 0;
-	virtual std::unordered_set<std::string> getAllVar() = 0;
-	virtual std::unordered_set<std::string> getAllProc() = 0;
 };
 
 class StmtStmtStore {
@@ -29,8 +22,6 @@ class StmtStmtStore {
 class StmtStmtStarStore {
 	virtual std::unordered_set<int> getLeftStar(int rightStmt) = 0;
 	virtual std::unordered_set<int> getRightStar(int leftStmt) = 0;
-	virtual std::unordered_set<int> getAllLeft() = 0;
-	virtual std::unordered_set<int> getAllRight() = 0;
 };
 
 class ProcProcStore {
@@ -47,8 +38,4 @@ class ProcProcStarStore {
 
 class ProcStmtStore {
 	virtual std::unordered_set<std::string> getProc(int lineNum) = 0;
-	virtual std::unordered_set<int> getStmt(std::string varName) = 0;
-	virtual std::unordered_set<std::string> getAllProc() = 0;
-	virtual std::unordered_set<int> getAllStmt() = 0;
 };
-
