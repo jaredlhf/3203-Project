@@ -8,11 +8,15 @@ AffectsStStrat::AffectsStStrat(std::string clauseKeyword, std::shared_ptr<Entity
 }
 
 bool AffectsStStrat::hasNonAssignArgs() {
-    if (this->arg1->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::ASSIGN)) {
+    if (this->arg1->isSynonym() &&
+        (!std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::ASSIGN)
+            && !std::static_pointer_cast<Synonym>(this->arg1)->matchesKeyword(Constants::STMT))) {
         return true;
     }
 
-    if (this->arg2->isSynonym() && !std::static_pointer_cast<Synonym>(this->arg2)->matchesKeyword(Constants::ASSIGN)) {
+    if (this->arg2->isSynonym() &&
+        (!std::static_pointer_cast<Synonym>(this->arg2)->matchesKeyword(Constants::ASSIGN)
+            && !std::static_pointer_cast<Synonym>(this->arg2)->matchesKeyword(Constants::STMT))) {
         return true;
     }
 
