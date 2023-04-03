@@ -170,7 +170,7 @@ SemanticError
 5000
 35 - Next
 stmt s;
-Select s such that Next(s, “”)
+Select s such that Next(s, "")
 SyntaxError
 5000
 36 - Next

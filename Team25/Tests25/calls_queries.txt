@@ -11,12 +11,12 @@ Select p such that Calls("First", "Fifth")
 3 - Calls
 call cl;
 Select cl such that Calls("First", "Second")
-
+1,2,3,5,6
 5000
 4 - Calls
 procedure p; 
 Select p such that Calls("First", p)
-
+Fourth,Second,Third
 5000
 5 - Calls
 procedure p; 
@@ -26,7 +26,7 @@ Select p such that Calls("Second", p)
 6 - Calls
 call cl; procedure p;
 Select cl such that Calls("Third", p)
-
+1,2,3,5,6
 5000
 7 - Calls
 procedure p;
@@ -76,7 +76,7 @@ Select p such that Calls(p, "First")
 16 - Calls
 procedure p;
 Select p such that Calls(p, "Third")
-First, Forth
+First, Fourth
 5000
 17 - Calls
 procedure p, q; 
@@ -159,22 +159,22 @@ Select p such that Calls( , p)
 SyntaxError
 5000
 33 - Calls
-procedure p, call cl;
+procedure p; call cl;
 Select p such that Calls(cl, p)
 SemanticError
 5000
 34 - Calls
-procedure p, call cl;
+procedure p; call cl;
 Select p such that Calls(p, cl)
 SemanticError
 5000
 35 - Calls
-procedure p, assign a;
+procedure p; assign a;
 Select p such that Calls(p, a)
 SemanticError
 5000
 36 - Calls
-procedure p, stmt s;
+procedure p; stmt s;
 Select p such that Calls(p, s)
 SemanticError
 5000
