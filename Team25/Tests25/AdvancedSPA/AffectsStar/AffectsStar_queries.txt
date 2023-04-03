@@ -1,0 +1,130 @@
+1 - testing case of Affects*(_, _): VALID
+stmt s;
+Select BOOLEAN such that Affects*(_, _)
+TRUE
+5000
+2 - testing case of Affects*(_, 7): VALID
+stmt s;
+Select BOOLEAN such that Affects*(_, 7)
+TRUE
+5000
+3 - testing case of Affects*(_, 2): INVALID
+stmt s;
+Select BOOLEAN such that Affects*(_, 2)
+FALSE
+5000
+4 - testing case of Affects*(_, s2): VALID
+stmt s2;
+Select s2 such that Affects*(_, s2)
+3,4,5,7,8,9,10
+5000
+5 - testing case of Affects*(_, r2): INVALID
+read r2;
+Select r2 such that Affects*(_, r2)
+
+5000
+6 - testing case of Affects*(1, _): VALID
+stmt s;
+Select BOOLEAN such that Affects*(1, _)
+TRUE
+5000
+7 - testing case of Affects*(5, _): INVALID
+stmt s;
+Select BOOLEAN such that Affects*(5, _)
+FALSE
+5000
+8 - testing case of indirect affects Affects*(1, 5): VALID
+stmt s;
+Select BOOLEAN such that Affects*(1, 5)
+TRUE
+5000
+9 - testing case of direct affects Affects*(4, 7): VALID
+stmt s;
+Select BOOLEAN such that Affects*(4, 7)
+TRUE
+5000
+10 - testing case of invalid indirect Affects*(1, 8): INVALID
+stmt s;
+Select BOOLEAN such that Affects*(1, 8)
+FALSE
+5000
+11 - testing case of invalid direct Affects*(5, 10): INVALID
+stmt s;
+Select BOOLEAN such that Affects*(5, 10)
+FALSE
+5000
+12 - testing case of affects Affects*(1, s2): VALID
+stmt s2;
+Select s2 such that Affects*(1, s2)
+3,5,9,10
+5000
+13 - testing case of Affects*(5, s2): INVALID
+stmt s2;
+Select s2 such that Affects*(5, s2)
+
+5000
+14 - testing case of Affects*(s1, _): VALID
+stmt s1;
+Select s1 such that Affects*(s1, _)
+1,2,3,4,6,9
+5000
+15 - testing case of Affects*(r1, _): INVALID
+read r1;
+Select r1 such that Affects*(r1, _)
+
+5000
+16 - testing case of Affects*(s1, 10): VALID
+stmt s1;
+Select s1 such that Affects*(s1, 10)
+1,9
+5000
+17 - testing case of Affects*(s1, 2): INVALID
+stmt s1;
+Select s1 such that Affects*(s1, 2)
+
+5000
+18 - testing case of Affects*(s1, s2): VALID
+stmt s1, s2;
+Select <s1.stmt#, s2> such that Affects*(s1, s2)
+1 3, 1 5, 1 9, 1 10, 2 3, 2 4, 2 5, 2 7, 3 5, 4 7, 6 8, 9 10
+5000
+19 - testing case of Affects*(s1, s1): INVALID
+stmt s1;
+Select s1 such that Affects*(s1, s1)
+
+5000
+20 - testing case of invalid spelling of Affects*: SyntaxError
+stmt s1;
+Select s1 such that aAffects*(s1, s1)
+SyntaxError
+5000
+21 - testing case of extra token: SyntaxError
+stmt s1;
+Select s1 such such that Affects*(s1, s1)
+SyntaxError
+5000
+22 - testing case of syntactically wrong arg1: SyntaxError
+stmt s1;
+Select s1 such that Affects*("arg1", s1)
+SyntaxError
+5000
+23 - testing case of syntactically wrong arg2: SyntaxError
+stmt s1;
+Select s1 such that Affects*(s1, "arg2")
+SyntaxError
+5000
+24 - testing case of undefined synonym in Select: SemanticError
+stmt s1;
+Select s2 such that Affects*(1, s1)
+SemanticError
+5000
+25 - testing case of undefined synonym in arg1: SemanticError
+stmt s1;
+Select s1 such that Affects*(s2, s1)
+SemanticError
+5000
+26 - testing case of undefined synonym in arg2: SemanticError
+stmt s1;
+Select s1 such that Affects*(s1, s2)
+SemanticError
+5000
