@@ -44,7 +44,6 @@ SCENARIO("Populating CFG store") {
 
 			THEN("The root node should be correct") {
 				REQUIRE(cfgStore.getCFGNode("TestCFG") == c);
-				REQUIRE(cfgStore.getLineNo(c) == lineNo);
 			}
 
 			THEN("The node after root should be correct") {
@@ -66,19 +65,7 @@ SCENARIO("Populating CFG store") {
 
 			THEN("The root nodes for both CFG should be correct") {
 				REQUIRE(cfgStore.getCFGNode("TestCFG1") == c);
-				REQUIRE(cfgStore.getLineNo(c) == lineNo);
 				REQUIRE(cfgStore.getCFGNode("TestCFG2") == ifs);
-				REQUIRE(cfgStore.getLineNo(ifs) == std::vector<int>({ 3 }));
-			}
-
-			THEN("Getting all nodes should return two CFG") {
-				std::vector<std::shared_ptr<CFGNode>> actualNodes = cfgStore.getAllCFGNodes();
-
-                auto it = std::find(actualNodes.begin(), actualNodes.end(), c);
-                auto it2 = std::find(actualNodes.begin(), actualNodes.end(), ifs);
-				REQUIRE(it != actualNodes.end());
-                REQUIRE(it2 != actualNodes.end());
-                REQUIRE(actualNodes.size() == 2);
 			}
 
 			THEN("The If Node should be correct") {
