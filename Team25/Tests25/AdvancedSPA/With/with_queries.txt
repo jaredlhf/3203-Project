@@ -1,0 +1,130 @@
+1 - procedure.procName query
+procedure p;
+Select p with p.procName = "WithTest"
+WithTest
+5000
+2 - call.procName query
+call c;
+Select c with c.procName = "Test"
+20, 26
+5000
+3 - variable.Varname query
+variable v;
+Select v with v.varName = "a"
+a
+5000
+4 - read.Varname query
+read r;
+Select r with r.varName = "y"
+3, 22
+5000
+5 - print.varName query
+print p;
+Select p with p.varName = "a"
+25, 30
+5000
+6 - constant.value query
+constant c;
+Select c with c.value = 4
+4
+5000
+7 - stmt.stmt# query
+stmt s;
+Select s with s.stmt# = 10
+10
+5000
+8 - read.stmt# query
+read r;
+Select r with r.stmt# = 21
+21
+5000
+9 - print.stmt# query
+print p;
+Select p with p.stmt# = 17
+17
+5000
+10 - call.stmt# query
+call c;
+Select c with c.stmt# = 19
+19
+5000
+11 - while.stmt# query
+while w;
+Select w with w.stmt# = 14
+14
+5000
+12 - if.stmt# query
+if ifs;
+Select ifs with ifs.stmt# = 16
+16
+5000
+13 - assign.stmt# query
+assign a;
+Select a with a.stmt# = 15
+15
+5000
+14 - using var.varName as filter
+variable v; assign a;
+Select a such that Modifies(a, v) with v.varName = "x"
+2, 6
+5000
+15 - using print.varName as filter
+print p; variable v;
+Select p such that Uses(p, v) with p.varName = "z"
+9, 18
+5000
+16 - using read.varName as filter
+read r; variable v;
+Select r such that Modifies(r, v) with r.varName = "y"
+3, 22
+5000
+17 - using call.procName as filter
+call c; procedure p;
+Select c such that Calls("WithTest", p) with c.procName = "Test"
+20, 26
+5000
+18 - using proc.procName as filter
+procedure p; variable v;
+Select v such that Uses(p, v) with p.procName = "Test"
+a, b, x
+5000
+19 - using print.varName and print.stmt#
+print p; variable v;
+Select p such that Uses(p, v) with p.varName = "z" and p.stmt# = 18
+18
+5000
+20 - wrongly associated attribute value
+print p; variable v;
+Select p such that Uses(p, v) with p.procName = "z"
+SemanticError
+5000
+21 - NAME != INTEGER
+print p; variable v;
+Select p such that Uses(p, v) with p.stmt# = v.varName
+SemanticError
+5000
+22 - syntaxError
+print p; variable v;
+Select p such that Uses(p, v) with p.stmt# = "123"
+SyntaxError
+5000
+23 - invalid with
+print p; variable v;
+Select p such that Uses(p, v) with p.stmt# = 200
+
+5000
+24 - invalid with 2
+print p; variable v;
+Select p such that Uses(p, v) with p.stmt# = 200
+
+5000
+25 - with and pattern
+assign a; variable v;
+Select v pattern a(v, "x - 1") with a.stmt# = 33
+z
+5000
+26 - selecting attributes that do not exist
+constant c;
+Select c with c.value = 20
+
+5000

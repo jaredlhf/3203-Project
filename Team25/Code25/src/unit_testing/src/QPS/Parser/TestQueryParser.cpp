@@ -822,3 +822,21 @@ TEST_CASE("Parse invalid query with one such that query and two pattern queries"
 
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
+
+TEST_CASE("System test bug 1") {
+    std::vector<std::string> queryTokens = {"assign", "a", ";", "Select", "a", "such", "that", "Modifies", "(", "a", ",", "v", ")", "where", "a.stmt#", "=", "10"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SYNTAX_ERROR, "")});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("System test bug 2") {
+    std::vector<std::string> queryTokens = {"stmt", "a", ";", "Select", "BOOLEAN", "pattern", "a", "(", "_", ",", "sum + 1", ")", "and",  "a", "(", "no", ",", "sum + 1", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SEMANTIC_ERROR, "")});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}

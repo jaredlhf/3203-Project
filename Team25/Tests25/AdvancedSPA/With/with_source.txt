@@ -1,0 +1,49 @@
+procedure WithTest {
+    call Example;
+    x = 3;
+    read y;
+    print x;
+    while (x != 0) {
+        x = x - 1;
+        z = 4;
+        read z;
+        print z;
+        if (x == y) then {
+            z = z + y;
+        } else {
+            z = z - y;
+            i = 4;
+            while (i > 0) {
+                i = i - 1;
+                if (i / 2 == 0) then {
+                    print x;
+                } else {
+                    print z;
+                }
+                call Example;
+            }
+        }
+    }
+    call Test;
+}
+
+procedure Example {
+    read x;
+    read y;
+    z = 4;
+    a = x + y - z;
+    print a;
+    call Test;
+}
+
+procedure Test {
+    a = 2;
+    b = 3;
+    if (a == 1) then {
+        print a;
+    } else {
+        print b;
+    }
+    y = x - 1;
+    z = x - 1;
+}

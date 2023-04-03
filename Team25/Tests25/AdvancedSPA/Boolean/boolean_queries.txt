@@ -1,0 +1,130 @@
+1 - simple true boolean query for such that
+stmt s;
+Select BOOLEAN such that Follows(1, 2)
+TRUE
+5000
+2 - simple false boolean query for such that
+stmt s;
+Select BOOLEAN such that Follows(1, 4)
+FALSE
+5000
+3 - simple true boolean query for pattern
+assign a;
+Select BOOLEAN pattern a(_, "sum - one")
+TRUE
+5000
+4 - simple false boolean query for pattern
+assign a;
+Select BOOLEAN pattern a(_, "SUM - one")
+FALSE
+5000
+5 - simple true boolean query for with
+stmt s;
+Select BOOLEAN with s.stmt# = 1
+TRUE
+5000
+6 - simple false boolean query for with
+stmt s;
+Select BOOLEAN with s.stmt# = 23423
+FALSE
+5000
+7 - boolean query with no clause
+stmt s;
+Select BOOLEAN
+TRUE
+5000
+8 - using boolean as a synonym name
+stmt BOOLEAN;
+Select BOOLEAN such that Follows(1, 2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+5000
+9 - small caps boolean
+stmt s;
+Select boolean such that Follows(1, 2)
+SemanticError
+5000
+10 - multiple such that true false
+stmt s;
+Select BOOLEAN such that Follows(1, 2) and Follows(1, 4)
+FALSE
+5000
+11 - multiple such that true true
+stmt s;
+Select BOOLEAN such that Follows(1, 2) and Follows(2, 3)
+TRUE
+5000
+12 - multiple such that false false
+stmt s;
+Select BOOLEAN such that Follows(1, 20) and Follows(1, 30)
+FALSE
+5000
+13 - multiple pattern true false
+assign a;
+Select BOOLEAN pattern a(_, "sum - one") and a("no", "sum - one")
+FALSE
+5000
+14 - multiple pattern true true
+assign a;
+Select BOOLEAN pattern a(_, "sum - one") and a("sum", "sum - one")
+TRUE
+5000
+15 - multiple pattern false false
+assign a;
+Select BOOLEAN pattern a(_, "sum - 1") and a("no", "sum - 1")
+FALSE
+5000
+16 - multiple with true false
+constant c; variable v;
+Select BOOLEAN with v.varName = "target" and c.value = c.value
+FALSE
+5000
+17 - multiple with true true
+assign a; variable v;
+Select BOOLEAN with v.varName = "target" and a.stmt# = 6
+TRUE
+5000
+18 - multiple with false false
+constant c; variable v;
+Select BOOLEAN with v.varName = "zero" and c.value = c.value
+FALSE
+5000
+19 - suchThat with pattern true false false
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2) with v.varName = "ten" pattern ifs("nothing", _, _)
+FALSE
+5000
+20 - suchThat with pattern false true false
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2020) with v.varName = "sum" pattern ifs("nothing", _, _)
+FALSE
+5000
+21 - suchThat with pattern false false true
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2020) with v.varName = "ten" pattern ifs("zero", _, _)
+FALSE
+5000
+22 - suchThat with pattern true true false
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2) with v.varName = "sum" pattern ifs("nothing", _, _)
+FALSE
+5000
+23 - suchThat with pattern false true true
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2020) with v.varName = "sum" pattern ifs("zero", _, _)
+FALSE
+5000
+24 - suchThat with pattern true false true
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2) with v.varName = "ten" pattern ifs("zero", _, _)
+FALSE
+5000
+25 - suchThat with pattern true true true
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 2) with v.varName = "sum" pattern ifs("zero", _, _)
+TRUE
+5000
+26 - suchThat with pattern false false false
+if ifs; variable v;
+Select BOOLEAN such that Follows(1, 12312) with v.varName = "nothing" pattern ifs("nothingagain", _, _)
+FALSE
+5000
