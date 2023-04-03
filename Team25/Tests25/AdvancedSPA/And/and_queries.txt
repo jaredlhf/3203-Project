@@ -41,7 +41,7 @@ Select s such that Parent(4, s) and Calls("AndTest", p)
 9 - ParentNext* query
 stmt s;
 Select s such that Parent(4, s) and Next*(5, s)
-6
+5,6,12,13,14
 5000
 10 - UsesModifies query
 variable v; assign a;
@@ -101,7 +101,7 @@ Select p such that Calls*("AndTest", p) and Calls*("Test", p)
 21 - Next*Next* query
 stmt s;
 Select s such that Next*(4, s) and Next*(3, s)
-
+10,11,12,13,14,15,4,5,6,7,8,9
 5000
 22 - extra and
 stmt s;
