@@ -144,7 +144,6 @@ Select s      such that    Next(s, ifs)
 1, 3, 6
 5000
 30 - Next
-Invalid Next queries return SyntaxError or SemanticError
 stmt s;
 Select s such that Next( , )
 SyntaxError
@@ -175,8 +174,9 @@ Select s such that Next(s, “”)
 SyntaxError
 5000
 36 - Next
+
 Select s1 such that Next(s1, 2)
-SyntaxError
+SemanticError
 5000
 37 - Next
 stmt s1, s2;

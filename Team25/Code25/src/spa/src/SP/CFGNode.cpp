@@ -7,7 +7,7 @@ CFGNode::CFGNode(std::vector<int> lineNo) : lineNo_(lineNo){}
 
 
 void CFGNode::findLeafNodes(std::unordered_set<std::shared_ptr<CFGNode>>& leafNodes) {
-    if (next_ == nullptr || next_->getLineNo().empty()) {
+    if (isDummyNode(next_)) {
         leafNodes.insert(shared_from_this());
         return;
     }
@@ -41,6 +41,14 @@ void CFGNode::addLineNo(int lineNo) {
 
 std::vector<int> CFGNode::getLineNo() const {
     return lineNo_;
+}
+
+bool CFGNode::isEmpty() {
+    return lineNo_.empty();
+}
+
+bool CFGNode::isDummyNode(std::shared_ptr<CFGNode> node) {
+    return (node == nullptr || node->isEmpty());
 }
 
 CFGIfNode::CFGIfNode(int lineNo) {
@@ -82,7 +90,7 @@ void CFGWhileNode::setLoopNode(std::shared_ptr<CFGNode> next) {
 }
 
 void CFGWhileNode::findLeafNodes(std::unordered_set<std::shared_ptr<CFGNode>>& leafNodes) {
-    if (next_ == nullptr || next_->getLineNo().size() == 0) {
+    if (isDummyNode(next_)) {
         leafNodes.insert(shared_from_this());
         return;
     }
