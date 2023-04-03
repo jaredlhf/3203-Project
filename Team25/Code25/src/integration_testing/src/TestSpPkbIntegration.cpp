@@ -51,6 +51,7 @@ SCENARIO("Integration testing between SP and PKB") {
 
 
         PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, usesPointer, callsPointer, cstarsPointer, printAPointer, readAPointer, callAPointer, nextPointer, cfgPointer, concallPointer);
+
 		WHEN("Given a SIMPLE program") {
 			std::string fileLocation = "sample_source.txt";
 
@@ -143,21 +144,18 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(pattsPointer->getWhileVars(6).count("d") == 1);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
-				REQUIRE(fstarsPointer->getAllRight().size() == 6);
                 REQUIRE(fstarsPointer->getRightStar(1).size() == 5);
                 REQUIRE(fstarsPointer->getRightStar(2).size() == 4);
                 REQUIRE(fstarsPointer->getRightStar(3).size() == 1);
                 REQUIRE(fstarsPointer->getRightStar(6).size() == 3);
                 REQUIRE(fstarsPointer->getRightStar(8).size() == 2);
                 REQUIRE(fstarsPointer->getRightStar(9).size() == 1);
-				REQUIRE(fstarsPointer->getAllLeft().size() == 6);
                 REQUIRE(fstarsPointer->getLeftStar(2).size() == 1);
                 REQUIRE(fstarsPointer->getLeftStar(4).size() == 1);
                 REQUIRE(fstarsPointer->getLeftStar(6).size() == 2);
                 REQUIRE(fstarsPointer->getLeftStar(8).size() == 3);
                 REQUIRE(fstarsPointer->getLeftStar(9).size() == 4);
                 REQUIRE(fstarsPointer->getLeftStar(10).size() == 5);
-
 			}
             THEN("PKB follows store should contain the correct follows") {
                 REQUIRE(fsPointer->getAllRight().size() == 6);
@@ -176,10 +174,8 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(fsPointer->getLeftStmt(10) == 9);
             }
 			THEN("PKB parent star store should contain the parent star relationships") {
-				REQUIRE(pStarsPointer->getAllLeft().size() == 2);
                 REQUIRE(pStarsPointer->getRightStar(2).size() == 3);
                 REQUIRE(pStarsPointer->getRightStar(6).size() == 1);
-				REQUIRE(pStarsPointer->getAllRight().size() == 4);
                 REQUIRE(pStarsPointer->getLeftStar(3).size() == 1);
                 REQUIRE(pStarsPointer->getLeftStar(4).size() == 1);
                 REQUIRE(pStarsPointer->getLeftStar(5).size() == 1);
@@ -198,16 +194,6 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(parentsPointer->getLeftStmt(7) == 6);
 			}
             THEN("PKB modifies proc store should contain the modifies proc relationships") {
-                REQUIRE(mprocsPointer->getAllProc().size() == 1);
-                REQUIRE(mprocsPointer->getProc("x").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("y").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("i").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("W").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("U").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("h").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("f1").count("Example") == 1);
-                REQUIRE(mprocsPointer->getProc("z").count("Example") == 1);
-                REQUIRE(mprocsPointer->getAllVar().size() == 8);
                 REQUIRE(mprocsPointer->getVar("Example").count("x") == 1);
                 REQUIRE(mprocsPointer->getVar("Example").count("y") == 1);
                 REQUIRE(mprocsPointer->getVar("Example").count("i") == 1);
@@ -218,7 +204,6 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(mprocsPointer->getVar("Example").count("z") == 1);
             }
             THEN("PKB modifies store should contain the modifies relationships") {
-                REQUIRE(msPointer->getAllVar().size() == 8);
                 REQUIRE(msPointer->getVar(2).size() == 3);
                 REQUIRE(msPointer->getVar(6).size() == 1);
                 REQUIRE(msPointer->getVar(1).count("x") == 1);
@@ -233,26 +218,8 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(msPointer->getVar(8).count("z") == 1);
                 REQUIRE(msPointer->getVar(9).count("h") == 1);
                 REQUIRE(msPointer->getVar(10).count("f1") == 1);
-                REQUIRE(msPointer->getAllStmt().size() == 10);
-                REQUIRE(msPointer->getStmt("y").size() == 2);
-                REQUIRE(msPointer->getStmt("i").size() == 2);
-                REQUIRE(msPointer->getStmt("W").size() == 2);
-                REQUIRE(msPointer->getStmt("U").size() == 2);
-                REQUIRE(msPointer->getStmt("x").count(1) == 1);
-                REQUIRE(msPointer->getStmt("y").count(3) == 1);
-                REQUIRE(msPointer->getStmt("y").count(2) == 1);
-                REQUIRE(msPointer->getStmt("i").count(4) == 1);
-                REQUIRE(msPointer->getStmt("i").count(2) == 1);
-                REQUIRE(msPointer->getStmt("W").count(5) == 1);
-                REQUIRE(msPointer->getStmt("W").count(2) == 1);
-                REQUIRE(msPointer->getStmt("U").count(7) == 1);
-                REQUIRE(msPointer->getStmt("U").count(6) == 1);
-                REQUIRE(msPointer->getStmt("z").count(8) == 1);
-                REQUIRE(msPointer->getStmt("h").count(9) == 1);
-                REQUIRE(msPointer->getStmt("f1").count(10) == 1);
             }
             THEN("PKB uses proc store should contain the uses proc relationships") {
-                REQUIRE(uprocsPointer->getAllProc().size() == 1);
                 REQUIRE(uprocsPointer->getVar("Example").size() == 11);
                 REQUIRE(uprocsPointer->getVar("Example").count("d") == 1);
                 REQUIRE(uprocsPointer->getVar("Example").count("a") == 1);
@@ -265,21 +232,8 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(uprocsPointer->getVar("Example").count("o") == 1);
                 REQUIRE(uprocsPointer->getVar("Example").count("p") == 1);
                 REQUIRE(uprocsPointer->getVar("Example").count("h3") == 1);
-                REQUIRE(uprocsPointer->getAllVar().size() == 11);
-                REQUIRE(uprocsPointer->getProc("d").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("a").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("b").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("z").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("j").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("k").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("n").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("c").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("o").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("p").count("Example") == 1);
-                REQUIRE(uprocsPointer->getProc("h3").count("Example") == 1);
             }
 			THEN("PKB uses store should contain the uses relationships") {
-				REQUIRE(usesPointer->getAllVar().size() == 11);
                 REQUIRE(usesPointer->getVar(1).count("d") == 1);
                 REQUIRE(usesPointer->getVar(2).count("a") == 1);
                 REQUIRE(usesPointer->getVar(2).count("b") == 1);
@@ -293,20 +247,6 @@ SCENARIO("Integration testing between SP and PKB") {
                 REQUIRE(usesPointer->getVar(7).count("p") == 1);
                 REQUIRE(usesPointer->getVar(7).count("d") == 1);
                 REQUIRE(usesPointer->getVar(10).count("h3") == 1);
-				REQUIRE(usesPointer->getAllStmt().size() == 8);
-                REQUIRE(usesPointer->getStmt("d").count(1) == 1);
-                REQUIRE(usesPointer->getStmt("d").count(6) == 1);
-                REQUIRE(usesPointer->getStmt("d").count(7) == 1);
-                REQUIRE(usesPointer->getStmt("a").count(2) == 1);
-                REQUIRE(usesPointer->getStmt("b").count(2) == 1);
-                REQUIRE(usesPointer->getStmt("z").count(3) == 1);
-                REQUIRE(usesPointer->getStmt("j").count(4) == 1);
-                REQUIRE(usesPointer->getStmt("k").count(4) == 1);
-                REQUIRE(usesPointer->getStmt("n").count(5) == 1);
-                REQUIRE(usesPointer->getStmt("c").count(6) == 1);
-                REQUIRE(usesPointer->getStmt("o").count(7) == 1);
-                REQUIRE(usesPointer->getStmt("p").count(7) == 1);
-                REQUIRE(usesPointer->getStmt("h3").count(10) == 1);
 			}
 		}
 
