@@ -251,7 +251,7 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
               pkbPopulator->addUses(lineNo, token);
         }
     }
-    
+
     for (auto j: whStmts) {
         visit(j, lineNo);
     }
@@ -504,11 +504,13 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }
         if(this->callingStorage.find(callingProc) != this->callingStorage.end()) {
-            for (auto i: this->callingStorage.at(calledProc)) {
-                pkbPopulator->addCallsStar(callingProc, i);
-                std::vector<std::string> procs = this->callsStorage.at(i);
-                procs.push_back(callingProc);
-                callsStorage.emplace(i,procs);
+            if (this->callingStorage.find(calledProc) != this->callingStorage.end()) {
+                for (auto i : this->callingStorage.at(calledProc)) {
+                  pkbPopulator->addCallsStar(callingProc, i);
+                  std::vector<std::string> procs = this->callsStorage.at(i);
+                  procs.push_back(callingProc);
+                  callsStorage.emplace(i, procs);
+                }
             }
         }
     }
