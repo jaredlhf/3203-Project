@@ -30,11 +30,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::creat
 // Case: Parent(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::wildcardWildcard() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-    for (int stNum : stmts) {
-        if (pkbRet->getChildren(stNum).size() > 0) {
-            return QpsTable::getDefaultOk();
-        }
+    if (pkbRet->getAllChildren().size() > 0) {
+        return QpsTable::getDefaultOk();
     }
+    
     return QpsTable::getDefaultNoMatch();
 }
 
@@ -42,11 +41,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::wildc
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::wildcardConst() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    for (int stNum : stmts) {
-        if (pkbRet->getChildren(stNum).count(std::stoi(arg2Val)) > 0) {
-            return QpsTable::getDefaultOk();
-        }
+    if (pkbRet->getAllChildren().count(std::stoi(arg2Val)) > 0) {
+        return QpsTable::getDefaultOk();
     }
+    
     return QpsTable::getDefaultNoMatch();
 }
 
@@ -72,11 +70,10 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::wildc
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStrat::constWildcard() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    for (int stNum : stmts) {
-        if (pkbRet->getParent(stNum) == std::stoi(arg1Val)) {
-            return QpsTable::getDefaultOk();
-        }
+    if (pkbRet->getAllParents().count(std::stoi(arg1Val)) > 0) {
+        return QpsTable::getDefaultOk();
     }
+
     return QpsTable::getDefaultNoMatch();
 }
 
