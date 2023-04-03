@@ -181,7 +181,7 @@ SyntaxError
 37 - NextStar
 stmt s;
 Select s1 such that Next*(s1, 2)
-SyntaxError
+SemanticError
 5000
 38 - NextStar
 stmt s1, s2;
@@ -191,10 +191,5 @@ SyntaxError
 39 - NextStar
 stmt s1, s2;
 Select s1 such that next(s1, s2)
-SyntaxError
-5000
-40 - NextStar
-stmt s1, s2;
-Select s1 such that Next* (s1, s2)
 SyntaxError
 5000
