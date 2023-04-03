@@ -98,12 +98,16 @@ public:
     std::unordered_map<std::string, std::vector<std::string>> getCallsStorage() {
         return this->callsStorage;
     }
+    std::unordered_map<std::string, std::vector<std::string>> getCallingStorage() {
+        return this->callingStorage;
+    }
     void visit(std::shared_ptr<TNode> n, int lineNo);
     void visit(std::shared_ptr<CallNode> n, int lineNo);
     void visit(std::shared_ptr<IfNode> n, int lineNo);
     void visit(std::shared_ptr<WhileNode> n, int lineNo);
 private:
     std::unordered_map<std::string, std::vector<std::string>> callsStorage;
+    std::unordered_map<std::string, std::vector<std::string>> callingStorage;
 };
 
 class PatternExtractor: public DesignExtractor {
