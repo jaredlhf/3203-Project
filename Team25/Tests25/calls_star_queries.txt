@@ -1,5 +1,195 @@
+1 - Calls*
+procedure p;
+Select p such that Calls*("First", "Second")
+First, Second, Third, Fourth, Fifth
+5000
+2 - Calls*
+procedure p;
+Select p such that Calls*("First", "First")
+
+5000
+3 - Calls*
+call cl;
+Select cl such that Calls*("Second", "Fifth")
+
+5000
+4 - Calls*
+procedure p; 
+Select p such that Calls*("First", p)
+Second, Third, Fourth, Fifth
+5000
+5 - Calls*
+procedure p; 
+Select p such that Calls*("Second", p)
+
+5000
+6 - Calls*
+call cl; procedure p;
+Select cl such that Calls*("Third", p)
+1, 2, 3, 5, 6
+5000
+7 - Calls*
+procedure p;
+Select p such that Calls*( "First", _)
+First, Second, Third, Fourth, Fifth
+5000
+8 - Calls*
+procedure p;
+Select p such that Calls*( "Second", _)
+
+5000
+9 - Calls*
+procedure p;
+Select p such that Calls*( "None", _)
+
+5000
+10 - Calls*
+procedure p, q;
+Select p such that Calls*(p, q)
+First, Third, Fourth
+5000
+11 - Calls*
+procedure p, q;
+Select q such that Calls*(p, q)
+Second, Third, Fourth, Fifth
+5000
+12 - Calls*
+procedure p;
+Select p such that Calls*(p, p)
+
+5000
+13 - Calls*
+procedure p;
+Select p such that Calls*(p, _)
+First, Third, Fourth
+5000
+14 - Calls*
+assign a; procedure p;
+Select a such that Calls*(p, _)
+4, 7
+5000
+15 - Calls*
+procedure p;
+Select p such that Calls*(p, "First")
+
+5000
 16 - Calls*
 procedure p;
 Select p such that Calls*(p, "Fifth")
+First, Third, Forth
+5000
+17 - Calls*
+procedure p, q; 
+Select p such that Calls*(q, "Second")
+First, Second, Third, Fourth, Fifth
+5000
+18 - Calls*
+procedure p;
+Select p such that Calls*(_, p)
+Second, Third, Fourth, Fifth
+5000
+19 - Calls*
+print pr; procedure p;
+Select pr such that Calls*(_, p)
+
+5000
+20 - Calls*
+procedure p;
+Select p such that Calls*(_, "First")
+
+5000
+21 - Calls*
+procedure p;
+Select p such that Calls*(_, "Second")
+First, Second, Third, Fourth, Fifth
+5000
+22 - Calls*
+procedure p;
+Select p such that Calls*(_, "Third")
+First, Second, Third, Fourth, Fifth
+5000
+23 - Calls*
+procedure p;
+Select p such that Calls*("None", _)
+
+5000
+24 - Calls*
+procedure p;
+Select p such that Calls*(_, _)
+First, Second, Third, Fourth, Fifth
+5000
+25 - Calls*
+call cl;
+Select cl such that Calls*(_, _)
+1, 2, 3, 5, 6
+5000
+26 - Calls*
+procedure Calls;
+Select Calls such that Calls*(Calls, _)
 First, Third, Fourth
+5000
+27 - Calls*
+procedure Calls, Select;
+Select Select such that Calls*(_, Calls)
+First, Second, Third, Fourth, Fifth
+5000
+28 - Calls*
+procedure that, such;
+Select such such that Calls*(such, that)
+First, Third, Fourth
+5000
+29 - Calls*
+procedure Select, that;
+Select that such that Calls*(Select, that)
+Second, Third, Fourth, Fifth
+5000
+30 - Calls*
+procedure p;
+Select p such that Calls*( , )
+SyntaxError
+5000
+31 - Calls*
+procedure p;
+Select p such that Calls*(p, )
+SyntaxError
+5000
+32 - Calls*
+procedure p;
+Select p such that Calls*( , p)
+SyntaxError
+5000
+33 - Calls*
+procedure p; call cl;
+Select p such that Calls*(cl, p)
+SemanticError
+5000
+34 - Calls*
+procedure p; call cl;
+Select p such that Calls*(p, cl)
+SemanticError
+5000
+35 - Calls*
+procedure p; assign a;
+Select p such that Calls*(p, a)
+SemanticError
+5000
+36 - Calls*
+procedure p; stmt s;
+Select p such that Calls*(p, s)
+SemanticError
+5000
+37 - Calls*
+procedure p;
+Select p such that Calls*(p, "")
+SyntaxError
+5000
+38 - Calls*
+
+Select p such that Calls*(_, _)
+SemanticError
+5000
+39 - Calls*
+procedure p;
+Select p such that calls*(_, _)
+SyntaxError
 5000

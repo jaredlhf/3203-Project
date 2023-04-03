@@ -1,189 +1,289 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>autotester</name><parsing_time_taken>44.000000</parsing_time_taken>
+<name>autotester</name><parsing_time_taken>5.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="procedure.procName query">1</id><querystr><![CDATA[procedure p; Select p with p.procName = "WithTest"]]></querystr>
-<stuans>WithTest</stuans>
-<correct>WithTest</correct>
-<time_taken>16.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">1</id><querystr><![CDATA[procedure p; Select p such that Calls*("First", "Second")]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="call.procName query">2</id><querystr><![CDATA[call c; Select c with c.procName = "Test"]]></querystr>
-<stuans>20,26</stuans>
-<correct>20,26</correct>
-<time_taken>17.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">2</id><querystr><![CDATA[procedure p; Select p such that Calls*("First", "First")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="variable.Varname query">3</id><querystr><![CDATA[variable v; Select v with v.varName = "a"]]></querystr>
-<stuans>a</stuans>
-<correct>a</correct>
-<time_taken>19.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">3</id><querystr><![CDATA[call cl; Select cl such that Calls*("Second", "Fifth")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="read.Varname query">4</id><querystr><![CDATA[read r; Select r with r.varName = "y"]]></querystr>
-<stuans>22,3</stuans>
-<correct>3,22</correct>
-<time_taken>16.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="print.varName query">5</id><querystr><![CDATA[print p; Select p with p.varName = "a"]]></querystr>
-<stuans>25,30</stuans>
-<correct>25,30</correct>
-<time_taken>19.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="constant.value query">6</id><querystr><![CDATA[constant c; Select c with c.value = 4]]></querystr>
-<stuans>4</stuans>
-<correct>4</correct>
-<time_taken>39.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="stmt.stmt# query">7</id><querystr><![CDATA[stmt s; Select s with s.stmt# = 10]]></querystr>
-<stuans>10</stuans>
-<correct>10</correct>
-<time_taken>28.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="read.stmt# query">8</id><querystr><![CDATA[read r; Select r with r.stmt# = 21]]></querystr>
-<stuans>21</stuans>
-<correct>21</correct>
-<time_taken>37.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="print.stmt# query">9</id><querystr><![CDATA[print p; Select p with p.stmt# = 17]]></querystr>
-<stuans>17</stuans>
-<correct>17</correct>
-<time_taken>40.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="call.stmt# query">10</id><querystr><![CDATA[call c; Select c with c.stmt# = 19]]></querystr>
-<stuans>19</stuans>
-<correct>19</correct>
-<time_taken>26.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="while.stmt# query">11</id><querystr><![CDATA[while w; Select w with w.stmt# = 14]]></querystr>
-<stuans>14</stuans>
-<correct>14</correct>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">4</id><querystr><![CDATA[procedure p;  Select p such that Calls*("First", p)]]></querystr>
+<stuans>Fifth,Fourth,Second,Third</stuans>
+<correct>Second,Third,Fourth,Fifth</correct>
 <time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="if.stmt# query">12</id><querystr><![CDATA[if ifs; Select ifs with ifs.stmt# = 16]]></querystr>
-<stuans>16</stuans>
-<correct>16</correct>
-<time_taken>15.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">5</id><querystr><![CDATA[procedure p;  Select p such that Calls*("Second", p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="assign.stmt# query">13</id><querystr><![CDATA[assign a; Select a with a.stmt# = 15]]></querystr>
-<stuans>15</stuans>
-<correct>15</correct>
-<time_taken>35.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">6</id><querystr><![CDATA[call cl; procedure p; Select cl such that Calls*("Third", p)]]></querystr>
+<stuans>1,2,3,5,6</stuans>
+<correct>1,2,3,5,6</correct>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using var.varName as filter">14</id><querystr><![CDATA[variable v; assign a; Select a such that Modifies(a, v) with v.varName = "x"]]></querystr>
-<stuans>2,6</stuans>
-<correct>2,6</correct>
-<time_taken>20.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">7</id><querystr><![CDATA[procedure p; Select p such that Calls*( "First", _)]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using print.varName as filter">15</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.varName = "z"]]></querystr>
-<stuans>18,9</stuans>
-<correct>9,18</correct>
-<time_taken>26.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">8</id><querystr><![CDATA[procedure p; Select p such that Calls*( "Second", _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using read.varName as filter">16</id><querystr><![CDATA[read r; variable v; Select r such that Modifies(r, v) with r.varName = "y"]]></querystr>
-<stuans>22,3</stuans>
-<correct>3,22</correct>
-<time_taken>23.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">9</id><querystr><![CDATA[procedure p; Select p such that Calls*( "None", _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Calls="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using call.procName as filter">17</id><querystr><![CDATA[call c; procedure p; Select c such that Calls("WithTest", p) with c.procName = "Test"]]></querystr>
-<stuans>20,26</stuans>
-<correct>20,26</correct>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">10</id><querystr><![CDATA[procedure p, q; Select p such that Calls*(p, q)]]></querystr>
+<stuans>First,Fourth,Third</stuans>
+<correct>First,Third,Fourth</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">11</id><querystr><![CDATA[procedure p, q; Select q such that Calls*(p, q)]]></querystr>
+<stuans>Fifth,Fourth,Second,Third</stuans>
+<correct>Second,Third,Fourth,Fifth</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">12</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
 <time_taken>22.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using proc.procName as filter">18</id><querystr><![CDATA[procedure p; variable v; Select v such that Uses(p, v) with p.procName = "Test"]]></querystr>
-<stuans>a,b,x</stuans>
-<correct>a,b,x</correct>
-<time_taken>18.000000</time_taken>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">13</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, _)]]></querystr>
+<stuans>First,Fourth,Third</stuans>
+<correct>First,Third,Fourth</correct>
+<time_taken>15.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="using print.varName and print.stmt#">19</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.varName = "z" and p.stmt# = 18]]></querystr>
-<stuans>18</stuans>
-<correct>18</correct>
-<time_taken>25.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="wrongly associated attribute value">20</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.procName = "z"]]></querystr>
-<stuans>SemanticError</stuans>
-<correct>SemanticError</correct>
-<time_taken>19.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="NAME != INTEGER">21</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.stmt# = v.varName]]></querystr>
-<stuans>SemanticError</stuans>
-<correct>SemanticError</correct>
-<time_taken>20.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="syntaxError">22</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.stmt# = "123"]]></querystr>
-<stuans>SyntaxError</stuans>
-<correct>SyntaxError</correct>
-<time_taken>18.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="invalid with">23</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.stmt# = 200]]></querystr>
-<stuans></stuans>
-<correct></correct>
-<time_taken>43.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="invalid with 2">24</id><querystr><![CDATA[print p; variable v; Select p such that Uses(p, v) with p.stmt# = 200]]></querystr>
-<stuans></stuans>
-<correct></correct>
-<time_taken>19.000000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Pattern="1" With="1" CondNum="3" RelNum="0" comment="with and pattern">25</id><querystr><![CDATA[assign a; variable v; Select v pattern a(v, "x - 1") with a.stmt# = 33]]></querystr>
-<stuans>z</stuans>
-<correct>z</correct>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">14</id><querystr><![CDATA[assign a; procedure p; Select a such that Calls*(p, _)]]></querystr>
+<stuans>4,7</stuans>
+<correct>4,7</correct>
 <time_taken>35.000000</time_taken>
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="selecting attributes that do not exist">26</id><querystr><![CDATA[constant c; Select c with c.value = 20]]></querystr>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">15</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, "First")]]></querystr>
 <stuans></stuans>
 <correct></correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">16</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, "Fifth")]]></querystr>
+<stuans>First,Third</stuans>
+<correct>First,Third,Forth</correct>
+<time_taken>13.000000</time_taken>
+<failed>
+<missing>Forth</missing>
+<additional></additional>
+<summary>
+<expected>3</expected>
+<matched>2</matched>
+<missing>1</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">17</id><querystr><![CDATA[procedure p, q;  Select p such that Calls*(q, "Second")]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">18</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, p)]]></querystr>
+<stuans>Fifth,Fourth,Second,Third</stuans>
+<correct>Second,Third,Fourth,Fifth</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">19</id><querystr><![CDATA[print pr; procedure p; Select pr such that Calls*(_, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">20</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, "First")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">21</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, "Second")]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">22</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, "Third")]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">23</id><querystr><![CDATA[procedure p; Select p such that Calls*("None", _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="Calls*">24</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, _)]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="Calls*">25</id><querystr><![CDATA[call cl; Select cl such that Calls*(_, _)]]></querystr>
+<stuans>1,2,3,5,6</stuans>
+<correct>1,2,3,5,6</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="Calls*">26</id><querystr><![CDATA[procedure Calls; Select Calls such that Calls*(Calls, _)]]></querystr>
+<stuans>First,Fourth,Third</stuans>
+<correct>First,Third,Fourth</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="Calls*">27</id><querystr><![CDATA[procedure Calls, Select; Select Select such that Calls*(_, Calls)]]></querystr>
+<stuans>Fifth,First,Fourth,Second,Third</stuans>
+<correct>First,Second,Third,Fourth,Fifth</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="2" CondNum="4" RelNum="1" comment="Calls*">28</id><querystr><![CDATA[procedure that, such; Select such such that Calls*(such, that)]]></querystr>
+<stuans>First,Fourth,Third</stuans>
+<correct>First,Third,Fourth</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">29</id><querystr><![CDATA[procedure Select, that; Select that such that Calls*(Select, that)]]></querystr>
+<stuans>Fifth,Fourth,Second,Third</stuans>
+<correct>Second,Third,Fourth,Fifth</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">30</id><querystr><![CDATA[procedure p; Select p such that Calls*( , )]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct>SyntaxError</correct>
 <time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">31</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, )]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct>SyntaxError</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">32</id><querystr><![CDATA[procedure p; Select p such that Calls*( , p)]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct>SyntaxError</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">33</id><querystr><![CDATA[procedure p; call cl; Select p such that Calls*(cl, p)]]></querystr>
+<stuans>SemanticError</stuans>
+<correct>SemanticError</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">34</id><querystr><![CDATA[procedure p; call cl; Select p such that Calls*(p, cl)]]></querystr>
+<stuans>SemanticError</stuans>
+<correct>SemanticError</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">35</id><querystr><![CDATA[procedure p; assign a; Select p such that Calls*(p, a)]]></querystr>
+<stuans>SemanticError</stuans>
+<correct>SemanticError</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">36</id><querystr><![CDATA[procedure p; stmt s; Select p such that Calls*(p, s)]]></querystr>
+<stuans>SemanticError</stuans>
+<correct>SemanticError</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">37</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, "")]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct>SyntaxError</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="Calls*">38</id><querystr><![CDATA[ Select p such that Calls*(_, _)]]></querystr>
+<stuans>SemanticError</stuans>
+<correct>SemanticError</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="Calls*">39</id><querystr><![CDATA[procedure p; Select p such that calls*(_, _)]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct>SyntaxError</correct>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 </queries>
