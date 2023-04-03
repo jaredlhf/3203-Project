@@ -73,7 +73,7 @@ SCENARIO("Integration testing between SP and PKB") {
 			file << fileInput;
 			file.close();
 			sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
-			THEN("PKB variable store should contain the correct variables") {
+			THEN("PKB variable store should contain the correct variables") { 
 				REQUIRE(vsPointer->getAllVar().size() == 18);
 				REQUIRE(vsPointer->getAllVar().count("x") == 1);
 				REQUIRE(vsPointer->getAllVar().count("d") == 1);
@@ -90,20 +90,20 @@ SCENARIO("Integration testing between SP and PKB") {
 				REQUIRE(vsPointer->getAllVar().count("U") == 1);
 				REQUIRE(vsPointer->getAllVar().count("o") == 1);
 				REQUIRE(vsPointer->getAllVar().count("p") == 1);
-				REQUIRE(vsPointer->getAllVar().count("z") == 1);
 				REQUIRE(vsPointer->getAllVar().count("h") == 1);
 				REQUIRE(vsPointer->getAllVar().count("f1") == 1);
 				REQUIRE(vsPointer->getAllVar().count("h3") == 1);
 			}
-			THEN("PKB constants store should contain the correct constants") {
+			THEN("PKB constants store should contain the correct constants") { 
 				REQUIRE(csPointer->getAllConst().size() == 2);
 				REQUIRE(csPointer->getAllConst().count(2) == 1);
 				REQUIRE(csPointer->getAllConst().count(232141) == 1);
 			}
-			THEN("PKB follows store should contain the correct follows") {
-				REQUIRE(fsPointer->getAllRight().size() == 6);
-				REQUIRE(fsPointer->getAllLeft().size() == 6);
-			}
+            THEN("PKB procedure store should contain the correct procedures") { 
+                REQUIRE(psPointer->getAllProc().size() == 1);
+                REQUIRE(psPointer->getProc(1) == "Example");
+                REQUIRE(psPointer->getStmt("Example").size() == 10);
+            }
 			THEN("PKB statment store should contain the correct statement") {
 				REQUIRE(ssPointer->getAllStmt("assign").size() == 7);
 				REQUIRE(ssPointer->getAllStmt("if").size() == 1);
@@ -112,24 +112,95 @@ SCENARIO("Integration testing between SP and PKB") {
 			}
 			THEN("PKB pattern store should contain the correct pattern statements") {
 				REQUIRE(pattsPointer->LhsAssignStoreSize() == 7);
+                REQUIRE(pattsPointer->getAssignLhs("x").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("y").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("i").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("W").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("U").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("h").size() == 1);
+                REQUIRE(pattsPointer->getAssignLhs("f1").size() == 1);
 				REQUIRE(pattsPointer->RhsAssignStoreSize() == 7);
+                REQUIRE(pattsPointer->getAssignRhs(1) == "2+d");
+                REQUIRE(pattsPointer->getAssignRhs(3) == "z");
+                REQUIRE(pattsPointer->getAssignRhs(4) == "j+k");
+                REQUIRE(pattsPointer->getAssignRhs(5) == "n");
+                REQUIRE(pattsPointer->getAssignRhs(7) == "o+p+d");
+                REQUIRE(pattsPointer->getAssignRhs(9) == "232141");
+                REQUIRE(pattsPointer->getAssignRhs(10) == "h3");
+                REQUIRE(pattsPointer->ifStatementStoreSize() == 1);
+                REQUIRE(pattsPointer->getIfStatements("a").size() == 1);
+                REQUIRE(pattsPointer->getIfStatements("b").size() == 1);
+                REQUIRE(pattsPointer->ifStatementVarStoreSize() == 2);
+                REQUIRE(pattsPointer->getIfVars(2).size() == 2);
+                REQUIRE(pattsPointer->getIfVars(2).count("a") == 1);
+                REQUIRE(pattsPointer->getIfVars(2).count("b") == 1);
+                REQUIRE(pattsPointer->whileStatementStoreSize() == 1);
+                REQUIRE(pattsPointer->getWhileStatements("c").size() == 1);
+                REQUIRE(pattsPointer->getWhileStatements("d").size() == 1);
+                REQUIRE(pattsPointer->whileStatementVarStoreSize() == 2);
+                REQUIRE(pattsPointer->getWhileVars(6).size() == 2);
+                REQUIRE(pattsPointer->getWhileVars(6).count("c") == 1);
+                REQUIRE(pattsPointer->getWhileVars(6).count("d") == 1);
 			}
 			THEN("PKB follows star store should contain the follows star statements") {
 				REQUIRE(fstarsPointer->getAllRight().size() == 6);
+                REQUIRE(fstarsPointer->getRightStar(1).size() == 5);
+                REQUIRE(fstarsPointer->getRightStar(2).size() == 4);
+                REQUIRE(fstarsPointer->getRightStar(3).size() == 1);
+                REQUIRE(fstarsPointer->getRightStar(6).size() == 3);
+                REQUIRE(fstarsPointer->getRightStar(8).size() == 2);
+                REQUIRE(fstarsPointer->getRightStar(9).size() == 1);
 				REQUIRE(fstarsPointer->getAllLeft().size() == 6);
+                REQUIRE(fstarsPointer->getLeftStar(2).size() == 1);
+                REQUIRE(fstarsPointer->getLeftStar(4).size() == 1);
+                REQUIRE(fstarsPointer->getLeftStar(6).size() == 2);
+                REQUIRE(fstarsPointer->getLeftStar(8).size() == 3);
+                REQUIRE(fstarsPointer->getLeftStar(9).size() == 4);
+                REQUIRE(fstarsPointer->getLeftStar(10).size() == 5);
+
 			}
-			THEN("PKB modifies store should contain the modifies relationships") {
-				REQUIRE(msPointer->getAllVar().size() == 8);
-				REQUIRE(msPointer->getAllStmt().size() == 10);
-			}
+            THEN("PKB follows store should contain the correct follows") {
+                REQUIRE(fsPointer->getAllRight().size() == 6);
+                REQUIRE(fsPointer->getRightStmt(1) == 2);
+                REQUIRE(fsPointer->getRightStmt(2) == 6);
+                REQUIRE(fsPointer->getRightStmt(3) == 4);
+                REQUIRE(fsPointer->getRightStmt(6) == 8);
+                REQUIRE(fsPointer->getRightStmt(8) == 9);
+                REQUIRE(fsPointer->getRightStmt(9) == 10);
+                REQUIRE(fsPointer->getAllLeft().size() == 6);
+                REQUIRE(fsPointer->getLeftStmt(2) == 1);
+                REQUIRE(fsPointer->getLeftStmt(4) == 3);
+                REQUIRE(fsPointer->getLeftStmt(6) == 2);                
+                REQUIRE(fsPointer->getLeftStmt(8) == 6);
+                REQUIRE(fsPointer->getLeftStmt(9) == 8);
+                REQUIRE(fsPointer->getLeftStmt(10) == 9);
+            }
 			THEN("PKB parent star store should contain the parent star relationships") {
 				REQUIRE(pStarsPointer->getAllLeft().size() == 2);
+                REQUIRE(pStarsPointer->getRightStar(2).size() == 3);
+                REQUIRE(pStarsPointer->getRightStar(6).size() == 1);
 				REQUIRE(pStarsPointer->getAllRight().size() == 4);
+                REQUIRE(pStarsPointer->getLeftStar(3).size() == 1);
+                REQUIRE(pStarsPointer->getLeftStar(4).size() == 1);
+                REQUIRE(pStarsPointer->getLeftStar(5).size() == 1);
+                REQUIRE(pStarsPointer->getLeftStar(7).size() == 1);
 			}
-			THEN("PKB parent star store should contain the parent star relationships") {
+			THEN("PKB parent store should contain the parent relationships") { 
 				REQUIRE(parentsPointer->getAllLeft().size() == 2);
+                REQUIRE(parentsPointer->getRightStmt(2).count(3) == 1);
+                REQUIRE(parentsPointer->getRightStmt(2).count(4) == 1);
+                REQUIRE(parentsPointer->getRightStmt(2).count(5) == 1);
+                REQUIRE(parentsPointer->getRightStmt(6).count(7) == 1);
 				REQUIRE(parentsPointer->getAllRight().size() == 4);
+                REQUIRE(parentsPointer->getLeftStmt(3) == 2);
+                REQUIRE(parentsPointer->getLeftStmt(4) == 2);
+                REQUIRE(parentsPointer->getLeftStmt(5) == 2);
+                REQUIRE(parentsPointer->getLeftStmt(7) == 6);
 			}
+            THEN("PKB modifies store should contain the modifies relationships") {
+                REQUIRE(msPointer->getAllVar().size() == 8);
+                REQUIRE(msPointer->getAllStmt().size() == 10);
+            }
 			THEN("PKB uses store should contain the uses relationships") {
 				REQUIRE(usesPointer->getAllVar().size() == 11);
 				REQUIRE(usesPointer->getAllStmt().size() == 8);
