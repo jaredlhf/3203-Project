@@ -1,0 +1,140 @@
+1 - stmtSuchThat patternAssign nameWith
+stmt s; assign a; variable v;
+Select v such that Follows(7, s) pattern a(v, "input + one") with v.varName = "input"
+input
+5000
+2 - variableSuchThat patternAssign nameWith
+assign a; variable v; call c;
+Select v such that Modifies(c, v) pattern a(v, "input + one") with v.varName = "input"
+
+5000
+3 - procedureSuchThat patternAssign nameWith
+assign a; variable v; procedure p;
+Select v such that Calls("multipleClauses", p) pattern a(v, "input + one") with v.varName = "input"
+input
+5000
+4 - stmtSuchThat patternWhile nameWith
+stmt s; while w; variable v;
+Select v such that Follows(7, s) pattern w(v, _) with v.varName = "one"
+one
+5000
+5 - variableSuchThat patternWhile nameWith
+while w; variable v; call c;
+Select v such that Uses(c, v) pattern w(v, _) with v.varName = "input"
+input
+5000
+6 - procedureSuchThat patternWhile nameWith
+stmt s; while w; variable v; procedure p;
+Select v such that Calls("multipleClauses", p) pattern w(v, _) with v.varName = "input"
+input
+5000
+7 - stmtSuchThat patternIf nameWith
+stmt s; if ifs; variable v;
+Select v such that Follows(7, s) pattern ifs(v, _, _) with v.varName = "input"
+input
+5000
+8 - variableSuchThat patternIf nameWith
+if ifs; variable v; call c; read r;
+Select v such that Uses(c, v) pattern ifs(v, _, _) with v.varName = r.varName
+input
+5000
+9 - procedureSuchThat patternIf nameWith
+stmt s; if ifs; variable v; procedure p;
+Select v such that Calls("multipleClauses", p) pattern ifs("input", _, _) with v.varName = "empty"
+empty
+5000
+10 - stmtSuchThat patternAssign intWith
+stmt s; assign a; variable v;
+Select s such that Follows(7, s) pattern a(v, "input + one") with s.stmt# = 9
+9
+5000
+11 - variableSuchThat patternAssign intWith
+assign a; variable v; call c;
+Select a such that Modifies(c, v) pattern a(v, "input + one") with a.stmt# = 9
+
+5000
+12 - procedureSuchThat patternAssign intWith
+assign a; variable v; procedure p;
+Select a such that Calls("multipleClauses", p) pattern a(v, "one - 1") with a.stmt# = 8
+8
+5000
+13 - stmtSuchThat patternWhile intWith
+while w; variable v; stmt s;
+Select w such that Follows(7, s) pattern w(_, _) with w.stmt# = 7
+7
+5000
+14 - variableSuchThat patternWhile intWith
+while w; variable v; call c;
+Select w such that Uses(c, v) pattern w("final", _) with w.stmt# = 12
+12
+5000
+15 - procedureSuchThat patternWhile intWith
+stmt s; while w; variable v; procedure p;
+Select v such that Calls("multipleClauses", p) pattern w(v, _) with w.stmt# = s.stmt#
+input, target, one, final
+5000
+16 - stmtSuchThat patternIf intWith
+stmt s; if ifs; variable v;
+Select ifs such that Follows(7, s) pattern ifs(v, _, _) with ifs.stmt# = 3
+3
+5000
+17 - variableSuchThat patternIf intWith
+if ifs; variable v; call c;
+Select v such that Uses(c, v) pattern ifs("not", _, _) with 3 = ifs.stmt#
+
+5000
+18 - procedureSuchThat patternIf intWith
+if ifs; variable v; procedure p;
+Select ifs such that Calls("multipleClauses", p) pattern ifs("input", _, _) with 1 = 2
+
+5000
+19 - procedureSuchThat patternIf intWith BOOLEAN false
+if ifs; variable v; procedure p;
+Select BOOLEAN such that Calls("multipleClauses", p) pattern ifs("input", _, _) with 1 = 2
+FALSE
+5000
+20 - variableSuchThat patternAssign nameWith BOOLEAN true
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with v.varName = "final"
+TRUE
+5000
+21 - syntax error in clause 1
+assign a; variable v; call c;
+Select BOOLEAN such that Modifie(c, v) pattern a(v, "input") with v.varName = "final"
+SyntaxError
+5000
+22 - syntax error in clause 2
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(c, v) pattern av, "input") with v.varName = "final"
+SyntaxError
+5000
+23 - syntax error in clause 3
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with v.varName != "final"
+SyntaxError
+5000
+24 - swap order
+assign a; variable v; call c;
+Select v such that Modifies(c, v) with v.varName = "final" pattern a(v, "input")
+final
+5000
+25 - very long query
+assign a; variable v;
+Select v pattern a(v, _) such that Uses(a, v) and Modifies(a, v) pattern a(v, "final + 1") with v.varName = "final"
+final
+5000
+26 - semantic error in clause 1
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(z, v) pattern a(v, "input") with v.varName = "final"
+SemanticError
+5000
+27 - semantic error in clause 2
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(c, v) pattern z(v, "input") with v.varName = "final"
+SemanticError
+5000
+28 - semantic error in clause 3
+assign a; variable v; call c;
+Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with z.varName = "final"
+SemanticError
+5000

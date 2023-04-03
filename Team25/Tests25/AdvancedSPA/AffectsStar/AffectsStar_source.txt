@@ -1,0 +1,14 @@
+procedure basicAffectsStar {
+  x = 1 + z;
+  intermid = 1 + nothing + z;
+  f = 2 + x + intermid;
+  intermid = 2 + intermid;
+  w = f + 2;
+  f = 1 + 2;
+  y = intermid + 1;
+  t = f + 1;
+  w = x + 1;
+  p = w;
+  read x;
+  read intermid;
+}

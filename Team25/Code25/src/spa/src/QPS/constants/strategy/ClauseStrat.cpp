@@ -10,6 +10,8 @@
 #include "CallsStStrat.h"
 #include "NextStrat.h"
 #include "NextStStrat.h"
+#include "AffectsStrat.h"
+#include "AffectsStStrat.h"
 #include "WithStrat.h"
 
 
@@ -55,6 +57,12 @@ std::shared_ptr<ClauseStrat> ClauseStrat::create(std::string clauseKeyword, std:
 	}
 	if (clauseKeyword == Constants::NEXTST) {
 		return std::make_shared<NextStStrat>(NextStStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::AFFECTS) {
+		return std::make_shared<AffectsStrat>(AffectsStrat(clauseKeyword, arg1, arg2, pkbRet));
+	}
+	if (clauseKeyword == Constants::AFFECTSST) {
+		return std::make_shared<AffectsStStrat>(AffectsStStrat(clauseKeyword, arg1, arg2, pkbRet));
 	}
 	if (clauseKeyword == Constants::WITH) {
 		return std::make_shared<WithStrat>(WithStrat(clauseKeyword, arg1, arg2, pkbRet));

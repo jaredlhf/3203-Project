@@ -1,0 +1,16 @@
+procedure Boolean {
+    read target;
+    read one;
+    read two;
+    read three;
+    read zero;
+    sum = zero;
+    while (sum < target) {
+        if (sum % two == zero) then {
+            sum = sum - one;
+        } else {
+            sum = sum + three;
+        }
+        print sum;
+    }
+}

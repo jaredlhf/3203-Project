@@ -1,0 +1,32 @@
+procedure AndTest {
+    left = 0;
+    right = 100;
+    read target;
+    while (left < right) {
+        mid = left + (right - left) / 2;
+        if (mid == target) then {
+            print mid;
+            left = right + 1;
+        } else {
+            if (mid < target) then {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        print left;
+        print right;
+        print mid;
+    }
+    call Test;
+}
+
+procedure Test {
+    read n;
+    sum = 1;
+    while (n > 0) {
+        sum = sum * n;
+        n = n - 1;
+    }
+    print sum;
+}

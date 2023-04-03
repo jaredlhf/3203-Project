@@ -93,6 +93,12 @@ add_library(spa ${srcs} ${headers}
 "src/QPS/constants/strategy/NextStStrat.cpp"
 "src/QPS/constants/strategy/WithStrat.cpp" 
 "src/QPS/constants/strategy/WithStrat.h"
+"src/QPS/constants/strategy/AffectsStrat.cpp" 
+"src/QPS/constants/strategy/AffectsStrat.h"
+"src/QPS/constants/strategy/AffectsStStrat.cpp" 
+"src/QPS/constants/strategy/AffectsStStrat.h" 
+"src/QPS/utils/QueryUtils.h" 
+"src/QPS/utils/QueryUtils.cpp"
 "src/QPS/utils/AttrUtils.cpp" 
 "src/QPS/utils/AttrUtils.h"
 "src/QPS/utils/ParserUtils.cpp"
@@ -122,7 +128,7 @@ src/SP/ParserDTO.h
 src/SP/CFGNode.h
 "src/PKB/CallsStarStore.h"
 "src/PKB/CallsStarStore.cpp"
-src/SP/CFGNode.cpp )
+src/SP/CFGNode.cpp)
 
 
 # this makes the headers accessible for other projects which uses spa lib
