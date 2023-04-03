@@ -1,14 +1,14 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>autotester</name><parsing_time_taken>5.000000</parsing_time_taken>
+<name>autotester</name><parsing_time_taken>24.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
-<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Calls*">1</id><querystr><![CDATA[procedure p; Select p such that Calls*("First", "Second")]]></querystr>
-<stuans>Fifth,First,Fourth,Second,Third</stuans>
-<correct>First,Second,Third,Fourth,Fifth</correct>
-<time_taken>10.000000</time_taken>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">1</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(2,6)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -138,10 +138,10 @@
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Calls*">20</id><querystr><![CDATA[procedure p; Select p such that Calls*(_, "First")]]></querystr>
-<stuans></stuans>
-<correct></correct>
-<time_taken>11.000000</time_taken>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure p calling q invalid relationship: INVALID">19</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(20, 27)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>

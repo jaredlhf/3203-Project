@@ -16,8 +16,5 @@ public:
 
 	void addCFGNode(std::string procName, std::shared_ptr<CFGNode> node);
 	std::shared_ptr<CFGNode> getCFGNode(std::string procName);
-	std::vector<std::shared_ptr<CFGNode>> getAllCFGNodes();
-
 	std::vector<std::shared_ptr<CFGNode>> getNextNodes(std::shared_ptr<CFGNode> currNode);
-	std::vector<int> getLineNo(std::shared_ptr<CFGNode> currNode) const;
 };

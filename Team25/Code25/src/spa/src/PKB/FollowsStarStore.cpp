@@ -34,20 +34,5 @@ std::unordered_set<int> FollowsStarStore::getRightStar(int leftStmt) {
 	}
 }
 
-std::unordered_set<int> FollowsStarStore::getAllRight() {
-	std::unordered_set<int> rightStmtList;
-	for (const auto& [key, value] : rightStmtStar) {
-		rightStmtList.insert(value.begin(), value.end());
-	}
-	return rightStmtList;
-}
-
-std::unordered_set<int> FollowsStarStore::getAllLeft() {
-	std::unordered_set<int> leftStmtList;
-	for (const auto& [key, value] : leftStmtStar) {
-		leftStmtList.insert(value.begin(), value.end());
-	}
-	return leftStmtList;
-}
 
 
