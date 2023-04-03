@@ -76,7 +76,7 @@ Select p such that Calls*(p, "First")
 16 - Calls*
 procedure p;
 Select p such that Calls*(p, "Fifth")
-First, Third, Forth
+First, Third, Fourth
 5000
 17 - Calls*
 procedure p, q; 
