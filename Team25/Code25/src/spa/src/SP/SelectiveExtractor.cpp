@@ -97,11 +97,12 @@ void SelectiveExtractor::visitProgramTree(std::shared_ptr<TNode> root) {
     }
 }
 
-void SelectiveExtractor::visitCFG(std::shared_ptr<CFGNode> root) {
+void SelectiveExtractor::visitCFG(std::shared_ptr<CFGNode> root, std::string procName) {
     std::set<std::shared_ptr<CFGNode>> visited;
     std::stack<std::shared_ptr<CFGNode>> stack;
     if (root != nullptr) {
         stack.push(root);
+        pkbPopulator->addCFGNode(procName, root);
     }
 
     while (!stack.empty()) {

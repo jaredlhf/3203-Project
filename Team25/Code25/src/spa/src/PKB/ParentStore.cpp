@@ -15,7 +15,7 @@ void ParentStore::addParent(int leftStmt, int rightStmt) {
 }
 
 int ParentStore::getLeftStmt(int rightStmt) {
-	if (hasRightStmt(rightStmt)) {
+	if (leftStmtStore.find(rightStmt) != leftStmtStore.end()) {
 		return leftStmtStore[rightStmt];
 	}
 	else {
@@ -24,7 +24,7 @@ int ParentStore::getLeftStmt(int rightStmt) {
 }
 
 std::unordered_set<int> ParentStore::getRightStmt(int parent) {
-	if (hasLeftStmt(parent)) {
+	if (rightStmtStore.find(parent) != rightStmtStore.end()) {
 		return rightStmtStore[parent];
 	}
 	else {
@@ -32,23 +32,6 @@ std::unordered_set<int> ParentStore::getRightStmt(int parent) {
 	}
 }
 
-bool ParentStore::hasLeftStmt(int lineNum) {
-	if (rightStmtStore.find(lineNum) != rightStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool ParentStore::hasRightStmt(int lineNum) {
-	if (leftStmtStore.find(lineNum) != leftStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<int> ParentStore::getAllLeft() {
 	std::unordered_set<int> leftStmtList;

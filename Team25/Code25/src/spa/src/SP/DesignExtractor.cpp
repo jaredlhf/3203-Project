@@ -206,15 +206,18 @@ void UsesExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
     std::vector<std::shared_ptr<StmtNode>> elseStmts = ifs->getElseLst()->getStatements();
     std::string expr = ifs->getCondExpr();
     std::vector<std::string> tokens = t.tokenize(expr);
-
-    for (const auto token: tokens) {
+    std::vector<std::string> validTokens;
+    for(const auto token:tokens) {
         if (Token::isValidName(token)) {
-            if (lineNo == SPConstants::PROCEDURE) {
-                pkbPopulator->addUsesProc(ifs->getProc(), token);
-            } else {
-                pkbPopulator->addUses(lineNo, token);
-            }
+            validTokens.push_back(token);
         }
+    }
+    for (const auto token: validTokens) {
+          if (lineNo == SPConstants::PROCEDURE) {
+              pkbPopulator->addUsesProc(ifs->getProc(), token);
+          } else {
+              pkbPopulator->addUses(lineNo, token);
+          }
     }
 
     for (auto i: ifStmts) {
@@ -235,16 +238,20 @@ void UsesExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     std::vector<std::shared_ptr<StmtNode>> whStmts = wh->getStmtLst()->getStatements();
     std::string expr = wh->getCondExpr();
     std::vector<std::string> tokens = t.tokenize(expr);
-
-    for (const auto token: tokens) {
+    std::vector<std::string> validTokens;
+    for(const auto token:tokens) {
         if (Token::isValidName(token)) {
-            if (lineNo == SPConstants::PROCEDURE) {
-                pkbPopulator->addUsesProc(wh->getProc(), token);
-            } else {
-                pkbPopulator->addUses(lineNo, token);
-            }
+              validTokens.push_back(token);
         }
     }
+    for (const auto token: validTokens) {
+        if (lineNo == SPConstants::PROCEDURE) {
+              pkbPopulator->addUsesProc(wh->getProc(), token);
+        } else {
+              pkbPopulator->addUses(lineNo, token);
+        }
+    }
+
     for (auto j: whStmts) {
         visit(j, lineNo);
     }
@@ -452,6 +459,15 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     std::vector<std::string> keys;
     std::string callingProc = c->getProc();
     std::string calledProc = c->getVar();
+    if (this->callingStorage.find(callingProc) == this->callingStorage.end()) {
+        std::vector<std::string> procs;
+        procs.push_back(calledProc);
+        this->callingStorage.emplace(callingProc,procs);
+    } else {
+        std::vector<std::string> procs = this->callingStorage.at(callingProc);
+        procs.push_back(calledProc);
+        this->callingStorage.emplace(callingProc,procs);
+    }
     // cyclic call ( A calls A)
     if (callingProc == calledProc) {
         throw std::invalid_argument("Cyclic Call in SPA Program");
@@ -487,7 +503,24 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             }
             pkbPopulator->addCallsStar(callingProc,calledProc);
         }
+        if(this->callingStorage.find(callingProc) != this->callingStorage.end()) {
+            if (this->callingStorage.find(calledProc) != this->callingStorage.end()) {
+                for (auto i : this->callingStorage.at(calledProc)) {
+                  pkbPopulator->addCallsStar(callingProc, i);
+                  std::vector<std::string> procs = this->callsStorage.at(i);
+                  procs.push_back(callingProc);
+                  callsStorage.emplace(i, procs);
+                }
+            }
+        }
     }
+//    for (auto const &pair: callsStorage) {
+//        std::cout << "{" << pair.first << ": " ;
+//        for(auto i : pair.second) {
+//            std::cout<<i<<endl;
+//        }
+//    }
+//    std::cout<<"END"<<endl;
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -583,9 +616,6 @@ void AttributeExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     } else if (isWhileNode(n)) {
         std::shared_ptr<WhileNode> wh = std::dynamic_pointer_cast<WhileNode>(n);
         AttributeExtractor::visit(wh, lineNo);
-    } else if (isProcedureNode(n)) {
-        std::shared_ptr<ProcedureNode> proc = std::dynamic_pointer_cast<ProcedureNode>(n);
-        AttributeExtractor::visit(proc, lineNo);
     }
 }
 
@@ -610,10 +640,6 @@ void AttributeExtractor::visit(std::shared_ptr<ReadNode> r, int lineNo) {
     }
     pkbPopulator->addVar(r->getVar());
     pkbPopulator->addReadAttr(r->getVar(), lineNo);
-}
-
-void AttributeExtractor::visit(std::shared_ptr<ProcedureNode> p, int lineNo) {
-    pkbPopulator->addProc(p->getProc());
 }
 
 void AttributeExtractor::visit(std::shared_ptr<AssignNode> a, int lineNo) {
@@ -651,7 +677,7 @@ void ProcedureCallsExtractor::visit(std::shared_ptr<CallNode> c,int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = c->getLine();
     }
-    std::cout<<"calls contain: " << lineNo << " " << c->getVar() <<endl;
+//    std::cout<<"calls contain: " << lineNo << " " << c->getVar() <<endl;
     pkbPopulator->addContainCalls(lineNo,c->getVar());
 }
 
@@ -685,24 +711,30 @@ void ProcedureCallsExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
 
 void StatementExtractor::visit(std::shared_ptr<AssignNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::ASSIGN_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<ReadNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::READ_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<PrintNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::PRINT_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<IfNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::IF_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<WhileNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::WHILE_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }
 
 void StatementExtractor::visit(std::shared_ptr<CallNode> n, int lineNo) {
     pkbPopulator->addStmt(SPConstants::CALL_TYPE, n->getLine());
+    pkbPopulator->addProc(n->getProc(),n->getLine());
 }

@@ -13,7 +13,7 @@ void NextStore::addNext(int leftStmt, int rightStmt) {
 }
 
 std::unordered_set<int> NextStore::getLeftStmt(int rightStmt) {
-	if (hasRightStmt(rightStmt)) {
+	if (leftStmtStore.find(rightStmt) != leftStmtStore.end()) {
 		return leftStmtStore[rightStmt];
 	}
 	else {
@@ -22,7 +22,7 @@ std::unordered_set<int> NextStore::getLeftStmt(int rightStmt) {
 }
 
 std::unordered_set<int> NextStore::getRightStmt(int leftStmt) {
-	if (hasLeftStmt(leftStmt)) {
+	if (rightStmtStore.find(leftStmt) != rightStmtStore.end()) {
 		return rightStmtStore[leftStmt];
 	}
 	else {
@@ -30,23 +30,6 @@ std::unordered_set<int> NextStore::getRightStmt(int leftStmt) {
 	}
 }
 
-bool NextStore::hasLeftStmt(int lineNum) {
-	if (rightStmtStore.find(lineNum) != rightStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool NextStore::hasRightStmt(int lineNum) {
-	if (leftStmtStore.find(lineNum) != leftStmtStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<int> NextStore::getAllLeft() {
 	std::unordered_set<int> leftStmtList;
@@ -65,35 +48,56 @@ std::unordered_set<int> NextStore::getAllRight() {
 	return rightStmtList;
 }
 
-
 std::unordered_set<int> NextStore::getRightStmtStar(int leftStmt) {
 	std::unordered_set<int> rightStmtList;
-	std::unordered_set<int> temp1 = getRightStmt(leftStmt);
+	std::shared_ptr<std::unordered_set<int>> visited = std::make_shared<std::unordered_set<int>>();
+	std::unordered_set<int> initialValues = getRightStmt(leftStmt);
+	std::vector<int> visitList;
+	visitList.insert(visitList.end(), initialValues.begin(), initialValues.end());
+	rightStmtList.insert(initialValues.begin(), initialValues.end());
 
-	for (const auto& value : temp1) {
-		bool hasVisited = std::find(rightStmtList.begin(), rightStmtList.end(), value) != rightStmtList.end();
-		rightStmtList.insert(value);
-		if (hasLeftStmt(value) 
-			&& !hasVisited) {
-			std::unordered_set<int> temp2 = getRightStmtStar(value);
-			rightStmtList.insert(temp2.begin(), temp2.end());
+	while (visitList.size() > 0) {
+		int curr = visitList[0];
+		visitList.erase(visitList.begin());
+		rightStmtList.insert(curr);
+		if (std::find(visited->begin(), visited->end(), curr) == visited->end()) {
+			std::unordered_set<int> results = getRightStmt(curr);
+			for (int res : results) {
+				if (std::find(visited->begin(), visited->end(), curr) == visited->end()) {
+					visitList.push_back(res);
+				}
+			}
+
+			rightStmtList.insert(results.begin(), results.end());
 		}
+		visited->insert(curr);
 	}
 	return rightStmtList;
 }
 
 std::unordered_set<int> NextStore::getLeftStmtStar(int rightStmt) {
 	std::unordered_set<int> leftStmtList;
-	std::unordered_set<int> temp1 = getLeftStmt(rightStmt);
+	std::shared_ptr<std::unordered_set<int>> visited = std::make_shared<std::unordered_set<int>>();
+	std::unordered_set<int> initialValues = getLeftStmt(rightStmt);
+	std::vector<int> visitList;
+	visitList.insert(visitList.end(), initialValues.begin(), initialValues.end());
+	leftStmtList.insert(initialValues.begin(), initialValues.end());
 
-	for (const auto& value : temp1) {
-		bool hasVisited = std::find(leftStmtList.begin(), leftStmtList.end(), value) != leftStmtList.end();
-		leftStmtList.insert(value);
-		if (hasRightStmt(value)
-			&& !hasVisited) {
-			std::unordered_set<int> temp2 = getLeftStmtStar(value);
-			leftStmtList.insert(temp2.begin(), temp2.end());
+	while (visitList.size() > 0) {
+		int curr = visitList[0];
+		visitList.erase(visitList.begin());
+		leftStmtList.insert(curr);
+		if (std::find(visited->begin(), visited->end(), curr) == visited->end()) {
+			std::unordered_set<int> results = getLeftStmt(curr);
+			for (int res : results) {
+				if (std::find(visited->begin(), visited->end(), curr) == visited->end()) {
+					visitList.push_back(res);
+				}
+			}
+
+			leftStmtList.insert(results.begin(), results.end());
 		}
+		visited->insert(curr);
 	}
 	return leftStmtList;
 }

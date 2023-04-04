@@ -78,7 +78,7 @@ SCENARIO("Mocking behavior of PatternClause::resolve") {
 			csPointer->addConst(64);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
+			psPointer->addProc("main", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);

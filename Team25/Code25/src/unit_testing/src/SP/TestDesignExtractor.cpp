@@ -331,24 +331,24 @@ SCENARIO("ExtractingNode") {
             CallNode c1 = CallNode(2, "compute", "test");
             shared_ptr<CallNode> call1 = make_shared<CallNode>(c1);
             a.visit(call1,2);
-            THEN("getAllAttr() should return compute") {
-                REQUIRE(callAPointer->getAllAttr() == std::unordered_set<std::string>({"compute"}));
+            THEN("getAttr() should return compute") {
+                REQUIRE(callAPointer->getAttr(2) == "compute");
             }
         }
         WHEN("a read node is visited") {
             ReadNode r = ReadNode(3, "book", "test");
             shared_ptr<ReadNode> read = make_shared<ReadNode>(r);
             a.visit(read,3);
-            THEN("getAllAttr() should return compute") {
-                REQUIRE(readAPointer->getAllAttr() == std::unordered_set<std::string>({"book"}));
+            THEN("getAttr() should return compute") {
+                REQUIRE(readAPointer->getAttr(3) == "book");
             }
         }
         WHEN("a print node is visited") {
             PrintNode p = PrintNode(3, "ans", "test");
             shared_ptr<PrintNode> print = make_shared<PrintNode>(p);
             a.visit(print,4);
-            THEN("getAllAttr() should return compute") {
-                REQUIRE(printAPointer->getAllAttr() == std::unordered_set<std::string>({"ans"}));
+            THEN("getAttr() should return compute") {
+                REQUIRE(printAPointer->getAttr(4) =="ans");
             }
         }
         WHEN("a if node is visited") {

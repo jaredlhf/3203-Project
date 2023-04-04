@@ -9,13 +9,12 @@ SCENARIO("Populating attribute stores") {
 		ReadAttribute readA;
 		CallAttribute callA;
 
-		THEN("They should start empty") {
-			REQUIRE(printA.getAllAttr().size() == 0);
-			REQUIRE(readA.getAllAttr().size() == 0);
-			REQUIRE(callA.getAllAttr().size() == 0);
-			REQUIRE(printA.getAllStmt().size() == 0);
-			REQUIRE(readA.getAllStmt().size() == 0);
-			REQUIRE(callA.getAllStmt().size() == 0);
+		WHEN("No attributes are added") {
+			THEN("Get methods should return empty") {
+				REQUIRE(printA.getAttr(1) == std::string());
+				REQUIRE(readA.getAttr(2) == std::string());
+				REQUIRE(callA.getAttr(3) == std::string());
+			}
 		}
 
 		WHEN("One value is added to them") {
@@ -25,17 +24,14 @@ SCENARIO("Populating attribute stores") {
 
 			THEN("print attribute store should return correct values") {
 				REQUIRE(printA.getAttr(1) == "x");
-				REQUIRE(printA.getStmt("x") == std::unordered_set<int>({ 1 }));
 			}
 
 			THEN("read attribute store should return correct values") {
 				REQUIRE(readA.getAttr(2) == "y");
-				REQUIRE(readA.getStmt("y") == std::unordered_set<int>({ 2 }));
 			}
 
 			THEN("call attribute store should return correct values") {
 				REQUIRE(callA.getAttr(3) == "sampleProc");
-				REQUIRE(callA.getStmt("sampleProc") == std::unordered_set<int>({ 3 }));
 			}
 		}
 
@@ -49,33 +45,27 @@ SCENARIO("Populating attribute stores") {
 
 			THEN("print attribute store should return correct values") {
 				REQUIRE(printA.getAttr(1) == "x");
-				REQUIRE(printA.getStmt("x") == std::unordered_set<int>({ 1, 4 }));
 			}
 
 			THEN("read attribute store should return correct values") {
 				REQUIRE(readA.getAttr(2) == "y");
-				REQUIRE(readA.getStmt("y") == std::unordered_set<int>({ 2, 5 }));
 			}
 
 			THEN("call attribute store should return correct values") {
 				REQUIRE(callA.getAttr(3) == "sampleProc");
-				REQUIRE(callA.getStmt("sampleProc") == std::unordered_set<int>({ 3, 6 }));
 			}
 
 			WHEN("Non-existent value is retrieved") {
 				THEN("print get methods should return empty") {
 					REQUIRE(printA.getAttr(2) == std::string());
-					REQUIRE(printA.getStmt("z") == std::unordered_set<int>());
 				}
 
 				THEN("read get methods should return empty") {
 					REQUIRE(readA.getAttr(3) == std::string());
-					REQUIRE(readA.getStmt("z") == std::unordered_set<int>());
 				}
 
 				THEN("call get methods should return empty") {
 					REQUIRE(callA.getAttr(4) == std::string());
-					REQUIRE(callA.getStmt("z") == std::unordered_set<int>());
 				}
 			}
 		}

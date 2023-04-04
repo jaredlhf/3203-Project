@@ -275,10 +275,10 @@ ParserResponse QueryParser::parseQueryTokens(std::vector<std::string> tokens) {
     bool isSuchThat = false;
     bool isPattern = false;
     bool isWith = false;
-
+    std::unordered_set<std::string> validClauseTokens = {"and", "with", "such", "that", "pattern"};
     while (ptr < tokenLength) {
         // invalid semicolon token after declarations
-        if (tokens[ptr] == DECLARATION_END_TOKEN) {
+        if (validClauseTokens.find(tokens[ptr]) == validClauseTokens.end() && !isSuchThat && !isWith && !isPattern) {
             return generateSyntaxErrorResponse();
         }
         

@@ -113,45 +113,6 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getWhileVars(2) == std::unordered_set<std::string>{});
 				REQUIRE(pkbRet.getWhileVars(3) == std::unordered_set<std::string>{});
 			}
-			THEN("Getting all follower star should return an empty set") {
-				REQUIRE(pkbRet.getAllFollowerStar().size() == 0);
-			}
-			THEN("Getting all followee star should return an empty set") {
-				REQUIRE(pkbRet.getAllFolloweeStar().size() == 0);
-			}
-			THEN("Getting all modifies statement should return an empty set") {
-				REQUIRE(pkbRet.getAllModStmt().size() == 0);
-			}
-			THEN("Getting all modifies variable should return an empty set") {
-				REQUIRE(pkbRet.getAllModVar().size() == 0);
-			}
-			THEN("Getting all modifiesProc procedure should return an empty set") {
-				REQUIRE(pkbRet.getAllModPProc().size() == 0);
-			}
-			THEN("Getting all modifiesProc variable should return an empty set") {
-				REQUIRE(pkbRet.getAllModPVar().size() == 0);
-			}
-			THEN("Getting all parents star parents should return an empty set") {
-				REQUIRE(pkbRet.getAllParentStar().size() == 0);
-			}
-			THEN("Getting all parents star children should return an empty set") {
-				REQUIRE(pkbRet.getAllChildrenStar().size() == 0);
-			}
-			THEN("Getting all parent should return an empty set") {
-				REQUIRE(pkbRet.getAllParents().size() == 0);
-			}
-			THEN("Getting all uses statment should return an empty set") {
-				REQUIRE(pkbRet.getAllUsesStmt().size() == 0);
-			}
-			THEN("Getting all uses variable should return an empty set") {
-				REQUIRE(pkbRet.getAllUsesVar().size() == 0);
-			}
-			THEN("Getting all usesProc variable should return an empty set") {
-				REQUIRE(pkbRet.getAllUsesPVar().size() == 0);
-			}
-			THEN("Getting all usesProc procedure should return an empty set") {
-				REQUIRE(pkbRet.getAllUsesPProc().size() == 0);
-			}
 			THEN("Getting all left calls should return an empty set") {
 				REQUIRE(pkbRet.getAllLeftCall().size() == 0);
 			}
@@ -164,28 +125,9 @@ SCENARIO("Working version of PkbRetriever") {
 			THEN("Getting all right calls star should return an empty set") {
 				REQUIRE(pkbRet.getAllRightCallStar().size() == 0);
 			}
-			THEN("Getting all print attributes and print statements should return an empty set") {
-				REQUIRE(pkbRet.getAllPrintAttr().size() == 0);
-				REQUIRE(pkbRet.getAllPrintStmt().size() == 0);
-			}
-			THEN("Getting all read attributes and read statements should return an empty set") {
-				REQUIRE(pkbRet.getAllReadAttr().size() == 0);
-				REQUIRE(pkbRet.getAllReadStmt().size() == 0);
-			}
-			THEN("Getting all call attributes and call statements should return an empty set") {
-				REQUIRE(pkbRet.getAllCallAttr().size() == 0);
-				REQUIRE(pkbRet.getAllCallStmt().size() == 0);
-			}
 			THEN("Getting all next statements should return an empty set") {
 				REQUIRE(pkbRet.getAllLeftNext().size() == 0);
 				REQUIRE(pkbRet.getAllRightNext().size() == 0);
-			}
-			THEN("Getting all cfg nodes should return an empty set") {
-				REQUIRE(pkbRet.getAllCFGNodes().size() == 0);
-			}
-			THEN("Getting all container calls should return an empty set") {
-				REQUIRE(pkbRet.getAllConProc().size() == 0);
-				REQUIRE(pkbRet.getAllConStmt().size() == 0);
 			}
 
 		}
@@ -219,7 +161,7 @@ SCENARIO("Working version of PkbRetriever") {
 			vsPointer -> addVar("x");
 			csPointer -> addConst(1);
 			fsPointer -> addFollows(1, 2);
-			psPointer -> addProc("testProc");
+			psPointer -> addProc("testProc", 2);
 			ssPointer -> addStmt(Constants::ASSIGN, 1);
 			pattsPointer->addAssignLhs("x", 1);
 			pattsPointer->addAssignLhs("y", 2);
@@ -277,6 +219,7 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getAllFollowers().count(2) == 1);
 			}
 			THEN("Getting a procedures should return a non empty set") {
+				REQUIRE(pkbRet.getProc(2) == "testProc");
 				REQUIRE(pkbRet.getAllProc().size() == 1);
 				REQUIRE(pkbRet.getAllProc().count("testProc") == 1);
 			}
@@ -337,63 +280,35 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getFollowerStar(1).size() == 2);
 				REQUIRE(pkbRet.getFollowerStar(2).size() == 1);
 				REQUIRE(pkbRet.getFollowerStar(3).size() == 0);
-				REQUIRE(pkbRet.getAllFollowerStar().size() == 2);
 			}
 			THEN("Getting a followee star should return a non empty set") {
 				REQUIRE(pkbRet.getFolloweeStar(1).size() == 0);
 				REQUIRE(pkbRet.getFolloweeStar(2).size() == 1);
 				REQUIRE(pkbRet.getFolloweeStar(3).size() == 2);
-				REQUIRE(pkbRet.getAllFolloweeStar().size() == 2);
-			}
-			THEN("Getting a modifies statement should return a non empty set") {
-				REQUIRE(pkbRet.getModStmt("x").size() == 1);
-				REQUIRE(pkbRet.getAllModStmt().size() == 1);
 			}
 			THEN("Getting a modifies variable should return a non empty set") {
 				REQUIRE(pkbRet.getModVar(1).size() == 1);
-				REQUIRE(pkbRet.getAllModVar().size() == 1);
-			}
-			THEN("Getting a modifiesProc procedure should return a non empty set") {
-				REQUIRE(pkbRet.getModPProc("x").size() == 1);
-				REQUIRE(pkbRet.getAllModPProc().size() == 1);
 			}
 			THEN("Getting a modifiesProc variable should return a non empty set") {
 				REQUIRE(pkbRet.getModPVar("sampleProc").size() == 1);
-				REQUIRE(pkbRet.getAllModPVar().size() == 1);
 			}
 			THEN("Getting parents star parent should return a non empty set") {
 				REQUIRE(pkbRet.getParentStar(1).size() == 0);
 				REQUIRE(pkbRet.getParentStar(2).size() == 1);
 				REQUIRE(pkbRet.getParentStar(3).size() == 1);
-				REQUIRE(pkbRet.getAllParentStar().size() == 1);
 			}
 			THEN("Getting parents star parent should return a non empty set") {
 				REQUIRE(pkbRet.getChildrenStar(1).size() == 2);
 				REQUIRE(pkbRet.getChildrenStar(2).size() == 0);
 				REQUIRE(pkbRet.getChildrenStar(3).size() == 0);
-				REQUIRE(pkbRet.getAllChildrenStar().size() == 2);
 			}
 			THEN("Getting parent should return a child") {
 				REQUIRE(pkbRet.getParent(1) == -1);
 				REQUIRE(pkbRet.getParent(2) == 1);
 				REQUIRE(pkbRet.getParent(3) == -1);
-				REQUIRE(pkbRet.getAllParents().size() == 1);
-			}
-			THEN("Getting a uses statment should return an empty set") {
-				REQUIRE(pkbRet.getUsesStmt("x").size() == 1);
-				REQUIRE(pkbRet.getAllUsesStmt().size() == 1);
-			}
-			THEN("Getting a uses variable should return an empty set") {
-				REQUIRE(pkbRet.getUsesVar(1).size() == 1);
-				REQUIRE(pkbRet.getAllUsesVar().size() == 1);
-			}
-			THEN("Getting a usesProc procedure should return a non empty set") {
-				REQUIRE(pkbRet.getUsesPProc("x").size() == 1);
-				REQUIRE(pkbRet.getAllUsesPProc().size() == 1);
 			}
 			THEN("Getting a usesProc variable should return a non empty set") {
 				REQUIRE(pkbRet.getUsesPVar("sampleProc").size() == 1);
-				REQUIRE(pkbRet.getAllUsesPVar().size() == 1);
 			}
 			THEN("Getting a call should return a non empty set") {
 				REQUIRE(pkbRet.getLeftCall("proc2").size() == 1);
@@ -411,21 +326,12 @@ SCENARIO("Working version of PkbRetriever") {
 			}
 			THEN("Getting print attribute should return a non empty set") {
 				REQUIRE(pkbRet.getPrintAttr(1).size() == 1);
-				REQUIRE(pkbRet.getPrintStmt("x").size() == 1);
-				REQUIRE(pkbRet.getAllPrintAttr().size() == 1);
-				REQUIRE(pkbRet.getAllPrintStmt().size() == 1);
 			}
 			THEN("Getting read attribute should return a non empty set") {
 				REQUIRE(pkbRet.getReadAttr(2).size() == 1);
-				REQUIRE(pkbRet.getReadStmt("y").size() == 1);
-				REQUIRE(pkbRet.getAllReadAttr().size() == 1);
-				REQUIRE(pkbRet.getAllReadStmt().size() == 1);
 			}
 			THEN("Getting call attribute should return a non empty set") {
 				REQUIRE(pkbRet.getCallAttr(3) == "sampleProc");
-				REQUIRE(pkbRet.getCallStmt("sampleProc") == std::unordered_set<int>({ 3 }));
-				REQUIRE(pkbRet.getAllCallAttr().size() == 1);
-				REQUIRE(pkbRet.getAllCallStmt().size() == 1);
 			}
 			THEN("Getting next statement should return a non empty set") {
 				REQUIRE(pkbRet.getLeftNext(2).size() == 1);
@@ -436,12 +342,7 @@ SCENARIO("Working version of PkbRetriever") {
 				REQUIRE(pkbRet.getRightNextStar(1).size() == 2);
 			}
 			THEN("Getting cfg node should return a non empty set") {
-				REQUIRE(pkbRet.getAllCFGNodes().size() == 1);
 				REQUIRE(pkbRet.getCFGNode("sampleProc") == c);
-			}
-			THEN("Getting container call should return a non empty set") {
-				REQUIRE(pkbRet.getAllConProc().size() == 2);
-				REQUIRE(pkbRet.getAllConStmt().size() == 1);
 			}
 		}
 	}

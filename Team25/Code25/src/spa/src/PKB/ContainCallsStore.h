@@ -11,17 +11,11 @@
 class ContainCallsStore : public ProcStmtStore {
 private:
 	std::unordered_map<int, std::unordered_set<std::string>> procStore;
-	std::unordered_map<std::string, std::unordered_set<int>> stmtStore;
 
 public:
 	ContainCallsStore();
-	ContainCallsStore(std::unordered_map<int, std::unordered_set<std::string>> procStore, std::unordered_map<std::string, std::unordered_set<int>> stmtStore);
+	ContainCallsStore(std::unordered_map<int, std::unordered_set<std::string>> procStore);
 
 	void addContainCall(int lineNum, std::string procName);
 	std::unordered_set<std::string> getProc(int lineNum) override;
-	std::unordered_set<int> getStmt(std::string procName) override;
-	bool hasProc(std::string procName) override;
-	bool hasStmt(int lineNum) override;
-	std::unordered_set<std::string> getAllProc() override;
-	std::unordered_set<int> getAllStmt() override;
 };

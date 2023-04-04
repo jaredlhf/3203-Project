@@ -17,6 +17,8 @@ public:
     void setNextNodes(std::shared_ptr<CFGNode> next);
     std::vector<int> getLineNo() const;
     void addLineNo(int lineNo);
+    bool isEmpty();
+    bool isDummyNode(std::shared_ptr<CFGNode> node);
 
 protected:
     std::vector<int> lineNo_;

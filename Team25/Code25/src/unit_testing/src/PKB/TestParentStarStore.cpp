@@ -6,9 +6,11 @@ SCENARIO("Populating parent star store") {
 	GIVEN("New instance of parent star store") {
 		ParentStarStore parentStar;
 
-		THEN("It should start empty") {
-			REQUIRE(parentStar.getAllLeft().size() == 0);
-			REQUIRE(parentStar.getAllRight().size() == 0);
+		WHEN("No parent star is added") {
+			THEN("Get method should return empty") {
+				REQUIRE(parentStar.getLeftStar(1) == std::unordered_set<int>());
+				REQUIRE(parentStar.getRightStar(1) == std::unordered_set<int>());
+			}
 		}
 
 		WHEN("One parent star is added") {
@@ -44,11 +46,6 @@ SCENARIO("Populating parent star store") {
 			parentStar.addParentStar(2, 3);
 			parentStar.addParentStar(2, 4);
 			parentStar.addParentStar(3, 4);
-
-			THEN("There should be 3 Parents and 3 Children") {
-				REQUIRE(parentStar.getAllLeft() == std::unordered_set<int>({ 1, 2, 3 }));
-				REQUIRE(parentStar.getAllRight() == std::unordered_set<int>({ 2, 3, 4 }));
-			}
 
 			THEN("Parents and Children should be mapped correctly") {
 				REQUIRE(parentStar.getRightStar(1) == std::unordered_set<int>({ 2, 3, 4 }));

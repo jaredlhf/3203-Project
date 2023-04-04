@@ -1,0 +1,93 @@
+procedure main {
+  x = 1;
+  y = 2;
+  a = 1 + x;
+  b = y + 4;
+  read x;
+  x = 2;
+  c = x + y;
+}
+procedure whileLoops  {
+  x = 1;
+  while (x < 1) {
+    x = 2;
+  }
+  y = x + 1;
+}
+procedure ifAllCovered  {
+  x = 1;
+  if (x == 1) then {
+    x = 1;
+  } else {
+    x = 2;
+  }
+  y = x + 1;
+}
+procedure ifOneNotCovered  {
+  x = 1;
+  if (x == 1) then {
+    y = 1;
+  } else {
+    x = 2;
+  }
+  y = x + 1;
+}
+procedure hasCalls1Path {
+  x = 1;
+  call ifOneNotCovered;
+  y = x + 1;
+}
+procedure hasCallsAllPaths {
+  x = 1;
+  z = 2;
+  call ifAllCovered;
+  y = x + 1;
+  w = z;
+  i = z;
+}
+procedure whileItself {
+  while (1 == 1) {
+    x = x + 1;
+  }
+}
+procedure whileWithAnother {
+  while (1 == 1) {
+    x = 1;
+    x = x + 1;
+  }
+}
+procedure whileWithAnotherBelow {
+  while (1 == 1) {
+    x = x + 1;
+    x = 1;
+    x = 1;
+  }
+}
+procedure whileWithInnerIf {
+  while (1 == 1) {
+    x = x + 1;
+    x = 1;
+    x = 1;
+    if (x == 1) then {
+      x = 2;
+    } else {
+      y = 1;
+    }
+  }
+}
+procedure IfElseBranch {
+    if (x == 1) then {
+        x = x + 1;
+    } else {
+        x = x + 1;
+    }
+}
+procedure WhileIfElseBranch {
+  while (x == x) {
+    if (x == 1) then {
+        x = x + 1;
+    } else {
+        x = x + 1;
+    }
+  }
+}

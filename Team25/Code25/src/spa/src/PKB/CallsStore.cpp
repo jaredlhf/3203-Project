@@ -14,7 +14,7 @@ void CallsStore::addCalls(std::string leftProc, std::string rightProc) {
 }
 
 std::unordered_set<std::string> CallsStore::getLeftProc(std::string rightProc) {
-	if (hasRightProc(rightProc)) {
+	if (leftProcStore.find(rightProc) != leftProcStore.end()) {
 		return leftProcStore[rightProc];
 	}
 	else {
@@ -23,7 +23,7 @@ std::unordered_set<std::string> CallsStore::getLeftProc(std::string rightProc) {
 }
 
 std::unordered_set<std::string> CallsStore::getRightProc(std::string leftProc) {
-	if (hasLeftProc(leftProc)) {
+	if (rightProcStore.find(leftProc) != rightProcStore.end()) {
 		return rightProcStore[leftProc];
 	}
 	else {
@@ -31,23 +31,6 @@ std::unordered_set<std::string> CallsStore::getRightProc(std::string leftProc) {
 	}
 }
 
-bool CallsStore::hasLeftProc(std::string procName) {
-	if (rightProcStore.find(procName) != rightProcStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool CallsStore::hasRightProc(std::string procName) {
-	if (leftProcStore.find(procName) != leftProcStore.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 std::unordered_set<std::string> CallsStore::getAllLeft() {
 	std::unordered_set<std::string> leftProcList;

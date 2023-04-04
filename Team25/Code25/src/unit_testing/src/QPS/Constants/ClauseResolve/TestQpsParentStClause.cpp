@@ -65,7 +65,7 @@ SCENARIO("Mocking behavior of ParentStClause::resolve") {
 			csPointer->addConst(1);
 
 			// Mock procedures appearing in the SIMPLE program
-			psPointer->addProc("main");
+			psPointer->addProc("main", 1);
 
 			// Mock statements appearing in the SIMPLE program
 			ssPointer->addStmt(Constants::ASSIGN, 1);
@@ -90,6 +90,19 @@ SCENARIO("Mocking behavior of ParentStClause::resolve") {
 			pStarsPointer->addParentStar(4, 6);
 			pStarsPointer->addParentStar(4, 7);
 			pStarsPointer->addParentStar(8, 9);
+
+			// Mock parent relationship in SIMPLE program
+			parentsPointer->addParent(2, 3);
+			parentsPointer->addParent(2, 4);
+			parentsPointer->addParent(2, 5);
+			parentsPointer->addParent(2, 6);
+			parentsPointer->addParent(2, 7);
+			parentsPointer->addParent(2, 8);
+			parentsPointer->addParent(2, 9);
+			parentsPointer->addParent(4, 5);
+			parentsPointer->addParent(4, 6);
+			parentsPointer->addParent(4, 7);
+			parentsPointer->addParent(8, 9);
 
 			THEN("When ParentStClause resolves wrong syntax, it should return the right results") {
 				std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> expectedClauseRes =

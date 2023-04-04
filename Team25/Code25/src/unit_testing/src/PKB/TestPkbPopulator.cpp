@@ -39,7 +39,7 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<FollowsStarStore> fstarsPointer = std::make_shared<FollowsStarStore>(fstars);
 			std::shared_ptr<ModifiesProcStore> mprocsPointer = std::make_shared<ModifiesProcStore>(mprocs);
 			std::shared_ptr<ModifiesStore> msPointer = std::make_shared<ModifiesStore>(ms);
-			std::shared_ptr<ParentStarStore> pStarsPointer = std::make_shared<ParentStarStore>(pStars);
+			std::shared_ptr<ParentStarStore> pstarsPointer = std::make_shared<ParentStarStore>(pStars);
 			std::shared_ptr<ParentStore> parentsPointer = std::make_shared<ParentStore>(parents);
 			std::shared_ptr<UsesProcStore> uprocsPointer = std::make_shared<UsesProcStore>(uprocs);
 			std::shared_ptr<UsesStore> usesPointer = std::make_shared<UsesStore>(uses);
@@ -53,28 +53,28 @@ SCENARIO("Working version of PkbPopulator") {
 			std::shared_ptr<ContainCallsStore> concallPointer = std::make_shared<ContainCallsStore>(concall);
 
 			PkbPopulator pkbPop(vsPointer, csPointer, fsPointer, psPointer, ssPointer, pattsPointer, 
-				fstarsPointer, mprocsPointer, msPointer, pStarsPointer, parentsPointer, uprocsPointer, 
+				fstarsPointer, mprocsPointer, msPointer, pstarsPointer, parentsPointer, uprocsPointer, 
 				usesPointer, callsPointer, cStarsPointer, printAPointer, readAPointer, callAPointer, nextPointer,
 				cfgPointer, concallPointer);
 			THEN("Adding one variable should increase the variable store size by 1") {
-				REQUIRE(vsPointer->size() == 0);
+				REQUIRE(vsPointer->getAllVar().size() == 0);
 				pkbPop.addVar("x");
-				REQUIRE(vsPointer->size() == 1);
+				REQUIRE(vsPointer->getAllVar().size() == 1);
 			}
 			THEN("Adding one constant should increase the constant store size by 1") {
-				REQUIRE(csPointer->size() == 0);
+				REQUIRE(csPointer->getAllConst().size() == 0);
 				pkbPop.addConst(10000);
-				REQUIRE(csPointer->size() == 1);
+				REQUIRE(csPointer->getAllConst().size() == 1);
 			}
 			THEN("Adding one procedure should increase the procedure store size by 1") {
-				REQUIRE(psPointer->size() == 0);
-				pkbPop.addProc("sampleProc");
-				REQUIRE(psPointer->size() == 1);
+				REQUIRE(psPointer->getAllProc().size() == 0);
+				pkbPop.addProc("sampleProc", 2);
+				REQUIRE(psPointer->getAllProc().size() == 1);
 			}
 			THEN("Adding one statement should increase the statement store size by 1") {
-				REQUIRE(ssPointer->size() == 0);
+				REQUIRE(ssPointer->getAllStmt(Constants::ASSIGN).size() == 0);
 				pkbPop.addStmt(Constants::ASSIGN, 2);
-				REQUIRE(ssPointer->size() == 1);
+				REQUIRE(ssPointer->getAllStmt(Constants::ASSIGN).size() == 1);
 			}
 			THEN("Adding one follows relationship should increase the follows store size by 1") {
 				REQUIRE(fsPointer->getAllRight().size() == 0);
@@ -113,33 +113,25 @@ SCENARIO("Working version of PkbPopulator") {
 				pkbPop.addWhileStatementVar("y", 2);
 				REQUIRE(pattsPointer->whileStatementVarStoreSize() == 1);
 			}
-			THEN("Adding one follows star should increase the follows star store size by 1") {
-				REQUIRE(fstarsPointer->getAllRight().size() == 0);
-				REQUIRE(fstarsPointer->getAllLeft().size() == 0);
+			THEN("Adding one follows star should return the correct value") {
 				pkbPop.addFollowsStar(1, std::unordered_set<int>({1, 2, 3}));
-				REQUIRE(fstarsPointer->getAllRight().size() == 3);
-				REQUIRE(fstarsPointer->getAllLeft().size() == 1);
+				REQUIRE(fstarsPointer->getLeftStar(1) == std::unordered_set<int>({ 1 }));
+				REQUIRE(fstarsPointer->getLeftStar(2) == std::unordered_set<int>({ 1 }));
+				REQUIRE(fstarsPointer->getLeftStar(3) == std::unordered_set<int>({ 1 }));
+				REQUIRE(fstarsPointer->getRightStar(1) == std::unordered_set<int>({ 1, 2, 3 }));
 			}
-			THEN("Adding one modifes procedure should increase the modifiesProc store size by 1") {
-				REQUIRE(mprocsPointer->getAllProc().size() == 0);
-				REQUIRE(mprocsPointer->getAllVar().size() == 0);
+			THEN("Adding one modifes procedure should return the correct value") {
 				pkbPop.addModifiesProc("sampleProc", "x");
-				REQUIRE(mprocsPointer->getAllProc().size() == 1);
-				REQUIRE(mprocsPointer->getAllVar().size() == 1);
+				REQUIRE(mprocsPointer->getVar("sampleProc") == std::unordered_set<std::string>({ "x" }));
 			}
-			THEN("Adding one modifes should increase the modifies store size by 1") {
-				REQUIRE(msPointer->getAllStmt().size() == 0);
-				REQUIRE(msPointer->getAllVar().size() == 0);
+			THEN("Adding one modifes should return the correct value") {
 				pkbPop.addModifies(1, "x");
-				REQUIRE(msPointer->getAllStmt().size() == 1);
-				REQUIRE(msPointer->getAllVar().size() == 1);
+				REQUIRE(msPointer->getVar(1) == std::unordered_set<std::string>({ "x" }));
 			}
-			THEN("Adding one parentsStar should increase the parentsStar store size by 1") {
-				REQUIRE(pStarsPointer->getAllLeft().size() == 0);
-				REQUIRE(pStarsPointer->getAllRight().size() == 0);
+			THEN("Adding one parentsStar should return the correct value") {
 				pkbPop.addParentStar(1, 1);
-				REQUIRE(pStarsPointer->getAllLeft().size() == 1);
-				REQUIRE(pStarsPointer->getAllRight().size() == 1);
+				REQUIRE(pstarsPointer->getLeftStar(1) == std::unordered_set<int>({ 1 }));
+				REQUIRE(pstarsPointer->getRightStar(1) == std::unordered_set<int>({ 1 }));
 			}
 			THEN("Adding one parent should increase the parent store size by 1") {
 				REQUIRE(parentsPointer->getAllLeft().size() == 0);
@@ -148,19 +140,13 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(parentsPointer->getAllLeft().size() == 1);
 				REQUIRE(parentsPointer->getAllRight().size() == 1);
 			}
-			THEN("Adding one uses procedure should increase the usesProc store size by 1") {
-				REQUIRE(uprocsPointer->getAllProc().size() == 0);
-				REQUIRE(uprocsPointer->getAllVar().size() == 0);
+			THEN("Adding one uses procedure should return the correct value") {
 				pkbPop.addUsesProc("sampleProc", "y");
-				REQUIRE(uprocsPointer->getAllProc().size() == 1);
-				REQUIRE(uprocsPointer->getAllVar().size() == 1);
+				REQUIRE(uprocsPointer->getVar("sampleProc") == std::unordered_set<std::string>({ "y" }));
 			}
-			THEN("Adding one uses should increase the uses store size by 1") {
-				REQUIRE(usesPointer->getAllStmt().size() == 0);
-				REQUIRE(usesPointer->getAllVar().size() == 0);
+			THEN("Adding one uses should return the correct value") {
 				pkbPop.addUses(1, "y");
-				REQUIRE(usesPointer->getAllStmt().size() == 1);
-				REQUIRE(usesPointer->getAllVar().size() == 1);
+				REQUIRE(usesPointer->getVar(1) == std::unordered_set<std::string>({ "y" }));
 			}
 			THEN("Adding one call should increase the calls store size by 1") {
 				REQUIRE(callsPointer->getAllLeft().size() == 0);
@@ -176,26 +162,17 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(cStarsPointer->getAllLeft().size() == 1);
 				REQUIRE(cStarsPointer->getAllRight().size() == 1);
 			}
-			THEN("Adding one print attribute should increase print attribute store size by 1") {
-				REQUIRE(printAPointer->getAllAttr().size() == 0);
-				REQUIRE(printAPointer->getAllStmt().size() == 0);
+			THEN("Adding one print attribute should return the correct value") {
 				pkbPop.addPrintAttr("x", 1);
-				REQUIRE(printAPointer->getAllAttr().size() == 1);
-				REQUIRE(printAPointer->getAllStmt().size() == 1);
+				REQUIRE(printAPointer->getAttr(1) == "x");
 			}
-			THEN("Adding one read attribute should increase print attribute store size by 1") {
-				REQUIRE(readAPointer->getAllAttr().size() == 0);
-				REQUIRE(readAPointer->getAllStmt().size() == 0);
+			THEN("Adding one read attribute should return the correct value") {
 				pkbPop.addReadAttr("y", 2);
-				REQUIRE(readAPointer->getAllAttr().size() == 1);
-				REQUIRE(readAPointer->getAllStmt().size() == 1);
+				REQUIRE(readAPointer->getAttr(2) == "y");
 			}
-			THEN("Adding one print attribute should increase print attribute store size by 1") {
-				REQUIRE(callAPointer->getAllAttr().size() == 0);
-				REQUIRE(callAPointer->getAllStmt().size() == 0);
+			THEN("Adding one print attribute should return the correct value") {
 				pkbPop.addCallAttr("sampleProc", 3);
-				REQUIRE(callAPointer->getAllAttr().size() == 1);
-				REQUIRE(callAPointer->getAllStmt().size() == 1);
+				REQUIRE(callAPointer->getAttr(3) == "sampleProc");
 			}
 			THEN("Adding one next statement should increase next store size by 1") {
 				REQUIRE(nextPointer->getAllLeft().size() == 0);
@@ -205,17 +182,13 @@ SCENARIO("Working version of PkbPopulator") {
 				REQUIRE(nextPointer->getAllRight().size() == 1);
 			}
 			THEN("Adding one cfg node should increase store size by 1") {
-				REQUIRE(cfgPointer->getAllCFGNodes().size() == 0);
 				std::shared_ptr<CFGNode> c = std::make_shared<CFGNode>(std::vector({ 3 }));
 				pkbPop.addCFGNode("sampleProc", c);
-				REQUIRE(cfgPointer->getAllCFGNodes().size() == 1);
+				REQUIRE(cfgPointer->getCFGNode("sampleProc") == c);
 			}
 			THEN("Adding one container call should increase store size by 1") {
-				REQUIRE(concallPointer->getAllProc().size() == 0);
-				REQUIRE(concallPointer->getAllStmt().size() == 0);
 				pkbPop.addContainCalls(1, "proc1");
-				REQUIRE(concallPointer->getAllProc().size() == 1);
-				REQUIRE(concallPointer->getAllStmt().size() == 1);
+				REQUIRE(concallPointer->getProc(1) == std::unordered_set<std::string>({ "proc1" }));
 			}
 		}
 	}

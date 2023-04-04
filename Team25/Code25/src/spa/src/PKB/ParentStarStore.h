@@ -20,8 +20,4 @@ public:
 	void addParentStar(int leftStmt, int rightStmt);
 	std::unordered_set<int> getLeftStar(int rightStmt) override;
 	std::unordered_set<int> getRightStar(int leftStmt) override;
-	bool hasLeftStmt(int lineNum) override;
-	bool hasRightStmt(int lineNum) override;
-	std::unordered_set<int> getAllLeft() override;
-	std::unordered_set<int> getAllRight() override;
 };

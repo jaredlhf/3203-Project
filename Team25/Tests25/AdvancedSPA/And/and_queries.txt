@@ -1,0 +1,135 @@
+1 - Follows*Parent query
+stmt s;
+Select s such that Follows*(12, s) and Parent(4, s)
+13, 14
+5000
+2 - Follows*Uses query
+stmt s; variable v;
+Select s such that Follows*(5, s) and Uses("AndTest", v)
+6, 12, 13, 14
+5000
+3 - Follows*Modifies query
+stmt s; variable v;
+Select s such that Follows*(5, s) and Modifies("AndTest", v)
+6, 12, 13, 14
+5000
+4 - Follows*Calls query
+procedure p; stmt s;
+Select s such that Follows*(1, s) and Calls("AndTest", p)
+2, 3, 4, 15
+5000
+5 - Follows*Next* query
+stmt s;
+Select s such that Next*(4, s) and Follows*(4, s)
+15
+5000
+6 - ParentUses query
+stmt s; variable v;
+Select s such that Parent(4, s) and Uses("AndTest", v)
+5, 6, 12, 13, 14
+5000
+7 - ParentModifies query
+stmt s; variable v;
+Select s such that Parent(4, s) and Modifies("AndTest", v)
+5, 6, 12, 13, 14
+5000
+8 - ParentCalls query
+stmt s; procedure p;
+Select s such that Parent(4, s) and Calls("AndTest", p)
+5, 6, 12, 13, 14
+5000
+9 - ParentNext* query
+stmt s;
+Select s such that Parent(4, s) and Next*(5, s)
+5,6,12,13,14
+5000
+10 - UsesModifies query
+variable v; assign a;
+Select v such that Modifies(a, v) and Uses(5, v)
+left, right
+5000
+11 - UsesCalls query
+variable v; procedure p; assign a;
+Select v such that Uses(a, v) and Calls("AndTest", p)
+left, right, n, sum, mid
+5000
+12 - UsesNext query
+variable v; stmt s; print p;
+Select v such that Uses(p, v) and Next(12, s)
+left, right, sum, mid
+5000
+13 - ModifiesCalls query
+variable v; procedure p; assign a;
+Select v such that Modifies(a, v) and Calls("AndTest", p)
+left, right, sum, mid, n
+5000
+14 - ModifiesNext query
+variable v; stmt s; assign a;
+Select v such that Modifies(a, v) and Next(12, s)
+left, right, sum, mid, n
+5000
+15 - CallsNext query
+procedure p; stmt s;
+Select p such that Calls("AndTest", p) and Next(12, s)
+Test
+5000
+16 - Follows*Follows* query
+stmt s;
+Select s such that Follows*(1, s) and Follows(4, s)
+15
+5000
+17 - ParentParent query
+stmt s;
+Select s such that Parent(4, s) and Parent(6, s)
+
+5000
+18 - UsesUses query
+assign a; variable v; print p;
+Select v such that Uses(p, v) and Uses(a, v)
+left, right, mid, sum
+5000
+19 - ModifiesModifies query
+assign a; variable v; read r;
+Select v such that Modifies(a, v) and Modifies(r, v)
+n
+5000
+20 - Calls*Calls* query
+procedure p;
+Select p such that Calls*("AndTest", p) and Calls*("Test", p)
+
+5000
+21 - Next*Next* query
+stmt s;
+Select s such that Next*(4, s) and Next*(3, s)
+10,11,12,13,14,15,4,5,6,7,8,9
+5000
+22 - extra and
+stmt s;
+Select s such that Follows*(3, s) and
+SyntaxError
+5000
+23 - undeclared synonym in second clause
+stmt s;
+Select s such that Follows*(3, s) and Follows*(3, t)
+SemanticError
+5000
+24 - many and clauses
+stmt s;
+Select s such that Follows*(1, s) and Follows*(2, s) and Follows*(3, s) and Follows*(4, s)
+15
+5000
+25 - suchThatandPattern query
+stmt s; assign a;
+Select s such that Follows*(1, s) and pattern a(_,_)
+SyntaxError
+5000
+26 - suchThatAndWith query
+stmt s;
+Select s such that Follows*(1, s) and s.stmt# = 1
+SyntaxError
+5000
+27 - using and as a synonym name
+stmt and;
+Select and such that Follows*(1, and) and Follows*(2, and)
+3, 4, 15
+5000

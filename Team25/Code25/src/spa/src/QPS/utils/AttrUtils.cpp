@@ -14,6 +14,8 @@ bool AttrUtils::hasValidAttr(const std::string& synKeyword, const std::string& a
     if (synKeyword == Constants::BOOLEAN) return false;
     if (synKeyword == Constants::SYNTAX_ERROR) return false;
     if (synKeyword == Constants::SEMANTIC_ERROR) return false;
+
+    return false;
 }
 
 bool AttrUtils::hasValidAttr(std::shared_ptr<Synonym> syn, const std::string& attrName) {

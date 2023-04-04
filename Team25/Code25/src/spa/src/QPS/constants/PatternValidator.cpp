@@ -13,7 +13,7 @@ std::shared_ptr<PatternValidator> PatternValidator::create(std::shared_ptr<Synon
 }
 
 PatternClausePair PatternValidator::verifyPattern(const std::vector<std::shared_ptr<Synonym>>& declarations) {
-    return make_pair(patternSynonym, patternClause);
+    return make_pair(Synonym::create(Constants::SEMANTIC_ERROR, ""), patternClause);
 }
 
 AssignPatternValidator::AssignPatternValidator(std::shared_ptr<Synonym> synonym, const std::vector<std::string>& tokens) : PatternValidator(synonym, tokens) {
