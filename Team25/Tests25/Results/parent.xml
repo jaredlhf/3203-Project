@@ -1,84 +1,84 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Parent</name><parsing_time_taken>15.000000</parsing_time_taken>
+<name>Parent</name><parsing_time_taken>14.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym,synonym">1</id><querystr><![CDATA[stmt s; stmt s1; Select s such that Parent (s, s1)]]></querystr>
 <stuans>12,14,16,2,4,7</stuans>
 <correct>2,4,7,12,14,16</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="synonym,wildcard">2</id><querystr><![CDATA[stmt s;  Select s such that Parent (s,  _)]]></querystr>
 <stuans>12,14,16,2,4,7</stuans>
 <correct>2,4,7,12,14,16</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym,ident">3</id><querystr><![CDATA[stmt s;  Select s such that Parent (s,  4)]]></querystr>
 <stuans>2</stuans>
 <correct>2</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="ident,synonym">4</id><querystr><![CDATA[stmt s; Select s such that Parent (2, s)]]></querystr>
 <stuans>10,11,3,4</stuans>
 <correct>3,4,10,11</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="ident, wildcard">5</id><querystr><![CDATA[stmt s;  Select s such that Parent (2,  _)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>15.000000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="ident, ident">6</id><querystr><![CDATA[stmt s;  Select s such that Parent (2,  3)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="wildcard,synonym">7</id><querystr><![CDATA[stmt s;  Select s such that Parent (_,  _)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="wildcard,synonym">8</id><querystr><![CDATA[stmt s;  Select s such that Parent (_,  s)]]></querystr>
 <stuans>10,11,13,14,15,16,17,18,3,4,5,6,7,8,9</stuans>
 <correct>3,4,5,6,7,8,9,10,11,13,14,15,16,17,18</correct>
-<time_taken>19.000000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="wildcard, ident">9</id><querystr><![CDATA[stmt s;  Select s such that Parent (_,  3)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="2" SuchThat="1" CondNum="4" RelNum="2" >10</id><querystr><![CDATA[stmt Parent;  Select Parent such that Parent(Parent,  3)]]></querystr>
 <stuans>2</stuans>
 <correct>2</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="3" SuchThat="1" CondNum="5" RelNum="3" >11</id><querystr><![CDATA[stmt Parent;  Select Parent such that Parent (2,  Parent)]]></querystr>
 <stuans>10,11,3,4</stuans>
 <correct>3,4,10,11</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -92,21 +92,21 @@
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="if container stmt">13</id><querystr><![CDATA[stmt s;  Select s such that Parent (4,s)]]></querystr>
 <stuans>5,6,7</stuans>
 <correct>5,6,7</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="wh container stmt">14</id><querystr><![CDATA[stmt s;  Select s such that Parent (12,s)]]></querystr>
 <stuans>13,14,18</stuans>
 <correct>13,14,18</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="nested if">15</id><querystr><![CDATA[stmt s;  Select s such that Parent (7,s)]]></querystr>
 <stuans>8,9</stuans>
 <correct>8,9</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -127,7 +127,7 @@
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >18</id><querystr><![CDATA[stmt s;  Select s such that Parent(s,)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -141,7 +141,7 @@
 <id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >20</id><querystr><![CDATA[variable v;  Select v such that Parent(v,2)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>

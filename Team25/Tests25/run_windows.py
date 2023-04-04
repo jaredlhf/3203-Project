@@ -30,8 +30,6 @@ def runTests(dir, originalDir):
             prefix = getPrefix(fname)
             outFile = os.path.join(outputPrefix, prefix + ".xml")
             os.system(f"{AUTOTESTER_PATH} {sourceFile} {queryFile} {outFile}")
-            print(outFile)
-            print(" ")
     os.chdir(originalDir)
 
 os.chdir("Tests25")

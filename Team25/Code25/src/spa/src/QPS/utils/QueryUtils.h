@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <map>
+#include <set>
 #include "PKB/PkbRetriever.h"
 #include "QPS/constants/Constants.h"
 
@@ -17,6 +18,12 @@ public:
 
 	template<typename T>
 	static bool isNotEmpty(std::unordered_set<T> set);
+
+	template<typename T>
+	static bool isEmpty(std::set<T> set);
+
+	template<typename T>
+	static bool isNotEmpty(std::set<T> set);
 
 	template<typename T>
 	static bool isEmpty(std::vector<T> set);

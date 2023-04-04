@@ -13,6 +13,16 @@ bool QueryUtils::isNotEmpty(std::unordered_set<T> set) {
 }
 
 template<typename T>
+bool QueryUtils::isEmpty(std::set<T> set) {
+	return set.size() <= 0;
+}
+
+template<typename T>
+bool QueryUtils::isNotEmpty(std::set<T> set) {
+	return !isEmpty(set);
+}
+
+template<typename T>
 bool QueryUtils::isEmpty(std::vector<T> set) {
 	return set.size() <= 0;
 }
