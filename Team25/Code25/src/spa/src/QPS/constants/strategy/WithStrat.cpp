@@ -42,7 +42,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithStrat::constSy
     constTable->addRow({ arg1Val });
     std::shared_ptr<QpsTable> resTable = constTable->join(unfilteredS2Res.second);
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -60,7 +60,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithStrat::synCons
     constTable->addRow({ arg2Val });
     std::shared_ptr<QpsTable> resTable = constTable->join(unfilteredS1Res.second);
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -86,7 +86,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> WithStrat::synSyn(
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }

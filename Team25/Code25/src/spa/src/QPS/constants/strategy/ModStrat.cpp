@@ -91,7 +91,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::constSyn
         resTable->addRow({ res });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -123,7 +123,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synWildc
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -157,7 +157,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synConst
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -192,7 +192,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ModStrat::synSyn()
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }

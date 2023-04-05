@@ -30,7 +30,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::cre
 // Case: ParentSt(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::wildcardWildcard() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
-    if (pkbRet->getAllChildren().size() > 0) {
+    if (QueryUtils::isNotEmpty(pkbRet->getAllChildren())) {
         return QpsTable::getDefaultOk();
     }
 
@@ -41,7 +41,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::wil
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::wildcardConst() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    if (pkbRet->getAllChildren().count(std::stoi(arg2Val)) > 0) {
+    if (QueryUtils::contains(pkbRet->getAllChildren(), std::stoi(arg2Val))) {
         return QpsTable::getDefaultOk();
     }
 
@@ -56,12 +56,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::wil
         : pkbRet->getAllStmt(s2Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
     for (int stNum : s2Stmts) {
-        if (pkbRet->getParentStar(stNum).size() > 0) {
+        if (QueryUtils::isNotEmpty(pkbRet->getParentStar(stNum))) {
             resTable->addRow({ std::to_string(stNum) });
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -70,7 +70,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::wil
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::constWildcard() {
     std::unordered_set<int> stmts = Clause::getEveryStmt(pkbRet);
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    if (pkbRet->getAllParents().count(std::stoi(arg1Val)) > 0) {
+    if (QueryUtils::contains(pkbRet->getAllParents(), std::stoi(arg1Val))) {
         return QpsTable::getDefaultOk();
     }
 
@@ -82,7 +82,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::con
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
-    if (pkbRet->getChildrenStar(std::stoi(arg1Val)).count(std::stoi(arg2Val)) > 0) {
+    if (QueryUtils::contains(pkbRet->getChildrenStar(std::stoi(arg1Val)), std::stoi(arg2Val))) {
         return QpsTable::getDefaultOk();
     }
     return QpsTable::getDefaultNoMatch();
@@ -98,11 +98,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::con
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
 
     for (int stNum : s2Stmts) {
-        if (pkbRet->getParentStar(stNum).count(std::stoi(arg1Val)) > 0) {
+        if (QueryUtils::contains(pkbRet->getParentStar(stNum), std::stoi(arg1Val))) {
             resTable->addRow({ std::to_string(stNum) });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -115,12 +115,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::syn
         : pkbRet->getAllStmt(s1Syn->getKeyword());
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
     for (int stNum : s1Stmts) {
-        if (pkbRet->getChildrenStar(stNum).size() > 0) {
+        if (QueryUtils::isNotEmpty(pkbRet->getChildrenStar(stNum))) {
             resTable->addRow({ std::to_string(stNum) });
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -135,11 +135,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::syn
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
 
     for (int stNum : s1Stmts) {
-        if (pkbRet->getChildrenStar(stNum).count(std::stoi(arg2Val)) > 0) {
+        if (QueryUtils::contains(pkbRet->getChildrenStar(stNum), std::stoi(arg2Val))) {
             resTable->addRow({ std::to_string(stNum) });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -162,16 +162,22 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> ParentStStrat::syn
     }
 
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
+    std::vector<std::pair<int, int>> argCombis;
     for (int arg1StNum : s1Stmts) {
         for (int arg2StNum : s2Stmts) {
-            if (pkbRet->getParentStar(arg2StNum).count(arg1StNum) > 0) {
-                resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-            }
+            argCombis.push_back({ arg1StNum, arg2StNum });
         }
     }
 
-    return resTable->getData().size() > 0
+    for (std::pair<int, int> argPair : argCombis) {
+        int arg1StNum = argPair.first;
+        int arg2StNum = argPair.second;
+        if (QueryUtils::contains(pkbRet->getParentStar(arg2StNum), arg1StNum)) {
+            resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
+        }
+    }
+
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }

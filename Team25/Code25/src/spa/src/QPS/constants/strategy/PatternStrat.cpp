@@ -105,7 +105,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
         resTable->addRow({ val });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -122,7 +122,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -139,7 +139,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::wild
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -155,7 +155,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
         resTable->addRow({ std::to_string(intVal) });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -174,7 +174,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -193,7 +193,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::cons
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -209,7 +209,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synW
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -231,7 +231,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synS
 
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -253,7 +253,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::synC
     }
 
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -265,7 +265,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::ifWi
         resTable->addRow({ val });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -279,7 +279,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::ifCo
         resTable->addRow({ std::to_string(intVal) });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -295,7 +295,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::ifSy
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -307,7 +307,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::whil
         resTable->addRow({ val });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -321,7 +321,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::whil
         resTable->addRow({ std::to_string(intVal) });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -337,7 +337,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> PatternStrat::whil
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }

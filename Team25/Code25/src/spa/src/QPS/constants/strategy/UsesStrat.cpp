@@ -88,7 +88,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constCo
     std::unordered_set<std::string> pkbRes = v1->isInt() 
         ? getAllVarUsesByStmt(std::stoi(arg1Val), pkbRet)
         : getAllVarUsesByProc(arg1Val, pkbRet);
-    return pkbRes.count(arg2Val) > 0
+    return QueryUtils::contains(pkbRes, arg2Val)
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -106,7 +106,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::constSy
         resTable->addRow({ val });
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -138,7 +138,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synWild
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -172,7 +172,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synCons
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -207,7 +207,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> UsesStrat::synSyn(
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
