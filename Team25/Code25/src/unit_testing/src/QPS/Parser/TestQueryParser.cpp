@@ -840,3 +840,21 @@ TEST_CASE("System test bug 2") {
 
     REQUIRE(expectedResObject.compare(resObj) == true);
 }
+
+TEST_CASE("System test bug 3") {
+    std::vector<std::string> queryTokens = {"while", "w", ";", "Select", "BOOLEAN", "pattern", "w", "(", "_", ",", "_", ",", "_" ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SYNTAX_ERROR, "")});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
+
+TEST_CASE("System test bug 4") {
+    std::vector<std::string> queryTokens = {"if", "ifs", ";", "Select", "BOOLEAN", "pattern", "ifs", "(", "_", ",", "_", ")"};
+    ParserResponse expectedResObject;
+    expectedResObject.setSelectSynonyms({Synonym::create(Constants::SYNTAX_ERROR, "")});
+    ParserResponse resObj = qp.parseQueryTokens(queryTokens);
+
+    REQUIRE(expectedResObject.compare(resObj) == true);
+}
