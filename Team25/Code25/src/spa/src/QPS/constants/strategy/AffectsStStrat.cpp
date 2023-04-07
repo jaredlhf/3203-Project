@@ -61,12 +61,19 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStStrat::wi
     std::unordered_set<std::string> procs = pkbRet->getAllProc();
     for (std::string proc : procs) {
         std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+        std::vector<std::pair<int, int>> stmtCombis;
 
         for (int stmt1 : stmts) {
             for (int stmt2 : stmts) {
-                if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
-                    return QpsTable::getDefaultOk();
-                }
+                stmtCombis.push_back({ stmt1, stmt2 });
+            }
+        }
+
+        for (std::pair<int, int> stmts : stmtCombis) {
+            int stmt1 = stmts.first;
+            int stmt2 = stmts.second;
+            if (QueryUtils::affects(stmt1, stmt2, pkbRet)) {
+                return QpsTable::getDefaultOk();
             }
         }
     }
@@ -97,6 +104,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStStrat::wi
     std::unordered_set<std::string> procs = pkbRet->getAllProc();
     for (std::string proc : procs) {
         std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+        std::vector<std::pair<int, int>> stmtCombis;
 
         for (int stmt2 : stmts) {
             for (int stmt1 : stmts) {
@@ -172,6 +180,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStStrat::sy
     std::unordered_set<std::string> procs = pkbRet->getAllProc();
     for (std::string proc : procs) {
         std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+        std::vector<std::pair<int, int>> stmtCombis;
 
         for (int stmt1 : stmts) {
             for (int stmt2 : stmts) {
@@ -220,12 +229,19 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> AffectsStStrat::sy
     std::unordered_set<std::string> procs = pkbRet->getAllProc();
     for (std::string proc : procs) {
         std::unordered_set<int> stmts = pkbRet->getStmt(proc);
+        std::vector<std::pair<int, int>> stmtCombis;
 
         for (int stmt1 : stmts) {
             for (int stmt2 : stmts) {
-                if (QueryUtils::affectsStar(stmt1, stmt2, pkbRet)) {
-                    resTable->addRow({ std::to_string(stmt1), std::to_string(stmt2) });
-                }
+                stmtCombis.push_back({ stmt1, stmt2 });
+            }
+        }
+
+        for (std::pair<int, int> stmts : stmtCombis) {
+            int stmt1 = stmts.first;
+            int stmt2 = stmts.second;
+            if (QueryUtils::affectsStar(stmt1, stmt2, pkbRet)) {
+                resTable->addRow({ std::to_string(stmt1), std::to_string(stmt2) });
             }
         }
     }

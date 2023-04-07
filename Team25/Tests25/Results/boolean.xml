@@ -1,189 +1,189 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Boolean</name><parsing_time_taken>5.481000</parsing_time_taken>
+<name>Boolean</name><parsing_time_taken>1.803000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="simple true boolean query for such that">1</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Follows(1, 2)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>2.902000</time_taken>
+<time_taken>1.212000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="simple false boolean query for such that">2</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Follows(1, 4)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.354000</time_taken>
+<time_taken>0.949000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="simple true boolean query for pattern">3</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a(_, "sum - one")]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>3.484000</time_taken>
+<time_taken>1.192000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="simple false boolean query for pattern">4</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a(_, "SUM - one")]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.602000</time_taken>
+<time_taken>1.094000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="simple true boolean query for with">5</id><querystr><![CDATA[stmt s; Select BOOLEAN with s.stmt# = 1]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>2.855000</time_taken>
+<time_taken>0.920000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="simple false boolean query for with">6</id><querystr><![CDATA[stmt s; Select BOOLEAN with s.stmt# = 23423]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.641000</time_taken>
+<time_taken>1.143000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" CondNum="1" RelNum="0" comment="boolean query with no clause">7</id><querystr><![CDATA[stmt s; Select BOOLEAN]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>1.985000</time_taken>
+<time_taken>0.696000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="using boolean as a synonym name">8</id><querystr><![CDATA[stmt BOOLEAN; Select BOOLEAN such that Follows(1, 2)]]></querystr>
 <stuans>1,10,11,2,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11</correct>
-<time_taken>2.728000</time_taken>
+<time_taken>1.007000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="small caps boolean">9</id><querystr><![CDATA[stmt s; Select boolean such that Follows(1, 2)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>2.250000</time_taken>
+<time_taken>0.872000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="2" SuchThat="1" CondNum="4" RelNum="2" comment="multiple such that true false">10</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Follows(1, 2) and Follows(1, 4)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.679000</time_taken>
+<time_taken>0.899000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="2" SuchThat="1" CondNum="4" RelNum="2" comment="multiple such that true true">11</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Follows(1, 2) and Follows(2, 3)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>2.412000</time_taken>
+<time_taken>0.841000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="2" SuchThat="1" CondNum="4" RelNum="2" comment="multiple such that false false">12</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Follows(1, 20) and Follows(1, 30)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.690000</time_taken>
+<time_taken>0.915000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="multiple pattern true false">13</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a(_, "sum - one") and a("no", "sum - one")]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>4.102000</time_taken>
+<time_taken>1.366000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="multiple pattern true true">14</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a(_, "sum - one") and a("sum", "sum - one")]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>4.720000</time_taken>
+<time_taken>1.639000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="multiple pattern false false">15</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a(_, "sum - 1") and a("no", "sum - 1")]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.549000</time_taken>
+<time_taken>1.389000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="multiple with true false">16</id><querystr><![CDATA[constant c; variable v; Select BOOLEAN with v.varName = "target" and c.value = c.value]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.965000</time_taken>
+<time_taken>1.058000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="multiple with true true">17</id><querystr><![CDATA[assign a; variable v; Select BOOLEAN with v.varName = "target" and a.stmt# = 6]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>3.321000</time_taken>
+<time_taken>1.056000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="multiple with false false">18</id><querystr><![CDATA[constant c; variable v; Select BOOLEAN with v.varName = "zero" and c.value = c.value]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>2.851000</time_taken>
+<time_taken>0.965000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern true false false">19</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2) with v.varName = "ten" pattern ifs("nothing", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.395000</time_taken>
+<time_taken>1.122000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern false true false">20</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2020) with v.varName = "sum" pattern ifs("nothing", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.596000</time_taken>
+<time_taken>1.245000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern false false true">21</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2020) with v.varName = "ten" pattern ifs("zero", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.420000</time_taken>
+<time_taken>1.206000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern true true false">22</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2) with v.varName = "sum" pattern ifs("nothing", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.339000</time_taken>
+<time_taken>1.225000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern false true true">23</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2020) with v.varName = "sum" pattern ifs("zero", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.456000</time_taken>
+<time_taken>1.173000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern true false true">24</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2) with v.varName = "ten" pattern ifs("zero", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.645000</time_taken>
+<time_taken>1.168000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern true true true">25</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 2) with v.varName = "sum" pattern ifs("zero", _, _)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>3.594000</time_taken>
+<time_taken>1.174000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="suchThat with pattern false false false">26</id><querystr><![CDATA[if ifs; variable v; Select BOOLEAN such that Follows(1, 12312) with v.varName = "nothing" pattern ifs("nothingagain", _, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>3.487000</time_taken>
+<time_taken>1.244000</time_taken>
 <passed/>
 </query>
 </queries>

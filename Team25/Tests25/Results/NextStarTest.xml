@@ -1,280 +1,280 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>NextStar</name><parsing_time_taken>11.611000</parsing_time_taken>
+<name>NextStar</name><parsing_time_taken>3.507000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">1</id><querystr><![CDATA[stmt s; Select s such that Next*(1, 2)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>4.210000</time_taken>
+<time_taken>1.638000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">2</id><querystr><![CDATA[assign a; Select a such that Next*(5, 6)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>3.762000</time_taken>
+<time_taken>1.166000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">3</id><querystr><![CDATA[stmt s; Select s such that Next*(4, 3)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>3.654000</time_taken>
+<time_taken>0.817000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">4</id><querystr><![CDATA[print pr; Select pr such that Next*(1, pr)]]></querystr>
 <stuans>10,18,19,20,5,8</stuans>
 <correct>5,8,10,18,19,20</correct>
-<time_taken>4.573000</time_taken>
+<time_taken>1.260000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">5</id><querystr><![CDATA[stmt s; Select s such that Next*(1, s)]]></querystr>
 <stuans>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>10.572000</time_taken>
+<time_taken>2.729000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">6</id><querystr><![CDATA[procedure p; Select p such that Next*(1, _)]]></querystr>
 <stuans>NextStarTest</stuans>
 <correct>NextStarTest</correct>
-<time_taken>2.894000</time_taken>
+<time_taken>0.869000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">7</id><querystr><![CDATA[stmt s; Select s such that Next*(20, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>3.054000</time_taken>
+<time_taken>0.765000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">8</id><querystr><![CDATA[stmt s; Select s such that Next*(1000, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>2.987000</time_taken>
+<time_taken>0.828000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">9</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Next*(s1, s2)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19</correct>
-<time_taken>71.919000</time_taken>
+<time_taken>21.424000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">10</id><querystr><![CDATA[stmt s; Select s such that Next*(s, s)]]></querystr>
 <stuans>12,13,14,15,16,17,18</stuans>
 <correct>12,13,14,15,16,17,18</correct>
-<time_taken>43.190000</time_taken>
+<time_taken>12.688000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">11</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Next*(s1, s2)]]></querystr>
 <stuans>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>72.927000</time_taken>
+<time_taken>21.278000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">12</id><querystr><![CDATA[stmt s; if ifs; Select s such that Next*(s, ifs)]]></querystr>
 <stuans>1,2,3,4,6</stuans>
 <correct>1,2,3,4,6</correct>
-<time_taken>11.513000</time_taken>
+<time_taken>3.175000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">13</id><querystr><![CDATA[stmt s; Select s such that Next*(s, _)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19</correct>
-<time_taken>9.451000</time_taken>
+<time_taken>2.432000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">14</id><querystr><![CDATA[print pr; Select pr such that Next*(pr, _)]]></querystr>
 <stuans>10,18,19,5,8</stuans>
 <correct>5,8,10,18,19</correct>
-<time_taken>3.827000</time_taken>
+<time_taken>1.084000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">15</id><querystr><![CDATA[call cl; Select cl such that Next*(cl, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>3.020000</time_taken>
+<time_taken>0.767000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">16</id><querystr><![CDATA[stmt s; Select s such that Next*(s, 10)]]></querystr>
 <stuans>1,2,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9</correct>
-<time_taken>7.107000</time_taken>
+<time_taken>1.814000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">17</id><querystr><![CDATA[assign a; Select a such that Next*(a, 12)]]></querystr>
 <stuans>1,11,13,15,17,3,6,9</stuans>
 <correct>1,3,6,9,11,13,15,17</correct>
-<time_taken>4.533000</time_taken>
+<time_taken>1.436000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">18</id><querystr><![CDATA[stmt s; Select s such that Next*(s, 1)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>3.019000</time_taken>
+<time_taken>0.780000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">19</id><querystr><![CDATA[stmt s; Select s such that Next*(_, s)]]></querystr>
 <stuans>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>8.607000</time_taken>
+<time_taken>2.266000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">20</id><querystr><![CDATA[while w; Select w such that Next*(_, w)]]></querystr>
 <stuans>12,14,16</stuans>
 <correct>12,14,16</correct>
-<time_taken>3.051000</time_taken>
+<time_taken>1.038000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">21</id><querystr><![CDATA[procedure p; Select p such that Next*(_, 2)]]></querystr>
 <stuans>NextStarTest</stuans>
 <correct>NextStarTest</correct>
-<time_taken>2.757000</time_taken>
+<time_taken>0.797000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">22</id><querystr><![CDATA[stmt s; Select s such that Next*(_, 1)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>5.957000</time_taken>
+<time_taken>0.745000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NextStar">23</id><querystr><![CDATA[stmt s; Select s such that Next*(_, 100)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>5.465000</time_taken>
+<time_taken>0.746000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="NextStar">24</id><querystr><![CDATA[print pr; Select pr such that Next*(_, _)]]></querystr>
 <stuans>10,18,19,20,5,8</stuans>
 <correct>5,8,10,18,19,20</correct>
-<time_taken>4.750000</time_taken>
+<time_taken>0.850000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="NextStar">25</id><querystr><![CDATA[stmt s; Select s such that Next*(_, _)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>3.464000</time_taken>
+<time_taken>0.960000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">26</id><querystr><![CDATA[stmt that, Select; Select that such that Next*(that, Select)]]></querystr>
 <stuans>1,10,11,12,13,14,15,16,17,18,19,2,3,4,5,6,7,8,9</stuans>
 <correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19</correct>
-<time_taken>69.355000</time_taken>
+<time_taken>21.203000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">27</id><querystr><![CDATA[stmt that, Select; Select Select such that Next*(that, Select)]]></querystr>
 <stuans>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9</stuans>
 <correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</correct>
-<time_taken>72.946000</time_taken>
+<time_taken>21.983000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="2" CondNum="4" RelNum="1" comment="NextStar">28</id><querystr><![CDATA[print such, that; Select such such that Next*(such, that)]]></querystr>
 <stuans>10,18,19,5,8</stuans>
 <correct>5,8,10,18,19</correct>
-<time_taken>7.069000</time_taken>
+<time_taken>2.144000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">29</id><querystr><![CDATA[while that, such; Select that such that Next*(such, that)]]></querystr>
 <stuans>12,14,16</stuans>
 <correct>12,14,16</correct>
-<time_taken>4.778000</time_taken>
+<time_taken>1.456000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">30</id><querystr><![CDATA[stmt s; if ifs; Select s      such that    Next*(s, ifs)]]></querystr>
 <stuans>1,2,3,4,6</stuans>
 <correct>1,2,3,4,6</correct>
-<time_taken>10.235000</time_taken>
+<time_taken>3.484000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">31</id><querystr><![CDATA[stmt s; Select s such that Next*( , )]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>4.316000</time_taken>
+<time_taken>0.905000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">32</id><querystr><![CDATA[stmt s; Select s such that Next*(s, )]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>3.971000</time_taken>
+<time_taken>0.893000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">33</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Next*( , s2)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>3.308000</time_taken>
+<time_taken>0.862000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">34</id><querystr><![CDATA[procedure p; stmt s; Select s such that Next*(p, s)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>3.814000</time_taken>
+<time_taken>0.840000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">35</id><querystr><![CDATA[procedure p; stmt s; Select s such that Next*(s, p)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>3.537000</time_taken>
+<time_taken>0.803000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">36</id><querystr><![CDATA[stmt s; Select s such that Next*(s, "")]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>2.762000</time_taken>
+<time_taken>0.750000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NextStar">37</id><querystr><![CDATA[stmt s; Select s1 such that Next*(s1, 2)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>3.590000</time_taken>
+<time_taken>0.844000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextStar">38</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Nxt(s1, s2)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>4.151000</time_taken>
+<time_taken>0.789000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextStar">39</id><querystr><![CDATA[stmt s1, s2; Select s1 such that next(s1, s2)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>5.152000</time_taken>
+<time_taken>0.753000</time_taken>
 <passed/>
 </query>
 </queries>
