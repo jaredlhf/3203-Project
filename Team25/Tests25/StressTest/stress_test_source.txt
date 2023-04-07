@@ -1,0 +1,694 @@
+procedure First {
+   x = 1;
+   y = 2;
+   if ( x != 1 ) then {
+           z = x + y - 3;
+           y = 3;
+       } else {
+       if (x != 2) then {
+               z = x;
+               if (y != x) then {
+                   x = y;
+                   print x;
+                 } else {
+                 if( y == x) then {
+                     z = 3;
+                     read z;
+                   } else {
+                   z = 1;
+                   print z;
+                   while ( z > 5) {
+                     z = y;
+                     call Second;
+                   }
+                 }
+                 z = 5;
+                 read y;
+               }
+           } else {
+           z = y;
+       }
+   }
+}
+procedure Second {
+   a = b;
+   b = a;
+   c = x + y + z;
+   if ( a != b ) then {
+           a = x + y - 3;
+           b = 3;
+           c = a + 1;
+           while ( a <= 3 ) {
+               print a;
+               read b;
+               print c;
+               if ( a == 3) then {
+                   read b;
+                   b = b + 1 * a;
+                   c = a + c * 3;
+                   a = c + z + x;
+                 } else {
+                 while (b == 3) {
+                   if (a == b + 3) then {
+                       call Third;
+                       a = b + 3;
+                       b = a * 3;
+                       c = b / 3;
+                     } else {
+                     print a;
+                     read b;
+                     b = a + b + y;
+                     c = 1 + 2 + 3 + 4;
+                   }
+                   a = x;
+                   b = c;
+                   c = a;
+                 }
+                 print b;
+               }
+               read a;
+           }
+       } else {
+       print a;
+       print c;
+       read b;
+       a = 2;
+       b = 3 + 4;
+       c = a;
+   }
+}
+
+
+procedure Third {
+   test = 6;
+   simple = 8;
+   such = 2;
+   select = 3;
+   select = simple + such;
+   simple  = select - test;
+   while ( simple != test ) {
+       simple = simple / test;
+       read simple;
+       if ( such == simple * 5 - 1) then {
+               simple = 1;
+               read test;
+               print such;
+               if ( such == 1) then {
+                   such = 1;
+                   print select;
+                 } else {
+                 select = 2;
+                 while ( select != 0 ) {
+                   select = select - 1;
+                 }
+               }
+               print select;
+           } else {
+           test = 9;
+           if (test == 9) then {
+                 test = simple;
+                 such = simple;
+                 while (such == simple) {
+                   simple = such;
+                   such = select;
+                 }
+               } else {
+               while (test == simple) {
+                 test = 2;
+                 such = 3;
+                 simple = 1;
+                 read simple;
+                 print such;
+                 if (such == 1) then {
+                     such = 2;
+                     print such;
+                     read select;
+                     test = 1 + 2;
+                   } else {
+                   select  = 4;
+                   simple = select + simple;
+                   test = test - simple * select;
+                 }
+               }
+               print select;
+           }
+           read such;
+       }
+       print simple;
+   }
+   read test;
+}
+procedure Fourth {
+ use = 1;
+ modifies = 2;
+ if ( use != 1 ) then {
+     follows = use + modifies - 3;
+     modifies = 3;
+   } else {
+   if (use != 2) then {
+       follows = use;
+       if (modifies != use) then {
+           use = modifies;
+           print use;
+         } else {
+         if( modifies == use) then {
+             follows = 3;
+             read follows;
+           } else {
+           follows = 1;
+           print follows;
+           while ( follows > 5) {
+             follows = modifies;
+             call Fifth;
+           }
+         }
+         follows = 5;
+         read modifies;
+       }
+     } else {
+     follows = modifies;
+   }
+ }
+}
+procedure Fifth {
+ parent = call;
+ call = parent;
+ affect = use + modifies + follows;
+ if ( parent != call ) then {
+     parent = use + modifies - 3;
+     call = 3;
+     affect = parent + 1;
+     while ( parent <= 3 ) {
+       print parent;
+       read call;
+       print affect;
+       if ( parent == 3) then {
+           read call;
+           call = call + 1 * parent;
+           affect = parent + affect * 3;
+           parent = affect + follows + use;
+         } else {
+         while (call == 3) {
+           if (parent == call + 3) then {
+               call Sixth;
+               parent = call + 3;
+               call = parent * 3;
+               affect = call / 3;
+             } else {
+             print parent;
+             read call;
+             call = parent + call + modifies;
+             affect = 1 + 2 + 3 + 4;
+           }
+           parent = use;
+           call = affect;
+           affect = parent;
+         }
+         print call;
+       }
+       read parent;
+     }
+   } else {
+   print parent;
+   print affect;
+   read call;
+   parent = 2;
+   call = 3 + 4;
+   affect = parent;
+ }
+}
+
+
+procedure Sixth {
+ i = 6;
+ j = 8;
+ k = 2;
+ l = 3;
+ l = j + k;
+ j = l - i;
+ while (j != i) {
+   j = j / i;
+   read j;
+   if (k == j * 5 - 1)
+     then {
+       j = 1;
+       read i;
+       print k;
+       if (k == 1)
+         then {
+           k = 1;
+           print l;
+         }
+       else {
+         l = 2;
+         while (l != 0) {
+           l = l - 1;
+         }
+       }
+       print l;
+     }
+   else {
+     i = 9;
+     if (i == 9)
+       then {
+         i = j;
+         k = j;
+         while (k == j) {
+           j = k;
+           k = l;
+         }
+       }
+     else {
+       while (i == j) {
+         i = 2;
+         k = 3;
+         j = 1;
+         read j;
+         print k;
+         if (k == 1)
+           then {
+             k = 2;
+             print k;
+             read l;
+             i = 1 + 2;
+           }
+         else {
+           l = 4;
+           j = l + j;
+           i = i - j * l;
+         }
+       }
+       print l;
+     }
+     read k;
+   }
+   print j;
+ }
+ read i;
+}
+procedure procedure {
+ sp = 1;
+ pkb = 2;
+ if ( sp != 1 ) then {
+     qps = sp + pkb - 3;
+     pkb = 3;
+   } else {
+   if (sp != 2) then {
+       qps = sp;
+       if (pkb != sp) then {
+           sp = pkb;
+           print sp;
+         } else {
+         if( pkb == sp) then {
+             qps = 3;
+             read qps;
+           } else {
+           qps = 1;
+           print qps;
+           while ( qps > 5) {
+             qps = pkb;
+             call Void;
+           }
+         }
+         qps = 5;
+         read pkb;
+       }
+     } else {
+     qps = pkb;
+   }
+ }
+}
+procedure Void {
+ extract = design;
+ design = extract;
+ store = sp + pkb + qps;
+ if ( extract != design ) then {
+     extract = sp + pkb - 3;
+     design = 3;
+     store = extract + 1;
+     while ( extract <= 3 ) {
+       print extract;
+       read design;
+       print store;
+       if ( extract == 3) then {
+           read design;
+           design = design + 1 * extract;
+           store = extract + store * 3;
+           extract = store + qps + sp;
+         } else {
+         while (design == 3) {
+           if (extract == design + 3) then {
+               call Null;
+               extract = design + 3;
+               design = extract * 3;
+               store = design / 3;
+             } else {
+             print extract;
+             read design;
+             design = extract + design + pkb;
+             store = 1 + 2 + 3 + 4;
+           }
+           extract = sp;
+           design = store;
+           store = extract;
+         }
+         print design;
+       }
+       read extract;
+     }
+   } else {
+   print extract;
+   print store;
+   read design;
+   extract = 2;
+   design = 3 + 4;
+   store = extract;
+ }
+}
+
+
+procedure Null {
+ time = 6;
+ compute = 8;
+ centroid = 2;
+ point = 3;
+ point = compute + centroid;
+ compute = point - time;
+ while (compute != time) {
+   compute = compute / time;
+   read compute;
+   if (centroid == compute * 5 - 1)
+     then {
+       compute = 1;
+       read time;
+       print centroid;
+       if (centroid == 1)
+         then {
+           centroid = 1;
+           print point;
+         }
+       else {
+         point = 2;
+         while (point != 0) {
+           point = point - 1;
+         }
+       }
+       print point;
+     }
+   else {
+     time = 9;
+     if (time == 9)
+       then {
+         time = compute;
+         centroid = compute;
+         while (centroid == compute) {
+           compute = centroid;
+           centroid = point;
+         }
+       }
+     else {
+       while (time == compute) {
+         time = 2;
+         centroid = 3;
+         compute = 1;
+         read compute;
+         print centroid;
+         if (centroid == 1)
+           then {
+             centroid = 2;
+             print centroid;
+             read point;
+             time = 1 + 2;
+           }
+         else {
+           point = 4;
+           compute = point + compute;
+           time = time - compute * point;
+         }
+       }
+       print point;
+     }
+     read centroid;
+   }
+   print compute;
+ }
+ read time;
+}
+
+
+procedure heavilyNested {
+   read read;
+   print read;
+   while = 40;
+   while (while < read) {
+       print = 20;
+       read = print - read * 2;
+       if (while % 2 == 0) then {
+           procedure = 10;
+           while (procedure / 2 > 1) {
+               procedure = procedure - 1;
+               call procedure;
+               if = 8;
+               then = 2;
+               else = if + then;
+               if (else == if) then {
+                   call procedure;
+               } else {
+                   print procedure;
+                   counter = 2048;
+                   while (counter % 2 == 0) {
+                       call Call;
+                       if (counter % 4 == 0) then {
+                           counter = counter / 4;
+                       } else {
+                           counter = counter / 2;
+                       }
+                   }
+                   read after;
+                   read else;
+                   print = after + else;
+                   print print;
+               }
+           }
+       } else {
+           read here;
+           nothing = here;
+           print nothing;
+       }
+       if ((while - 1) % 2 == 0 || (while - 1) % 2 != 0) then {
+           while = while - 1;
+       } else {
+           while = while - 2;
+       }
+   }
+   read else;
+   if (else == 2) then {
+       then = 1;
+   } else {
+       else = 2;
+   }
+   print then;
+   read the;
+   read end;
+}
+
+
+procedure procedure {
+   read print;
+   print print;
+}
+
+
+procedure Call {
+   call = 10;
+   print Call;
+}
+
+procedure HeavilyNested {
+  read toread;
+  print toread;
+  pattern = 40;
+  while (pattern < toread) {
+    print = 20;
+    toread = print - toread * 2;
+    if (pattern % 2 == 0) then {
+        procedure = 10;
+        while (procedure / 2 > 1) {
+          procedure = procedure - 1;
+          call procedure;
+          if = 8;
+          so = 2;
+          else = if + so;
+          if (else == if) then {
+              call procedure;
+            } else {
+            print procedure;
+            counter = 2048;
+            while (counter % 2 == 0) {
+              call Call;
+              if (counter % 4 == 0) then {
+                  counter = counter / 4;
+                } else {
+                counter = counter / 2;
+              }
+            }
+            read after;
+            read else;
+            print = after + else;
+            print print;
+          }
+        }
+      } else {
+      read here;
+      nothing = here;
+      print nothing;
+    }
+    if ((pattern - 1) % 2 == 0 || (pattern - 1) % 2 != 0) then {
+        pattern = pattern - 1;
+      } else {
+      pattern = pattern - 2;
+    }
+  }
+  read else;
+  if (else == 2) then {
+      so = 1;
+    } else {
+    else = 2;
+  }
+  print so;
+  read the;
+  read end;
+}
+
+procedure onlyAssign {
+  a = 1 + 1;
+  b = 2;
+  b =3;
+  c = 8;
+  d = a + b % c;
+  e = 1;
+  f = 2;
+  g =4;
+  h = 9;
+  j = 10;
+}
+
+procedure onlyRead {
+  read book;
+  read paper;
+  read plane;
+  read tree;
+  read game;
+  read toy;
+  read screen;
+  read key;
+  read car;
+  read noodle;
+}
+
+procedure onlyPrint {
+  print paper;
+  print plane;
+  print worksheet;
+  print tax;
+  print score;
+  print line;
+  print long;
+  print int;
+  print string;
+  print ans;
+}
+
+procedure callAll {
+  call First;
+  call Second;
+  call Third;
+  call Fourth;
+  call Fifth;
+  call Sixth;
+  call Void;
+  call Null;
+  call onlyAssign;
+  call onlyRead;
+  call onlyPrint;
+  call heavilyNested;
+  call HeavilyNested;
+}
+
+
+procedure random {
+  sort = 1;
+  uniq = 2;
+  ls = 3;
+  cd = 4;
+  cat =5;
+  mv =6;
+  mv = cat + ls;
+  ls = mv + cd;
+  cd = ls + uniq;
+  uniq = sort + wc;
+  while(wc != uniq) {
+    uniq = uniq + 1;
+    if(uniq == 1) then {
+        uniq = uniq 1;
+        wc = wc + uniq;
+        ls = cd +mv;
+        mv = ls + cat;
+      } else {
+      while(uniq != 2) {
+        uniq = 8;
+        cd = 9;
+        ls = 1;
+        mv = cd + ls;
+        if (!(ls == 2)) then {
+            ls = 2;
+            cd = 5;
+            mv = 6;
+            wc = 8;
+            while (wc == 9) {
+              wc = wc +1;
+              cd = cd + 1;
+              ls = ls + 1;
+              mv = mv + 1;
+              sort = sort + 1;
+              uniq = uniq + 1;
+              call callAll;
+              while (ls == 1) {
+                call callAll;
+                print wc;
+                print ls;
+                print cd;
+                read mv;
+                read wc;
+                read sort;
+              }
+              print cd;
+              read mv;
+              read wc;
+              read sort;
+            }
+          } else {
+          wc = wc -1;
+        }
+        print wc;
+        read ls;
+        print cd;
+        read mv;
+      }
+      print wc;
+      read ls;
+      print cd;
+      read mv;
+    }
+    print wc;
+    read ls;
+    print cd;
+    read mv;
+  }
+  print wc;
+  read ls;
+  print cd;
+  read mv;
+}
+
+
