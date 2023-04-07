@@ -70,6 +70,9 @@ SCENARIO("System testing between all components for single synonym select") {
                                     "  call n;\n"
                                     "  o = 3;\n"
                                     "  print p;\n"
+                                    "}"
+                                    "procedure n {"
+                                    "   a = 1 + b;"
                                     "}";
             std::ofstream file(fileLocation);
             file << fileInput;
@@ -80,7 +83,7 @@ SCENARIO("System testing between all components for single synonym select") {
             sp.processSimple(fileLocation, std::make_shared<PkbPopulator>(pkbPop));
             Qps qps(std::make_shared<PkbRetriever>(pkbRet));
             THEN("For select all procedure, the right result is returned") {
-                list<string> expected = { "Example"};
+                list<string> expected = { "Example", "n"};
                 list<string> res;
 
                 string query = "procedure p;  Select p";
@@ -107,7 +110,7 @@ SCENARIO("System testing between all components for single synonym select") {
                 REQUIRE(res == expected);
             }
             THEN("For select all statement query, the right result is returned") {
-                list<string> expected = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+                list<string> expected = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
                 list<string> res;
 
                 string query = "stmt s;  Select s";
@@ -118,7 +121,7 @@ SCENARIO("System testing between all components for single synonym select") {
                 REQUIRE(res == expected);
             }
             THEN("For select all assign query, the right result is returned") {
-                list<string> expected = { "1", "3", "4", "6", "9" };
+                list<string> expected = { "1", "11", "3", "4", "6", "9"  };
                 list<string> res;
 
                 string query = "assign a;  Select a";
@@ -162,7 +165,7 @@ SCENARIO("System testing between all components for single synonym select") {
                 qps.query(query, res);
                 REQUIRE(res == expected);
             }
-            THEN("For select all if query, the right result is returned") {
+            THEN("For select all while query, the right result is returned") {
                 list<string> expected = { "5" };
                 list<string> res;
 

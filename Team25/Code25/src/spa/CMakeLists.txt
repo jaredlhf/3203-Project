@@ -128,7 +128,7 @@ src/SP/ParserDTO.h
 src/SP/CFGNode.h
 "src/PKB/CallsStarStore.h"
 "src/PKB/CallsStarStore.cpp"
-src/SP/CFGNode.cpp)
+src/SP/CFGNode.cpp src/SP/SPUtils.cpp src/SP/SPUtils.h)
 
 
 # this makes the headers accessible for other projects which uses spa lib

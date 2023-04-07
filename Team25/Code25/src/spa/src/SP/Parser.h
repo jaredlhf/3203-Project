@@ -13,15 +13,17 @@
 #include "ExpressionParser.h"
 #include "PKB/PkbPopulator.h"
 #include "ParserDTO.h"
+#include "SPUtils.h"
 
 
 class Parser {
 public:
-    Parser(std::shared_ptr<Tokenizer> t);
+    Parser(std::shared_ptr<Tokenizer> t, std::shared_ptr<SPUtils> spUtils);
     std::vector<std::shared_ptr<ParserDTO>> parseProgram();
 private:
     std::shared_ptr<Tokenizer> tokenizer;
     std::shared_ptr<SPParserUtils> utils;
+    std::shared_ptr<SPUtils> spUtils;
 
     std::shared_ptr<ParserDTO> parseProcedure();
 };
