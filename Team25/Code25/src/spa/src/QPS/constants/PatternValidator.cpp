@@ -23,11 +23,15 @@ AssignPatternValidator::AssignPatternValidator(std::shared_ptr<Synonym> synonym,
 
 PatternClausePair AssignPatternValidator::verifyPattern(const std::vector<std::shared_ptr<Synonym>>& declarations) {
     int ptr = 0;
+    int ASSIGN_LENGTH = 5;
     bool hasSemanticError = false;
 
     std::string expression;
     std::shared_ptr<Entity> entRef;
 
+    if (patternTokens.size() != ASSIGN_LENGTH) {
+        return make_pair(Synonym::create(Constants::SYNTAX_ERROR, ""), nullptr);
+    }
     while (ptr < patternTokens.size()) {
 
         // check if pattern is enclosed by brackets
@@ -87,11 +91,15 @@ IfPatternValidator::IfPatternValidator(std::shared_ptr<Synonym> synonym, const s
 
 PatternClausePair IfPatternValidator::verifyPattern(const std::vector<std::shared_ptr<Synonym>> &declarations) {
     int ptr = 0;
+    int IF_LENGTH = 7;
     bool hasSemanticError = false;
 
     std::string expression;
     std::shared_ptr<Entity> entRef;
 
+    if (patternTokens.size() != IF_LENGTH) {
+        return make_pair(Synonym::create(Constants::SYNTAX_ERROR, ""), nullptr);
+    }
     while (ptr < patternTokens.size()) {
 
         // check if pattern is enclosed by brackets
@@ -143,11 +151,15 @@ WhilePatternValidator::WhilePatternValidator(std::shared_ptr<Synonym> synonym, c
 
 PatternClausePair WhilePatternValidator::verifyPattern(const std::vector<std::shared_ptr<Synonym>> &declarations) {
     int ptr = 0;
+    int WHILE_LENGTH = 5;
     bool hasSemanticError = false;
 
     std::string expression;
     std::shared_ptr<Entity> entRef;
 
+    if (patternTokens.size() != WHILE_LENGTH) {
+        return make_pair(Synonym::create(Constants::SYNTAX_ERROR, ""), nullptr);
+    }
     while (ptr < patternTokens.size()) {
 
         // check if pattern is enclosed by brackets
