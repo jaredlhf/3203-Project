@@ -1,189 +1,189 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>AffectsStar</name><parsing_time_taken>12.000000</parsing_time_taken>
+<name>AffectsStar</name><parsing_time_taken>8.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="testing case of Affects*(_, _): VALID">1</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(_, _)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>18.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(_, 7): VALID">2</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(_, 7)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(_, 2): INVALID">3</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(_, 2)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(_, s2): VALID">4</id><querystr><![CDATA[stmt s2; Select s2 such that Affects*(_, s2)]]></querystr>
 <stuans>10,3,4,5,7,8,9</stuans>
 <correct>3,4,5,7,8,9,10</correct>
-<time_taken>38.000000</time_taken>
+<time_taken>18.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(_, r2): INVALID">5</id><querystr><![CDATA[read r2; Select r2 such that Affects*(_, r2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>12.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(1, _): VALID">6</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, _)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(5, _): INVALID">7</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(5, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>15.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of indirect affects Affects*(1, 5): VALID">8</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, 5)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>16.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of direct affects Affects*(4, 7): VALID">9</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(4, 7)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>5.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of invalid indirect Affects*(1, 8): INVALID">10</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, 8)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>18.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of invalid direct Affects*(5, 10): INVALID">11</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(5, 10)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>17.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of affects Affects*(1, s2): VALID">12</id><querystr><![CDATA[stmt s2; Select s2 such that Affects*(1, s2)]]></querystr>
 <stuans>10,3,5,9</stuans>
 <correct>3,5,9,10</correct>
-<time_taken>29.000000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of Affects*(5, s2): INVALID">13</id><querystr><![CDATA[stmt s2; Select s2 such that Affects*(5, s2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>38.000000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(s1, _): VALID">14</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, _)]]></querystr>
 <stuans>1,2,3,4,6,9</stuans>
 <correct>1,2,3,4,6,9</correct>
-<time_taken>35.000000</time_taken>
+<time_taken>20.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="testing case of Affects*(r1, _): INVALID">15</id><querystr><![CDATA[read r1; Select r1 such that Affects*(r1, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>13.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of Affects*(s1, 10): VALID">16</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, 10)]]></querystr>
 <stuans>1,9</stuans>
 <correct>1,9</correct>
-<time_taken>37.000000</time_taken>
+<time_taken>18.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of Affects*(s1, 2): INVALID">17</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, 2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>43.000000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of Affects*(s1, s2): VALID">18</id><querystr><![CDATA[stmt s1, s2; Select <s1.stmt#, s2> such that Affects*(s1, s2)]]></querystr>
 <stuans>1 10,1 3,1 5,1 9,2 3,2 4,2 5,2 7,3 5,4 7,6 8,9 10</stuans>
 <correct>1 3,1 5,1 9,1 10,2 3,2 4,2 5,2 7,3 5,4 7,6 8,9 10</correct>
-<time_taken>86.000000</time_taken>
+<time_taken>47.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of Affects*(s1, s1): INVALID">19</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, s1)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>66.000000</time_taken>
+<time_taken>27.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="testing case of invalid spelling of Affects*: SyntaxError">20</id><querystr><![CDATA[stmt s1; Select s1 such that aAffects*(s1, s1)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="2" CondNum="4" RelNum="1" comment="testing case of extra token: SyntaxError">21</id><querystr><![CDATA[stmt s1; Select s1 such such that Affects*(s1, s1)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of syntactically wrong arg1: SyntaxError">22</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*("arg1", s1)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of syntactically wrong arg2: SyntaxError">23</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, "arg2")]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of undefined synonym in Select: SemanticError">24</id><querystr><![CDATA[stmt s1; Select s2 such that Affects*(1, s1)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of undefined synonym in arg1: SemanticError">25</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s2, s1)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing case of undefined synonym in arg2: SemanticError">26</id><querystr><![CDATA[stmt s1; Select s1 such that Affects*(s1, s2)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 </queries>

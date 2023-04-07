@@ -22,6 +22,13 @@ private:
 	std::vector<PatternClausePair> patternClauses;
 	std::vector<std::shared_ptr<Clause>> suchThatClauses;
 	std::vector<std::shared_ptr<Clause>> withClauses;
+	bool hasSynErr = false;
+	bool hasSemErr = false;
+	bool hasBoolSel = false;
+	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
+	void init();
+	void checkSelectValidity();
+	void checkClauseValidity();
 	void handleParserResponse(ParserResponse& response);
 	std::vector<std::string> getResultNames();
 	
@@ -31,5 +38,6 @@ public:
 		std::vector<std::shared_ptr<Synonym>> resultSynonyms, std::shared_ptr<PkbRetriever> pkbRetriever);
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> resolveClauses(
 		std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults);
+	void findAllIntermediateResults(std::shared_ptr<PkbRetriever> pkbRetriever);
 	std::list<std::string> evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever);
 };
