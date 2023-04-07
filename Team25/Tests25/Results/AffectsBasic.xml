@@ -1,35 +1,35 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Affects</name><parsing_time_taken>42.000000</parsing_time_taken>
+<name>Affects</name><parsing_time_taken>45.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, constant in same procedure">1</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(1, 3)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, constant in same procedure">2</id><querystr><![CDATA[stmt s; Select s such that Affects(1, 2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, constant due to ordering in same procedure">3</id><querystr><![CDATA[stmt s; Select s such that Affects(6, 3)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>8.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="valid synonym, wildcard in same procedure">4</id><querystr><![CDATA[stmt s; Select s such that Affects(s, _)]]></querystr>
 <stuans>1,10,14,15,17,2,20,26,32,34,39,43,45,52,53,6,8</stuans>
 <correct>1,2,6,8,10,14,15,17,20,26,32,34,39,43,45,52,53</correct>
-<time_taken>71.000000</time_taken>
+<time_taken>51.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -50,7 +50,7 @@
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, constant in same procedure with if branch all paths modified">7</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(12, 16)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -85,21 +85,21 @@
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid synonym, constant in same procedure with call procedure">12</id><querystr><![CDATA[stmt s; Select s such that Affects(s, 16)]]></querystr>
 <stuans>14,15</stuans>
 <correct>14,15</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, synonym in same procedure with call procedure">13</id><querystr><![CDATA[stmt s; Select s such that Affects(26, s)]]></querystr>
 <stuans>29,30</stuans>
 <correct>29,30</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, constant in same procedure referring to same line in while loop">14</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(32, 32)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -113,14 +113,14 @@
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, constant in same procedure referring to line below uses line in while loop">16</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(39, 37)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, constant in same procedure referring to if within while loop">17</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(45, 41)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>6.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -134,119 +134,119 @@
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, constant in same procedure referring to if within while loop">19</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(42, 41)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, constant in same procedure referring to 2 sides of if branch">20</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(48, 49)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="4" ReturnBoolean="1" SuchThat="2" CondNum="7" RelNum="4" comment="valid constant, constant in same procedure referring to if within while loop">21</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(52, 52) and Affects(52, 53) such that Affects(53, 52) and Affects(53, 53)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="valid wildcard, wildcard">22</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(_, _)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="valid wildcard, constant">23</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(_, 4)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="invalid wildcard, constant on non assign stmt">24</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(_, 5)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="invalid wildcard, constant">24</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(_, 6)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="valid wildcard, synonym on assign stmt">25</id><querystr><![CDATA[assign a; Select a such that Affects(_, a)]]></querystr>
 <stuans>11,16,21,29,3,30,32,35,37,4,41,52,53,7</stuans>
 <correct>11,16,21,29,3,30,32,35,37,4,41,52,53,7</correct>
-<time_taken>57.000000</time_taken>
+<time_taken>48.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="invalid wildcard, synonym on assign stmt">26</id><querystr><![CDATA[read read; Select read such that Affects(_, read)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>7.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="valid constant, wildcard on assign stmt">27</id><querystr><![CDATA[assign a; Select BOOLEAN such that Affects(1, _)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="invalid constant, wildcard on assign stmt">28</id><querystr><![CDATA[assign a; Select BOOLEAN such that Affects(3, _)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid constant, syn on assign stmt">29</id><querystr><![CDATA[assign a; Select a such that Affects(26, a)]]></querystr>
 <stuans>29,30</stuans>
 <correct>29,30</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid constant, syn on assign stmt">30</id><querystr><![CDATA[assign a; Select a such that Affects(24, a)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>9.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid syn, constant on assign stmt">31</id><querystr><![CDATA[assign a; Select a such that Affects(a, 53)]]></querystr>
 <stuans>52,53</stuans>
 <correct>52,53</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid syn, constant on assign stmt">32</id><querystr><![CDATA[assign a; Select a such that Affects(a, 24)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>8.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="valid syn, constant on assign stmt">33</id><querystr><![CDATA[assign a; Select <a, a> such that Affects(a, a)]]></querystr>
 <stuans>32 32,52 52,53 53</stuans>
 <correct>32 32,52 52,53 53</correct>
-<time_taken>72.000000</time_taken>
+<time_taken>60.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid syn, constant on assign stmt">34</id><querystr><![CDATA[read a; Select <a, a> such that Affects(a, a)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>6.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -260,7 +260,7 @@
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing for syntax error 2">36</id><querystr><![CDATA[read a;; Select <a, a> such that Affects(a, a)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
@@ -274,28 +274,28 @@
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing for sem error 1">38</id><querystr><![CDATA[procedure a; Select <a, a> such that Affects(a, a)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing for sem error 2">39</id><querystr><![CDATA[read a; Select <a, a> such that Affects(a1, a)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing for sem error 3">40</id><querystr><![CDATA[read a; constant c; Select <a, a> such that Affects(c, a)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>6.000000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="testing for syntax error 4">41</id><querystr><![CDATA[read a; Select <a, a> such that Affects(1, a.stmt#)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 </queries>

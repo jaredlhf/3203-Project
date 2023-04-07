@@ -29,7 +29,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::crea
 
 // Case: Follows(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::wildcardWildcard() {
-    return pkbRet->getAllFollowees().size() > 0
+    return QueryUtils::isNotEmpty(pkbRet->getAllFollowees())
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -38,7 +38,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::wild
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::wildcardConst() {
     std::unordered_set<int> stmts = pkbRet->getAllFollowers();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    return stmts.count(std::stoi(arg2Val)) > 0
+    return QueryUtils::contains(stmts, std::stoi(arg2Val))
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -56,7 +56,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::wild
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -65,7 +65,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::wild
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::constWildcard() {
     std::unordered_set<int> stmts = pkbRet->getAllFollowees();
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    return stmts.count(std::stoi(arg1Val)) > 0
+    return QueryUtils::contains(stmts, std::stoi(arg1Val))
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -95,7 +95,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::cons
             resTable->addRow({ std::to_string(stNum) });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -113,7 +113,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::synW
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -132,7 +132,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::synC
             resTable->addRow({ std::to_string(stNum) });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -155,12 +155,18 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> FollowsStrat::synS
     }
 
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
-
+    std::vector<std::pair<int, int>> argCombis;
     for (int arg1StNum : s1Stmts) {
         for (int arg2StNum : s2Stmts) {
-            if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
-                resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
-            }
+            argCombis.push_back({ arg1StNum, arg2StNum });
+        }
+    }
+
+    for (std::pair<int, int> argPair : argCombis) {
+        int arg1StNum = argPair.first;
+        int arg2StNum = argPair.second;
+        if (pkbRet->getFollower(arg1StNum) == arg2StNum) {
+            resTable->addRow({ std::to_string(arg1StNum), std::to_string(arg2StNum) });
         }
 
     }

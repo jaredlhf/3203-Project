@@ -8,6 +8,70 @@ void QueryEvaluator::handleParserResponse(ParserResponse& response) {
 	this->patternClauses = response.getPatternClauses();
 	this->suchThatClauses = response.getSuchThatClauses();
 	this->withClauses = response.getWithClauses();
+
+	checkClauseValidity();
+	checkSelectValidity();
+}
+
+void QueryEvaluator::checkSelectValidity() {
+	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
+		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR)) {
+			this->hasSynErr = true;
+			break;
+		}
+
+		if (resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
+			this->hasSemErr = true;
+		}
+
+		if (resSyn->isBooleanSyn()) {
+			this->hasBoolSel = true;
+		}
+	}
+}
+
+void QueryEvaluator::checkClauseValidity() {
+	for (std::shared_ptr<Clause> withClause : this->withClauses) {
+		if (withClause->isWrongArgs()) {
+			this->hasSynErr = true;
+		}
+
+		if (withClause->isSemInvalid()) {
+			this->hasSemErr = true;
+		}
+	}
+
+	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
+		if (stClause->isWrongArgs()) {
+			this->hasSynErr = true;
+		}
+
+		if (stClause->isSemInvalid()) {
+			this->hasSemErr = true;
+		}
+	}
+
+	for (PatternClausePair ptClausePair : this->patternClauses) {
+		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
+		if (ptnClause->isWrongArgs()) {
+			this->hasSynErr = true;
+		}
+
+		std::shared_ptr<Synonym> patternSynonym = ptClausePair.first;
+
+		if (ptnClause->isSemInvalid() || !(patternSynonym->matchesKeyword(Constants::ASSIGN)
+			|| patternSynonym->matchesKeyword(Constants::IF)
+			|| patternSynonym->matchesKeyword(Constants::WHILE))) {
+			this->hasSemErr = true;
+		}
+	}
+}
+
+void QueryEvaluator::init() {
+	this->hasSynErr = false;
+	this->hasSemErr = false;
+	this->hasBoolSel = false;
+	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>>().swap(this->clauseResults);
 }
 
 // Returns the vector of Synonym names in order
@@ -69,53 +133,55 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> QueryEvaluator::re
 	return res;
 }
 
-std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever) {
-	std::list<std::string> result;
-	handleParserResponse(response);
-
-	// Edge case: If resultSynonym is a syntax error, return immediately
-	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
-		if (resSyn->matchesKeyword(Constants::SYNTAX_ERROR)) {
-			return std::list<std::string>({ resSyn->getKeyword() });
+void QueryEvaluator::findAllIntermediateResults(std::shared_ptr<PkbRetriever> pkbRetriever) {
+	for (std::shared_ptr<Clause> withClause : this->withClauses) {
+		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> intermedRes = withClause->resolve(pkbRetriever);
+		clauseResults.push_back(intermedRes);
+		if (intermedRes.first < Constants::ClauseResult::OK) {
+			return;
 		}
-	}
-
-	// Edge case: If resultSynonym is a semantic error, return immediately
-	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
-		if (resSyn->matchesKeyword(Constants::SEMANTIC_ERROR)) {
-			return std::list<std::string>({ resSyn->getKeyword() });
-		}
-	}
-
-	// Edge case:: If resultSynonym is a BOOLEAN synonym, mark it before clause resolution
-	bool hasBoolSyn = false;
-	for (std::shared_ptr<Synonym> resSyn : this->resultSynonyms) {
-		if (resSyn->isBooleanSyn()) {
-			hasBoolSyn = true;
-		}
-	}
-
-	std::vector<std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>>> clauseResults;
-
-	// Select Result is not evaluated if it is not a BOOLEAN synonym
-	if (!hasBoolSyn) {
-		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
-			resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
-		clauseResults.push_back(selectRes);
 	}
 
 	for (std::shared_ptr<Clause> stClause : this->suchThatClauses) {
-		clauseResults.push_back(stClause->resolve(pkbRetriever));
+		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> intermedRes = stClause->resolve(pkbRetriever);
+		clauseResults.push_back(intermedRes);
+		if (intermedRes.first < Constants::ClauseResult::OK) {
+			return;
+		}
 	}
 
 	for (PatternClausePair ptClausePair : this->patternClauses) {
 		std::shared_ptr<PatternClause> ptnClause = std::static_pointer_cast<PatternClause>(ptClausePair.second);
-		clauseResults.push_back(ptnClause->resolve(pkbRetriever, ptClausePair.first));
+		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> intermedRes = ptnClause->resolve(pkbRetriever, ptClausePair.first);
+		clauseResults.push_back(intermedRes);
+		if (intermedRes.first < Constants::ClauseResult::OK) {
+			return;
+		}
 	}
 
-	for (std::shared_ptr<Clause> withClause : this->withClauses) {
-		clauseResults.push_back(withClause->resolve(pkbRetriever));
+	// Select Result is not evaluated if it is not a BOOLEAN synonym
+	if (!this->hasBoolSel) {
+		std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> selectRes =
+			resolveSelectSynonyms(this->resultSynonyms, pkbRetriever);
+		this->clauseResults.push_back(selectRes);
 	}
+}
+
+std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::shared_ptr<PkbRetriever> pkbRetriever) {
+	init();
+	std::list<std::string> result;
+	handleParserResponse(response);
+
+	// Edge case: If resultSynonym is a syntax or sem error
+	if (this->hasSynErr) {
+		return std::list<std::string>({ Constants::SYNTAX_ERROR });
+	}
+
+	if (this->hasSemErr) {
+		return std::list<std::string>({ Constants::SEMANTIC_ERROR });
+	}
+
+	findAllIntermediateResults(pkbRetriever);
 
 	std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> finalRes =
 		resolveClauses(clauseResults);
@@ -123,15 +189,8 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	// Handle non valid ans cases
 	Constants::ClauseResult finalClauseStatus = finalRes.first;
 	std::shared_ptr<QpsTable> finalResTable = finalRes.second;
-	if (finalClauseStatus == Constants::ClauseResult::SYN_ERR) {
-		return std::list<std::string>({ Constants::SYNTAX_ERROR });
-	}
 
-	if (finalClauseStatus == Constants::ClauseResult::SEM_ERR) {
-		return std::list<std::string>({ Constants::SEMANTIC_ERROR });
-	}
-
-	if (hasBoolSyn) { // If select is BOOLEAN, only consider the clause result status
+	if (this->hasBoolSel) { // If select is BOOLEAN, only consider the clause result status
 		const std::string boolRes = finalClauseStatus == Constants::ClauseResult::OK
 			? Constants::TRUE
 			: Constants::FALSE;
@@ -143,7 +202,6 @@ std::list<std::string> QueryEvaluator::evaluate(ParserResponse response, std::sh
 	}
 
 	// Retrieve answer of resultSyn col in table
-	/*TODO RESOLVE ANSWER FOR ALL SELECT SYNONYMS*/
 	std::set<std::string> ansSet = ResultFormatter(getResultNames(), finalResTable).getResults();
 	for (const std::string& answer : ansSet) {
 		result.push_back(answer);
