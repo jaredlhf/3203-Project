@@ -4,6 +4,7 @@
 #include "TNode.h"
 #include "SPConstants.h"
 #include "PKB/PkbPopulator.h"
+#include "SPUtils.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ public:
     virtual void visit(std::shared_ptr<ProcedureNode> n, int lineNo) {};
 
     DesignExtractor(std::shared_ptr<PkbPopulator> pkbPopulator);
+    DesignExtractor(std::shared_ptr<PkbPopulator> pkbPopulator, std::shared_ptr<SPUtils> spUtil);
+
     static bool isAssignNode(std::shared_ptr<TNode> n);
     static bool isPrintNode(std::shared_ptr<TNode> n);
     static bool isReadNode(std::shared_ptr<TNode> n);
@@ -31,6 +34,7 @@ public:
     void extractConst(vector<std::string> tokens);
 protected:
     std::shared_ptr<PkbPopulator> pkbPopulator;
+    std::shared_ptr<SPUtils> spUtils;
 };
 
 class ModifiesExtractor: public DesignExtractor {

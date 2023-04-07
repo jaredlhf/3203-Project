@@ -1,14 +1,15 @@
 #include "SelectiveExtractor.h"
 
-SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator) {
+SelectiveExtractor::SelectiveExtractor(std::shared_ptr<PkbPopulator> populator, std::shared_ptr<SPUtils> spUtil) {
     pkbPopulator = populator;
+    spUtils = spUtil;
     modifiesExtractor = make_shared<ModifiesExtractor>(populator);
     usesExtractor = make_shared<UsesExtractor>(populator);
     followsExtractor = make_shared<FollowsExtractor>(populator);
     followsStarExtractor = make_shared<FollowsStarExtractor>(populator);
     parentsExtractor = make_shared<ParentsExtractor>(populator);
     parentsStarExtractor = make_shared<ParentsStarExtractor>(populator);
-    callsExtractor = make_shared<CallsExtractor>(populator);
+    callsExtractor = make_shared<CallsExtractor>(populator, spUtil);
     callsStarExtractor = make_shared<CallsStarExtractor>(populator);
     patternExtractor = make_shared<PatternExtractor>(populator);
     attrExtractor = make_shared<AttributeExtractor>(populator);

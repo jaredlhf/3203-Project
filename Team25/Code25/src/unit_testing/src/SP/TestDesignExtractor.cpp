@@ -218,8 +218,10 @@ SCENARIO("ExtractingNode") {
         }
     }
     GIVEN("CallsExtractor") {
-        CallsExtractor c(pkbPop);
+        std::shared_ptr<SPUtils> spUtils = std::make_shared<SPUtils>();
+        CallsExtractor c(pkbPop, spUtils);
         WHEN("a call node is visited") {
+            spUtils->addProc("compute");
             CallNode c1 = CallNode(1, "compute", "test");
             shared_ptr<CallNode> call = make_shared<CallNode>(c1);
             c.visit(call,1);
@@ -230,9 +232,19 @@ SCENARIO("ExtractingNode") {
                 REQUIRE(callsPointer->getLeftProc("compute") == std::unordered_set<std::string>({"test"}));
             }
         }
+        WHEN("a call node that calls an non-existent procedure is visited") {
+            CallNode c1 = CallNode(1, "compute", "test");
+            shared_ptr<CallNode> call = make_shared<CallNode>(c1);
+
+            THEN("should throw an error") {
+                REQUIRE_THROWS_AS(c.visit(call,1), std::invalid_argument);
+            }
+
+        }
     }
     GIVEN("CallsStarExtractor") {
         CallsStarExtractor c(pkbPop);
+
         WHEN("a call node is visited") {
             CallNode c1 = CallNode(1, "compute", "test");
             shared_ptr<CallNode> call1 = make_shared<CallNode>(c1);

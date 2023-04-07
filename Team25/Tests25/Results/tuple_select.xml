@@ -1,161 +1,161 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>TupleSelect</name><parsing_time_taken>7.000000</parsing_time_taken>
+<name>TupleSelect</name><parsing_time_taken>9.296000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="single select">1</id><querystr><![CDATA[assign a; variable v; Select v such that Modifies(a, v)]]></querystr>
 <stuans>i,x,y,z</stuans>
 <correct>x,y,z,i</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>5.551000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="two tuple select">2</id><querystr><![CDATA[assign a; variable v; Select <a, v> such that Modifies(a, v)]]></querystr>
 <stuans>1 x,10 i,2 z,3 i,5 x,7 z,8 y,9 z</stuans>
 <correct>1 x,2 z,3 i,5 x,7 z,8 y,9 z,10 i</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>8.156000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Pattern="1" SuchThat="1" CondNum="4" RelNum="1" comment="5 tuple select">3</id><querystr><![CDATA[assign a; variable v1, v2; Select <a, v1, v2, v2, v1> such that Modifies("tupleSelect", v1) pattern a(v2, "z + x")]]></querystr>
 <stuans>8 i y y i,8 x y y x,8 y y y y,8 z y y z</stuans>
 <correct>8 y y y y,8 i y y i,8 x y y x,8 z y y z</correct>
-<time_taken>38.000000</time_taken>
+<time_taken>30.147000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="tuple select with unused variable in clauses">4</id><querystr><![CDATA[variable v1, v2; assign a; Select <v1, v2> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>i i,i x,i y,i z,x i,x x,x y,x z,y i,y x,y y,y z,z i,z x,z y,z z</stuans>
 <correct>i i,i x,i y,i z,x x,x i,x y,x z,y i,y x,y y,y z,z i,z z,z x,z y</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>3.828000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="1 tuple select">5</id><querystr><![CDATA[variable v; assign a; Select <v> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>i,x,y,z</stuans>
 <correct>i,x,y,z</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>3.489000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="empty tuple select">6</id><querystr><![CDATA[variable x; Select <> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>2.646000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="select synonym does not exist">6</id><querystr><![CDATA[variable x; Select y such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>2.378000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="select synonym does not exist in tuple">7</id><querystr><![CDATA[variable x; Select <y> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>2.626000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Improper select synonym">8</id><querystr><![CDATA[variable x; Select 123 such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>3.066000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Improper select synonym in tuple">9</id><querystr><![CDATA[variable x; Select <123> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>4.841000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="mix of improper and proper selects in tuple">10</id><querystr><![CDATA[variable x; Select <123, x> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>5.030000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="mix of declared and undeclared selects in tuple">11</id><querystr><![CDATA[variable x; Select <y, x> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>3.393000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="unclosed bracket">12</id><querystr><![CDATA[variable x, y; Select <x, y such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>3.562000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="no open bracket">13</id><querystr><![CDATA[variable x, y; Select x, y> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>4.417000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="use of keywords as query variables">14</id><querystr><![CDATA[variable Select, such; Select <Select, such> such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>i i,i x,i y,i z,x i,x x,x y,x z,y i,y x,y y,y z,z i,z x,z y,z z</stuans>
 <correct>i i,i x,i y,i z,x x,x i,x y,x z,y i,y x,y y,y z,z i,z z,z x,z y</correct>
-<time_taken>14.000000</time_taken>
+<time_taken>3.787000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="2" CondNum="5" RelNum="1" comment="no brackets, use of keywords">15</id><querystr><![CDATA[variable Select, such; Select Select, such such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>2.662000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="no select keyword">16</id><querystr><![CDATA[variable x; x such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>2.696000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="2" CondNum="5" RelNum="1" comment="extra keyword token between clauses">17</id><querystr><![CDATA[variable x, y; Select <x, y> such such that Modifies("tupleSelect", _)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>7.171000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="tuple select with attribute values">18</id><querystr><![CDATA[variable x; assign a; Select <a.stmt#, x> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"]]></querystr>
 <stuans>1 x</stuans>
 <correct>1 x</correct>
-<time_taken>16.000000</time_taken>
+<time_taken>6.563000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="tuple select with variable attribute">19</id><querystr><![CDATA[variable x; assign a; Select <a.stmt#, x.varName> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"]]></querystr>
 <stuans>1 x</stuans>
 <correct>1 x</correct>
-<time_taken>13.000000</time_taken>
+<time_taken>6.445000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="tuple select with incorrect attributes">20</id><querystr><![CDATA[variable x; assign a; Select <a.stmt#, x.stmt#> such that Modifies(a, "x") with a.stmt# = 1 and x.varName = "x"]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>3.766000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="3" Pattern="1" SuchThat="1" With="1" CondNum="8" RelNum="1" comment="tuple select with attributes">21</id><querystr><![CDATA[variable x, y; assign a; Select <a.stmt#, x, y> such that Modifies(a, _) with x.varName = "x" pattern a(y, _"z + x"_)]]></querystr>
 <stuans>8 x y,9 x z</stuans>
 <correct>8 x y,9 x z</correct>
-<time_taken>35.000000</time_taken>
+<time_taken>21.641000</time_taken>
 <passed/>
 </query>
 </queries>
