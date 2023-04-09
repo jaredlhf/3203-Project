@@ -41,6 +41,8 @@ add_executable(unit_testing ${srcs}
 "src/QPS/Constants/TestQpsWildcard.cpp"
 "src/QPS/Evaluator/TestQueryEvaluator.cpp"
 "src/QPS/Parser/TestQueryParser.cpp"
+"src/QPS/Parser/TestParserResponse.cpp"
+"src/QPS/Parser/TestQueryParserUtils.cpp"
 "src/QPS/Tokenizer/TestQueryTokenizer.cpp"
 "src/SP/TestDesignExtractor.cpp"
 "src/SP/TestExpressionParser.cpp"
