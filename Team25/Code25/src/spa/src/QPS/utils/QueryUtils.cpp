@@ -1,4 +1,6 @@
 #include "QueryUtils.h"
+#include<algorithm>
+#include<memory>
 
 std::map<std::pair<int, int>, bool> QueryUtils::cache = {};
 
