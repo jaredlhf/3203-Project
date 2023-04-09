@@ -23,15 +23,15 @@ std::vector<std::shared_ptr<ParserDTO>> Parser::parseProgram() {
 
 
 std::shared_ptr<ParserDTO> Parser::parseProcedure() {
-    utils->expect(std::make_shared<Procedure>());
-    std::string proc = utils->expect(std::make_shared<Name>());
-    utils->expect(std::make_shared<LeftBrace>());
+    utils->expect(SPConstants::PROCEDURE_TOKEN);
+    std::string proc = utils->expect(SPConstants::NAME_TOKEN);
+    utils->expect(SPConstants::LEFTBRACE_TOKEN);
 
     std::shared_ptr<ParserDTO> stmtLstDTO = StmtParser::parseStmtLst(this->utils, this->tokenizer, proc);
     shared_ptr<StmtLstNode> stmtLstNode = std::dynamic_pointer_cast<StmtLstNode>(stmtLstDTO->getNode());
     ProcedureNode node = ProcedureNode(stmtLstNode, proc);
 
-    utils->expect(std::make_shared<RightBrace>());
+    utils->expect(SPConstants::RIGHTBRACE_TOKEN);
 
     spUtils->addProc(proc);
 

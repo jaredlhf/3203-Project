@@ -41,5 +41,6 @@ for testPrefix in TESTDIRS:
     os.chdir(testDir)
     subDirs = os.listdir()
     for item in subDirs:
-        runTests(item, testDir)
+        if not (item == ".DS_Store"):
+            runTests(item, testDir)
     os.chdir("..")
