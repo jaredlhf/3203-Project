@@ -26,12 +26,12 @@ First, Second
 6 - comment
 procedure p;
 Select p such that Modifies(p, "i")
-Second
+First,Second
 5000
 7 - comment
 procedure p;
 Select p such that Uses(p, "y")
-Second
+First,Second
 5000
 8 - comment
 assign a;
@@ -56,7 +56,7 @@ Select <a, w>
 12 - comment
 variable v;
 Select v such that Modifies(6, v)
-x, i
+v,z,x, i
 5000
 13 - comment
 assign a;
