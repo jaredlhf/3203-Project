@@ -63,7 +63,7 @@ std::shared_ptr<ParserDTO> StmtParser::parseStmtLst(std::shared_ptr<SPParserUtil
         }
 
 
-    } while(!RightBrace().isEqual(tokenizer->peek()));
+    } while(SPConstants::RIGHTBRACE_TOKEN != tokenizer->peek());
     StmtLstNode node = StmtLstNode(StmtLsts, proc);
 
     std::shared_ptr<ParserDTO> resultDTO = std::make_shared<ParserDTO>(std::make_shared<StmtLstNode>(node), head);
@@ -71,9 +71,9 @@ std::shared_ptr<ParserDTO> StmtParser::parseStmtLst(std::shared_ptr<SPParserUtil
 }
 
 std::shared_ptr<ParserDTO> AssignParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
-    std::string lhs = utils->expect(std::make_shared<Name>());
+    std::string lhs = utils->expect(SPConstants::NAME_TOKEN);
 
-    utils->expect(std::make_shared<Equal>());
+    utils->expect(SPConstants::EQUAL_TOKEN);
     std::string rhs = "";
     vector<string> rhsTokens;
     while(tokenizer->peek() != ";") {
@@ -85,7 +85,7 @@ std::shared_ptr<ParserDTO> AssignParser::parse(std::shared_ptr<SPParserUtils> ut
         throw std::invalid_argument("Invalid expression ");
     }
     AssignNode node = AssignNode(utils->getCurrentStmtNo(), lhs, rhs, proc);
-    utils->expect(std::make_shared<Semicolon>());
+    utils->expect(SPConstants::SEMICOLON_TOKEN);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<AssignNode>(node), utils->getCurrentStmtNo());
     return std::make_shared<ParserDTO>(resultDTO);
@@ -93,9 +93,9 @@ std::shared_ptr<ParserDTO> AssignParser::parse(std::shared_ptr<SPParserUtils> ut
 
 
 std::shared_ptr<ParserDTO> PrintParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
-    utils->expect(std::make_shared<Print>());
-    std::string var = utils->expect(std::make_shared<Name>());
-    utils->expect(std::make_shared<Semicolon>());
+    utils->expect(SPConstants::PRINT_TOKEN);
+    std::string var = utils->expect(SPConstants::NAME_TOKEN);
+    utils->expect(SPConstants::SEMICOLON_TOKEN);
     PrintNode node = PrintNode(utils->getCurrentStmtNo(), var, proc);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<PrintNode>(node), utils->getCurrentStmtNo());
@@ -104,7 +104,7 @@ std::shared_ptr<ParserDTO> PrintParser::parse(std::shared_ptr<SPParserUtils> uti
 
 std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
     int lineNo = utils->getCurrentStmtNo();
-    utils->expect(std::make_shared<While>());
+    utils->expect(SPConstants::WHILE_TOKEN);
     //parse conditional expr
     std::string rhs = "";
     vector<string> rhsTokens;
@@ -123,10 +123,10 @@ std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> uti
         throw std::invalid_argument("Invalid expression ");
     }
 
-    utils->expect(std::make_shared<LeftBrace>());
+    utils->expect(SPConstants::LEFTBRACE_TOKEN);
     shared_ptr<ParserDTO> stmtLstDTO = parseStmtLst(utils, tokenizer, proc);
     shared_ptr<StmtLstNode> stmtLstNode = std::dynamic_pointer_cast<StmtLstNode>(stmtLstDTO->getNode());
-    utils->expect(std::make_shared<RightBrace>());
+    utils->expect(SPConstants::RIGHTBRACE_TOKEN);
 
     WhileNode node = WhileNode(lineNo, rhs, stmtLstNode, proc);
 
@@ -141,7 +141,7 @@ std::shared_ptr<ParserDTO> WhileParser::parse(std::shared_ptr<SPParserUtils> uti
 
 std::shared_ptr<ParserDTO> IfParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
     int lineNo = utils->getCurrentStmtNo();
-    utils->expect(std::make_shared<If>());
+    utils->expect(SPConstants::IF_TOKEN);
 
     std::string rhs = "";
     vector<string> rhsTokens;
@@ -161,16 +161,16 @@ std::shared_ptr<ParserDTO> IfParser::parse(std::shared_ptr<SPParserUtils> utils,
     }
 
 
-    utils->expect(std::make_shared<Then>());
-    utils->expect(std::make_shared<LeftBrace>());
+    utils->expect(SPConstants::THEN_TOKEN);
+    utils->expect(SPConstants::LEFTBRACE_TOKEN);
     shared_ptr<ParserDTO> ifLstDTO = parseStmtLst(utils, tokenizer, proc);
     shared_ptr<StmtLstNode> ifLstNode = std::dynamic_pointer_cast<StmtLstNode>(ifLstDTO->getNode());
-    utils->expect(std::make_shared<RightBrace>());
-    utils->expect(std::make_shared<Else>());
-    utils->expect(std::make_shared<LeftBrace>());
+    utils->expect(SPConstants::RIGHTBRACE_TOKEN);
+    utils->expect(SPConstants::ELSE_TOKEN);
+    utils->expect(SPConstants::LEFTBRACE_TOKEN);
     shared_ptr<ParserDTO> elseLstDTO = parseStmtLst(utils, tokenizer, proc);
     shared_ptr<StmtLstNode> elseLstNode = std::dynamic_pointer_cast<StmtLstNode>(elseLstDTO->getNode());
-    utils->expect(std::make_shared<RightBrace>());
+    utils->expect(SPConstants::RIGHTBRACE_TOKEN);
 
     IfNode node = IfNode(lineNo, rhs, ifLstNode, elseLstNode, proc);
 
@@ -185,9 +185,9 @@ std::shared_ptr<ParserDTO> IfParser::parse(std::shared_ptr<SPParserUtils> utils,
 }
 
 std::shared_ptr<ParserDTO> ReadParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
-    utils->expect(std::make_shared<Read>());
-    std::string var = utils->expect(std::make_shared<Name>());
-    utils->expect(std::make_shared<Semicolon>());
+    utils->expect(SPConstants::READ_TOKEN);
+    std::string var = utils->expect(SPConstants::NAME_TOKEN);
+    utils->expect(SPConstants::SEMICOLON_TOKEN);
     ReadNode node = ReadNode(utils->getCurrentStmtNo(), var, proc);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<ReadNode>(node), utils->getCurrentStmtNo());
@@ -195,9 +195,9 @@ std::shared_ptr<ParserDTO> ReadParser::parse(std::shared_ptr<SPParserUtils> util
 }
 
 std::shared_ptr<ParserDTO> CallParser::parse(std::shared_ptr<SPParserUtils> utils, std::shared_ptr<Tokenizer> tokenizer, const std::string& proc) {
-    utils->expect(std::make_shared<Call>());
-    std::string var = utils->expect(std::make_shared<Name>());
-    utils->expect(std::make_shared<Semicolon>());
+    utils->expect(SPConstants::CALL_TOKEN);
+    std::string var = utils->expect(SPConstants::NAME_TOKEN);
+    utils->expect(SPConstants::SEMICOLON_TOKEN);
     CallNode node = CallNode(utils->getCurrentStmtNo(), var, proc);
 
     ParserDTO resultDTO = ParserDTO(std::make_shared<CallNode>(node), utils->getCurrentStmtNo());

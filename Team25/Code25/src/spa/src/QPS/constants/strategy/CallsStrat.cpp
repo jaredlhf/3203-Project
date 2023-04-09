@@ -29,7 +29,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::create
 
 // Case: Calls(_, _)
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardWildcard() {
-    return pkbRet->getAllLeftCall().size() > 0
+    return QueryUtils::isNotEmpty(pkbRet->getAllLeftCall())
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -38,7 +38,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildca
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildcardConst() {
     std::unordered_set<std::string> procs = pkbRet->getAllRightCall();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
-    return procs.count(arg2Val) > 0
+    return QueryUtils::contains(procs, arg2Val)
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -49,12 +49,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildca
     std::unordered_set<std::string> s2Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
     for (std::string proc : s2Procs) {
-        if (pkbRet->getLeftCall(proc).size() > 0) {
+        if (QueryUtils::isNotEmpty(pkbRet->getLeftCall(proc))) {
             resTable->addRow({ proc });
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -63,7 +63,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::wildca
 std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constWildcard() {
     std::unordered_set<std::string> procs = pkbRet->getAllLeftCall();
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
-    return procs.count(arg1Val) > 0
+    return QueryUtils::contains(procs, arg1Val)
         ? QpsTable::getDefaultOk()
         : QpsTable::getDefaultNoMatch();
 }
@@ -73,7 +73,7 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constC
     const std::string& arg1Val = std::static_pointer_cast<Value>(this->arg1)->getVal();
     const std::string& arg2Val = std::static_pointer_cast<Value>(this->arg2)->getVal();
 
-    if (pkbRet->getRightCall(arg1Val).count(arg2Val) > 0) {
+    if (QueryUtils::contains(pkbRet->getRightCall(arg1Val), arg2Val)) {
         return QpsTable::getDefaultOk();
     }
     return QpsTable::getDefaultNoMatch();
@@ -87,11 +87,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::constS
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s2Syn->getName() });
 
     for (std::string proc : s2Procs) {
-        if (pkbRet->getRightCall(arg1Val).count(proc) > 0) {
+        if (QueryUtils::contains(pkbRet->getRightCall(arg1Val), proc)) {
             resTable->addRow({ proc });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -102,12 +102,12 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synWil
     std::unordered_set<std::string> s1Procs = pkbRet->getAllProc();
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
     for (std::string proc : s1Procs) {
-        if (pkbRet->getRightCall(proc).size() > 0) {
+        if (QueryUtils::isNotEmpty(pkbRet->getRightCall(proc))) {
             resTable->addRow({ proc });
         }
     }
 
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -120,11 +120,11 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synCon
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName() });
 
     for (std::string proc : s1Procs) {
-        if (pkbRet->getLeftCall(arg2Val).count(proc) > 0) {
+        if (QueryUtils::contains(pkbRet->getLeftCall(arg2Val), proc)) {
             resTable->addRow({ proc });
         }
     }
-    return resTable->getData().size() > 0
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }
@@ -143,16 +143,23 @@ std::pair<Constants::ClauseResult, std::shared_ptr<QpsTable>> CallsStrat::synSyn
     }
 
     std::shared_ptr<QpsTable> resTable = QpsTable::create({ s1Syn->getName(), s2Syn->getName() });
+    std::vector<std::pair<std::string, std::string>> argCombis;
 
     for (std::string arg1Proc : s1Procs) {
         for (std::string arg2Proc : s2Procs) {
-            if (pkbRet->getRightCall(arg1Proc).count(arg2Proc) > 0) {
-                resTable->addRow({ arg1Proc, arg2Proc });
-            }
+            argCombis.push_back({ arg1Proc, arg2Proc });
         }
     }
 
-    return resTable->getData().size() > 0
+    for (std::pair<std::string, std::string> argPair : argCombis) {
+        std::string arg1Proc = argPair.first;
+        std::string arg2Proc = argPair.second;
+        if (QueryUtils::contains(pkbRet->getRightCall(arg1Proc), arg2Proc)) {
+            resTable->addRow({ arg1Proc, arg2Proc });
+        }
+    }
+
+    return QueryUtils::isNotEmpty(resTable->getData())
         ? std::make_pair(Constants::ClauseResult::OK, resTable)
         : std::make_pair(Constants::ClauseResult::NO_MATCH, resTable);
 }

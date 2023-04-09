@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include <iostream>
+#include <algorithm>
+#include <memory>
 
 #include "NextStore.h"
 

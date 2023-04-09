@@ -16,13 +16,15 @@ std::string SourceProcessor::processFile(std::string &filename) {
 void SourceProcessor::processSimple(std::string &filename, std::shared_ptr<PkbPopulator> pkbPopulator) {
     std::string fileStr = processFile(filename);
 
+    std::shared_ptr<SPUtils> spUtils = std::make_shared<SPUtils>();
+
     Tokenizer t;
     t.tokenize(fileStr);
 
-    Parser p(std::make_shared<Tokenizer>(t));
+    Parser p(std::make_shared<Tokenizer>(t), spUtils);
     std::vector<std::shared_ptr<ParserDTO>> programDTOs = p.parseProgram();
 
-    std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator);
+    std::shared_ptr<SelectiveExtractor> selectiveExtractor = std::make_shared<SelectiveExtractor>(pkbPopulator, spUtils);
 
     for (auto programDTO : programDTOs) {
         std::shared_ptr<ProcedureNode> root = std::dynamic_pointer_cast<ProcedureNode>(programDTO->getNode());

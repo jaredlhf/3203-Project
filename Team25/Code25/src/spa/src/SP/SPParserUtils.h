@@ -4,11 +4,12 @@
 #include <string>
 #include "Token.h"
 #include "Tokenizer.h"
+#include "SPConstants.h"
 
 class SPParserUtils {
 public:
     SPParserUtils(std::shared_ptr<Tokenizer> t);
-    std::string expect(std::shared_ptr<Token> expectedToken);
+    std::string expect(const std::string expectedToken);
     int getCurrentStmtNo();
     void incrementStmtNo();
 

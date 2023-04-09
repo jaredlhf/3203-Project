@@ -9,6 +9,7 @@ using namespace std;
 #include "Tokenizer.h"
 #include "Parser.h"
 #include "SelectiveExtractor.h"
+#include "SPUtils.h"
 
 #include "PKB/PkbPopulator.h"
 

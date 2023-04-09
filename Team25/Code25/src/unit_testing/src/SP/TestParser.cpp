@@ -24,9 +24,10 @@ SCENARIO("Testing ParseProgram") {
 
 
         WHEN("tokenizer has simple program") {
+            std::shared_ptr<SPUtils> spUtils = std::make_shared<SPUtils>();
             std::shared_ptr<Tokenizer> t = std::make_shared<Tokenizer>();
             t->tokenize(program);
-            std::shared_ptr<Parser> p = std::make_shared<Parser>(t);
+            std::shared_ptr<Parser> p = std::make_shared<Parser>(t, spUtils);
 
             THEN ("it should generate correct AST") {
                 std::shared_ptr<ProcedureNode> pn = dynamic_pointer_cast<ProcedureNode>(p->parseProgram()[0]->getNode());

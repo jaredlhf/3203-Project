@@ -1,175 +1,175 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Affects</name><parsing_time_taken>23.000000</parsing_time_taken>
+<name>Affects</name><parsing_time_taken>5.395000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">1</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(2,6)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>1.348000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">2</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(4, 8)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>1.118000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">3</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(4, 10)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.923000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">4</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(6, 6)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.898000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">5</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(1, 4)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.865000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">6</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(1, 8)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>0.904000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">7</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(1, 10)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.925000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">8</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(1, 12)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.936000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">9</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(2, 10)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>0.903000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">10</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(9, 10)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.929000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second invalid relationship: INVALID">11</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(9, 11)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>11.000000</time_taken>
+<time_taken>0.893000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second invalid relationship: INVALID">12</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(9, 12)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>12.000000</time_taken>
+<time_taken>0.887000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second invalid relationship: INVALID">13</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(2, 3)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>0.866000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second invalid relationship: INVALID">14</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(9, 6)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>9.000000</time_taken>
+<time_taken>0.863000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure alpha valid relationship: VALID">15</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(13,17)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.938000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure p calling q valid relationship: VALID">16</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(19,20)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.920000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure p calling q invalid relationship: INVALID">17</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(18, 22)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>0.989000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure p calling q invalid relationship: INVALID">18</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(19, 22)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>0.875000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure p calling q invalid relationship: INVALID">19</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(20, 27)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>0.900000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure reads invalid relationship: INVALID">20</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects(29, 31)]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>0.940000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">21</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1,4)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>0.985000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">22</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, 10)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>8.000000</time_taken>
+<time_taken>1.033000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">23</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, 11)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>10.000000</time_taken>
+<time_taken>1.359000</time_taken>
 <passed/>
 </query>
 <query>
 <id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="Wiki procedure Second valid relationship: VALID">24</id><querystr><![CDATA[stmt s; Select BOOLEAN such that Affects*(1, 12)]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>7.000000</time_taken>
+<time_taken>1.094000</time_taken>
 <passed/>
 </query>
 </queries>

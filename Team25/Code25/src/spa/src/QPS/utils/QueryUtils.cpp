@@ -1,31 +1,8 @@
 #include "QueryUtils.h"
+#include<algorithm>
+#include<memory>
 
 std::map<std::pair<int, int>, bool> QueryUtils::cache = {};
-
-template<typename T>
-bool QueryUtils::isEmpty(std::unordered_set<T> set) {
-	return set.size() <= 0;
-}
-
-template<typename T>
-bool QueryUtils::isNotEmpty(std::unordered_set<T> set) {
-	return !isEmpty(set);
-}
-
-template<typename T>
-bool QueryUtils::isEmpty(std::vector<T> set) {
-	return set.size() <= 0;
-}
-
-template<typename T>
-bool QueryUtils::isNotEmpty(std::vector<T> set) {
-	return !isEmpty(set);
-}
-
-template<typename T>
-bool QueryUtils::contains(std::unordered_set<T> set, T item) {
-	return set.count(item) > 0;
-}
 
 bool QueryUtils::isAssignStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet) {
 	std::unordered_set<int> asgSet = pkbRet->getAllStmt(Constants::ASSIGN);

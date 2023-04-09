@@ -16,6 +16,11 @@ DesignExtractor::DesignExtractor(std::shared_ptr<PkbPopulator> populator) {
     this->pkbPopulator = populator;
 }
 
+DesignExtractor::DesignExtractor(std::shared_ptr<PkbPopulator> populator, std::shared_ptr<SPUtils> spUtil) {
+    this->pkbPopulator = populator;
+    this->spUtils = spUtil;
+}
+
 bool DesignExtractor::isAssignNode(std::shared_ptr<TNode> n) {
     return (dynamic_pointer_cast<AssignNode>(n) != nullptr);
 }
@@ -395,6 +400,7 @@ void ParentsStarExtractor::visit(std::shared_ptr<WhileNode> wh, int lineNo) {
     }
 }
 
+
 void CallsExtractor::visit(std::shared_ptr<TNode> n, int lineNo) {
     if (isCallNode(n)) {
         std::shared_ptr<AssignNode> v = std::dynamic_pointer_cast<AssignNode>(n);
@@ -412,6 +418,11 @@ void CallsExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = c->getLine();
     }
+
+    if (!spUtils->isExistingProc(c->getVar())) {
+        throw std::invalid_argument("Procedure called does not exist!");
+    }
+
     pkbPopulator->addCalls(c->getProc(),c->getVar());
 }
 
@@ -514,13 +525,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             }
         }
     }
-//    for (auto const &pair: callsStorage) {
-//        std::cout << "{" << pair.first << ": " ;
-//        for(auto i : pair.second) {
-//            std::cout<<i<<endl;
-//        }
-//    }
-//    std::cout<<"END"<<endl;
+
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -677,7 +682,6 @@ void ProcedureCallsExtractor::visit(std::shared_ptr<CallNode> c,int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = c->getLine();
     }
-//    std::cout<<"calls contain: " << lineNo << " " << c->getVar() <<endl;
     pkbPopulator->addContainCalls(lineNo,c->getVar());
 }
 

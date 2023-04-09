@@ -8,10 +8,11 @@
 #include "TNode.h"
 #include "CFGNode.h"
 #include "PKB/PkbPopulator.h"
+#include "SPUtils.h"
 
 class SelectiveExtractor: public std::enable_shared_from_this<SelectiveExtractor> {
 public:
-    SelectiveExtractor(std::shared_ptr<PkbPopulator> pkbPopulator);
+    SelectiveExtractor(std::shared_ptr<PkbPopulator> pkbPopulator, std::shared_ptr<SPUtils> spUtils);
     void visit(std::shared_ptr<AssignNode> n);
     void visit(std::shared_ptr<PrintNode> n);
     void visit(std::shared_ptr<ReadNode> n);
@@ -37,5 +38,6 @@ private:
     std::shared_ptr<ProcedureCallsExtractor> procCallsExtractor;
     std::shared_ptr<StatementExtractor> stmtExtractor;
     std::shared_ptr<PkbPopulator> pkbPopulator;
+    std::shared_ptr<SPUtils> spUtils;
 };
 #endif //SPA_SELECTIVEEXTRACTOR_H

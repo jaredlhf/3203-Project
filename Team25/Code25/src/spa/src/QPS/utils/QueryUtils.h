@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <map>
+#include <set>
 #include "PKB/PkbRetriever.h"
 #include "QPS/constants/Constants.h"
 
@@ -13,19 +14,39 @@ public:
 	typedef std::shared_ptr<std::unordered_set<std::shared_ptr<CFGNode>>> NodeVisitSet;
 
 	template<typename T>
-	static bool isEmpty(std::unordered_set<T> set);
+	static bool isEmpty(std::unordered_set<T> set) {
+		return set.size() <= 0;
+	}
 
 	template<typename T>
-	static bool isNotEmpty(std::unordered_set<T> set);
+	static bool isNotEmpty(std::unordered_set<T> set) {
+		return !isEmpty(set);
+	}
 
 	template<typename T>
-	static bool isEmpty(std::vector<T> set);
+	static bool isEmpty(std::set<T> set) {
+		return set.size() <= 0;
+	}
 
 	template<typename T>
-	static bool isNotEmpty(std::vector<T> set);
+	static bool isNotEmpty(std::set<T> set) {
+		return !isEmpty(set);
+	}
 
 	template<typename T>
-	static bool contains(std::unordered_set<T> set, T item);
+	static bool isEmpty(std::vector<T> set) {
+		return set.size() <= 0;
+	}
+
+	template<typename T>
+	static bool isNotEmpty(std::vector<T> set) {
+		return !isEmpty(set);
+	}
+
+	template<typename T>
+	static bool contains(std::unordered_set<T> set, T item) {
+		return set.count(item) > 0;
+	}
 
 	static bool isAssignStmt(int lineNum, std::shared_ptr<PkbRetriever> pkbRet);
 

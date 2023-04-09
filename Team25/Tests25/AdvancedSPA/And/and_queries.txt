@@ -56,7 +56,7 @@ left, right, n, sum, mid
 12 - UsesNext query
 variable v; stmt s; print p;
 Select v such that Uses(p, v) and Next(12, s)
-left, right, sum, mid
+left, right, sum, mid, n
 5000
 13 - ModifiesCalls query
 variable v; procedure p; assign a;
@@ -86,7 +86,7 @@ Select s such that Parent(4, s) and Parent(6, s)
 18 - UsesUses query
 assign a; variable v; print p;
 Select v such that Uses(p, v) and Uses(a, v)
-left, right, mid, sum
+left, right, mid, sum, n
 5000
 19 - ModifiesModifies query
 assign a; variable v; read r;
@@ -103,33 +103,68 @@ stmt s;
 Select s such that Next*(4, s) and Next*(3, s)
 10,11,12,13,14,15,4,5,6,7,8,9
 5000
-22 - extra and
+22 - assignPatternAssignPattern query
+assign a;
+Select a pattern a(_, _"right"_) and a(_, _"left"_)
+5
+5000
+23 - assignPatternIfPattern query
+assign a; if ifs; variable v;
+Select v pattern a(v, _"left"_) and ifs(v, _, _)
+mid
+5000
+24 - assignPatternWhilePattern query
+assign a; while w; variable v;
+Select v pattern a(v, _) and w(v, _)
+left, right, n
+5000
+25 - ifPatternIfPattern query
+if ifs;
+Select ifs pattern ifs("mid", _, _) and ifs("target", _, _)
+6, 9
+5000
+26 - ifsPatternWhilePattern
+if ifs; while w; variable v;
+Select v pattern ifs(v, _, _) and w(v, _)
+left
+5000
+27 - whilePatternWhilePattern
+while w;
+Select w pattern w(_, _) and w("left", _)
+4
+5000
+28 - extra and
 stmt s;
 Select s such that Follows*(3, s) and
 SyntaxError
 5000
-23 - undeclared synonym in second clause
+29 - undeclared synonym in second clause
 stmt s;
 Select s such that Follows*(3, s) and Follows*(3, t)
 SemanticError
 5000
-24 - many and clauses
+30 - many and clauses
 stmt s;
 Select s such that Follows*(1, s) and Follows*(2, s) and Follows*(3, s) and Follows*(4, s)
 15
 5000
-25 - suchThatandPattern query
+31 - suchThatandPattern query
 stmt s; assign a;
 Select s such that Follows*(1, s) and pattern a(_,_)
 SyntaxError
 5000
-26 - suchThatAndWith query
+32 - suchThatAndWith query
 stmt s;
 Select s such that Follows*(1, s) and s.stmt# = 1
 SyntaxError
 5000
-27 - using and as a synonym name
+33 - using and as a synonym name
 stmt and;
 Select and such that Follows*(1, and) and Follows*(2, and)
 3, 4, 15
+5000
+34 - withwith query
+assign a; variable v;
+Select a with a.stmt# = 1 and v.varName = "left"
+1
 5000

@@ -2,7 +2,7 @@ import os
 
 TESTDIRS = ["AdvancedSPA", "BasicSPA"]
 QUERY = "queries"
-AUTOTESTER_PATH = os.path.join(os.getcwd(), "Code25", "out", "build", "x64-Debug", "src", "autotester", "autotester.exe")
+AUTOTESTER_PATH = os.path.join(os.getcwd(), "Code25", "cmake-build-debug", "src", "autotester", "autotester")
 
 def isQueryFile(fname):
     return QUERY in fname
@@ -30,6 +30,8 @@ def runTests(dir, originalDir):
             prefix = getPrefix(fname)
             outFile = os.path.join(outputPrefix, prefix + ".xml")
             os.system(f"{AUTOTESTER_PATH} {sourceFile} {queryFile} {outFile}")
+            print(outFile)
+            print(" ")
     os.chdir(originalDir)
 
 os.chdir("Tests25")
@@ -39,5 +41,6 @@ for testPrefix in TESTDIRS:
     os.chdir(testDir)
     subDirs = os.listdir()
     for item in subDirs:
-        runTests(item, testDir)
+        if not (item == ".DS_Store"):
+            runTests(item, testDir)
     os.chdir("..")

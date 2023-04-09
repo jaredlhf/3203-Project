@@ -255,31 +255,163 @@ c, d, ab, cd
 5000
 52 - comment
 while w;
-Select w pattern w(_,_,_)
+Select w pattern w(_,_)
 12, 14, 16
 5000
 53 - comment
 while w;
-Select w pattern w("i",_,_)
+Select w pattern w("i",_)
 12, 14
 5000
 54 - comment
 while w;
-Select w pattern w("ij",_,_)
-16
-5000
-55 - comment
-while w;
-Select w pattern w("ij",_,_)
+Select w pattern w("ij",_)
 16
 5000
 55 - comment
 while w; variable v;
-Select w pattern w(v,_,_)
+Select w pattern w(v,_)
 12, 14, 16
 5000
 56 - comment
 while w; variable v;
-Select v pattern w(v,_,_)
+Select v pattern w(v,_)
 i, j, ij, n, in
 5000
+57 - comment
+if ifs;
+Select ifss pattern ifss(_,_,_)
+SemanticError
+5000
+58 - comment
+if ifs;
+Select ifs pattern ifss(_,_,_)
+SemanticError
+5000
+59 - comment
+if ifs;
+Select ifs pattren ifs(_,_,_)
+SyntaxError
+5000
+60 - comment
+if ifs;
+Select ifs pattern ifs(,,)
+SyntaxError
+5000
+61 - comment
+if ifs;
+Select ifs pattern ifs(_,,)
+SyntaxError
+5000
+62 - comment
+if ifs;
+Select ifs pattern ifs(,_,)
+SyntaxError
+5000
+63 - comment
+if ifs; variable v1;
+Select ifs pattern ifs(v, _, _)
+SemanticError
+5000
+64 - comment
+if ifs;
+Select ifs pattern ifs("1,_,_)
+SyntaxError
+5000
+65 - comment
+if ifs;
+Select ifs pattern ifs(_,_)
+SyntaxError
+5000
+66 - comment
+while w;
+Select w pattern w1(_,_)
+SemanticError
+5000
+67 - comment
+while w;
+Select w1 pattern w1(_,_)
+SemanticError
+5000
+68 - comment
+while w;
+Select w patern w(_,_)
+SyntaxError
+5000
+69 - comment
+while w;
+Select w pattern w(_,_,_)
+SyntaxError
+5000
+70 - comment
+while w;
+Select w pattern w(,,)
+SyntaxError
+5000
+71 - comment
+while w;
+Select w pattern w(_,)
+SyntaxError
+5000
+72 - comment
+while w;
+Select w pattern w(,_)
+SyntaxError
+5000
+73 - comment
+while w;
+Select w pattern w("1,_)
+SyntaxError
+5000
+74 - comment
+stmt s;
+Select s pattern s(_,_)
+SemanticError
+5000
+75 - comment
+constant c;
+Select c pattern c(_,_)
+SemanticError
+5000
+76 - comment
+assign a; constant c;
+Select a pattern a(c,_)
+SemanticError
+5000
+77 - comment
+if ifs; constant c;
+Select ifs pattern ifs(c,_,_)
+SemanticError
+5000
+78 - comment
+if ifs; assign a;
+Select ifs pattern ifs(a, _,_)
+SemanticError
+5000
+79 - comment
+if ifs; assign a;
+Select ifs pattern ifs(_,a,_)
+SemanticError
+5000
+80 - comment
+if ifs; assign a;
+Select a pattern a(ifs,_)
+SemanticError
+5000
+81 - comment
+while w; constant c;
+Select w pattern w(c,_)
+SemanticError
+5000
+82 - comment
+while w; assign a;
+Select a pattern a(w,_)
+SemanticError
+5000
+83- comment
+while w; assign a;
+Select w pattern w(_, a)
+SemanticError
+5000
+
+

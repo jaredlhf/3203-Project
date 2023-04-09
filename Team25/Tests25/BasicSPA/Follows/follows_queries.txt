@@ -103,5 +103,11 @@ procedure p;
 Select p such that Follows (p,2)
 SemanticError
 5000
+22
+procedure p;
+Select p such that Follows (Alpha,2)
+SemanticError
+5000
+
 
 

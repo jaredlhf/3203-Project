@@ -48,6 +48,7 @@ std::vector<PatternClausePair> ParserResponse::getPatternClauses() {
 bool ParserResponse::compare(ParserResponse other) {
 
     std::vector<std::shared_ptr<Synonym>> otherDeclarations = other.getDeclarations();
+
     // compare declarations
     if (otherDeclarations.size() != this->declarations.size()) {
         return false;
@@ -78,6 +79,8 @@ bool ParserResponse::compare(ParserResponse other) {
     }
 
     // compare patterns
+
+
     if (!other.getPatternClauses().empty() && !this->patternClauses.empty()) {
         std::vector<PatternClausePair>  pc1 = other.getPatternClauses();
         std::vector<PatternClausePair>  pc2 = this->patternClauses;
@@ -97,6 +100,7 @@ bool ParserResponse::compare(ParserResponse other) {
     }
 
     // compare such thats
+
     if (!other.getSuchThatClauses().empty() && !this->suchThatClauses.empty()) {
         std::vector<std::shared_ptr<Clause>> otherSuchThatClauses = other.getSuchThatClauses();
 
@@ -113,6 +117,7 @@ bool ParserResponse::compare(ParserResponse other) {
     }
 
     // compare with clauses
+
     if (!other.getWithClauses().empty() && !this->getWithClauses().empty()) {
         std::vector<std::shared_ptr<Clause>> otherWithClauses = other.getWithClauses();
 
@@ -127,6 +132,26 @@ bool ParserResponse::compare(ParserResponse other) {
             }
         }
     }
-    
+
+    if (other.getDeclarations().size() != this->declarations.size()) {
+        return false;
+    }
+
+    if (other.getSelectSynonyms().size() != this->getSelectSynonyms().size()) {
+        return false;
+    }
+
+    if (other.getSuchThatClauses().size() != this->suchThatClauses.size()) {
+        return false;
+    }
+
+    if (other.getWithClauses().size() != this->getWithClauses().size()) {
+        return false;
+    }
+
+    if (other.getPatternClauses().size() != this->patternClauses.size()) {
+        return false;
+    }
+
     return true;
 }

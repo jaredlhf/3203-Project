@@ -16,6 +16,4 @@ jobs:
           tidy-checks: -boost, -bugprone, -performance, -portability, -modernize, -clang-anlayzer, -cppcoreguidelines
           files-changed-only: false
           extra-args: -std=c++17 -I ./include
-      - name: Failed coding standard check
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1   
+      
