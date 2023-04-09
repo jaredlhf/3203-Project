@@ -45,3 +45,6 @@ procedure reads {
   read x;
   v = x; 
 }
+procedure Third {
+  a = a;
+}
