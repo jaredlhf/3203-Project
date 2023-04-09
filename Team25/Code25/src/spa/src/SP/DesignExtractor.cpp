@@ -525,13 +525,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             }
         }
     }
-//    for (auto const &pair: callsStorage) {
-//        std::cout << "{" << pair.first << ": " ;
-//        for(auto i : pair.second) {
-//            std::cout<<i<<endl;
-//        }
-//    }
-//    std::cout<<"END"<<endl;
+
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
@@ -688,7 +682,6 @@ void ProcedureCallsExtractor::visit(std::shared_ptr<CallNode> c,int lineNo) {
     if (lineNo == SPConstants::INVALID_LINE_NO) {
         lineNo = c->getLine();
     }
-//    std::cout<<"calls contain: " << lineNo << " " << c->getVar() <<endl;
     pkbPopulator->addContainCalls(lineNo,c->getVar());
 }
 
