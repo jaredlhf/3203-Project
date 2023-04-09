@@ -1,203 +1,203 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>MultipleClause</name><parsing_time_taken>2.719000</parsing_time_taken>
+<name>MultipleClause</name><parsing_time_taken>24.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Follows="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="stmtSuchThat patternAssign nameWith">1</id><querystr><![CDATA[stmt s; assign a; variable v; Select v such that Follows(7, s) pattern a(v, "input + one") with v.varName = "input"]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>2.025000</time_taken>
+<time_taken>21.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="variableSuchThat patternAssign nameWith">2</id><querystr><![CDATA[assign a; variable v; call c; Select v such that Modifies(c, v) pattern a(v, "input + one") with v.varName = "input"]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.831000</time_taken>
+<time_taken>21.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="procedureSuchThat patternAssign nameWith">3</id><querystr><![CDATA[assign a; variable v; procedure p; Select v such that Calls("multipleClauses", p) pattern a(v, "input + one") with v.varName = "input"]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>1.756000</time_taken>
+<time_taken>20.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="stmtSuchThat patternWhile nameWith">4</id><querystr><![CDATA[stmt s; while w; variable v; Select v such that Follows(7, s) pattern w(v, _) with v.varName = "one"]]></querystr>
 <stuans>one</stuans>
 <correct>one</correct>
-<time_taken>1.490000</time_taken>
+<time_taken>16.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="variableSuchThat patternWhile nameWith">5</id><querystr><![CDATA[while w; variable v; call c; Select v such that Uses(c, v) pattern w(v, _) with v.varName = "input"]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>1.311000</time_taken>
+<time_taken>18.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="procedureSuchThat patternWhile nameWith">6</id><querystr><![CDATA[stmt s; while w; variable v; procedure p; Select v such that Calls("multipleClauses", p) pattern w(v, _) with v.varName = "input"]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>1.425000</time_taken>
+<time_taken>19.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="stmtSuchThat patternIf nameWith">7</id><querystr><![CDATA[stmt s; if ifs; variable v; Select v such that Follows(7, s) pattern ifs(v, _, _) with v.varName = "input"]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>1.196000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="variableSuchThat patternIf nameWith">8</id><querystr><![CDATA[if ifs; variable v; call c; read r; Select v such that Uses(c, v) pattern ifs(v, _, _) with v.varName = r.varName]]></querystr>
 <stuans>input</stuans>
 <correct>input</correct>
-<time_taken>1.464000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="procedureSuchThat patternIf nameWith">9</id><querystr><![CDATA[stmt s; if ifs; variable v; procedure p; Select v such that Calls("multipleClauses", p) pattern ifs("input", _, _) with v.varName = "empty"]]></querystr>
 <stuans>empty</stuans>
 <correct>empty</correct>
-<time_taken>1.267000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="stmtSuchThat patternAssign intWith">10</id><querystr><![CDATA[stmt s; assign a; variable v; Select s such that Follows(7, s) pattern a(v, "input + one") with s.stmt# = 9]]></querystr>
 <stuans>9</stuans>
 <correct>9</correct>
-<time_taken>1.839000</time_taken>
+<time_taken>20.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="variableSuchThat patternAssign intWith">11</id><querystr><![CDATA[assign a; variable v; call c; Select a such that Modifies(c, v) pattern a(v, "input + one") with a.stmt# = 9]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.517000</time_taken>
+<time_taken>19.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="procedureSuchThat patternAssign intWith">12</id><querystr><![CDATA[assign a; variable v; procedure p; Select a such that Calls("multipleClauses", p) pattern a(v, "one - 1") with a.stmt# = 8]]></querystr>
 <stuans>8</stuans>
 <correct>8</correct>
-<time_taken>1.529000</time_taken>
+<time_taken>18.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="stmtSuchThat patternWhile intWith">13</id><querystr><![CDATA[while w; variable v; stmt s; Select w such that Follows(7, s) pattern w(_, _) with w.stmt# = 7]]></querystr>
 <stuans>7</stuans>
 <correct>7</correct>
-<time_taken>1.176000</time_taken>
+<time_taken>15.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="variableSuchThat patternWhile intWith">14</id><querystr><![CDATA[while w; variable v; call c; Select w such that Uses(c, v) pattern w("final", _) with w.stmt# = 12]]></querystr>
 <stuans>12</stuans>
 <correct>12</correct>
-<time_taken>1.226000</time_taken>
+<time_taken>16.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="procedureSuchThat patternWhile intWith">15</id><querystr><![CDATA[stmt s; while w; variable v; procedure p; Select v such that Calls("multipleClauses", p) pattern w(v, _) with w.stmt# = s.stmt#]]></querystr>
 <stuans>final,input,one,target</stuans>
 <correct>input,target,one,final</correct>
-<time_taken>1.486000</time_taken>
+<time_taken>20.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="stmtSuchThat patternIf intWith">16</id><querystr><![CDATA[stmt s; if ifs; variable v; Select ifs such that Follows(7, s) pattern ifs(v, _, _) with ifs.stmt# = 3]]></querystr>
 <stuans>3</stuans>
 <correct>3</correct>
-<time_taken>1.234000</time_taken>
+<time_taken>16.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="variableSuchThat patternIf intWith">17</id><querystr><![CDATA[if ifs; variable v; call c; Select v such that Uses(c, v) pattern ifs("not", _, _) with 3 = ifs.stmt#]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.100000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="procedureSuchThat patternIf intWith">18</id><querystr><![CDATA[if ifs; variable v; procedure p; Select ifs such that Calls("multipleClauses", p) pattern ifs("input", _, _) with 1 = 2]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.159000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Calls="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="procedureSuchThat patternIf intWith BOOLEAN false">19</id><querystr><![CDATA[if ifs; variable v; procedure p; Select BOOLEAN such that Calls("multipleClauses", p) pattern ifs("input", _, _) with 1 = 2]]></querystr>
 <stuans>FALSE</stuans>
 <correct>FALSE</correct>
-<time_taken>0.985000</time_taken>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="variableSuchThat patternAssign nameWith BOOLEAN true">20</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with v.varName = "final"]]></querystr>
 <stuans>TRUE</stuans>
 <correct>TRUE</correct>
-<time_taken>1.535000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Pattern="1" SuchThat="1" With="1" CondNum="4" RelNum="0" comment="syntax error in clause 1">21</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifie(c, v) pattern a(v, "input") with v.varName = "final"]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>0.951000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="syntax error in clause 2">22</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(c, v) pattern av, "input") with v.varName = "final"]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>1.037000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="syntax error in clause 3">23</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with v.varName != "final"]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>1.202000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="swap order">24</id><querystr><![CDATA[assign a; variable v; call c; Select v such that Modifies(c, v) with v.varName = "final" pattern a(v, "input")]]></querystr>
 <stuans>final</stuans>
 <correct>final</correct>
-<time_taken>1.593000</time_taken>
+<time_taken>17.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" Uses="1" Pattern="2" SuchThat="1" With="1" CondNum="8" RelNum="2" comment="very long query">25</id><querystr><![CDATA[assign a; variable v; Select v pattern a(v, _) such that Uses(a, v) and Modifies(a, v) pattern a(v, "final + 1") with v.varName = "final"]]></querystr>
 <stuans>final</stuans>
 <correct>final</correct>
-<time_taken>1.861000</time_taken>
+<time_taken>23.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="semantic error in clause 1">26</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(z, v) pattern a(v, "input") with v.varName = "final"]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>1.134000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="semantic error in clause 2">27</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(c, v) pattern z(v, "input") with v.varName = "final"]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>1.140000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnBoolean="1" Modifies="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="semantic error in clause 3">28</id><querystr><![CDATA[assign a; variable v; call c; Select BOOLEAN such that Modifies(c, v) pattern a(v, "input") with z.varName = "final"]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>1.120000</time_taken>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 </queries>
