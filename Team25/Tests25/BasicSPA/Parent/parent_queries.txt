@@ -103,5 +103,9 @@ procedure p;
 Select p such that Parent(p,2)
 SemanticError
 5000
-
+22
+procedure p;
+Select p such that Parent (Alpha,2)
+SemanticError
+5000
 
