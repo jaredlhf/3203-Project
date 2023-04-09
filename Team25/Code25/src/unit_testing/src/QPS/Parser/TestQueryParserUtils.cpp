@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "QPS/utils/ParserUtils.h"
 
-// TODO: add tests for new methods
 TEST_CASE("valid integer string") {
     std::string s = "123";
     REQUIRE(ParserUtils::isValidIntegerString(s) == true);
@@ -54,7 +53,6 @@ SCENARIO("Testing method for checking validity of an entity reference") {
         };
 
         WHEN("given a valid wildcard string") {
-            std::shared_ptr<Wildcard> w = Wildcard::create();
             THEN("it should return a wildcard entity") {
                 std::shared_ptr<Entity> e = ParserUtils::getValidEntRef("_", declarations);
                 REQUIRE(e->isWildcard() == true);
@@ -214,4 +212,34 @@ TEST_CASE("remove quotes from string") {
     std::string s = "\"some text\"";
     std::string clean = "some text";
     REQUIRE(ParserUtils::removeQuotations(s) == clean);
+}
+
+TEST_CASE("valid syntax error") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::SYNTAX_ERROR, "");
+    REQUIRE(ParserUtils::isSyntaxError(syn) == true);
+}
+
+TEST_CASE("not syntax error") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::VARIABLE, "v");
+    REQUIRE(ParserUtils::isSyntaxError(syn) == false);
+}
+
+TEST_CASE("valid semantic error") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::SEMANTIC_ERROR, "");
+    REQUIRE(ParserUtils::isSemanticError(syn) == true);
+}
+
+TEST_CASE("not semantic error") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::VARIABLE, "v");
+    REQUIRE(ParserUtils::isSemanticError(syn) == false);
+}
+
+TEST_CASE("is expected synonym") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::VARIABLE, "v");
+    REQUIRE(ParserUtils::isExpectedSynonym(syn, Constants::VARIABLE) == true);
+}
+
+TEST_CASE("is not expected synonym") {
+    std::shared_ptr<Entity> syn = Synonym::create(Constants::VARIABLE, "v");
+    REQUIRE(ParserUtils::isExpectedSynonym(syn, Constants::ASSIGN) == false);
 }

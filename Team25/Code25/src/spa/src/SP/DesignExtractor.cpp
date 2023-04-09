@@ -525,6 +525,7 @@ void CallsStarExtractor::visit(std::shared_ptr<CallNode> c, int lineNo) {
             }
         }
     }
+
 }
 
 void CallsStarExtractor::visit(std::shared_ptr<IfNode> ifs, int lineNo) {
