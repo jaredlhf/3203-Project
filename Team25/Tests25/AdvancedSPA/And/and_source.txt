@@ -27,6 +27,11 @@ procedure Test {
     while (n > 0) {
         sum = sum * n;
         n = n - 1;
+        if (left == 1) then {
+            print left;
+        } else {
+            print n;
+        }
     }
     print sum;
 }
