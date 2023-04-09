@@ -1,196 +1,196 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>And</name><parsing_time_taken>3.872000</parsing_time_taken>
+<name>And</name><parsing_time_taken>12.000000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Followsstar="1" Parent="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Parent query">1</id><querystr><![CDATA[stmt s; Select s such that Follows*(12, s) and Parent(4, s)]]></querystr>
 <stuans>13,14</stuans>
 <correct>13,14</correct>
-<time_taken>2.000000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" Uses="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Uses query">2</id><querystr><![CDATA[stmt s; variable v; Select s such that Follows*(5, s) and Uses("AndTest", v)]]></querystr>
 <stuans>12,13,14,6</stuans>
 <correct>6,12,13,14</correct>
-<time_taken>2.474000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" Modifies="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Modifies query">3</id><querystr><![CDATA[stmt s; variable v; Select s such that Follows*(5, s) and Modifies("AndTest", v)]]></querystr>
 <stuans>12,13,14,6</stuans>
 <correct>6,12,13,14</correct>
-<time_taken>2.425000</time_taken>
+<time_taken>12.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Followsstar="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Calls query">4</id><querystr><![CDATA[procedure p; stmt s; Select s such that Follows*(1, s) and Calls("AndTest", p)]]></querystr>
 <stuans>15,2,3,4</stuans>
 <correct>2,3,4,15</correct>
-<time_taken>1.359000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" Nextstar="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Next* query">5</id><querystr><![CDATA[stmt s; Select s such that Next*(4, s) and Follows*(4, s)]]></querystr>
 <stuans>15</stuans>
 <correct>15</correct>
-<time_taken>2.002000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="1" Uses="1" SuchThat="1" CondNum="4" RelNum="2" comment="ParentUses query">6</id><querystr><![CDATA[stmt s; variable v; Select s such that Parent(4, s) and Uses("AndTest", v)]]></querystr>
 <stuans>12,13,14,5,6</stuans>
 <correct>5,6,12,13,14</correct>
-<time_taken>2.479000</time_taken>
+<time_taken>13.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Parent="1" SuchThat="1" CondNum="4" RelNum="2" comment="ParentModifies query">7</id><querystr><![CDATA[stmt s; variable v; Select s such that Parent(4, s) and Modifies("AndTest", v)]]></querystr>
 <stuans>12,13,14,5,6</stuans>
 <correct>5,6,12,13,14</correct>
-<time_taken>2.498000</time_taken>
+<time_taken>14.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Parent="1" SuchThat="1" CondNum="4" RelNum="2" comment="ParentCalls query">8</id><querystr><![CDATA[stmt s; procedure p; Select s such that Parent(4, s) and Calls("AndTest", p)]]></querystr>
 <stuans>12,13,14,5,6</stuans>
 <correct>5,6,12,13,14</correct>
-<time_taken>1.386000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="1" Parent="1" SuchThat="1" CondNum="4" RelNum="2" comment="ParentNext* query">9</id><querystr><![CDATA[stmt s; Select s such that Parent(4, s) and Next*(5, s)]]></querystr>
 <stuans>12,13,14,5,6</stuans>
 <correct>5,6,12,13,14</correct>
-<time_taken>2.130000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Uses="1" SuchThat="1" CondNum="4" RelNum="2" comment="UsesModifies query">10</id><querystr><![CDATA[variable v; assign a; Select v such that Modifies(a, v) and Uses(5, v)]]></querystr>
 <stuans>left,right</stuans>
 <correct>left,right</correct>
-<time_taken>1.295000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Uses="1" SuchThat="1" CondNum="4" RelNum="2" comment="UsesCalls query">11</id><querystr><![CDATA[variable v; procedure p; assign a; Select v such that Uses(a, v) and Calls("AndTest", p)]]></querystr>
 <stuans>left,mid,n,right,sum</stuans>
 <correct>left,right,n,sum,mid</correct>
-<time_taken>2.004000</time_taken>
+<time_taken>9.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Next="1" Uses="1" SuchThat="1" CondNum="4" RelNum="2" comment="UsesNext query">12</id><querystr><![CDATA[variable v; stmt s; print p; Select v such that Uses(p, v) and Next(12, s)]]></querystr>
 <stuans>left,mid,right,sum</stuans>
 <correct>left,right,sum,mid</correct>
-<time_taken>2.143000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Modifies="1" SuchThat="1" CondNum="4" RelNum="2" comment="ModifiesCalls query">13</id><querystr><![CDATA[variable v; procedure p; assign a; Select v such that Modifies(a, v) and Calls("AndTest", p)]]></querystr>
 <stuans>left,mid,n,right,sum</stuans>
 <correct>left,right,sum,mid,n</correct>
-<time_taken>1.853000</time_taken>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" Next="1" SuchThat="1" CondNum="4" RelNum="2" comment="ModifiesNext query">14</id><querystr><![CDATA[variable v; stmt s; assign a; Select v such that Modifies(a, v) and Next(12, s)]]></querystr>
 <stuans>left,mid,n,right,sum</stuans>
 <correct>left,right,sum,mid,n</correct>
-<time_taken>1.728000</time_taken>
+<time_taken>11.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Calls="1" Next="1" SuchThat="1" CondNum="4" RelNum="2" comment="CallsNext query">15</id><querystr><![CDATA[procedure p; stmt s; Select p such that Calls("AndTest", p) and Next(12, s)]]></querystr>
 <stuans>Test</stuans>
 <correct>Test</correct>
-<time_taken>1.560000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Follows="1" Followsstar="1" SuchThat="1" CondNum="4" RelNum="2" comment="Follows*Follows* query">16</id><querystr><![CDATA[stmt s; Select s such that Follows*(1, s) and Follows(4, s)]]></querystr>
 <stuans>15</stuans>
 <correct>15</correct>
-<time_taken>1.336000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Parent="2" SuchThat="1" CondNum="4" RelNum="2" comment="ParentParent query">17</id><querystr><![CDATA[stmt s; Select s such that Parent(4, s) and Parent(6, s)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.477000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Uses="2" SuchThat="1" CondNum="4" RelNum="2" comment="UsesUses query">18</id><querystr><![CDATA[assign a; variable v; print p; Select v such that Uses(p, v) and Uses(a, v)]]></querystr>
 <stuans>left,mid,right,sum</stuans>
 <correct>left,right,mid,sum</correct>
-<time_taken>1.465000</time_taken>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="2" SuchThat="1" CondNum="4" RelNum="2" comment="ModifiesModifies query">19</id><querystr><![CDATA[assign a; variable v; read r; Select v such that Modifies(a, v) and Modifies(r, v)]]></querystr>
 <stuans>n</stuans>
 <correct>n</correct>
-<time_taken>1.125000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Callsstar="2" SuchThat="1" CondNum="4" RelNum="2" comment="Calls*Calls* query">20</id><querystr><![CDATA[procedure p; Select p such that Calls*("AndTest", p) and Calls*("Test", p)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>0.866000</time_taken>
+<time_taken>7.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Nextstar="2" SuchThat="1" CondNum="4" RelNum="2" comment="Next*Next* query">21</id><querystr><![CDATA[stmt s; Select s such that Next*(4, s) and Next*(3, s)]]></querystr>
 <stuans>10,11,12,13,14,15,4,5,6,7,8,9</stuans>
 <correct>10,11,12,13,14,15,4,5,6,7,8,9</correct>
-<time_taken>3.166000</time_taken>
+<time_taken>18.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="extra and">22</id><querystr><![CDATA[stmt s; Select s such that Follows*(3, s) and]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>0.841000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="2" SuchThat="1" CondNum="4" RelNum="2" comment="undeclared synonym in second clause">23</id><querystr><![CDATA[stmt s; Select s such that Follows*(3, s) and Follows*(3, t)]]></querystr>
 <stuans>SemanticError</stuans>
 <correct>SemanticError</correct>
-<time_taken>0.849000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="4" SuchThat="1" CondNum="6" RelNum="4" comment="many and clauses">24</id><querystr><![CDATA[stmt s; Select s such that Follows*(1, s) and Follows*(2, s) and Follows*(3, s) and Follows*(4, s)]]></querystr>
 <stuans>15</stuans>
 <correct>15</correct>
-<time_taken>1.682000</time_taken>
+<time_taken>10.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="suchThatandPattern query">25</id><querystr><![CDATA[stmt s; assign a; Select s such that Follows*(1, s) and pattern a(_,_)]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>0.918000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="suchThatAndWith query">26</id><querystr><![CDATA[stmt s; Select s such that Follows*(1, s) and s.stmt# = 1]]></querystr>
 <stuans>SyntaxError</stuans>
 <correct>SyntaxError</correct>
-<time_taken>0.765000</time_taken>
+<time_taken>6.000000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Followsstar="2" SuchThat="1" CondNum="4" RelNum="2" comment="using and as a synonym name">27</id><querystr><![CDATA[stmt and; Select and such that Follows*(1, and) and Follows*(2, and)]]></querystr>
 <stuans>15,3,4</stuans>
 <correct>3,4,15</correct>
-<time_taken>1.322000</time_taken>
+<time_taken>8.000000</time_taken>
 <passed/>
 </query>
 </queries>
