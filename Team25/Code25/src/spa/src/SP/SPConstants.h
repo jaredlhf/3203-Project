@@ -13,6 +13,18 @@ namespace SPConstants {
     const std::string CALL_TYPE = "call";
 
     const std::string EQUAL_TOKEN = "=";
+    const std::string PROCEDURE_TOKEN = "procedure";
+    const std::string NAME_TOKEN = "name_token";
+    const std::string LEFTBRACE_TOKEN = "{";
+    const std::string RIGHTBRACE_TOKEN = "}";
+    const std::string SEMICOLON_TOKEN = ";";
+    const std::string READ_TOKEN = "read";
+    const std::string CALL_TOKEN = "call";
+    const std::string PRINT_TOKEN = "print";
+    const std::string THEN_TOKEN = "then";
+    const std::string WHILE_TOKEN = "while";
+    const std::string IF_TOKEN = "if";
+    const std::string ELSE_TOKEN = "else";
 
     const char TAB = '\t';
     const char NEWLINE = '\n';
